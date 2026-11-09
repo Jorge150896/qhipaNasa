@@ -1,0 +1,22 @@
+{
+  "name": "astra-workspace",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace frontend --",
+    "build": "npm run build --workspace frontend",
+    "start": "npm run start --workspace frontend --",
+    "typecheck": "npm run typecheck --workspace frontend",
+    "lint": "npm run lint --workspace frontend",
+    "test": "npm run test --workspace frontend",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run build",
+    "format:check": "npm run format:check --workspace frontend",
+    "test:e2e": "npm run test:e2e --workspace frontend"
+  },
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
+  },
+  "version": "0.1.0"
+}
