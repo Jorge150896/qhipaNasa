@@ -17,7 +17,10 @@ test('mapa 3D, destinos y navegación preservando diarios y contexto', async ({ 
     .getByRole('navigation')
     .getByRole('button', { name: 'Mapa espacial', exact: true })
     .click();
-  await expect(page.getByRole('heading', { name: /Distintos mundos/ })).toBeVisible();
+  // The requested 3 s intro starts after route hydration; allow cold route assets as well.
+  await expect(page.getByRole('heading', { name: /Distintos mundos/ })).toBeVisible({
+    timeout: 10_000,
+  });
   await expect(page.locator('.fleet-map-label')).toHaveCount(0);
   const canvas = page.locator('.fleet-scene canvas');
   await expect(canvas).toBeVisible();
@@ -85,7 +88,7 @@ test('mapa 3D, destinos y navegación preservando diarios y contexto', async ({ 
 test('móvil: todos los destinos por HTML, recarga y sin desbordamiento', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 1000 });
   await page.goto('/explore?destination=mars');
-  await expect(page.locator('.fleet-detail')).toContainText('Base Ares');
+  await expect(page.locator('.fleet-detail')).toContainText('Base Ares', { timeout: 10_000 });
   await expect(page.locator('.fleet-map-label')).toHaveCount(0);
   await page
     .getByLabel('Seleccionar destino', { exact: true })

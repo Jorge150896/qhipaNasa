@@ -43,3 +43,11 @@ Las nuevas funcionalidades autónomas con estado/operaciones usan `NombreScreen.
 | Datos/contratos de misión usados por varias vistas | `mission/types.ts`, `mapMissionPresentation.ts`; coordinar consumidores |
 
 Los modelos, dominio, adapters, DI y claves de persistencia no se reorganizan por cada vista. Componentes genéricos siguen en `src/ui`; no moverlos a una sección ni duplicarlos.
+
+## Portada de Qhipa Pacha
+
+`landing/` posee `LandingScreen`, `useLandingViewModel`, `types.ts` y `components/LandingView.tsx`. La ruta `/` presenta la portada y enlaza a las features existentes sin cambiar sus URLs. Recursos y ciclo de movimiento en `frontend/src/presentation/features/landing/README.md`.
+
+## Animación de carga
+
+`loading-preview/` ofrece la vista de revisión `/loading-preview`, con Screen/ViewModel/View y pausa local. El componente reusable del Tumi y el temporizador de introducción viven en `presentation/shared/loading/`; consumidores reales: misión, mapa y fallback de rutas. No se duplican operaciones ni datos del provider.

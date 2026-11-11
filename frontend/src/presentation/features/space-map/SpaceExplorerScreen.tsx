@@ -1,8 +1,9 @@
 'use client';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useTransition } from 'react';
 import { createSpaceExplorerDependencies } from '@/di/createSpaceExplorerDependencies.client';
+import { TumiLoader } from '../../shared/loading/TumiLoader';
 import { missionRoute } from '@/presentation/shared/missionRoutes';
 import { MissionShell } from '../mission/components/MissionShell';
 import { useSpaceExplorerViewModel } from './useSpaceExplorerViewModel';
@@ -19,6 +20,8 @@ const SpaceMapScene = dynamic(() => import('./components/SpaceMapScene'), {
 });
 export function SpaceExplorerScreen({ destination = 'ship' }: { destination?: DestinationKey }) {
   const router = useRouter();
+  const [navigationPending, startNavigation] = useTransition();
+  const navigateTo = (path: string) => startNavigation(() => router.push(path));
   const [visibleCard, setVisibleCard] = useState<DestinationKey | null>(null);
   const dependencies = useMemo(() => createSpaceExplorerDependencies(), []);
   const model = useSpaceExplorerViewModel(dependencies, destination);
@@ -30,14 +33,14 @@ export function SpaceExplorerScreen({ destination = 'ship' }: { destination?: De
     <MissionShell
       section="explorer"
       missionName="Red de exploración"
-      onOpenExplorer={() => router.push('/explore')}
-      onNavigate={(section) => router.push(missionRoute('odyssey', section))}
+      onOpenExplorer={() => navigateTo('/explore')}
+      onNavigate={(section) => navigateTo(missionRoute('odyssey', section))}
     >
-      {model.loading ? (
-        <div className="loading-state" role="status">
-          <h1>Conectando la tripulación con su mundo…</h1>
-          <p>Cargando escenarios sintéticos y registros locales.</p>
-        </div>
+      {model.loading || navigationPending ? (
+        <TumiLoader
+          title="Conectando la tripulación con su mundo…"
+          description="Cargando escenarios sintéticos y registros locales."
+        />
       ) : model.error || !model.data || !model.selected ? (
         <div className="loading-state" role="alert">
           <h1>No pudimos cargar el mapa</h1>
@@ -50,7 +53,7 @@ export function SpaceExplorerScreen({ destination = 'ship' }: { destination?: De
           data={model.data}
           selected={model.selected}
           onSelect={select}
-          onOpenCrew={(id) => router.push(missionRoute(id, 'crew'))}
+          onOpenCrew={(id) => navigateTo(missionRoute(id, 'crew'))}
           onRefresh={model.refresh}
           scene={
             <SpaceMapScene

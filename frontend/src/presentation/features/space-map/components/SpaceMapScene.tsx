@@ -16,7 +16,7 @@ import { ShuttleModel } from '@/presentation/shared/scene/ShuttleModel';
 import { Icon } from '@/ui/Icon';
 import type { DestinationData, DestinationKey } from '../types';
 import { PlanetModel } from './PlanetModel';
-import { SpaceBackdrop } from './SpaceBackdrop';
+import { SpaceBackdrop } from '../../../shared/scene/SpaceBackdrop';
 import { SolarSystemReferences } from './SolarSystemReferences';
 import { SceneMotion, useSceneMotionClock } from './SceneMotion';
 import { orbitalMotion, orbitalPosition, orbitalAngle } from './orbitalMotion';

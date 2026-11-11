@@ -1,4 +1,5 @@
 'use client';
+import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@/ui/Icon';
 import type { MissionSection } from './types';
@@ -6,6 +7,7 @@ import { missionRoute } from '@/presentation/shared/missionRoutes';
 import { useMissionWorkspace } from './MissionWorkspaceProvider';
 import { MissionShell } from './components/MissionShell';
 import { MissionFeatureScreen } from './MissionFeatureScreen';
+import { TumiLoader } from '../../shared/loading/TumiLoader';
 import { MissionPageHeader } from '../../shared/mission/MissionPageHeader';
 export function MissionScreen({
   section,
@@ -15,9 +17,10 @@ export function MissionScreen({
   habitatId?: string;
 }) {
   const router = useRouter();
+  const [navigationPending, startNavigation] = useTransition();
   const { data, loading, error, message, saving, actions } = useMissionWorkspace();
   function navigate(next: MissionSection) {
-    router.push(missionRoute(habitatId, next));
+    startNavigation(() => router.push(missionRoute(habitatId, next)));
   }
   return (
     <MissionShell
@@ -26,8 +29,10 @@ export function MissionScreen({
       pendingCount={data?.pendingCount}
       missionName={data?.name}
       onOpenExplorer={() =>
-        router.push(
-          `/explore?destination=${habitatId === 'aurora' ? 'station' : habitatId === 'selene' ? 'moon' : habitatId === 'ares' ? 'mars' : 'ship'}`,
+        startNavigation(() =>
+          router.push(
+            `/explore?destination=${habitatId === 'aurora' ? 'station' : habitatId === 'selene' ? 'moon' : habitatId === 'ares' ? 'mars' : 'ship'}`,
+          ),
         )
       }
     >
@@ -43,12 +48,11 @@ export function MissionScreen({
           </button>
         </div>
       )}
-      {loading ? (
-        <div className="loading-state" role="status">
-          <Icon name="orbit" className="spin" size={38} />
-          <h1>Preparando la misión</h1>
-          <p>Cargando el escenario y el registro de demostración.</p>
-        </div>
+      {loading || navigationPending ? (
+        <TumiLoader
+          title="Preparando la misión"
+          description="Cargando el escenario y el registro de demostración."
+        />
       ) : error || !data ? (
         <div className="loading-state" role="alert">
           <Icon name="alert" size={38} />

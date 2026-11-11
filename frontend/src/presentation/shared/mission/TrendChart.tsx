@@ -70,13 +70,13 @@ function InteractiveTrend({ metric }: { metric: MetricData }) {
             ))}
             <g clipPath={`url(#${id}-clip)`} aria-hidden="true">
               <g className="chart-sweep">
-                <rect x="-22" y="15" width="22" height="130" fill="#8aded1" opacity="0.08" />
+                <rect x="-22" y="15" width="22" height="130" fill="var(--accent)" opacity="0.08" />
                 <line
                   x1="0"
                   x2="0"
                   y1="15"
                   y2="145"
-                  stroke="#b0f5e2"
+                  stroke="var(--accent-hover)"
                   strokeWidth="1"
                   opacity="0.65"
                 />

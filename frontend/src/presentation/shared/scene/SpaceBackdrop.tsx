@@ -48,7 +48,7 @@ function makeSky() {
   texture.colorSpace = SRGBColorSpace;
   return texture;
 }
-export function SpaceBackdrop() {
+export function SpaceBackdrop({ radius = 12000 }: { radius?: number }) {
   const texture = useMemo(() => makeSky(), []);
   const sky = useRef<Group>(null);
   const { camera } = useThree();
@@ -58,8 +58,8 @@ export function SpaceBackdrop() {
   useEffect(() => () => texture.dispose(), [texture]);
   return (
     <group ref={sky}>
-      <mesh rotation={[0, 0.8, 0.15]} renderOrder={-10}>
-        <sphereGeometry args={[12000, 48, 32]} />
+      <mesh rotation={[0, 0.8, 0.15]} renderOrder={-10} raycast={() => null}>
+        <sphereGeometry args={[radius, 48, 32]} />
         <meshBasicMaterial map={texture} side={BackSide} depthWrite={false} toneMapped={false} />
       </mesh>
     </group>

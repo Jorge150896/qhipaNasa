@@ -121,3 +121,21 @@ Para repartir trabajo consultar [features-map.md](features-map.md): feature, vis
 Las nueve secciones tienen carpeta propia; `mission/` mantiene el provider, `useMission`, mapper, shell y selección del Screen. La cabecera, tarjetas de sensores, contexto ambiental, gráfica y dashboard compartidos viven en `presentation/shared/mission/`; el visor sigue en `presentation/shared/scene/` y se carga desde `MissionSceneSlot` con SSR desactivado. Las URLs y claves de almacenamiento no cambian.
 
 Cambiar de sección desmonta su estado visual privado: modo de visor, sistema corporal y borradores. Los datos, persona/indicador/zona/escenario y operaciones siguen siendo del provider por hábitat. Las pantallas reciben datos/callbacks del modelo existente; las nuevas operaciones autónomas deben usar casos de uso y ViewModel propios.
+
+### Portada Qhipa Pacha
+
+La ruta raíz monta `landing/LandingScreen.tsx`, con `useLandingViewModel` y `components/LandingView.tsx`. Ofrece entrada al dashboard, mapa y tripulación. Las animaciones de marca, Tumi, estrellas, planeta cercano y reflejo del CTA viven en CSS aislado; el hook administra pausa y disponibilidad de movimiento según sistema/visibilidad. No hay nuevos adapters ni acceso a datos. El parallax de puntero se limita a ratón y se desactiva en pausa/movimiento reducido. Recursos, procedencia y detalles en el README de `landing/`.
+
+### Tema del dashboard
+
+La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md). El dashboard comparte el fondo espacial de la portada, superficies moradas y acentos naranja, manteniendo la lectura de indicadores, estados y formularios. Las variables comunes viven en `globals.css`; salud por sistemas y mapa conservan sus estilos locales con la misma familia visual.
+
+### Cielo compartido de las escenas 3D
+
+`presentation/shared/scene/SpaceBackdrop.tsx` representa el mismo cielo local de estrellas y nebulosas en el mapa general, astronauta, nave, estación y base. La textura se genera de forma determinista, sigue la posición de la cámara y se libera al desmontar. El mapa utiliza radio 12000 y el visor de misión radio 100 para respetar sus planos de recorte; las proporciones angulares del fondo se conservan. La esfera decorativa no participa en raycasting ni tapa modelos mediante escritura de profundidad. No cambia el portal HTML independiente, los controles ni los fallbacks.
+
+### Carga animada del Tumi
+
+`presentation/shared/loading/TumiLoader` representa carga de misión y mapa dentro del contenido; su variante fullscreen se reserva para iniciar misión desde la portada y la vista de revisión. `TumiHead` revela la referencia PNG original en capas SVG: cabeza, tocado, expresión y sombra tienen animaciones coordinadas, con spinner independiente y movimiento reducido. La imagen original se conserva sin redibujar; el loader es una capa de viewport completo y sin bordes. `/loading-preview` permite revisar el bucle sin depender de una carga real.
+
+La introducción mínima de tres segundos pertenece ahora al ViewModel de portada y solo empieza tras «Iniciar mi misión». El provider de misión mantiene únicamente su carga real. Los Screens de misión/mapa usan `useTransition` para representar navegación pendiente dentro del área de información, con el shell interactivo. No hay fallback global a pantalla completa ni bloqueo global del scroll. Detalle en `features/loading-preview/README.md`.

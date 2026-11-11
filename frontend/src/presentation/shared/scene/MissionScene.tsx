@@ -6,6 +6,7 @@ import { Icon } from '@/ui/Icon';
 import { AstronautModel, type SceneSensor } from './AstronautModel';
 import { ShuttleModel } from './ShuttleModel';
 import { HabitatModel } from './HabitatModel';
+import { SpaceBackdrop } from './SpaceBackdrop';
 interface Props {
   selectedSystem?: string;
   onSelectSystem?(id: 'cardio' | 'fitness' | 'vision'): void;
@@ -64,6 +65,7 @@ export default function MissionScene(props: Props) {
             fallback={<SceneFallback />}
             gl={{ antialias: true, alpha: true }}
           >
+            <SpaceBackdrop radius={100} />
             <ambientLight intensity={1.8} />
             <hemisphereLight args={['#e7f5ff', '#34445b', 2]} />
             <directionalLight position={[-3, 5, 4]} intensity={3.5} />

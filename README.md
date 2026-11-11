@@ -11,7 +11,7 @@ npm ci
 npm run dev
 ```
 
-Abrir http://127.0.0.1:3000. La raíz lleva a `/mission/overview`.
+Abrir http://127.0.0.1:3000. La raíz abre la portada animada de Qhipa Pacha. El dashboard sigue disponible en `/mission/overview`.
 
 ```bash
 npm run typecheck
@@ -26,6 +26,8 @@ npm run test:e2e
 Desde la raíz, los scripts delegan al workspace `frontend`. Para cambiar el puerto: `npm run dev -- --port 3001`.
 
 ## Funciona en esta versión
+
+- Carga animada del Tumi con salto, sonrisa, rebote del tocado y spinner independiente. Introducción a pantalla completa de 3 segundos solo tras «Iniciar mi misión»; dentro de la app, carga limitada al área de información. Vista permanente en `/loading-preview`.
 
 - Salud por siete sistemas corporales en Tripulación: explicaciones y fuentes HHC, contexto, comparación descriptiva de series, autorregistros e historial, revisión documental y análisis explicable de cada persona. Los registros de salud tienen almacenamiento separado del diario anterior.
 

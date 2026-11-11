@@ -28,7 +28,10 @@ export function MissionShell({
             <Icon name="orbit" size={27} />
           </span>
           <div>
-            ASTRA<span>MISSION INTELLIGENCE</span>
+            <div className="brand-name">
+              QHIPA <strong>PACHA</strong>
+            </div>
+            <small>BIENESTAR SIN FRONTERAS</small>
           </div>
         </div>
         <div className="mission-marker">
@@ -88,7 +91,7 @@ export function MissionShell({
         </header>
         <main id="mission-content">{children}</main>
         <footer className="app-footer">
-          <span>ASTRA · Prototipo de monitorización de salud</span>
+          <span>Qhipa Pacha · Prototipo de monitorización de salud</span>
           <span>Java API e IA · integración pendiente</span>
         </footer>
       </div>
