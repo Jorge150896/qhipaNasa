@@ -50,10 +50,12 @@ export function MissionPageHeader({
               </button>
             ))}
           </div>
-          <div className="crew-context">
-            <span className="status-dot" />
-            {data.selected.activity} · {data.selected.location}
-          </div>
+          {section !== 'overview' && (
+            <div className="crew-context">
+              <span className="status-dot" />
+              {data.selected.activity} · {data.selected.location}
+            </div>
+          )}
         </div>
       )}
     </>

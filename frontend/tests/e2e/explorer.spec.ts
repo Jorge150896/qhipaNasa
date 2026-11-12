@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { confirmDailyCheck, openDailyAssessment } from './daily-check-helpers';
 import { PerspectiveCamera } from 'three';
 import { orbitalPosition } from '../../src/presentation/features/space-map/components/orbitalMotion';
 import {
@@ -9,8 +10,9 @@ test('mapa 3D, destinos y navegación preservando diarios y contexto', async ({ 
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/mission/journal');
+  await openDailyAssessment(page);
   await page.getByRole('spinbutton', { name: 'Horas de sueño', exact: true }).fill('7.6');
-  await page.getByRole('button', { name: 'Guardar chequeo', exact: true }).click();
+  await confirmDailyCheck(page);
   await expect(page.getByRole('status').filter({ hasText: 'guardado' })).toBeVisible();
   const original = await page.evaluate(() => localStorage.getItem('astra.demo.journal.v1'));
   await page
@@ -60,8 +62,9 @@ test('mapa 3D, destinos y navegación preservando diarios y contexto', async ({ 
   await page.getByRole('button', { name: 'Seleccionar zona 02', exact: true }).click();
   await expect(page.getByLabel('Zona de la base')).toHaveValue('exercise');
   await nav.getByRole('button', { name: 'Chequeo diario', exact: true }).click();
+  await openDailyAssessment(page);
   await page.getByRole('spinbutton', { name: 'Horas de sueño', exact: true }).fill('6.8');
-  await page.getByRole('button', { name: 'Guardar chequeo', exact: true }).click();
+  await confirmDailyCheck(page);
   await expect(page.getByRole('status').filter({ hasText: 'guardado' })).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem('astra.demo.journal.v1'))).toBe(original);
   expect(

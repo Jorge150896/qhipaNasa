@@ -65,7 +65,7 @@ describe('Salud por sistemas', () => {
       'fitness',
       '2026-11-08',
     );
-    expect(data.entryCount).toBe('1');
+    expect(data.history).toHaveLength(1);
     expect(data.history[0].duration).toBe('20 min registrados');
     expect(data.history[0].note).not.toContain('Otra persona');
     expect((await other.load.execute()).entries[0].crewId).toBe('ana');
@@ -108,6 +108,18 @@ describe('Salud por sistemas', () => {
     });
     await expect(denied.record.execute(input)).rejects.toThrow('quota');
   });
+  it('guarda una actividad visual opcional y devuelve el identificador exacto del registro', async () => {
+    const deps = dependencies();
+    const visual = { ...input, systemId: 'vision' as const, activity: '', minutes: null };
+    await deps.record.execute(visual);
+    const result = await deps.record.execute({ ...visual, visionActivityId: 'near' });
+    const journal = await deps.load.execute();
+    expect(journal.entries.find(({ id }) => id === result.entryId)?.visionActivityId).toBe('near');
+    expect(journal.entries[1].visionActivityId).toBeUndefined();
+    expect(() => deps.record.execute({ ...input, visionActivityId: 'focus' })).toThrow(
+      'actividad visual válida',
+    );
+  });
   it('la revisión documental es diaria, por área y persona, y puede volver a pendiente', async () => {
     const deps = dependencies();
     await deps.review.execute('elena', 'vision', true);
@@ -141,6 +153,7 @@ describe('Salud por sistemas', () => {
       '2026-11-08',
     );
     expect(data.metrics).toHaveLength(0);
+    expect(data.nextStep.target).toBe('entry');
     expect(data.stateLabel).toBe('Sin autoevaluación registrada');
     expect(data.system.limitation).toContain('SANS');
     expect(data.analysis.next).toContain('calidad y vigencia');
@@ -154,6 +167,7 @@ describe('Salud por sistemas', () => {
       cardio.metrics.find((metric) => metric.id === 'oxygen')?.comparison?.difference,
     ).toContain('Sin comparación actual');
     expect(cardio.pendingObservations).toContain('Sin lecturas recientes de SpO₂');
+    expect(cardio.nextStep).toMatchObject({ title: 'Comprobar la señal', target: 'readings' });
     const mateo = mapCrewHealthPresentation(
       { ...context, mission: await mission('mateo', 'sensor-gap') },
       { entries: [], reviews: [] },

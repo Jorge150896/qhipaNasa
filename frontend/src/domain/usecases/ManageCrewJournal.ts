@@ -1,5 +1,6 @@
 import { CheckValidationError, type Clock, type DailyCheckInput } from '../mission/models';
 import type { CrewJournalRepository } from '../mission/ports';
+import { discomfortRegions, validDailyCheckContext } from '../mission/dailyCheckContext';
 export class LoadCrewJournal {
   constructor(private readonly repository: CrewJournalRepository) {}
   execute() {
@@ -21,6 +22,12 @@ export class RecordDailyCheck {
       throw new CheckValidationError('Selecciona un estado de ánimo válido.');
     if (input.note.length > 400)
       throw new CheckValidationError('La nota admite hasta 400 caracteres.');
+    if (input.context && !validDailyCheckContext(input.context))
+      throw new CheckValidationError(
+        'Revisa el momento y los valores de la actividad seleccionada.',
+      );
+    if (input.discomfortRegion !== undefined && !discomfortRegions.includes(input.discomfortRegion))
+      throw new CheckValidationError('Selecciona una región válida o déjala sin informar.');
     const recordedAt = this.clock.now().toISOString();
     return this.repository.saveCheck({
       ...input,

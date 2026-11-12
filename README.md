@@ -1,6 +1,6 @@
 # ASTRA · Mission Intelligence
 
-Frontend de monitorización de salud de tripulación y contexto ambiental, construido con Next.js App Router, React y TypeScript. La aplicación implementa un modo de demostración determinista: no está conectada a sensores, NASA, una IA ni un backend.
+Frontend de monitorización de salud de tripulación y contexto ambiental, construido con Next.js App Router, React y TypeScript. La aplicación implementa un modo de demostración determinista sin conexión a sensores, servicios de NASA, IA ni backend. Historial incluye una referencia de laboratorio de NASA OSDR preparada a partir de un CSV público.
 
 ## Ejecutar
 
@@ -29,7 +29,7 @@ Desde la raíz, los scripts delegan al workspace `frontend`. Para cambiar el pue
 
 - Carga animada del Tumi con salto, sonrisa, rebote del tocado y spinner independiente. Introducción a pantalla completa de 3 segundos solo tras «Iniciar mi misión»; dentro de la app, carga limitada al área de información. Vista permanente en `/loading-preview`.
 
-- Salud por siete sistemas corporales en Tripulación: explicaciones y fuentes HHC, contexto, comparación descriptiva de series, autorregistros e historial, revisión documental y análisis explicable de cada persona. Los registros de salud tienen almacenamiento separado del diario anterior.
+- Salud por siete sistemas corporales en Tripulación: explicaciones y fuentes HHC, contexto, comparación descriptiva de series, autoevaluación guiada con confirmación, historial y siguientes pasos, revisión documental y análisis explicable de cada persona. Los registros de salud tienen almacenamiento separado del diario anterior.
 
 - Rotación axial de planetas, órbitas ilustrativas de Luna y estación, perspectiva inicial inclinada y pausa global. Al alejarse aparecen el Sol y los ocho planetas, con seguimiento Tierra–Marte y regreso a la misión. Distancias medias en UA; tamaños y tiempos ilustrativos.
 - Nuevo [mapa espacial 3D](http://127.0.0.1:3000/explore): Tierra, Luna, Marte, estación y nave seleccionables. Desde cada ficha se entra a su tripulación, indicadores y seguimiento.
@@ -38,7 +38,7 @@ Desde la raíz, los scripts delegan al workspace `frontend`. Para cambiar el pue
 
 - Centro de misión original con sus tres tripulantes ficticios, más perfiles por hábitat.
 - Astronauta 3D con rotación, zoom y sensores seleccionables; modelo GLB local de unos 305 KB. Fallback si no hay WebGL o falla el asset.
-- Nave 3D estilizada con zonas seleccionables y lecturas ambientales. Su distribución es conceptual, no un plano técnico del transbordador.
+- Odyssey 01 en corte 3D interactivo dentro de Tripulación, con cinco módulos, ubicación del tripulante y lecturas ambientales simuladas. La distribución de la nave es ilustrativa.
 - Frecuencia cardíaca, temperatura, SpO₂ y respiración; historial, unidades, hora UTC, procedencia y calidad de datos visibles.
 - Escenarios de rutina, cambio de sueño y pérdida de señal. Las muestras ausentes no se reemplazan por valores antiguos ni se interpolan.
 - Chequeo diario de demostración con sueño, ánimo y fatiga; seguimiento de observaciones.

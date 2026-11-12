@@ -1,19 +1,41 @@
 'use client';
-import { Component, Suspense, useState, type ReactNode } from 'react';
-import { Canvas } from '@react-three/fiber';
+import {
+  Component,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ComponentRef,
+  type ReactNode,
+} from 'react';
+import { Canvas, useThree } from '@react-three/fiber';
 import { Html, OrbitControls } from '@react-three/drei';
+import { MathUtils, PerspectiveCamera } from 'three';
 import { Icon } from '@/ui/Icon';
-import { AstronautModel, type SceneSensor } from './AstronautModel';
+import { AstronautModel } from './AstronautModel';
+import type { SceneBodyRegion, SceneSensor } from './astronautBodyZones';
+import { AstronautCameraFocus } from './AstronautCameraFocus';
+import type { HabitatModuleMarkers } from './HabitatZoneMarker';
 import { ShuttleModel } from './ShuttleModel';
 import { HabitatModel } from './HabitatModel';
 import { SpaceBackdrop } from './SpaceBackdrop';
+import {
+  HabitatCamera,
+  habitatOverview,
+  shuttleOverview,
+  type HabitatCameraView,
+} from './HabitatCamera';
 interface Props {
   selectedSystem?: string;
+  activeBodyRegion?: SceneBodyRegion;
   onSelectSystem?(id: 'cardio' | 'fitness' | 'vision'): void;
   habitatKind?: 'ship' | 'station' | 'base';
   mode: 'crew' | 'ship';
   selectedSensor: SceneSensor;
   selectedZone: string;
+  modules?: HabitatModuleMarkers;
+  showModuleCamera?: boolean;
   onSelectSensor(id: SceneSensor): void;
   onSelectZone(id: string): void;
 }
@@ -44,9 +66,42 @@ class SceneBoundary extends Component<
     return this.state.failed ? <SceneFallback onRetry={this.props.onRetry} /> : this.props.children;
   }
 }
+
+function FitShuttleCamera() {
+  const camera = useThree((state) => state.camera);
+  const aspect = useThree((state) => state.size.width / Math.max(state.size.height, 1));
+  useEffect(() => {
+    if (!(camera instanceof PerspectiveCamera) || aspect <= 0) return;
+    const halfHeight = Math.tan(MathUtils.degToRad(13));
+    camera.setFocalLength(camera.getFilmHeight() / (2 * halfHeight * Math.max(1, 1.55 / aspect)));
+  }, [aspect, camera]);
+  return null;
+}
+
 export default function MissionScene(props: Props) {
   const [attempt, setAttempt] = useState(0);
+  const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
+  const [cameraReady, setCameraReady] = useState(false);
+  const [cameraRequest, setCameraRequest] = useState<{
+    view: HabitatCameraView;
+    revision: number;
+  }>();
+  const attachControls = useCallback((instance: ComponentRef<typeof OrbitControls> | null) => {
+    controls.current = instance;
+    setCameraReady(Boolean(instance));
+  }, []);
   const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
+  const cutaway = props.mode === 'ship' && props.habitatKind === 'ship' && Boolean(props.modules);
+  const fullViewLabel =
+    props.habitatKind === 'station'
+      ? 'Ver estación completa'
+      : props.habitatKind === 'base'
+        ? 'Ver base completa'
+        : 'Ver nave completa';
+
+  function requestCamera(view: HabitatCameraView) {
+    setCameraRequest((previous) => ({ view, revision: (previous?.revision ?? 0) + 1 }));
+  }
   return (
     <div
       className="scene-viewport"
@@ -54,6 +109,24 @@ export default function MissionScene(props: Props) {
     >
       <div className="starfield" aria-hidden="true" />
       <div className="scene-overlay" ref={setOverlay} />
+      {props.showModuleCamera && cameraReady && (
+        <div className="crew-camera-controls" role="group" aria-label="Encuadre del visor">
+          <button
+            className="button secondary"
+            type="button"
+            onClick={() => requestCamera('module')}
+          >
+            Acercar al módulo
+          </button>
+          <button
+            className="button secondary"
+            type="button"
+            onClick={() => requestCamera('overview')}
+          >
+            {fullViewLabel}
+          </button>
+        </div>
+      )}
       <SceneBoundary
         key={`${props.mode}-${attempt}`}
         onRetry={() => setAttempt((value) => value + 1)}
@@ -61,7 +134,15 @@ export default function MissionScene(props: Props) {
         {overlay && (
           <Canvas
             dpr={[1, 1.75]}
-            camera={{ position: props.mode === 'crew' ? [0, 0.08, 4.3] : [3, 1.8, -4.4], fov: 32 }}
+            camera={{
+              position:
+                props.mode === 'crew'
+                  ? [0, 0.08, 4.3]
+                  : cutaway
+                    ? shuttleOverview
+                    : habitatOverview,
+              fov: 32,
+            }}
             fallback={<SceneFallback />}
             gl={{ antialias: true, alpha: true }}
           >
@@ -84,6 +165,7 @@ export default function MissionScene(props: Props) {
                 <AstronautModel
                   portal={{ current: overlay }}
                   selectedSystem={props.selectedSystem}
+                  activeBodyRegion={props.activeBodyRegion}
                   onSelectSystem={props.onSelectSystem}
                   selected={props.selectedSensor}
                   onSelect={props.onSelectSensor}
@@ -92,24 +174,39 @@ export default function MissionScene(props: Props) {
                 <HabitatModel
                   kind={props.habitatKind}
                   portal={{ current: overlay }}
+                  modules={props.modules}
                   selectedZone={props.selectedZone}
                   onSelectZone={props.onSelectZone}
                 />
               ) : (
                 <ShuttleModel
                   portal={{ current: overlay }}
+                  modules={props.modules}
                   selectedZone={props.selectedZone}
                   onSelectZone={props.onSelectZone}
                 />
               )}
             </Suspense>
             <OrbitControls
+              ref={attachControls}
               enablePan={false}
-              minDistance={2.8}
-              maxDistance={7}
+              minDistance={cutaway ? 3.7 : 2.8}
+              maxDistance={cutaway ? 16 : 7}
               maxPolarAngle={Math.PI * 0.8}
               makeDefault
             />
+            {cutaway && <FitShuttleCamera />}
+            {props.showModuleCamera && (
+              <HabitatCamera
+                controls={controls}
+                request={cameraRequest}
+                zone={cameraRequest?.view === 'module' ? props.selectedZone : undefined}
+                cutaway={cutaway}
+              />
+            )}
+            {props.mode === 'crew' && props.onSelectSystem && (
+              <AstronautCameraFocus region={props.activeBodyRegion} controls={controls} />
+            )}
           </Canvas>
         )}
       </SceneBoundary>

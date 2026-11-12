@@ -95,6 +95,8 @@ export function useMission(dependencies: Dependencies) {
           fatigue: Number(values.fatigue),
           mood: values.mood,
           note: values.note,
+          context: values.context,
+          discomfortRegion: values.discomfortRegion,
         });
         setJournal(next);
         setToday(new Date().toISOString().slice(0, 10));

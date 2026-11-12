@@ -1,3 +1,5 @@
+import type { DailyCheckContext, DiscomfortRegion } from './dailyCheckContext';
+
 export type ScenarioId = 'baseline' | 'sleep-change' | 'sensor-gap';
 export type MetricId = 'heartRate' | 'temperature' | 'oxygen' | 'respiration';
 export type DataQuality = 'available' | 'stale' | 'missing';
@@ -52,6 +54,8 @@ export interface MissionSnapshot {
   observations: readonly Observation[];
 }
 export interface DailyCheckInput {
+  context?: DailyCheckContext;
+  discomfortRegion?: DiscomfortRegion;
   crewId: string;
   sleepHours: number;
   fatigue: number;

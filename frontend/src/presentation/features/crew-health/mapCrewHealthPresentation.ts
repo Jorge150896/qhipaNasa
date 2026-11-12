@@ -1,12 +1,69 @@
 import type { HealthJournal } from '@/domain/health/models';
-import { healthSystems, reportedStateLabels } from './constants';
+import { healthSystems, metricMeaning, reportedStateLabels } from './constants';
 import type { BodySystemKey, CrewHealthContext, CrewHealthData } from './types';
+import { findVisionActivity } from './visionActivities';
 const date = (iso: string) =>
   new Intl.DateTimeFormat('es-PE', {
     dateStyle: 'medium',
     timeStyle: 'short',
+    hourCycle: 'h23',
     timeZone: 'UTC',
   }).format(new Date(iso)) + ' UTC';
+const shortDay = new Intl.DateTimeFormat('es-PE', {
+  day: 'numeric',
+  month: 'short',
+  timeZone: 'UTC',
+});
+
+function mapNextStep(
+  data: Pick<CrewHealthData, 'metrics' | 'reviewed'>,
+  journal: HealthJournal | null,
+  last: HealthJournal['entries'][number] | undefined,
+): CrewHealthData['nextStep'] {
+  const missingReading = data.metrics.some(
+    (metric) => metric.qualityTone === 'attention' || metric.value === '—',
+  );
+  if (last?.reportedState === 'change') {
+    return {
+      title: 'Compartir el cambio reportado',
+      detail:
+        'Reúne cuándo empezó y en qué contexto ocurrió. Comparte el registro con la persona responsable de salud de la tripulación según el procedimiento de la misión.' +
+        (missingReading ? ' Indica también qué lecturas no están disponibles.' : ''),
+      target: 'review',
+    };
+  }
+  if (missingReading) {
+    return {
+      title: 'Comprobar la señal',
+      detail:
+        'Revisa la disponibilidad del sensor y, si puedes, repite la medición. La última muestra disponible queda en el historial.',
+      target: 'readings',
+    };
+  }
+  if (journal === null) {
+    return {
+      title: 'Consultar los indicadores',
+      detail: 'Puedes revisar los datos de la demo mientras se recupera el registro local.',
+      target: 'readings',
+    };
+  }
+  if (!last || last.reportedState === 'not-assessed') {
+    return {
+      title: 'Completar la autoevaluación',
+      detail:
+        'Responde la pregunta de esta área y confirma el registro para conservarlo en tu historial.',
+      target: 'entry',
+    };
+  }
+  return {
+    title: data.reviewed ? 'Registrar cambios cuando ocurran' : 'Revisar el registro',
+    detail: data.reviewed
+      ? 'Puedes actualizar el seguimiento si notas un cambio o tienes nueva información.'
+      : 'Contrasta lo que reportaste con tu actividad y las lecturas disponibles. Registra la revisión cuando termines.',
+    target: data.reviewed ? 'entry' : 'review',
+  };
+}
+
 export function mapCrewHealthPresentation(
   context: CrewHealthContext,
   journal: HealthJournal | null,
@@ -31,29 +88,56 @@ export function mapCrewHealthPresentation(
   const review = journal?.reviews.find(
     (item) => item.crewId === crew.id && item.systemId === system.id && item.day === today,
   );
+  const metrics = crew.metrics
+    .filter((metric) => system.sensors.includes(metric.id))
+    .map((metric) => ({ ...metric, meaning: metricMeaning[metric.id] }));
+  const reviewed = !!review?.reviewed && (!last || last.recordedAt <= review.recordedAt);
   const pending = mission.observations.filter((item) => item.crewId === crew.id && !item.reviewed);
   return {
+    recordZones: mission.zones.map(({ id, name }) => ({ id, name })),
+    timelineRecords: all.map((entry) => ({
+      id: entry.id,
+      at: entry.recordedAt,
+      date: date(entry.recordedAt),
+      title:
+        entry.systemId === 'fitness' && entry.activity
+          ? entry.activity
+          : (healthSystems.find((item) => item.id === entry.systemId)?.shortLabel ??
+            'Autorregistro'),
+      state: reportedStateLabels[entry.reportedState],
+      activity: entry.activity,
+      duration: entry.minutes === null ? undefined : `${entry.minutes} min`,
+      note: entry.note,
+      zoneId: entry.zoneId,
+      visionActivity: findVisionActivity(entry.visionActivityId)?.label,
+    })),
     system,
     systems: healthSystems,
     name: crew.name,
+    personContext: `${crew.location} · ${crew.activity}`,
+    sensorDate: mission.date,
     scope: `${habitatId}:${crew.id}`,
     today,
-    metrics: crew.metrics.filter((metric) => system.sensors.includes(metric.id)),
+    metrics,
+    nextStep: mapNextStep({ metrics, reviewed }, journal, last),
+    lastEntryDate: last ? date(last.recordedAt) : '',
     stateLabel:
       journal === null
         ? 'Registro no disponible'
         : last
           ? reportedStateLabels[last.reportedState]
           : 'Sin autoevaluación registrada',
-    entryCount: journal === null ? '—' : String(entries.length),
-    reviewed: review?.reviewed ?? false,
+    reviewed,
     reviewDate: review ? date(review.recordedAt) : '',
     history: entries.map((entry) => ({
       id: entry.id,
       date: date(entry.recordedAt),
+      dayLabel: shortDay.format(new Date(entry.recordedAt)),
+      minutes: entry.minutes,
       state: reportedStateLabels[entry.reportedState],
       note: entry.note,
       activity: entry.activity,
+      visionActivity: findVisionActivity(entry.visionActivityId)?.label,
       duration:
         entry.minutes === null
           ? 'Duración no informada'

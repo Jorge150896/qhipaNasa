@@ -9,6 +9,8 @@ export const healthSystemIds = [
 ] as const;
 export type HealthSystemId = (typeof healthSystemIds)[number];
 export const reportedStates = ['no-change', 'change', 'not-assessed'] as const;
+export const visionActivityIds = ['near', 'focus', 'distance'] as const;
+export type VisionActivityId = (typeof visionActivityIds)[number];
 export interface HealthEntryInput {
   crewId: string;
   systemId: HealthSystemId;
@@ -16,6 +18,8 @@ export interface HealthEntryInput {
   note: string;
   activity: string;
   minutes: number | null;
+  zoneId?: string;
+  visionActivityId?: VisionActivityId;
 }
 export interface HealthEntry extends HealthEntryInput {
   id: string;

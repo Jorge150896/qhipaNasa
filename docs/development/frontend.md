@@ -35,6 +35,8 @@ La carga sigue `LoadMission -> MissionRepository -> SimulatedMissionRepository`.
 
 El visor tiene Suspense, Error Boundary y fallback cuando no hay WebGL. Sus hotspots usan un portal DOM independiente del Canvas para conservar un ciclo de desmontaje correcto al navegar o cambiar de modelo; las tarjetas de sensores y el selector de zona siguen funcionando. Las bibliotecas 3D no conocen repositorios ni reglas clínicas. La fuente y licencia del asset están en `frontend/public/models/ATTRIBUTION.md`.
 
+El resumen de Centro de misión combina el contexto de la instantánea con el último autorregistro local de la persona seleccionada. El ViewModel consulta el diario por hábitat al montar la vista, por lo que regresar desde Tripulación vuelve a leer lo guardado. Los accesos a Tripulación usan los fragmentos `#crew-module` y `#crew-health-entry` para abrir el visor del módulo asignado o enfocar el formulario. Una entrada directa usa la selección del contexto de misión. Las señales con calidad de atención abren Historial con el indicador seleccionado.
+
 ## Incorporar una funcionalidad
 
 1. Revisar su consumidor real y el límite de responsabilidad.
@@ -139,3 +141,7 @@ La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md
 `presentation/shared/loading/TumiLoader` representa carga de misión y mapa dentro del contenido; su variante fullscreen se reserva para iniciar misión desde la portada y la vista de revisión. `TumiHead` revela la referencia PNG original en capas SVG: cabeza, tocado, expresión y sombra tienen animaciones coordinadas, con spinner independiente y movimiento reducido. La imagen original se conserva sin redibujar; el loader es una capa de viewport completo y sin bordes. `/loading-preview` permite revisar el bucle sin depender de una carga real.
 
 La introducción mínima de tres segundos pertenece ahora al ViewModel de portada y solo empieza tras «Iniciar mi misión». El provider de misión mantiene únicamente su carga real. Los Screens de misión/mapa usan `useTransition` para representar navegación pendiente dentro del área de información, con el shell interactivo. No hay fallback global a pantalla completa ni bloqueo global del scroll. Detalle en `features/loading-preview/README.md`.
+
+### Chequeo diario por actividad
+
+`DailyCheckScreen` conecta el estado local de los cuatro pasos con la acción de guardado de `useMission`. El caso de uso `RecordDailyCheck` valida los datos generales y los campos permitidos por actividad. El diario mantiene su clave y versión con `context` y `discomfortRegion` opcionales. Los campos vacíos se omiten y los ceros ingresados se conservan. Al recargar, el chequeo del día UTC se puede editar con sus valores guardados. La consola muestra la instantánea sintética del escenario, separada de las respuestas ingresadas.

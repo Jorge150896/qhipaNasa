@@ -1,3 +1,4 @@
+import type { SensorKey } from '../mission/types';
 import type { HealthSystemContent } from './types';
 const source = {
   title: 'NASA · riesgos de HHC',
@@ -16,6 +17,8 @@ export const healthSystems: HealthSystemContent[] = [
       'Una lectura aislada no determina adaptación cardiovascular ni riesgo de trombosis.',
     missing: 'Sin presión arterial, ECG ni evaluación cardiovascular específica.',
     task: 'Revisar la serie y el contexto de actividad',
+    checkPrompt:
+      '¿Has notado algún cambio durante el reposo o la actividad? Describe cuándo lo observaste y qué estabas haciendo.',
     sensors: ['heartRate', 'oxygen', 'respiration'],
     source,
   },
@@ -30,8 +33,13 @@ export const healthSystems: HealthSystemContent[] = [
     limitation: 'El cumplimiento de ejercicio no mide masa muscular, fuerza ni densidad ósea.',
     missing: 'Sin pruebas funcionales ni mediciones de fuerza o densidad ósea.',
     task: 'Revisar el registro de actividad física',
-    sensors: ['heartRate', 'respiration'],
-    source,
+    checkPrompt:
+      '¿Qué actividad realizaste y cómo te sentiste durante o después? Registra la duración si la conoces.',
+    sensors: [],
+    source: {
+      title: 'NASA · Fisiología del ejercicio',
+      url: 'https://www.nasa.gov/directorates/esdmd/hhp/exercise-physiology-and-countermeasures/',
+    },
   },
   {
     id: 'vision',
@@ -44,8 +52,13 @@ export const healthSystems: HealthSystemContent[] = [
     limitation: 'Un autorregistro no permite identificar ni descartar SANS.',
     missing: 'Sin evaluación ocular, imágenes ni agudeza visual medida.',
     task: 'Revisar el autorregistro visual',
+    checkPrompt:
+      '¿Has notado cambios al leer, enfocar o mirar a distancia? Describe cuándo ocurrieron.',
     sensors: [],
-    source,
+    source: {
+      title: 'NASA · Evaluación visual en vuelo espacial',
+      url: 'https://www.nasa.gov/wp-content/uploads/2024/02/ochmo-mtb-001-sans.pdf',
+    },
   },
   {
     id: 'balance',
@@ -58,6 +71,8 @@ export const healthSystems: HealthSystemContent[] = [
     limitation: 'La aplicación no mide capacidad vestibular ni aptitud operativa.',
     missing: 'Sin prueba instrumental de equilibrio o coordinación.',
     task: 'Revisar el contexto del autorregistro',
+    checkPrompt:
+      '¿Has notado algún cambio al orientarte o coordinar movimientos? Indica la actividad y el entorno.',
     sensors: [],
     source,
   },
@@ -72,6 +87,8 @@ export const healthSystems: HealthSystemContent[] = [
     limitation: 'Una nota no cuantifica nutrientes ni acredita adecuación de la dieta.',
     missing: 'Sin ingesta cuantificada, analítica ni plan nutricional cargado.',
     task: 'Revisar el registro alimentario disponible',
+    checkPrompt:
+      '¿Cambió tu apetito, la ingesta de alimentos o la de líquidos? Anota qué observaste.',
     sensors: [],
     source,
   },
@@ -85,6 +102,8 @@ export const healthSystems: HealthSystemContent[] = [
     limitation: 'La temperatura corporal no mide función inmunitaria ni confirma infección.',
     missing: 'Sin biomarcadores, microbiología ni evaluación inmunitaria.',
     task: 'Revisar las observaciones registradas',
+    checkPrompt:
+      '¿Has notado algún cambio en cómo te sientes? Describe lo observado y desde cuándo.',
     sensors: ['temperature'],
     source,
   },
@@ -98,7 +117,9 @@ export const healthSystems: HealthSystemContent[] = [
     limitation: 'Las lecturas interiores no representan sensores de un traje ni habilitan una EVA.',
     missing: 'Sin presión, oxígeno ni CO₂ del traje; sin evaluación de preparación EVA.',
     task: 'Verificar qué datos del contexto están disponibles',
-    sensors: ['oxygen', 'respiration'],
+    checkPrompt:
+      '¿Hay alguna observación de bienestar durante la preparación o después de la actividad? Indica la fase y el contexto.',
+    sensors: [],
     source,
   },
 ];
@@ -107,3 +128,14 @@ export const reportedStateLabels = {
   change: 'Cambio reportado',
   'not-assessed': 'No evaluado',
 } as const;
+
+export const metricMeaning: Record<SensorKey, string> = {
+  heartRate:
+    'Latidos por minuto. Compáralos en la serie teniendo en cuenta si la persona estaba en reposo o en actividad.',
+  oxygen:
+    'Porcentaje estimado de saturación de oxígeno en sangre. La calidad de la señal importa al comparar lecturas.',
+  respiration:
+    'Respiraciones por minuto. Revisa la actividad y la disponibilidad de la señal al comparar la serie.',
+  temperature:
+    'Temperatura corporal en grados Celsius. Consulta la hora y el historial de la medición.',
+};

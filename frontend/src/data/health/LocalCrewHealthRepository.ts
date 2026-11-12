@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {
   healthSystemIds,
   reportedStates,
+  visionActivityIds,
   type CrewHealthRepository,
   type HealthEntry,
   type HealthJournal,
@@ -20,6 +21,8 @@ const schema = z.object({
         note: z.string().max(600),
         activity: z.string().max(80),
         minutes: z.number().min(0).max(1440).nullable(),
+        zoneId: z.string().min(1).max(80).optional(),
+        visionActivityId: z.enum(visionActivityIds).optional(),
         recordedAt: z.iso.datetime(),
       }),
     )

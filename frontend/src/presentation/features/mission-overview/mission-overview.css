@@ -1,0 +1,65 @@
+.mission-personal-summary {
+  margin-bottom: 18px;
+}
+
+.mission-personal-summary h2 {
+  margin: 0 0 10px;
+  font-size: 19px;
+}
+
+.mission-personal-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+  gap: 10px;
+}
+
+.mission-personal-card {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  min-width: 0;
+  gap: 7px;
+  background: linear-gradient(145deg, #8338ec24, transparent 65%), var(--surface);
+  overflow-wrap: anywhere;
+}
+
+.mission-personal-card h3 {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.mission-personal-card h3 svg {
+  color: var(--accent-hover);
+}
+
+.mission-personal-card strong {
+  font-size: 16px;
+}
+
+.mission-personal-card p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.mission-personal-card > .button {
+  margin-top: auto;
+}
+
+.mission-personal-card .button {
+  min-height: 40px;
+}
+
+.mission-personal-attention {
+  border-color: #d28b56;
+}
+
+.mission-personal-signal {
+  display: grid;
+  justify-items: start;
+  gap: 7px;
+}

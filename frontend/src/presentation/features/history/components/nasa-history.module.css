@@ -1,0 +1,267 @@
+.anchor {
+  scroll-margin-top: 90px;
+}
+
+.panel {
+  border-color: var(--selection-border);
+  background: radial-gradient(ellipse at 100% 0%, #8338ec25, transparent 62%), var(--surface);
+}
+
+.panel :global(.panel-heading) {
+  flex-wrap: wrap;
+}
+
+.indicators {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(6px, 1.2vw, 14px);
+  margin: 18px 0;
+}
+
+.indicator {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 9px;
+  align-items: center;
+  min-width: 0;
+  min-height: 58px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+}
+
+.indicator[aria-pressed='true'] {
+  border-color: var(--selection-border);
+  background: var(--selection-soft);
+}
+
+.indicatorIcon {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #8338ec30;
+  color: var(--selection-text);
+}
+
+.indicator strong {
+  font-size: 13px;
+}
+
+.indicator small,
+.chartHeading small,
+.detailContext {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.explorer {
+  display: grid;
+  gap: 12px;
+}
+
+.chart,
+.sampleDetail {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.chart {
+  padding: 14px;
+}
+
+.chartHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 5px 12px;
+  margin-bottom: 12px;
+}
+
+.chartHeading h4 {
+  margin: 0;
+  font-size: 13px;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
+  gap: 8px;
+}
+
+.phaseGroup {
+  min-width: 0;
+  padding: 10px 8px 4px;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: #8338ec13;
+}
+
+.phaseGroup h5 {
+  margin: 0 0 14px;
+  color: var(--selection-text);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.plot {
+  display: flex;
+  gap: 5px;
+}
+
+.sample {
+  flex: 1;
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  border: 1px solid transparent;
+  padding: 14px 2px 6px;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text);
+  text-align: center;
+}
+
+.sample:hover {
+  background: #8338ec20;
+}
+
+.sample[aria-pressed='true'] {
+  border-color: #ffb68d;
+  background: #fb560718;
+}
+
+.track {
+  height: 93px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  border-bottom: 1px solid var(--line);
+  background: repeating-linear-gradient(to top, #e9ecef15 0 1px, transparent 1px 25%);
+}
+
+.bar {
+  position: relative;
+  width: min(85%, 46px);
+  border-radius: 5px 5px 0 0;
+  background: linear-gradient(180deg, #c8a3ff, #8338ec);
+}
+
+.sample[aria-pressed='true'] .bar {
+  background: linear-gradient(180deg, #ffc19b, #fb5607);
+}
+
+.barValue {
+  position: absolute;
+  inset: auto 50% calc(100% + 3px) auto;
+  transform: translateX(50%);
+  font-size: clamp(9px, 1vw, 11px);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.phase {
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.sample[aria-pressed='true'] .phase {
+  color: #ffc19b;
+}
+
+.sampleDetail {
+  display: grid;
+  align-content: center;
+  padding: 16px;
+  background: linear-gradient(145deg, #8338ec24, transparent 75%), var(--surface);
+}
+
+.detailHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffc19b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.relativeDay {
+  margin: 8px 0;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.reading {
+  font-size: 32px;
+  font-variant-numeric: tabular-nums;
+}
+
+.reading small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.detailContext {
+  margin: 3px 0 0;
+}
+
+.disclosure {
+  border-top: 1px solid var(--line);
+  margin-top: 16px;
+  padding-top: 12px;
+}
+
+.disclosure summary {
+  color: var(--selection-text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.table th small {
+  display: block;
+  margin-top: 3px;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-top: 14px;
+}
+
+@media (min-width: 1180px) {
+  .explorer {
+    grid-template-columns: minmax(0, 1fr) minmax(190px, 26%);
+  }
+}
+
+@media (max-width: 560px) {
+  .indicator {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    padding: 8px;
+  }
+
+  .indicatorIcon {
+    grid-row: auto;
+    width: 30px;
+    height: 30px;
+  }
+
+  .timeline {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .track {
+    height: 68px;
+  }
+}

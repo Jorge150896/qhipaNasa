@@ -3,7 +3,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@/ui/Icon';
 import type { MissionSection } from './types';
-import { missionRoute } from '@/presentation/shared/missionRoutes';
+import { missionRoute, type CrewEntryAnchor } from '@/presentation/shared/missionRoutes';
 import { useMissionWorkspace } from './MissionWorkspaceProvider';
 import { MissionShell } from './components/MissionShell';
 import { MissionFeatureScreen } from './MissionFeatureScreen';
@@ -19,8 +19,9 @@ export function MissionScreen({
   const router = useRouter();
   const [navigationPending, startNavigation] = useTransition();
   const { data, loading, error, message, saving, actions } = useMissionWorkspace();
-  function navigate(next: MissionSection) {
-    startNavigation(() => router.push(missionRoute(habitatId, next)));
+  function navigate(next: MissionSection, anchor?: CrewEntryAnchor) {
+    const route = missionRoute(habitatId, next);
+    startNavigation(() => router.push(anchor ? `${route}#${anchor}` : route, { scroll: !anchor }));
   }
   return (
     <MissionShell

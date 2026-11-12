@@ -1,4 +1,5 @@
 import type { MissionActions, MissionData, MissionSection } from './types';
+import type { CrewEntryAnchor } from '../../shared/missionRoutes';
 import { MissionOverviewScreen } from '../mission-overview/MissionOverviewScreen';
 import { CrewScreen } from '../crew/CrewScreen';
 import { HabitatScreen } from '../habitat/HabitatScreen';
@@ -20,7 +21,7 @@ export function MissionFeatureScreen({
   actions: MissionActions;
   saving: boolean;
   habitatId: string;
-  onNavigate(section: MissionSection): void;
+  onNavigate(section: MissionSection, anchor?: CrewEntryAnchor): void;
 }) {
   switch (section) {
     case 'overview':

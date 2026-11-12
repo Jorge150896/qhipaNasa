@@ -111,26 +111,58 @@
   border-left: 2px solid #db8757;
   padding-left: 12px;
 }
-.health-status {
+.health-next-step {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 14px;
-  background: #2b193a;
-  border: 1px solid #482a63;
-  padding: 15px;
-  border-radius: 9px;
-  margin-top: 18px;
+  grid-template-columns: minmax(0, 2fr) minmax(180px, 1fr);
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 20px;
+  border-color: var(--selection-border);
+  background: linear-gradient(120deg, var(--selection-soft), var(--surface));
 }
-.health-status span {
-  display: block;
-  font-size: 10px;
+.health-next-step h3 {
+  margin: 5px 0;
+}
+.health-next-step p:not(.eyebrow) {
+  margin: 6px 0 10px;
+}
+.health-next-state {
+  display: grid;
+  gap: 5px;
+  padding: 12px 15px;
+  background: var(--surface);
+  border-radius: 8px;
+}
+.health-next-state span,
+.health-next-state small {
   color: var(--muted);
-  margin-bottom: 7px;
+  font-size: 11px;
 }
-.health-status strong {
-  font-size: 12px;
-  font-weight: 500;
-  color: #f3d6c5;
+.health-next-state strong {
+  font-size: 14px;
+}
+.health-workspace [id^='crew-health-'] {
+  scroll-margin-top: 90px;
+}
+.health-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+}
+.health-workspace .health-confirmation {
+  display: grid;
+  gap: 12px;
+  border-left: 2px solid var(--accent);
+  padding-left: 14px;
+}
+.health-confirmation dd {
+  white-space: pre-wrap;
+}
+@media (max-width: 560px) {
+  .health-next-step {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 .health-metrics {
   display: grid;
@@ -453,9 +485,6 @@
   .health-entry-link a {
     margin-left: 0;
   }
-  .health-status {
-    grid-template-columns: 1fr;
-  }
   .health-history li > div {
     flex-direction: column;
   }
@@ -695,4 +724,211 @@
     font-size: 10px;
     padding: 9px 4px;
   }
+}
+
+.health-history.health-vision-timeline {
+  padding-left: 12px;
+  border-left: 1px solid var(--selection-border);
+}
+
+.health-vision-timeline li {
+  position: relative;
+  padding-left: 8px;
+}
+
+.health-vision-timeline li::before {
+  content: '';
+  position: absolute;
+  top: 17px;
+  left: -16px;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--surface);
+  border-radius: 50%;
+  background: #ffb38a;
+}
+
+.crew-vision-guide {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.crew-vision-guide li {
+  min-width: 0;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #1d122e;
+}
+
+.crew-vision-guide strong,
+.crew-vision-guide small {
+  display: block;
+  margin-top: 5px;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.crew-vision-guide small {
+  color: var(--muted);
+}
+
+.crew-vision-illustration {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 48px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at center, #6e3da9, #2a1a45);
+  color: #ffe0c9;
+}
+
+.crew-vision-near span {
+  padding: 0 6px 3px;
+  border-bottom: 1px solid #ffc19b;
+  border-radius: 2px;
+  background: #f7e6fd21;
+  font-family: Georgia, serif;
+  font-size: 23px;
+  line-height: 1;
+}
+
+.crew-vision-focus span {
+  width: 25px;
+  height: 25px;
+  border: 1px solid #ffc19b;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffd0af 0 2px, transparent 3px);
+  box-shadow: 0 0 0 4px #f7e6fd21;
+}
+
+.crew-vision-distance::before {
+  content: '';
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  top: 8px;
+  left: 60%;
+  border-radius: 50%;
+  background: #ffc19b;
+  box-shadow: 0 0 10px #ffc19b88;
+}
+
+.crew-vision-distance span {
+  align-self: end;
+  width: 100%;
+  height: 24px;
+  background: linear-gradient(160deg, #c297ff, #7347b0);
+  clip-path: polygon(0 90%, 29% 28%, 47% 68%, 72% 10%, 100% 90%, 100% 100%, 0 100%);
+}
+
+.health-vision-field {
+  min-width: 0;
+  padding: 0;
+  margin: 0 0 15px;
+  border: 0;
+}
+
+.health-vision-field legend {
+  margin-bottom: 8px;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.health-vision-field legend span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.health-vision-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.health-entry-form .health-vision-choice {
+  position: relative;
+  margin: 0;
+  cursor: pointer;
+}
+
+.health-vision-choice input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  opacity: 0;
+}
+
+.health-vision-tile {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 7px;
+  height: 100%;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #28183e;
+}
+
+.health-vision-tile strong {
+  align-self: center;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.25;
+}
+
+.health-vision-choice input:checked + .health-vision-tile {
+  border-color: var(--selection-border);
+  background: var(--selection-soft);
+  box-shadow: inset 0 0 0 1px var(--selection-border);
+}
+
+.health-vision-choice input:focus-visible + .health-vision-tile {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: 2px;
+}
+
+.health-vision-field:disabled .health-vision-choice {
+  cursor: default;
+}
+
+.health-entry-form .health-vision-skip {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 8px 0 0;
+  min-height: 30px;
+}
+
+.health-entry-form .health-vision-skip input {
+  width: 15px;
+  height: 15px;
+  accent-color: #a86cf7;
+}
+
+.health-entry-form .health-vision-note-help {
+  margin: -8px 0 12px;
+  color: var(--muted);
+}
+
+.health-vision-saved {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 8px;
+  border: 1px solid var(--selection-border);
+  border-radius: 8px;
+  background: var(--selection-soft);
+  font-size: 12px;
 }

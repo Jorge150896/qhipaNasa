@@ -1,22 +1,56 @@
 import { useId, useState } from 'react';
 import type { MetricData } from '../../features/mission/types';
 
-export function TrendChart({ metric }: { metric: MetricData }) {
-  return <InteractiveTrend key={`${metric.id}:${metric.chart.paths.join('|')}`} metric={metric} />;
+export function TrendChart({
+  metric,
+  compact = false,
+  animated = !compact,
+  onSelectSample,
+}: {
+  metric: MetricData;
+  compact?: boolean;
+  animated?: boolean;
+  onSelectSample?(at: string): void;
+}) {
+  return (
+    <InteractiveTrend
+      key={`${metric.id}:${metric.chart.paths.join('|')}`}
+      metric={metric}
+      compact={compact}
+      animated={animated}
+      onSelectSample={onSelectSample}
+    />
+  );
 }
 
-function InteractiveTrend({ metric }: { metric: MetricData }) {
+function InteractiveTrend({
+  metric,
+  compact,
+  animated,
+  onSelectSample,
+}: {
+  metric: MetricData;
+  compact: boolean;
+  animated: boolean;
+  onSelectSample?(at: string): void;
+}) {
   const id = useId();
   const [paused, setPaused] = useState(false);
   const [selected, setSelected] = useState(metric.history.length - 1);
   const row = metric.history[selected];
   return (
-    <div className={`telemetry-chart ${paused ? 'is-paused' : ''}`}>
+    <div
+      className={`telemetry-chart ${compact ? 'telemetry-compact' : ''} ${paused ? 'is-paused' : ''}`}
+    >
       <div className="telemetry-toolbar">
-        <span className="telemetry-mode">BARRIDO DEMO · HISTORIAL SINTÉTICO</span>
-        <button className="text-button" aria-pressed={paused} onClick={() => setPaused(!paused)}>
-          {paused ? 'Reanudar gráfica' : 'Pausar gráfica'}
-        </button>
+        <span className="telemetry-mode">
+          {!animated ? 'HISTORIAL SINTÉTICO' : 'BARRIDO DEMO · HISTORIAL SINTÉTICO'}
+        </span>
+        {animated && (
+          <button className="text-button" aria-pressed={paused} onClick={() => setPaused(!paused)}>
+            {paused ? 'Reanudar gráfica' : 'Pausar gráfica'}
+          </button>
+        )}
       </div>
       <div className="trend-chart">
         <div className="chart-axis">
@@ -68,20 +102,29 @@ function InteractiveTrend({ metric }: { metric: MetricData }) {
                 />
               </g>
             ))}
-            <g clipPath={`url(#${id}-clip)`} aria-hidden="true">
-              <g className="chart-sweep">
-                <rect x="-22" y="15" width="22" height="130" fill="var(--accent)" opacity="0.08" />
-                <line
-                  x1="0"
-                  x2="0"
-                  y1="15"
-                  y2="145"
-                  stroke="var(--accent-hover)"
-                  strokeWidth="1"
-                  opacity="0.65"
-                />
+            {animated && (
+              <g clipPath={`url(#${id}-clip)`} aria-hidden="true">
+                <g className="chart-sweep">
+                  <rect
+                    x="-22"
+                    y="15"
+                    width="22"
+                    height="130"
+                    fill="var(--accent)"
+                    opacity="0.08"
+                  />
+                  <line
+                    x1="0"
+                    x2="0"
+                    y1="15"
+                    y2="145"
+                    stroke="var(--accent-hover)"
+                    strokeWidth="1"
+                    opacity="0.65"
+                  />
+                </g>
               </g>
-            </g>
+            )}
             {metric.chart.points.map((point, i) =>
               point.y === null ? (
                 <path
@@ -121,10 +164,13 @@ function InteractiveTrend({ metric }: { metric: MetricData }) {
       >
         {metric.history.map((sample, i) => (
           <button
-            key={sample.time}
+            key={sample.at}
             aria-label={`${sample.time}: ${sample.value}`}
             aria-pressed={selected === i}
-            onClick={() => setSelected(i)}
+            onClick={() => {
+              setSelected(i);
+              onSelectSample?.(sample.at);
+            }}
           >
             <span>{sample.time.replace(' UTC', '')}</span>
             <strong>{sample.missing ? '—' : sample.value}</strong>
@@ -137,10 +183,12 @@ function InteractiveTrend({ metric }: { metric: MetricData }) {
         </span>
         <span>{row?.missing ? 'Muestra ausente · sin interpolación' : 'Muestra sintética'}</span>
       </div>
-      <p className="chart-demo-note">
-        El barrido se repite sobre estas muestras; no llegan nuevas lecturas.{' '}
-        {metric.id === 'heartRate' ? 'Tendencia de pulso, no señal ECG.' : ''}
-      </p>
+      {animated && (
+        <p className="chart-demo-note">
+          El barrido se repite sobre estas muestras; no llegan nuevas lecturas.{' '}
+          {metric.id === 'heartRate' ? 'Tendencia de pulso, no señal ECG.' : ''}
+        </p>
+      )}
     </div>
   );
 }

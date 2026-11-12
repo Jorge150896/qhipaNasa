@@ -121,7 +121,7 @@ export class SimulatedMissionRepository implements MissionRepository {
         {
           id: 'habitat',
           name: 'Hábitat de descanso',
-          description: 'Módulo de descanso y recuperación de la tripulación.',
+          description: 'Cápsulas de descanso con iluminación individual para la tripulación.',
           temperature: disturbed ? 24.8 : 22.1,
           co2: disturbed ? 1100 : 650,
           humidity: 48,
@@ -130,7 +130,7 @@ export class SimulatedMissionRepository implements MissionRepository {
         {
           id: 'exercise',
           name: 'Módulo de ejercicio',
-          description: 'Zona de actividad física del escenario.',
+          description: 'Bicicleta estática y equipo de resistencia para las sesiones de ejercicio.',
           temperature: 25.6,
           co2: 950,
           humidity: 55,
@@ -139,11 +139,29 @@ export class SimulatedMissionRepository implements MissionRepository {
         {
           id: 'laboratory',
           name: 'Laboratorio',
-          description: 'Módulo de investigación y trabajo científico.',
+          description: 'Mesa de trabajo con pantallas y almacenamiento de muestras.',
           temperature: 23.4,
           co2: 780,
           humidity: 45,
           noise: 55,
+        },
+        {
+          id: 'cockpit',
+          name: 'Cabina de mando',
+          description: 'Puestos de pilotaje y consolas para navegación y comunicaciones.',
+          temperature: 22.8,
+          co2: 710,
+          humidity: 46,
+          noise: 48,
+        },
+        {
+          id: 'life-support',
+          name: 'Soporte vital',
+          description: 'Depósitos y equipos de ventilación y filtrado del aire.',
+          temperature: 24.2,
+          co2: 820,
+          humidity: 44,
+          noise: 58,
         },
       ],
     };

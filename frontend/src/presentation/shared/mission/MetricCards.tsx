@@ -12,7 +12,7 @@ export function MetricCards({
   onSelect,
 }: {
   metrics: MetricData[];
-  selectedId: SensorKey;
+  selectedId?: SensorKey;
   onSelect(id: SensorKey): void;
 }) {
   return (

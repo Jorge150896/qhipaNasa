@@ -1,7 +1,7 @@
 import { Icon } from '@/ui/Icon';
 import { Panel } from '@/ui/Panel';
 import type { SensorKey } from '../../mission/types';
-import type { BodySystemKey, CrewHealthData, HealthFormValues } from '../types';
+import type { BodySystemKey, CrewHealthData, CrewHealthMessage, HealthFormValues } from '../types';
 import { HealthEntryForm } from './HealthEntryForm';
 import { HealthSystemIllustration } from './HealthSystemIllustration';
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
   loading: boolean;
   error: boolean;
   saving: boolean;
-  message: { text: string; error: boolean } | null;
+  message: CrewHealthMessage | null;
   onSelectSystem(id: BodySystemKey): void;
   onSave(values: HealthFormValues): Promise<boolean>;
   onReview(): Promise<void>;
@@ -17,7 +17,9 @@ interface Props {
   onOpenHistory(): void;
   onOpenJournal(): void;
   onOpenObservations(): void;
+  onOpenHabitat(): void;
   onSelectMetric(id: SensorKey): void;
+  onOpenTimelineRecord(id: string): void;
 }
 export function CrewHealthView({
   data,
@@ -32,7 +34,9 @@ export function CrewHealthView({
   onOpenHistory,
   onOpenJournal,
   onOpenObservations,
+  onOpenHabitat,
   onSelectMetric,
+  onOpenTimelineRecord,
 }: Props) {
   const disabled = loading || error || saving;
   return (
@@ -44,12 +48,12 @@ export function CrewHealthView({
     >
       <div className="health-heading">
         <div>
-          <p className="eyebrow">SALUD DE LA TRIPULACIÓN / REFERENCIA HHC</p>
-          <h2>Comprender cada señal.</h2>
-          <p>Indicadores, contexto y seguimiento de {data.name}.</p>
+          <p className="eyebrow">SALUD DE LA TRIPULACIÓN</p>
+          <h2>Autoevaluación de {data.name}</h2>
+          <p>{data.personContext}</p>
         </div>
         <div className="health-heading-actions">
-          <span className="badge">Demo · sin evaluación clínica</span>
+          <span className="badge">Demostración</span>
           <a className="text-button" href="#crew-body">
             Volver al astronauta
             <Icon name="arrow" size={14} />
@@ -85,18 +89,31 @@ export function CrewHealthView({
           </button>
         </div>
       )}
-      {message && (
-        <p
-          id="health-save-message"
-          className={`health-notice ${message.error ? 'health-error' : ''}`}
-          role={message.error ? 'alert' : 'status'}
-        >
-          {message.text}
-        </p>
-      )}
+      <section className="panel health-next-step" id="crew-health-next" tabIndex={-1}>
+        <div>
+          <p className="eyebrow">SIGUIENTE PASO · {data.system.shortLabel}</p>
+          <h3>{loading ? 'Consultando autorregistros…' : data.nextStep.title}</h3>
+          {!loading && <p>{data.nextStep.detail}</p>}
+          {!loading && (
+            <a className="text-button" href={`#crew-health-${data.nextStep.target}`}>
+              {data.nextStep.target === 'entry'
+                ? 'Abrir autorregistro'
+                : data.nextStep.target === 'readings'
+                  ? 'Ver indicadores'
+                  : 'Ir al seguimiento'}
+              <Icon name="arrow" size={13} />
+            </a>
+          )}
+        </div>
+        <div className="health-next-state">
+          <span>Último autorregistro</span>
+          <strong>{loading ? 'Consultando…' : data.stateLabel}</strong>
+          {data.lastEntryDate && <small>{data.lastEntryDate}</small>}
+        </div>
+      </section>
       <div className="health-layout">
         <div className="health-main-column">
-          <Panel className="health-system-detail">
+          <section className="panel health-system-detail" id="crew-health-readings" tabIndex={-1}>
             <div className="health-title">
               <span className="icon-chip">
                 <Icon name={data.system.icon} />
@@ -106,18 +123,11 @@ export function CrewHealthView({
                 <h3>{data.system.label}</h3>
               </div>
             </div>
-            <HealthSystemIllustration key={data.system.id} system={data.system} />
-            <div className="health-status">
-              <div>
-                <span>Último autorregistro</span>
-                <strong>{data.stateLabel}</strong>
-              </div>
-              <div>
-                <span>Historial de esta área</span>
-                <strong>{data.entryCount} registros</strong>
-              </div>
-            </div>
+            <p>{data.system.overview}</p>
             <h4>Indicadores disponibles</h4>
+            {data.metrics.length > 0 && (
+              <p>Telemetría sintética de la misión · {data.sensorDate}</p>
+            )}
             {data.metrics.length ? (
               <div className="health-metrics">
                 {data.metrics.map((metric) => (
@@ -132,6 +142,7 @@ export function CrewHealthView({
                     <span className={`badge ${metric.qualityTone === 'attention' ? 'amber' : ''}`}>
                       {metric.quality}
                     </span>
+                    <p>{metric.meaning}</p>
                     <p>{metric.lastReading}</p>
                     <dl>
                       <div>
@@ -170,6 +181,7 @@ export function CrewHealthView({
               <p>{data.system.missing}</p>
               <details>
                 <summary>Cómo interpretarlo y fuente científica</summary>
+                <HealthSystemIllustration key={data.system.id} system={data.system} />
                 <p>{data.system.limitation}</p>
                 <small>
                   La primera muestra de una serie no es una referencia clínica ni un rango de
@@ -188,20 +200,43 @@ export function CrewHealthView({
                 </p>
               </details>
             </div>
-          </Panel>
-          <Panel>
+          </section>
+          <section
+            className="panel"
+            id="crew-health-entry"
+            tabIndex={-1}
+            aria-label="Autorregistro de salud"
+          >
             <HealthEntryForm
               key={`${data.scope}:${data.system.id}`}
-              systemId={data.system.id}
+              system={data.system}
               name={data.name}
               disabled={disabled}
+              zones={data.recordZones}
               onSave={onSave}
+              savedEntryId={message?.entryId}
+              onOpenTimelineRecord={onOpenTimelineRecord}
             />
-          </Panel>
-          <Panel>
+            {message?.operation === 'entry' && (
+              <p
+                className={`health-notice ${message.error ? 'health-error' : ''}`}
+                role={message.error ? 'alert' : 'status'}
+              >
+                {message.text}
+              </p>
+            )}
+          </section>
+          <section
+            className="panel"
+            id="crew-health-history"
+            tabIndex={-1}
+            aria-label="Historial de autorregistros"
+          >
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">SOLO ESTA PERSONA Y ESTA ÁREA</p>
+                <p className="eyebrow">
+                  {data.name} · {data.system.shortLabel}
+                </p>
                 <h3>Historial de autorregistros</h3>
               </div>
               <Icon name="clock" />
@@ -209,7 +244,13 @@ export function CrewHealthView({
             {error ? (
               <p>Historial no disponible. No se interpreta como ausencia de registros.</p>
             ) : data.history.length ? (
-              <ol className="health-history">
+              <ol
+                className={
+                  data.system.id === 'vision'
+                    ? 'health-history health-vision-timeline'
+                    : 'health-history'
+                }
+              >
                 {data.history.map((entry) => (
                   <li key={entry.id}>
                     <div>
@@ -221,6 +262,7 @@ export function CrewHealthView({
                         {entry.activity} · {entry.duration}
                       </p>
                     )}
+                    {entry.visionActivity && <p>{entry.visionActivity}</p>}
                     {entry.note && <p>{entry.note}</p>}
                     <small>Autorregistro de demostración</small>
                   </li>
@@ -232,7 +274,7 @@ export function CrewHealthView({
                 su estado.
               </p>
             )}
-          </Panel>
+          </section>
         </div>
         <div className="health-side-column">
           <Panel>
@@ -248,12 +290,18 @@ export function CrewHealthView({
                 </div>
               ))}
             </dl>
-            <button className="text-button" onClick={onOpenJournal}>
-              Abrir chequeo diario
-              <Icon name="arrow" size={13} />
-            </button>
+            <div className="health-form-actions">
+              <button className="text-button" onClick={onOpenJournal}>
+                Abrir chequeo diario
+                <Icon name="arrow" size={13} />
+              </button>
+              <button className="text-button" onClick={onOpenHabitat}>
+                Ver entorno de la nave
+                <Icon name="arrow" size={13} />
+              </button>
+            </div>
           </Panel>
-          <Panel className="health-followup">
+          <section className="panel health-followup" id="crew-health-review" tabIndex={-1}>
             <p className="eyebrow">SEGUIMIENTO DOCUMENTAL / DEMO</p>
             <h3>{data.system.task}</h3>
             <p>
@@ -271,11 +319,19 @@ export function CrewHealthView({
             >
               {data.reviewed ? 'Volver a pendiente' : 'Marcar revisión realizada'}
             </button>
+            {message?.operation === 'review' && (
+              <p
+                className={`health-notice ${message.error ? 'health-error' : ''}`}
+                role={message.error ? 'alert' : 'status'}
+              >
+                {message.text}
+              </p>
+            )}
             <small>
               Revisar registros no acredita una evaluación clínica ni cumple un plan de ejercicio
               prescrito.
             </small>
-          </Panel>
+          </section>
           <Panel className="health-analysis">
             <div className="panel-heading">
               <div>

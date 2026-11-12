@@ -5,6 +5,7 @@ import { Panel } from '@/ui/Panel';
 import { MetricCards } from './MetricCards';
 import { CopilotPanel } from './CopilotPanel';
 import { EnvironmentPanel } from './EnvironmentPanel';
+import { MissionExplorerPanel } from './MissionExplorerPanel';
 import { TrendChart } from './TrendChart';
 export interface MissionDashboardProps {
   data: MissionData;
@@ -15,7 +16,6 @@ export interface MissionDashboardProps {
   onModeChange(mode: 'crew' | 'ship'): void;
   onOpenHistory(): void;
   onOpenDailyCheck(): void;
-  bodyAnchor?: boolean;
 }
 export function MissionDashboardView({
   data,
@@ -26,7 +26,6 @@ export function MissionDashboardView({
   onModeChange,
   onOpenHistory,
   onOpenDailyCheck,
-  bodyAnchor,
 }: MissionDashboardProps) {
   return (
     <>
@@ -37,53 +36,15 @@ export function MissionDashboardView({
       />
       <div className="dashboard-grid">
         <div className="main-column">
-          <section
-            id={bodyAnchor ? 'crew-body' : undefined}
-            className="scene-panel"
-            aria-label="Explorador tridimensional"
-          >
-            <div className="scene-panel-header">
-              <div>
-                <p className="eyebrow">
-                  {mode === 'crew' ? 'EXPLORADOR CORPORAL' : 'EXPLORADOR DE HÁBITAT'}
-                </p>
-                <h3>{mode === 'crew' ? data.selected.name : data.selectedZone.name}</h3>
-              </div>
-              <div className="segmented">
-                <button aria-pressed={mode === 'crew'} onClick={() => onModeChange('crew')}>
-                  <Icon name="users" size={14} />
-                  Astronauta
-                </button>
-                <button aria-pressed={mode === 'ship'} onClick={() => onModeChange('ship')}>
-                  <Icon name="rocket" size={14} />
-                  {habitatLabel}
-                </button>
-              </div>
-            </div>
-            {scene}
-            <div className="scene-caption">
-              <span>
-                <Icon name="orbit" size={14} />
-                Arrastra para girar · Rueda para acercar
-              </span>
-              <span>Modelo visual de referencia</span>
-            </div>
-            <div className="scene-reading">
-              <div>
-                <span className="eyebrow">{data.metric.label}</span>
-                <strong>
-                  {data.metric.value}
-                  <small>{data.metric.unit}</small>
-                </strong>
-              </div>
-              <div>
-                <span className={`badge ${data.metric.qualityTone === 'attention' ? 'amber' : ''}`}>
-                  {data.metric.quality}
-                </span>
-                <p>{data.metric.lastReading}</p>
-              </div>
-            </div>
-          </section>
+          <MissionExplorerPanel
+            crewName={data.selected.name}
+            zoneName={data.selectedZone.name}
+            metric={data.metric}
+            habitatLabel={habitatLabel}
+            scene={scene}
+            mode={mode}
+            onModeChange={onModeChange}
+          />
           <Panel>
             <div className="panel-heading">
               <div>

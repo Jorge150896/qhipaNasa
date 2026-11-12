@@ -44,6 +44,7 @@ export class SimulatedHabitatMissionRepository implements MissionRepository {
       id: habitat.id,
       name: habitat.name,
       crew,
+      zones: template.zones.filter((zone) => zone.id !== 'cockpit' && zone.id !== 'life-support'),
       observations: template.observations.map((entry) => ({
         ...entry,
         id: `${habitat.id}:${entry.id}`,

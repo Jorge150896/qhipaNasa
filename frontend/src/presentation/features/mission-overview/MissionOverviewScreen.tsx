@@ -1,24 +1,34 @@
 'use client';
-import { useMissionDashboardViewModel } from '../../shared/mission/useMissionDashboardViewModel';
+import { useMemo } from 'react';
+import { createCrewHealthDependencies } from '@/di/createCrewHealthDependencies.client';
+import { useMissionOverviewViewModel } from './useMissionOverviewViewModel';
 import type { MissionOverviewScreenProps } from './types';
 import { MissionOverviewView } from './components/MissionOverviewView';
 import { MissionSceneSlot } from '../../shared/mission/MissionSceneSlot';
+import './mission-overview.css';
 export function MissionOverviewScreen({
   data,
   actions,
   habitatId,
   onNavigate,
 }: MissionOverviewScreenProps) {
-  const model = useMissionDashboardViewModel(habitatId, 'crew');
+  const health = useMemo(() => createCrewHealthDependencies(habitatId), [habitatId]);
+  const model = useMissionOverviewViewModel(habitatId, data, health.load);
   return (
     <MissionOverviewView
+      summary={model.summary}
+      onOpenModule={() => onNavigate('crew', 'crew-module')}
+      onOpenRecord={() => onNavigate('crew', 'crew-health-entry')}
+      onReviewSignal={(id) => {
+        actions.selectMetric(id);
+        onNavigate('history');
+      }}
       dashboard={{
         data,
         actions,
         habitatLabel: model.habitatLabel,
         mode: model.mode,
         onModeChange: model.onModeChange,
-        bodyAnchor: false,
         onOpenHistory: () => onNavigate('history'),
         onOpenDailyCheck: () => onNavigate('journal'),
         scene: (

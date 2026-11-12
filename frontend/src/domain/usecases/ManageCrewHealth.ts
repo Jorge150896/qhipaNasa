@@ -1,9 +1,11 @@
 import {
   healthSystemIds,
   reportedStates,
+  visionActivityIds,
   HealthValidationError,
   type CrewHealthRepository,
   type HealthEntryInput,
+  type HealthEntry,
   type HealthIds,
   type HealthSystemId,
 } from '../health/models';
@@ -45,13 +47,23 @@ export class RecordCrewHealth {
       );
     if (input.minutes !== null && !input.activity.trim())
       throw new HealthValidationError('Indica la actividad asociada a la duración.');
-    return this.repository.addEntry({
+    if (input.zoneId !== undefined && (!input.zoneId.trim() || input.zoneId.length > 80))
+      throw new HealthValidationError('Selecciona un módulo válido o déjalo sin informar.');
+    if (
+      input.visionActivityId !== undefined &&
+      (input.systemId !== 'vision' || !visionActivityIds.includes(input.visionActivityId))
+    )
+      throw new HealthValidationError(
+        'Selecciona una actividad visual válida o déjala sin informar.',
+      );
+    const entry: HealthEntry = {
       ...input,
       note: input.note.trim(),
       activity: input.activity.trim(),
       id: this.ids.next(),
       recordedAt: this.clock.now().toISOString(),
-    });
+    };
+    return this.repository.addEntry(entry).then((journal) => ({ journal, entryId: entry.id }));
   }
 }
 export class ReviewCrewHealth {

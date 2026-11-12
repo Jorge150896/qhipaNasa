@@ -13,7 +13,6 @@ export function HabitatScreen({ data, actions, habitatId, onNavigate }: HabitatS
         habitatLabel: model.habitatLabel,
         mode: model.mode,
         onModeChange: model.onModeChange,
-        bodyAnchor: false,
         onOpenHistory: () => onNavigate('history'),
         onOpenDailyCheck: () => onNavigate('journal'),
         scene: (

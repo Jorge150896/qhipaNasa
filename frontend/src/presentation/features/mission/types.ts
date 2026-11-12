@@ -1,3 +1,5 @@
+import type { DailyCheckContext, DiscomfortRegion } from '@/domain/mission/dailyCheckContext';
+
 export const sections = [
   'overview',
   'crew',
@@ -21,7 +23,13 @@ export interface MetricData {
   comparison?: { reference: string; difference: string };
   qualityTone: 'normal' | 'attention';
   lastReading: string;
-  history: { time: string; value: string; missing: boolean }[];
+  history: {
+    at: string;
+    time: string;
+    value: string;
+    numericValue: number | null;
+    missing: boolean;
+  }[];
   chart: {
     paths: string[];
     points: { x: number; y: number | null }[];
@@ -63,6 +71,7 @@ export interface ObservationData {
 export interface MissionData {
   name: string;
   day: string;
+  capturedAt: string;
   time: string;
   date: string;
   scenario: ScenarioKey;
@@ -81,11 +90,16 @@ export interface MissionData {
     fatigue: string;
     mood: string;
     note: string;
+    context?: DailyCheckContext;
+    discomfortRegion?: DiscomfortRegion;
   }[];
   todayCheck: boolean;
+  dailyCheckDraft?: CheckFormValues;
   analysis: { summary: string; recommendation: string; evidence: string[] };
 }
 export interface CheckFormValues {
+  context?: DailyCheckContext;
+  discomfortRegion?: DiscomfortRegion;
   sleep: string;
   fatigue: string;
   mood: 'good' | 'neutral' | 'low';

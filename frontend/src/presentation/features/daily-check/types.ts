@@ -4,3 +4,7 @@ export interface DailyCheckScreenProps {
   saving: boolean;
   onSave(values: CheckFormValues): Promise<boolean>;
 }
+
+export type DailyCheckViewModel = ReturnType<
+  typeof import('./useDailyCheckViewModel').useDailyCheckViewModel
+>;

@@ -2,6 +2,28 @@ import { z } from 'zod';
 import type { CrewJournal, DailyCheck } from '@/domain/mission/models';
 import type { CrewJournalRepository } from '@/domain/mission/ports';
 import type { KeyValueStorage } from '@/infrastructure/storage/KeyValueStorage';
+import {
+  dailyActivities,
+  dailyMoments,
+  discomfortRegions,
+  validDailyCheckContext,
+} from '@/domain/mission/dailyCheckContext';
+
+const checkContextSchema = z
+  .object({
+    activity: z.enum(dailyActivities),
+    moment: z.enum(dailyMoments),
+    measurements: z.strictObject({
+      waterMl: z.number().optional(),
+      restInterruptions: z.number().optional(),
+      durationMinutes: z.number().optional(),
+      effort: z.number().optional(),
+      distanceKm: z.number().optional(),
+      handDiscomfort: z.number().optional(),
+    }),
+  })
+  .refine(validDailyCheckContext);
+
 const journalSchema = z.object({
   version: z.literal(1),
   checks: z
@@ -14,6 +36,8 @@ const journalSchema = z.object({
         fatigue: z.number().int().min(1).max(5),
         mood: z.enum(['good', 'neutral', 'low']),
         note: z.string().max(400),
+        context: checkContextSchema.optional(),
+        discomfortRegion: z.enum(discomfortRegions).optional(),
       }),
     )
     .max(300),

@@ -61,7 +61,9 @@ function mapMetric(reading: Reading): MetricData {
       ? `Última disponible: ${number(lastValid.value)} ${reading.unit} · ${time(lastValid.at)} UTC`
       : 'No hay muestras disponibles.',
     history: reading.samples.map((sample) => ({
+      at: sample.at,
       time: `${time(sample.at)} UTC`,
+      numericValue: sample.value,
       value: sample.value === null ? 'Sin muestra' : `${number(sample.value)} ${reading.unit}`,
       missing: sample.value === null,
     })),
@@ -134,9 +136,15 @@ export function mapMissionPresentation(
     fatigue: `${item.fatigue} / 5`,
     mood: { good: 'Bien', neutral: 'Regular', low: 'Bajo' }[item.mood],
     note: item.note,
+    context: item.context,
+    discomfortRegion: item.discomfortRegion,
   }));
+  const todayCheck = journal.checks.find(
+    (item) => item.crewId === selected.id && item.recordedAt.slice(0, 10) === today,
+  );
   return {
     name: snapshot.name,
+    capturedAt: snapshot.capturedAt,
     day: String(snapshot.missionDay).padStart(3, '0'),
     time: `${time(snapshot.capturedAt)} UTC`,
     date: date(snapshot.capturedAt),
@@ -149,9 +157,17 @@ export function mapMissionPresentation(
     observations,
     pendingCount: String(observations.filter((item) => !item.reviewed).length),
     checks,
-    todayCheck: journal.checks.some(
-      (item) => item.crewId === selected.id && item.recordedAt.slice(0, 10) === today,
-    ),
+    todayCheck: Boolean(todayCheck),
+    dailyCheckDraft: todayCheck
+      ? {
+          sleep: String(todayCheck.sleepHours),
+          fatigue: String(todayCheck.fatigue),
+          mood: todayCheck.mood,
+          note: todayCheck.note,
+          context: todayCheck.context,
+          discomfortRegion: todayCheck.discomfortRegion,
+        }
+      : undefined,
     analysis: {
       summary:
         snapshot.scenario === 'sleep-change'

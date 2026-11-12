@@ -1,15 +1,20 @@
 import type { CrewData, MetricData, SensorKey } from '../../mission/types';
 import { Panel } from '@/ui/Panel';
 import { Icon } from '@/ui/Icon';
+import { SensorTabs } from '../../../shared/mission/SensorTabs';
 import { TrendChart } from '../../../shared/mission/TrendChart';
+import { NasaHistoryPanel } from './NasaHistoryPanel';
+import type { NasaHistoryPanelProps } from '../types';
 export function HistoryView({
   crew,
   metric,
   onSelect,
+  nasaHistory,
 }: {
   crew: CrewData;
   metric: MetricData;
   onSelect(id: SensorKey): void;
+  nasaHistory: NasaHistoryPanelProps;
 }) {
   return (
     <>
@@ -23,22 +28,17 @@ export function HistoryView({
             {metric.quality}
           </span>
         </div>
-        <div className="sensor-tabs">
-          {crew.metrics.map((item) => (
-            <button
-              key={item.id}
-              aria-pressed={item.id === metric.id}
-              onClick={() => onSelect(item.id)}
-            >
-              {item.shortLabel}
-            </button>
-          ))}
-        </div>
+        <SensorTabs metrics={crew.metrics} selectedId={metric.id} onSelect={onSelect} />
         <TrendChart metric={metric} />
         <p className="sub">
           Los segmentos se interrumpen cuando falta una muestra. No se interpolan valores ausentes.
         </p>
+        <a className="text-button" href="#nasa-history">
+          Ver histórico de NASA
+          <Icon name="arrow" size={14} />
+        </a>
       </Panel>
+      <NasaHistoryPanel {...nasaHistory} />
       <Panel>
         <div className="panel-heading">
           <Icon name="radio" />

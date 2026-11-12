@@ -49,6 +49,35 @@ describe('Chequeo diario y persistencia', () => {
     await expect(repo.load()).rejects.toThrow('formato compatible');
     expect(storage.read('astra.demo.journal.v1')).toContain('999');
   });
+  it('valida escalas y campos de actividad en el caso de uso', async () => {
+    const repo = new LocalCrewJournalRepository(new MemoryStorage());
+    const record = new RecordDailyCheck(repo, clock);
+    expect(() =>
+      record.execute({
+        ...valid,
+        context: { activity: 'exercise', moment: 'before', measurements: { effort: 11 } },
+      }),
+    ).toThrow(CheckValidationError);
+    expect(() =>
+      record.execute({
+        ...valid,
+        context: { activity: 'eva', moment: 'incident', measurements: { handDiscomfort: 6 } },
+      }),
+    ).toThrow(CheckValidationError);
+    expect(() =>
+      record.execute({
+        ...valid,
+        context: { activity: 'cabin', moment: 'after', measurements: { restInterruptions: 1.5 } },
+      }),
+    ).toThrow(CheckValidationError);
+    expect(() =>
+      record.execute({
+        ...valid,
+        context: { activity: 'surface', moment: 'after', measurements: { effort: 2 } },
+      }),
+    ).toThrow(CheckValidationError);
+    expect((await repo.load()).checks).toEqual([]);
+  });
   it('propaga un fallo de escritura para no anunciar un guardado falso', async () => {
     const storage = {
       read: () => null,

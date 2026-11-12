@@ -1,0 +1,164 @@
+.daily-check-layout > .panel,
+.daily-check-sidebar > .panel {
+  min-width: 0;
+}
+
+.daily-check-sidebar {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.daily-check-progress {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.daily-check-progress li {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  padding: 7px 2px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.daily-check-progress li span {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #322047;
+}
+
+.daily-check-progress li[aria-current='step'] {
+  border-color: var(--selection-border);
+  background: var(--selection-soft);
+  color: var(--text);
+}
+
+.daily-check-progress li[data-complete] span {
+  color: #ffc19b;
+}
+
+.daily-check-form h4 {
+  margin: 0;
+  font-size: 18px;
+  scroll-margin-top: 90px;
+}
+
+.daily-activity-options,
+.daily-moment-options,
+.daily-check-summary,
+.daily-check-sensors {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.daily-moment-options {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.daily-activity-options label,
+.daily-moment-options label {
+  flex-direction: row;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.daily-activity-options label[data-selected='true'],
+.daily-moment-options label[data-selected='true'] {
+  border-color: var(--selection-border);
+  background: var(--selection-soft);
+}
+
+.daily-activity-options input,
+.daily-moment-options input {
+  accent-color: var(--accent);
+  flex: 0 0 auto;
+}
+
+.daily-activity-options svg {
+  flex: 0 0 auto;
+  color: var(--accent-hover);
+}
+
+.daily-check-summary,
+.daily-check-sensors {
+  margin: 0;
+}
+
+.daily-check-sensors {
+  margin-top: 10px;
+}
+
+.daily-check-summary > div,
+.daily-check-sensors > div,
+.daily-check-notice,
+.daily-check-result {
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #2a1839;
+  overflow-wrap: anywhere;
+}
+
+.daily-check-summary dt,
+.daily-check-sensors dt,
+.daily-check-sensors small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.daily-check-summary dd,
+.daily-check-sensors dd {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+.daily-check-notice {
+  border-color: var(--accent);
+}
+
+.daily-check-result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+
+.daily-check-result p,
+.daily-check-history-context {
+  margin: 4px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.daily-check-layout .check-list dl {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 420px) {
+  .daily-activity-options svg {
+    display: none;
+  }
+
+  .daily-check-form .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
