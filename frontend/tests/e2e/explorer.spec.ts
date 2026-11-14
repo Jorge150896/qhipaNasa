@@ -162,10 +162,13 @@ test('distribución espacial, nave hacia Marte y pausa del recorrido', async ({ 
   await expect(
     page.getByRole('button', { name: 'Reanudar simulación', exact: true }),
   ).toBeVisible();
+  // El Canvas puede terminar un fotograma después de actualizar el botón.
+  await expect(async () => {
+    const position = (await labels.ship.boundingBox())!;
+    await page.waitForTimeout(800);
+    expect((await labels.ship.boundingBox())!.x).toBeCloseTo(position.x, 0);
+  }).toPass({ timeout: 5_000 });
   const paused = (await labels.ship.boundingBox())!;
-  // Observe over time to distinguish a frozen trajectory from one that keeps advancing.
-  await page.waitForTimeout(800);
-  expect((await labels.ship.boundingBox())!.x).toBeCloseTo(paused.x, 0);
   await page.screenshot({ path: '../docs/qa/explorer-transit-desktop.png', fullPage: true });
   await page.getByRole('button', { name: 'Reanudar simulación', exact: true }).click();
   await expect
