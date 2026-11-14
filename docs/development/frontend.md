@@ -1,5 +1,7 @@
 # Desarrollo del frontend
 
+Monitoreo asistido tiene un flujo independiente de preparación/captura/revisión/guardado, adapters de demo/API y registro local por hábitat. La API es configurable y su contrato sigue provisional; ver [uso, arquitectura y límites](monitoring.md). No comparte las capturas con el snapshot sintético del dashboard.
+
 ## Decisiones implementadas
 
 Workspace npm en la raíz y aplicación en `frontend/`. Next.js 16.4.5 y React 19.3.1 con TypeScript estricto. CSS propio, Lucide, Three.js, React Three Fiber y Drei. No hay servicios remotos ni variables de entorno necesarias para ejecutar la demo.
@@ -145,3 +147,17 @@ La introducción mínima de tres segundos pertenece ahora al ViewModel de portad
 ### Chequeo diario por actividad
 
 `DailyCheckScreen` conecta el estado local de los cuatro pasos con la acción de guardado de `useMission`. El caso de uso `RecordDailyCheck` valida los datos generales y los campos permitidos por actividad. El diario mantiene su clave y versión con `context` y `discomfortRegion` opcionales. Los campos vacíos se omiten y los ceros ingresados se conservan. Al recargar, el chequeo del día UTC se puede editar con sus valores guardados. La consola muestra la instantánea sintética del escenario, separada de las respuestas ingresadas.
+
+### Modelos holográficos conservados en Fabian
+
+La integración de origin/main conserva el explorador, fichas, línea de tiempo y formularios de main. Dentro de Tripulación, «Modelo corporal» permite cambiar entre el astronauta con traje existente y el holograma humano local. El astronauta sigue siendo la entrada inicial. El holograma mantiene sus variantes neutra, masculina y femenina, shader, giro, zoom y lecturas sobre el cuerpo; seleccionar una región abre las fichas de salud del flujo actual. Los accesos HTML de main siguen disponibles si falla el modelo o WebGL.
+
+`useCrewHologramViewModel` administra solo representación y apariencia por hábitat/persona durante la visita. No amplía el ViewModel de salud ni modifica dominio, diario o sensores. Al salir de Tripulación o recargar se reinicia. Los estilos viven en `crew/human-hologram.css`. Los recursos y sus licencias están documentados en `public/models/ATTRIBUTION.md`; el portal de etiquetas permanece separado del Canvas. Las maquetas locales anteriores de Chequeo Diario y Aurora no forman parte de esta integración.
+
+### Procedencia verificable de muestras
+
+Historial añade «Ver origen» por muestra, conservando la distribución y el tema actuales. Los adaptadores sintéticos construyen metadatos cuantitativos portables con sujeto, origen, método, unidad, calidad y tiempo. El mapper prepara la ficha para View; las fases de estudio se mantienen como fases y el contexto de la instantánea no se presenta como actividad confirmada de cada muestra histórica. No se modifica la persistencia. Detalle y límites en [measurement-contract.md](measurement-contract.md).
+
+## Consumir radiación ambiental
+
+El backend Java ya ofrece catálogo y series de NASA RadLab. La web todavía no los consume; crear una feature/adapter ambiental separado del consumidor de signos vitales. Ejemplos, CORS, errores, zonas horarias y límites en [radlab-backend.md](radlab-backend.md). El contrato comparte `docs/contracts/openapi.yaml` y no requiere cambiar paleta o modelos.

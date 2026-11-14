@@ -1,6 +1,6 @@
 # ASTRA · Mission Intelligence
 
-Frontend de monitorización de salud de tripulación y contexto ambiental, construido con Next.js App Router, React y TypeScript. La aplicación implementa un modo de demostración determinista sin conexión a sensores, servicios de NASA, IA ni backend. Historial incluye una referencia de laboratorio de NASA OSDR preparada a partir de un CSV público.
+Frontend de monitorización de salud de tripulación y contexto ambiental, construido con Next.js App Router, React y TypeScript. Incluye demostración determinista y un consumidor HTTP configurable para sesiones de medición. El frontend personal sigue en demostración; el backend Java incluye consulta y archivo de radiación histórica de NASA RadLab. No hay sensores personales ni IA conectados. Historial incluye una referencia de laboratorio de NASA OSDR preparada a partir de un CSV público.
 
 ## Ejecutar
 
@@ -27,6 +27,8 @@ Desde la raíz, los scripts delegan al workspace `frontend`. Para cambiar el pue
 
 ## Funciona en esta versión
 
+- **Monitoreo asistido**: preparar equipo/contexto, capturar, repetir, consultar cada 5 s, revisar y guardar sesiones locales. Calidad, ausencia, origen, tiempo y comparación por indicador. Demo explícita y modo API sin fallback; [configuración y límites](docs/development/monitoring.md), [contrato provisional](docs/contracts/openapi.yaml).
+
 - Carga animada del Tumi con salto, sonrisa, rebote del tocado y spinner independiente. Introducción a pantalla completa de 3 segundos solo tras «Iniciar mi misión»; dentro de la app, carga limitada al área de información. Vista permanente en `/loading-preview`.
 
 - Salud por siete sistemas corporales en Tripulación: explicaciones y fuentes HHC, contexto, comparación descriptiva de series, autoevaluación guiada con confirmación, historial y siguientes pasos, revisión documental y análisis explicable de cada persona. Los registros de salud tienen almacenamiento separado del diario anterior.
@@ -40,15 +42,18 @@ Desde la raíz, los scripts delegan al workspace `frontend`. Para cambiar el pue
 - Astronauta 3D con rotación, zoom y sensores seleccionables; modelo GLB local de unos 305 KB. Fallback si no hay WebGL o falla el asset.
 - Odyssey 01 en corte 3D interactivo dentro de Tripulación, con cinco módulos, ubicación del tripulante y lecturas ambientales simuladas. La distribución de la nave es ilustrativa.
 - Frecuencia cardíaca, temperatura, SpO₂ y respiración; historial, unidades, hora UTC, procedencia y calidad de datos visibles.
+- «Ver origen» por muestra en Historial: identificador, persona, fecha completa, método y contexto. Contrato cuantitativo independiente de la fuente, con distinción entre datos individuales, agregados y ausentes.
 - Escenarios de rutina, cambio de sueño y pérdida de señal. Las muestras ausentes no se reemplazan por valores antiguos ni se interpolan.
 - Chequeo diario de demostración con sueño, ánimo y fatiga; seguimiento de observaciones.
 - Persistencia local de chequeos y revisiones entre recargas, con validación de esquema y manejo de errores de almacenamiento.
 - Copiloto explicativo determinista con evidencia y límites, identificado como demo.
-- Navegación por ocho secciones, rutas directas, estados de carga/error/vacío, responsive y controles accesibles.
+- Navegación por nueve secciones, rutas directas, estados de carga/error/vacío, responsive y controles accesibles.
 
 No existe un modo offline completo ni sincronización: el almacenamiento local conserva registros, pero una visita nueva necesita cargar la app. No introducir datos de salud reales en esta demo.
 
 ## Arquitectura
+
+El backend ambiental puede ejecutarse aparte con `cd backend`, `./mvnw verify` y `./mvnw spring-boot:run`. Escucha en `127.0.0.1:8080`; el frontend aún no consume esas nuevas operaciones.
 
 ```text
 frontend/src/app                      rutas y layouts delgados (servidor)
@@ -63,7 +68,7 @@ frontend/src/ui                       primitivas visuales genéricas
 
 Ver [arquitectura compartida](docs/architecture/system.md), [guía de frontend](docs/development/frontend.md) y [siguientes etapas](docs/development/roadmap.md). Los límites de imports entre capas están configurados en ESLint. Ver [verificación y pruebas de navegador](docs/qa/verification.md).
 
-Backend acordado: Java con Spring Boot. Su implementación y el contrato HTTP quedan pendientes; no hay endpoints ficticios ni un backend duplicado en Next.
+Backend implementado en `backend/`: Java 21 y Spring Boot 3.5.16, con catálogo y consultas históricas de radiación RadLab. Ver [arranque](backend/README.md) y [contrato y uso desde frontend](docs/development/radlab-backend.md). El contrato personal de Monitoreo sigue provisional, sin proveedor ni endpoints Java de salud personal. No hay un backend duplicado en Next.
 
 ## Desarrollo en equipo
 
@@ -75,4 +80,4 @@ La [propuesta de evolución del dashboard](docs/product/dashboard-proposal.md) r
 
 Modelo “Astronaut” de Poly by Google, CC BY 2.0, distribuido en model-viewer. Textura redimensionada y comprimida; geometría sin cambios. [Atribución y procedencia](frontend/public/models/ATTRIBUTION.md).
 
-La UI y todas las mediciones son una propuesta del equipo; no implican validación o respaldo de NASA. Los recursos científicos del reto deben seleccionarse y documentarse antes de una entrega oficial.
+La UI y los escenarios sintéticos son una propuesta del equipo; no implican validación ni respaldo de NASA. Las respuestas ambientales de RadLab conservan su origen, fecha y límites documentados.

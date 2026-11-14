@@ -1,5 +1,8 @@
 'use client';
 import { useEffect, useEffectEvent } from 'react';
+import { useCrewHologramViewModel } from './useCrewHologramViewModel';
+import { HumanHologramSlot } from './components/HumanHologramSlot';
+import { HumanHologramControls } from './components/HumanHologramControls';
 import { useCrewViewModel } from './useCrewViewModel';
 import { CrewHealthScreen } from '../crew-health/CrewHealthScreen';
 import type { CrewScreenProps } from './types';
@@ -14,6 +17,7 @@ import './crew-explorer.css';
 
 export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenProps) {
   const model = useCrewViewModel(habitatId, data);
+  const body = useCrewHologramViewModel(habitatId, data.selected.id);
 
   function selectSensor(id: SensorKey) {
     actions.selectMetric(id);
@@ -103,6 +107,14 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
             },
             scene: (
               <>
+                {model.mode === 'crew' && (
+                  <HumanHologramControls
+                    display={body.display}
+                    appearance={body.appearance}
+                    onDisplayChange={body.selectDisplay}
+                    onAppearanceChange={body.selectAppearance}
+                  />
+                )}
                 {model.mode === 'ship' && model.moduleData.origin && (
                   <CrewModuleOriginBanner origin={model.moduleData.origin} />
                 )}
@@ -113,20 +125,30 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                       : 'crew-scene-stage'
                   }
                 >
-                  <MissionSceneSlot
-                    key={model.mode}
-                    habitatKind={model.habitatKind}
-                    mode={model.mode}
-                    selectedSensor={data.metric.id}
-                    selectedZone={data.selectedZone.id}
-                    modules={model.mode === 'ship' ? model.moduleData : undefined}
-                    showModuleCamera={model.mode === 'ship'}
-                    onSelectSensor={selectSensor}
-                    onSelectZone={actions.selectZone}
-                    selectedSystem={model.healthSystem}
-                    activeBodyRegion={model.activeBodyRegion}
-                    onSelectSystem={selectBodyRegion}
-                  />
+                  {model.mode === 'crew' && body.display === 'hologram' ? (
+                    <HumanHologramSlot
+                      name={data.selected.name}
+                      appearance={body.appearance}
+                      metrics={data.selected.metrics}
+                      selected={data.metric.id}
+                      onSelect={selectSensor}
+                    />
+                  ) : (
+                    <MissionSceneSlot
+                      key={model.mode}
+                      habitatKind={model.habitatKind}
+                      mode={model.mode}
+                      selectedSensor={data.metric.id}
+                      selectedZone={data.selectedZone.id}
+                      modules={model.mode === 'ship' ? model.moduleData : undefined}
+                      showModuleCamera={model.mode === 'ship'}
+                      onSelectSensor={selectSensor}
+                      onSelectZone={actions.selectZone}
+                      selectedSystem={model.healthSystem}
+                      activeBodyRegion={model.activeBodyRegion}
+                      onSelectSystem={selectBodyRegion}
+                    />
+                  )}
                   {model.mode === 'crew' && model.hologram && (
                     <CrewHologram
                       data={model.hologram}

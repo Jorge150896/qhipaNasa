@@ -1,0 +1,223 @@
+openapi: 3.1.0
+info:
+  title: ASTRA · radiación ambiental y propuesta de indicadores personales
+  version: 0.2.0
+  description: >-
+    Las operaciones /api/v1/radiation están implementadas en backend Java.
+    La operación raíz sigue siendo una propuesta de indicadores personales,
+    sin proveedor y sin implementación de servidor. No conectar el consumidor
+    personal a RadLab: sus sujetos, indicadores y unidades son distintos.
+servers:
+  - url: https://monitoring.example.invalid
+paths:
+  /api/v1/radiation/instruments:
+    servers: [{ url: 'http://localhost:8080' }]
+    get:
+      operationId: listRadiationInstruments
+      summary: Instrumentos admitidos por esta primera versión
+      description: Catálogo de DosTel1 y DosTel2, ISS/Columbus. No garantiza cobertura de todas las fechas.
+      responses:
+        '200':
+          description: Catálogo local, sin llamada a NASA
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [id, spacecraft, module]
+                  properties:
+                    id: { enum: [DosTel1, DosTel2] }
+                    spacecraft: { const: ISS }
+                    module: { const: Columbus }
+  /api/v1/radiation/readings:
+    servers: [{ url: 'http://localhost:8080' }]
+    get:
+      operationId: getRadiationReadings
+      summary: Consultar y archivar radiación histórica de un instrumento
+      description: >-
+        Periodo [from,to), hasta 24 horas, sin futuro. Consulta RadLab si no existe
+        copia local; conserva CSV original y SHA-256. Las copias no caducan ni se
+        eliminan automáticamente. Máximo 10000 filas y 4 MiB de respuesta remota;
+        superar límites es error, nunca truncamiento. Los timestamps originales de
+        RadLab no incluyen zona; observedAt se interpreta con la zona configurada,
+        UTC por defecto, y timeZoneBasis=configured-assumption. No es confirmación
+        de zona por NASA. No son dosis personales, datos actuales ni diagnóstico.
+        Datos ambientales públicos: esta API no recibe identidades ni datos médicos.
+      parameters:
+        - { in: query, name: instrumentId, required: true, schema: { enum: [DosTel1, DosTel2] } }
+        - in: query
+          name: from
+          required: true
+          schema: { type: string, format: date-time }
+          example: '2022-03-01T00:00:00Z'
+        - in: query
+          name: to
+          required: true
+          schema: { type: string, format: date-time }
+          example: '2022-03-01T01:00:00Z'
+      responses:
+        '200':
+          description: Serie; readings vacío significa ausencia de registros en el periodo, no radiación cero
+          headers:
+            Cache-Control: { schema: { const: no-store } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RadiationSeries' }
+        '400':
+          description: INVALID_QUERY; instrumento, fechas o periodo inválidos
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RadiationError' }
+        '502':
+          description: RADLAB_INVALID_RESPONSE; CSV o mediciones incompatibles
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RadiationError' }
+        '503':
+          description: RADLAB_UNAVAILABLE o ARCHIVE_UNAVAILABLE; sin fallback simulado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RadiationError' }
+  /:
+    get:
+      operationId: captureMonitoring
+      summary: Obtener hasta una muestra por indicador para un sujeto
+      description: >-
+        Consulta sin escritura. Devuelve requestId y subjectId recibidos.
+        samples vacío significa ausencia. No renueva IDs ni timestamps de muestras
+        repetidas. El consumidor consulta manualmente o cada 5 s, con timeout de
+        10 s, sin solicitudes simultáneas ni fallback sintético.
+      parameters:
+        - in: query
+          name: subjectId
+          required: true
+          schema: { type: string, minLength: 1, maxLength: 100 }
+        - in: query
+          name: requestId
+          required: true
+          schema: { type: string, minLength: 1 }
+      responses:
+        '200':
+          description: Captura; cero a cuatro indicadores
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [requestId, subjectId, samples]
+                properties:
+                  requestId: { type: string, minLength: 1 }
+                  subjectId: { type: string, minLength: 1 }
+                  samples:
+                    type: array
+                    maxItems: 4
+                    items: { $ref: '#/components/schemas/Sample' }
+              example:
+                requestId: example-request
+                subjectId: test-person
+                samples:
+                  - id: example-device-sample
+                    subjectId: test-person
+                    indicator: heartRate
+                    value: 72
+                    unit: lpm
+                    observedAt: '2026-11-12T12:00:00Z'
+                    quality: available
+                    source: { kind: device, id: test-device }
+                    method: instrument
+        '400': { description: Solicitud inválida }
+        '401': { description: Falta autenticación; mecanismo pendiente }
+        '403': { description: Sujeto no autorizado }
+        '429': { description: Frecuencia excedida; el cliente detiene la actualización }
+        '503': { description: Servicio indisponible; reintento manual }
+components:
+  schemas:
+    RadiationError:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          {
+            enum: [INVALID_QUERY, RADLAB_INVALID_RESPONSE, RADLAB_UNAVAILABLE, ARCHIVE_UNAVAILABLE],
+          }
+        message: { type: string }
+    RadiationSeries:
+      type: object
+      required: [query, source, cacheHit, count, readings]
+      properties:
+        query:
+          type: object
+          required: [instrumentId, from, to]
+          properties:
+            instrumentId: { enum: [DosTel1, DosTel2] }
+            from: { type: string, format: date-time }
+            to: { type: string, format: date-time }
+        source:
+          type: object
+          required: [name, requestUrl, fetchedAt, sha256, historical, sourceTimeZone, timeZoneBasis]
+          properties:
+            name: { const: NASA OSDR RadLab }
+            requestUrl: { type: string, format: uri }
+            fetchedAt: { type: string, format: date-time }
+            sha256: { type: string, pattern: '^[0-9a-f]{64}$' }
+            historical: { const: true }
+            sourceTimeZone: { type: string }
+            timeZoneBasis: { const: configured-assumption }
+        cacheHit: { type: boolean }
+        count: { type: integer, minimum: 0, maximum: 10000 }
+        readings:
+          type: array
+          maxItems: 10000
+          items:
+            type: object
+            required:
+              [
+                id,
+                instrumentId,
+                spacecraft,
+                module,
+                sourceTimestamp,
+                observedAt,
+                indicator,
+                value,
+                unit,
+                quality,
+              ]
+            properties:
+              id: { type: string, pattern: '^[0-9a-f]{64}$' }
+              instrumentId: { enum: [DosTel1, DosTel2] }
+              spacecraft: { const: ISS }
+              module: { const: Columbus }
+              sourceTimestamp: { type: string, description: Texto original de RadLab sin zona }
+              observedAt: { type: string, format: date-time }
+              indicator: { const: absorbedDoseRate }
+              value: { type: [number, 'null'], minimum: 0 }
+              unit: { const: µGy/h }
+              quality:
+                enum: [reported, missing]
+                description: reported conserva el valor recibido, no certifica normalidad ni calidad clínica; missing exige value=null
+    Sample:
+      type: object
+      required: [id, subjectId, indicator, value, unit, observedAt, quality, source, method]
+      description: >-
+        Un indicador por respuesta. ID estable por muestra, sin cambios de valor.
+        Fecha con zona. El cliente rechaza retrocesos y relojes adelantados más de
+        5 s frente a la recepción (comprobación técnica, no clínica).
+        Pares exactos: heartRate/lpm, temperature/°C, oxygen/%, respiration/rpm.
+        quality=missing exige value=null; available/stale exigen número finito.
+        No se convierten unidades. Cero no representa ausencia.
+      properties:
+        id: { type: string, minLength: 1, maxLength: 200 }
+        subjectId: { type: string, minLength: 1, maxLength: 200 }
+        indicator: { enum: [heartRate, temperature, oxygen, respiration] }
+        value: { type: [number, 'null'] }
+        unit: { enum: [lpm, '°C', '%', rpm] }
+        observedAt: { type: string, format: date-time }
+        quality: { enum: [available, stale, missing] }
+        source:
+          type: object
+          required: [kind, id]
+          properties:
+            kind: { const: device }
+            id: { type: string, minLength: 1, maxLength: 200 }
+        method: { enum: [instrument, derived] }

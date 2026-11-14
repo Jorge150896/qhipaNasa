@@ -1,3 +1,4 @@
+import { withSyntheticMeasurements } from '../mission/withSyntheticMeasurements';
 import type { HabitatId } from '@/domain/explorer/models';
 import type { MissionRepository } from '@/domain/mission/ports';
 import type { MissionSnapshot, ScenarioId } from '@/domain/mission/models';
@@ -39,7 +40,7 @@ export class SimulatedHabitatMissionRepository implements MissionRepository {
             ? 'Especialista de sistemas'
             : template.crew[index % template.crew.length].role,
     }));
-    return {
+    return withSyntheticMeasurements({
       ...template,
       id: habitat.id,
       name: habitat.name,
@@ -50,6 +51,6 @@ export class SimulatedHabitatMissionRepository implements MissionRepository {
         id: `${habitat.id}:${entry.id}`,
         crewId: crew[0].id,
       })),
-    };
+    });
   }
 }
