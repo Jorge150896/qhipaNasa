@@ -17,6 +17,7 @@ export function MissionOverviewScreen({
   return (
     <MissionOverviewView
       summary={model.summary}
+      onStartMonitoring={() => onNavigate('monitoring')}
       onOpenModule={() => onNavigate('crew', 'crew-module')}
       onOpenRecord={() => onNavigate('crew', 'crew-health-entry')}
       onReviewSignal={(id) => {

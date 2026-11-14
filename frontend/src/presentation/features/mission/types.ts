@@ -2,6 +2,7 @@ import type { DailyCheckContext, DiscomfortRegion } from '@/domain/mission/daily
 
 export const sections = [
   'overview',
+  'monitoring',
   'crew',
   'habitat',
   'history',
@@ -29,6 +30,7 @@ export interface MetricData {
     value: string;
     numericValue: number | null;
     missing: boolean;
+    trace?: { source: string; quality: string; fields: { label: string; value: string }[] };
   }[];
   chart: {
     paths: string[];

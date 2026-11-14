@@ -1,5 +1,7 @@
 # Desarrollo del frontend
 
+Monitoreo asistido tiene un flujo independiente de preparación/captura/revisión/guardado, adapters de demo/API y registro local por hábitat. La API es configurable y su contrato sigue provisional; ver [uso, arquitectura y límites](monitoring.md). No comparte las capturas con el snapshot sintético del dashboard.
+
 ## Decisiones implementadas
 
 El mapa mantiene el tema Qhipa Pacha y añade la pestaña de despegues de Tierra (`tab=launches`, `site=<id>`). El nuevo catálogo y su estado se aíslan en `launch-sites`, sin modificar `useMission` ni claves del diario. Al cambiar de sitio o salir se desmonta el video; el globo tiene lista HTML equivalente. El botón «Acercar a…» pausa el mapa para inspeccionar el objeto y «Volver a la misión» restaura su encuadre. Fuentes, límites, coordenadas y ciclo de vida en `frontend/src/presentation/features/launch-sites/README.md`.
@@ -156,3 +158,17 @@ El visor utiliza luz lateral neutra y relleno tenue, fondo atenuado y encuadre i
 El selector HTML de destinos aparece antes del Canvas. «Ampliar mapa» desplaza la ficha debajo de la escena para aprovechar el ancho; «Restaurar distribución» recupera las columnas. Es estado visual local de `SpaceExplorerView`, se reinicia al recargar y conserva destino, URL y datos. En móvil la distribución sigue una columna y los controles tienen objetivos de al menos 44 px. El interior modular de nave integrado desde main usa `ShuttleModuleDeck`; la vista exterior del mapa conserva `ShuttleExteriorModel`.
 
 El mapa permite inspeccionar Tierra, Luna, Marte y nave con controles HTML. El enfoque pausa la simulación y ajusta la distancia a los límites visuales y al aspecto del viewport. `PlanetSurface` comparte textura, nubes, relieve y atmósfera entre el mapa y el globo geográfico; las capas opcionales fallidas no impiden seleccionar lugares. La nave mantiene sus zonas y el portal HTML independiente. Procedencia y límites de las texturas locales en `frontend/public/textures/ATTRIBUTION.md`.
+
+### Modelos holográficos conservados en Fabian
+
+La integración de origin/main conserva el explorador, fichas, línea de tiempo y formularios de main. Dentro de Tripulación, «Modelo corporal» permite cambiar entre el astronauta con traje existente y el holograma humano local. El astronauta sigue siendo la entrada inicial. El holograma mantiene sus variantes neutra, masculina y femenina, shader, giro, zoom y lecturas sobre el cuerpo; seleccionar una región abre las fichas de salud del flujo actual. Los accesos HTML de main siguen disponibles si falla el modelo o WebGL.
+
+`useCrewHologramViewModel` administra solo representación y apariencia por hábitat/persona durante la visita. No amplía el ViewModel de salud ni modifica dominio, diario o sensores. Al salir de Tripulación o recargar se reinicia. Los estilos viven en `crew/human-hologram.css`. Los recursos y sus licencias están documentados en `public/models/ATTRIBUTION.md`; el portal de etiquetas permanece separado del Canvas. Las maquetas locales anteriores de Chequeo Diario y Aurora no forman parte de esta integración.
+
+### Procedencia verificable de muestras
+
+Historial añade «Ver origen» por muestra, conservando la distribución y el tema actuales. Los adaptadores sintéticos construyen metadatos cuantitativos portables con sujeto, origen, método, unidad, calidad y tiempo. El mapper prepara la ficha para View; las fases de estudio se mantienen como fases y el contexto de la instantánea no se presenta como actividad confirmada de cada muestra histórica. No se modifica la persistencia. Detalle y límites en [measurement-contract.md](measurement-contract.md).
+
+## Consumir radiación ambiental
+
+El backend Java ya ofrece catálogo y series de NASA RadLab. La web todavía no los consume; crear una feature/adapter ambiental separado del consumidor de signos vitales. Ejemplos, CORS, errores, zonas horarias y límites en [radlab-backend.md](radlab-backend.md). El contrato comparte `docs/contracts/openapi.yaml` y no requiere cambiar paleta o modelos.

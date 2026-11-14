@@ -1,6 +1,7 @@
 node_modules/
 .next/
-out/
+/out/
+/frontend/out/
 coverage/
 *.tsbuildinfo
 .env*

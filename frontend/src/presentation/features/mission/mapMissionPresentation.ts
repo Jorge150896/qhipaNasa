@@ -1,3 +1,4 @@
+import { mapMeasurementTrace } from './mapMeasurementTrace';
 import type { CrewJournal, MissionSnapshot, Reading } from '@/domain/mission/models';
 import { metricLabels } from './constants';
 import type { MetricData, MissionData, SensorKey } from './types';
@@ -12,7 +13,7 @@ const time = (iso: string) =>
   }).format(new Date(iso));
 const date = (iso: string) =>
   new Intl.DateTimeFormat('es-PE', { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(iso));
-function mapMetric(reading: Reading): MetricData {
+function mapMetric(reading: Reading, person: { id: string; name: string }): MetricData {
   const last = reading.samples.at(-1);
   const valid = reading.samples.filter(
     (sample): sample is { at: string; value: number } => sample.value !== null,
@@ -66,6 +67,7 @@ function mapMetric(reading: Reading): MetricData {
       numericValue: sample.value,
       value: sample.value === null ? 'Sin muestra' : `${number(sample.value)} ${reading.unit}`,
       missing: sample.value === null,
+      trace: sample.measurement ? mapMeasurementTrace(sample.measurement, person) : undefined,
     })),
     chart: {
       paths,
@@ -102,7 +104,7 @@ export function mapMissionPresentation(
     zoneId: person.zoneId,
     location: snapshot.zones.find((zone) => zone.id === person.zoneId)?.name ?? 'Sin ubicación',
     sleep: `${number(person.sleepHours)} h`,
-    metrics: person.readings.map(mapMetric),
+    metrics: person.readings.map((reading) => mapMetric(reading, person)),
   }));
   const selected = crew.find((person) => person.id === crewId) ?? crew[0];
   const metric = selected.metrics.find((item) => item.id === metricId) ?? selected.metrics[0];

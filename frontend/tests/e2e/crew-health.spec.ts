@@ -312,7 +312,10 @@ test('error del registro de salud no borra datos ni bloquea los sensores; fallo 
   await expect(
     health.getByRole('button', { name: 'Revisar respuestas', exact: true }),
   ).toBeDisabled();
-  await page.getByRole('button', { name: 'Consultar temperatura corporal', exact: true }).click();
+  await page
+    .getByRole('group', { name: 'Lecturas de la instantánea' })
+    .getByRole('button', { name: 'Temperatura', exact: true })
+    .click();
   await expect(page.getByRole('complementary', { name: 'Temperatura corporal' })).toContainText(
     /36[.,]6/,
   );
@@ -605,11 +608,11 @@ test('la gráfica sincroniza el módulo conocido y oculta la ubicación sin cont
   await sync.click();
   await expect(sync).toHaveAttribute('aria-pressed', 'true');
   const explorer = page.getByRole('region', { name: 'Explorador tridimensional' });
-  const exerciseModule = explorer.getByRole('button', {
-    name: 'Explorar Módulo de ejercicio',
+  const panel = explorer.getByRole('complementary', { name: 'Contexto del módulo' });
+  const exerciseModule = panel.getByRole('button', {
+    name: 'Ver Módulo de ejercicio',
     exact: true,
   });
-  const panel = explorer.getByRole('complementary', { name: 'Contexto del módulo' });
   await expect(exerciseModule).toHaveAttribute('aria-pressed', 'true');
   await expect(panel).toContainText('14:32 UTC');
   const early = telemetry.getByRole('button', { name: '14:18 UTC: 88 lpm', exact: true });

@@ -46,6 +46,16 @@ export function SourcesView({ nasaHistoryHref }: { nasaHistoryHref: string }) {
         </div>
         <div className="source-list">
           <article>
+            <span className="badge">Consumidor configurable</span>
+            <h3>Sesiones de monitoreo asistido</h3>
+            <p>
+              Preparación, captura, repetición, revisión y guardado local. El modo API exige una URL
+              y un sujeto propios; no sustituye errores por datos simulados. El contrato es
+              provisional y todavía no hay proveedor conectado. El modo demo conserva el origen
+              sintético. Los indicadores no determinan diagnóstico ni aptitud para una actividad.
+            </p>
+          </article>
+          <article>
             <span className="badge">Datos históricos reales</span>
             <h3>Inspiration4 · OSD-575</h3>
             <p>
