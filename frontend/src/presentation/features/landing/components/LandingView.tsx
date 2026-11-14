@@ -41,7 +41,7 @@ export function LandingView({
       <a className="qhipa-skip" href="#qhipa-content">
         Ir al contenido
       </a>
-      <SpaceAtmosphere />
+      <SpaceAtmosphere paused={!motionActive} />
       <header className="qhipa-header">
         <button
           className="qhipa-brand"

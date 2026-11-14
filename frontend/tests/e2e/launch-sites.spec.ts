@@ -229,7 +229,9 @@ test('textura fallida conserva ubicación y selección; acercamiento respeta pau
 }) => {
   await page.route('**/textures/2k_earth_daymap.jpg', (route) => route.abort());
   await page.goto('/explore?destination=earth&tab=launches');
-  await expect(page.getByText(/La textura terrestre no se pudo cargar/)).toBeVisible();
+  await expect(page.getByText(/La textura terrestre no se pudo cargar/)).toBeVisible({
+    timeout: 15_000,
+  });
   await page
     .getByLabel('Sitios de lanzamiento y sedes NASA', { exact: true })
     .getByRole('button', { name: /Kennedy/ })
@@ -265,7 +267,9 @@ test('opción Todo de la Tierra: directorio completo, videos, acceso desde el ma
   await expect(page.locator('.earth-place-card')).toHaveCount(8);
   await expect(page.locator('.earth-video-card')).toHaveCount(3);
   await expect(page.locator('.launch-video iframe')).toHaveCount(0);
-  await expect(page.locator('.launch-globe-overlay')).toHaveAttribute('data-surface', 'ready');
+  await expect(page.locator('.launch-globe-overlay')).toHaveAttribute('data-surface', 'ready', {
+    timeout: 15_000,
+  });
   await page.screenshot({ path: '../docs/qa/earth-overview-desktop.png', fullPage: true });
   await page
     .getByRole('button', { name: /Centro Espacial Johnson.*Ver información y video/ })

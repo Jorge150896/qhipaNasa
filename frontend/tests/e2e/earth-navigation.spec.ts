@@ -1,19 +1,22 @@
 import { expect, test } from '@playwright/test';
 
-test('menú Tierra desde misión y mapa, selección activa, móvil y recarga', async ({ page }) => {
+test('menú Tierra desde Tripulación y mapa, tema compartido, móvil y recarga', async ({ page }) => {
   for (const viewport of [
     { width: 1440, height: 1100 },
     { width: 390, height: 844 },
   ]) {
     await page.setViewportSize(viewport);
-    await page.goto('/missions/selene/overview');
+    await page.goto('/missions/selene/crew');
     const nav = page.getByRole('navigation', { name: 'Navegación principal' });
     const earth = nav.getByRole('button', { name: 'Tierra', exact: true });
     const map = nav.getByRole('button', { name: 'Mapa espacial', exact: true });
+    const sky = page.locator('.app-shell > .space-background');
+    await expect(sky).toHaveCSS('position', 'fixed');
     await earth.click();
     await expect(page).toHaveURL('/explore?destination=earth&tab=earth');
     await expect(earth).toHaveAttribute('aria-current', 'page');
     await expect(map).not.toHaveAttribute('aria-current');
+    await expect(sky).toHaveCSS('position', 'fixed');
     await expect(page.locator('.earth-place-card')).toHaveCount(8);
     await page.reload();
     await expect(earth).toHaveAttribute('aria-current', 'page');
@@ -21,6 +24,7 @@ test('menú Tierra desde misión y mapa, selección activa, móvil y recarga', a
     await expect(earth).toHaveAttribute('aria-current', 'page');
     await map.click();
     await expect(map).toHaveAttribute('aria-current', 'page');
+    await expect(sky).toHaveCSS('position', 'fixed');
     await expect(earth).not.toHaveAttribute('aria-current');
     await earth.focus();
     await page.keyboard.press('Enter');

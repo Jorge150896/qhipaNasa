@@ -3,7 +3,7 @@ import { AssistantActionsContext } from '../../mission-assistant/AssistantAction
 import { navigation } from '../constants';
 import type { MissionSection } from '../types';
 import { Icon, type IconName } from '@/ui/Icon';
-import './mission-background.css';
+import { SpaceBackground } from '@/presentation/shared/space/SpaceBackground';
 export function MissionShell({
   section,
   onNavigate,
@@ -16,7 +16,7 @@ export function MissionShell({
   section: MissionSection | 'explorer' | 'earth';
   missionName?: string;
   onOpenExplorer?(): void;
-  onOpenEarth?(): void;
+  onOpenEarth(): void;
   onNavigate(section: MissionSection): void;
   pendingCount?: string;
   children: ReactNode;
@@ -27,17 +27,8 @@ export function MissionShell({
     [setLauncherHost],
   );
   return (
-    <div
-      className={section === 'overview' ? 'app-shell overview-shell' : 'app-shell'}
-      data-mission-section={section}
-    >
-      {section !== 'explorer' && section !== 'earth' && (
-        <div className="mission-background" aria-hidden="true">
-          <span className="mission-background__nebula" />
-          <span className="mission-background__distant" />
-          <span className="mission-background__near" />
-        </div>
-      )}
+    <div className={section === 'overview' ? 'app-shell overview-shell' : 'app-shell'}>
+      <SpaceBackground />
       <a className="skip-link" href="#mission-content">
         Ir al contenido
       </a>
@@ -70,12 +61,14 @@ export function MissionShell({
               <span>Mapa espacial</span>
             </button>
           )}
-          {onOpenEarth && (
-            <button aria-current={section === 'earth' ? 'page' : undefined} onClick={onOpenEarth}>
-              <Icon name="earth" />
-              <span>Tierra</span>
-            </button>
-          )}
+          <button
+            aria-label="Tierra"
+            aria-current={section === 'earth' ? 'page' : undefined}
+            onClick={onOpenEarth}
+          >
+            <Icon name="earth" />
+            <span>Tierra</span>
+          </button>
           {navigation.map((item) => (
             <button
               key={item.id}

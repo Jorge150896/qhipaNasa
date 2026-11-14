@@ -11,13 +11,13 @@ test('portada: Tumi, parallax, pausa y CTA hacia la misión', async ({ page }) =
   await expect
     .poll(() => tumi.evaluate((image: HTMLImageElement) => image.naturalWidth))
     .toBeGreaterThan(0);
-  const sky = page.locator('.qhipa-parallax-far');
-  const before = (await sky.boundingBox())!.x;
+  const sky = page.locator('.space-background__nebula');
   await page.mouse.move(1300, 400);
-  await expect.poll(async () => Math.abs((await sky.boundingBox())!.x - before)).toBeGreaterThan(1);
+  await expect.poll(() => sky.evaluate((layer) => getComputedStyle(layer).translate)).toMatch(/^-/);
   await page.getByRole('button', { name: 'Animar logo de Qhipa Pacha' }).click();
   await page.getByRole('button', { name: 'Pausar animación', exact: true }).click();
   await expect(page.locator('.qhipa-tumi-float')).toHaveCSS('animation-play-state', 'paused');
+  await expect(sky).toHaveCSS('animation-play-state', 'paused');
   await page.getByRole('button', { name: 'Reanudar animación', exact: true }).click();
   await expect(page.locator('.qhipa-tumi-float')).toHaveCSS('animation-play-state', 'running');
   await page.screenshot({
@@ -42,7 +42,7 @@ test('portada móvil y movimiento reducido: estática, accesible y navegable tra
   await page.goto('/');
   await page.reload();
   await expect(page.locator('.qhipa-tumi-float')).toHaveCSS('animation-name', 'none');
-  await expect(page.locator('.qhipa-background-art')).toHaveCSS('animation-name', 'none');
+  await expect(page.locator('.space-background__nebula')).toHaveCSS('animation-name', 'none');
   await expect(page.locator('.qhipa-cta')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({

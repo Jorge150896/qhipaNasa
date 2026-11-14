@@ -13,9 +13,10 @@
   cursor: pointer;
 }
 .explorer-tabs button[aria-selected='true'] {
-  background: var(--selection-bg, #62329b);
+  background: var(--glass-active);
   color: var(--text);
-  border-color: var(--accent);
+  border-color: var(--selection-border);
+  box-shadow: var(--glass-glow);
 }
 .launch-page {
   max-width: 1450px;
