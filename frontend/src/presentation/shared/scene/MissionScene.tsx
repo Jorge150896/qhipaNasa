@@ -79,6 +79,7 @@ function FitShuttleCamera() {
 }
 
 export default function MissionScene(props: Props) {
+  const isShuttle = props.mode === 'ship' && (!props.habitatKind || props.habitatKind === 'ship');
   const [attempt, setAttempt] = useState(0);
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const [cameraReady, setCameraReady] = useState(false);
@@ -146,11 +147,15 @@ export default function MissionScene(props: Props) {
             fallback={<SceneFallback />}
             gl={{ antialias: true, alpha: true }}
           >
-            <SpaceBackdrop radius={100} />
-            <ambientLight intensity={1.8} />
-            <hemisphereLight args={['#e7f5ff', '#34445b', 2]} />
-            <directionalLight position={[-3, 5, 4]} intensity={3.5} />
-            <directionalLight position={[3, 1, -3]} color="#69d9ec" intensity={2} />
+            <SpaceBackdrop radius={100} brightness={isShuttle ? 0.65 : 1} />
+            <ambientLight intensity={isShuttle ? 0.85 : 1.8} />
+            <hemisphereLight args={['#e7f5ff', '#34445b', isShuttle ? 0.8 : 2]} />
+            <directionalLight position={[-3, 5, 4]} intensity={isShuttle ? 2.4 : 3.5} />
+            <directionalLight
+              position={[3, 1, -3]}
+              color="#69d9ec"
+              intensity={isShuttle ? 0.9 : 2}
+            />
             <Suspense
               fallback={
                 <Html portal={{ current: overlay }} center>

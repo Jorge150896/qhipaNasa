@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Group } from 'three';
+import { Color, Group } from 'three';
 import { BackSide, CanvasTexture, SRGBColorSpace } from 'three';
 /** Original local sky illustration. Star positions and clouds are artistic, not catalog data. */
 function makeSky() {
@@ -48,8 +48,15 @@ function makeSky() {
   texture.colorSpace = SRGBColorSpace;
   return texture;
 }
-export function SpaceBackdrop({ radius = 12000 }: { radius?: number }) {
+export function SpaceBackdrop({
+  radius = 12000,
+  brightness = 1,
+}: {
+  radius?: number;
+  brightness?: number;
+}) {
   const texture = useMemo(() => makeSky(), []);
+  const skyColor = useMemo(() => new Color(brightness, brightness, brightness), [brightness]);
   const sky = useRef<Group>(null);
   const { camera } = useThree();
   useFrame(() => {
@@ -60,7 +67,13 @@ export function SpaceBackdrop({ radius = 12000 }: { radius?: number }) {
     <group ref={sky}>
       <mesh rotation={[0, 0.8, 0.15]} renderOrder={-10} raycast={() => null}>
         <sphereGeometry args={[radius, 48, 32]} />
-        <meshBasicMaterial map={texture} side={BackSide} depthWrite={false} toneMapped={false} />
+        <meshBasicMaterial
+          map={texture}
+          color={skyColor}
+          side={BackSide}
+          depthWrite={false}
+          toneMapped={false}
+        />
       </mesh>
     </group>
   );

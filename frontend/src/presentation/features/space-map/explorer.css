@@ -8,10 +8,10 @@
   justify-content: space-between;
   gap: 20px;
   align-items: center;
-  margin-bottom: 26px;
+  margin-bottom: 18px;
 }
 .fleet-heading h1 {
-  font-size: clamp(28px, 2.5vw, 40px);
+  font-size: clamp(26px, 2.1vw, 34px);
   font-weight: 500;
   letter-spacing: -1.5px;
   line-height: 1.15;
@@ -31,8 +31,8 @@
 .fleet-stats {
   display: flex;
   align-items: center;
-  gap: 36px;
-  padding: 18px 22px;
+  gap: 28px;
+  padding: 14px 20px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: linear-gradient(110deg, #331e46, #2d1a3e);
@@ -69,13 +69,13 @@
 }
 .fleet-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 345px;
+  grid-template-columns: minmax(0, 1fr) 310px;
   gap: 20px;
   align-items: start;
 }
 .fleet-map {
   min-width: 0;
-  background: radial-gradient(ellipse at 30% 40%, #8338ec40, transparent 70%), #2d1844;
+  background: #101422;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
@@ -97,7 +97,7 @@
   letter-spacing: 1px;
 }
 .fleet-scene {
-  height: 490px;
+  height: 520px;
   position: relative;
   width: 100%;
 }
@@ -784,4 +784,210 @@
   border-radius: 50%;
   background: #ffdc7c;
   box-shadow: 0 0 9px #ffc356bb;
+}
+.fleet-detail-presets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.fleet-detail-presets > span {
+  margin-right: auto;
+  color: var(--muted);
+  font-size: 11px;
+}
+.fleet-detail-presets button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 9px 13px;
+  background: var(--surface-raised);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 11px;
+}
+.fleet-detail-presets button[aria-pressed='true'] {
+  background: var(--selection-bg, #62329b);
+  border-color: var(--accent);
+}
+
+/* Keep navigation outside the canvas and give the scene a quiet, readable frame. */
+.fleet-map-heading {
+  gap: 16px;
+  background: linear-gradient(120deg, #241834, #171b2c);
+}
+.fleet-map-heading h2 {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+  margin: 8px 0 4px;
+}
+.fleet-map-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.fleet-expand-map {
+  flex-shrink: 0;
+  font-size: 11px;
+  min-height: 44px;
+}
+.fleet-destination-hint {
+  display: none;
+}
+.fleet-map {
+  box-shadow: 0 18px 55px #00000030;
+}
+.fleet-map-label {
+  background: #111b2bed;
+  border-color: #66778c;
+  box-shadow: 0 8px 24px #0008;
+}
+.fleet-view-mode,
+.fleet-transit-controls {
+  background: #101827e8;
+  border-color: #536078;
+}
+.fleet-view-mode strong {
+  color: #eef3fa;
+}
+.fleet-view-mode span {
+  color: #c6cfdf;
+}
+.fleet-destinations {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  background: #171b2b;
+  border-bottom: 1px solid var(--line);
+}
+.fleet-destinations button {
+  background: #232239;
+  min-height: 56px;
+  padding: 10px 8px;
+  gap: 7px;
+}
+.fleet-destinations button > span:nth-child(2) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.fleet-destinations button svg {
+  display: none;
+}
+.fleet-dot-earth {
+  background: radial-gradient(circle at 30% 30%, #9fd9d2, #2879b0 40%, #183d63 75%);
+}
+.fleet-detail-presets,
+.fleet-zoom-toolbar {
+  background: #191c2e;
+}
+.fleet-detail-presets button,
+.fleet-zoom-toolbar button,
+.fleet-reset {
+  min-height: 44px;
+  font-size: 11px;
+}
+.fleet-detail-presets button,
+.fleet-zoom-toolbar button {
+  background: #2b2943;
+  color: #eee8f6;
+}
+.fleet-detail-presets button[aria-pressed='true'] {
+  background: var(--selection-bg, #62329b);
+  border-color: var(--accent);
+}
+.fleet-map-caption {
+  background: #171b2b;
+  color: #c1b9cf;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.fleet-map button:focus-visible,
+.fleet-map input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.fleet-layout-expanded {
+  grid-template-columns: minmax(0, 1fr);
+}
+.fleet-layout-expanded .fleet-scene {
+  height: clamp(520px, 65vh, 760px);
+}
+@media (max-width: 1200px) {
+  .fleet-destinations {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 1000px) {
+  .fleet-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .fleet-map-heading {
+    gap: 10px;
+    padding: 14px 12px;
+  }
+  .fleet-map-heading h2 {
+    font-size: 18px;
+    margin-bottom: 0;
+  }
+  .fleet-map-heading p {
+    display: none;
+  }
+  .fleet-expand-map {
+    justify-content: center;
+    max-width: 132px;
+    padding: 8px;
+  }
+  .fleet-expand-map svg {
+    display: none;
+  }
+  .fleet-heading h1 {
+    font-size: 26px;
+  }
+  .fleet-destination-hint {
+    display: block;
+    margin: 0;
+    padding: 8px 12px 0;
+    color: var(--muted);
+    font-size: 11px;
+    background: #171b2b;
+  }
+  .fleet-destinations {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+  }
+  .fleet-destinations button {
+    flex: 0 0 132px;
+    scroll-snap-align: start;
+  }
+  .fleet-scene,
+  .fleet-layout-expanded .fleet-scene {
+    height: 420px;
+  }
+  .fleet-detail-presets {
+    gap: 6px;
+    padding: 12px;
+  }
+  .fleet-detail-presets > span {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+  .fleet-detail-presets button {
+    flex: 1;
+    padding: 8px;
+  }
+  .fleet-view-mode {
+    max-width: calc(100% - 150px);
+  }
+  .fleet-transit-controls > span {
+    max-width: 50%;
+    line-height: 1.5;
+  }
+  .fleet-zoom-toolbar label {
+    gap: 12px;
+  }
 }

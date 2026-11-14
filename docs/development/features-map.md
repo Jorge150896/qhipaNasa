@@ -51,3 +51,9 @@ Los modelos, dominio, adapters, DI y claves de persistencia no se reorganizan po
 ## Animación de carga
 
 `loading-preview/` ofrece la vista de revisión `/loading-preview`, con Screen/ViewModel/View y pausa local. El componente reusable del Tumi y el temporizador de introducción viven en `presentation/shared/loading/`; consumidores reales: misión, mapa y fallback de rutas. No se duplican operaciones ni datos del provider.
+
+## Sitios de lanzamiento
+
+La pestaña `/explore?destination=earth&tab=launches` pertenece a `presentation/features/launch-sites`: `LaunchSitesScreen`, `useLaunchSitesViewModel`, `types.ts` y `components/LaunchSitesView`. `space-map` conecta la navegación sin asumir el estado privado de la feature. La selección `site` vive en URL. El catálogo se compone en `di/createLaunchSitesDependencies.client.ts`. No modifica registros ni contratos de misión.
+
+`tab=earth` ofrece «Todo de la Tierra», una vista general de los mismos sitios, sedes y videos mediante `components/EarthOverview`. Se accede desde la tercera pestaña o desde la tarjeta/marcador de Tierra; no tiene un catálogo, estado de misión o capa de negocio adicionales. Conserva el parámetro `site` y reutiliza la ficha y el reproductor del flujo.

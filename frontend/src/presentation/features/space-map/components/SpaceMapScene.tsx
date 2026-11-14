@@ -1,4 +1,5 @@
 'use client';
+import { StationModel } from '@/presentation/shared/scene/StationModel';
 import {
   Component,
   useState,
@@ -10,7 +11,7 @@ import {
 } from 'react';
 import { Canvas, useFrame, type ThreeEvent } from '@react-three/fiber';
 import { Group, Vector3 } from 'three';
-import { mapPositions, transitCurve, transitProgress } from './spaceMapLayout';
+import { mapObjectRadii, mapPositions, transitCurve, transitProgress } from './spaceMapLayout';
 import { Html, Line } from '@react-three/drei';
 import { ShuttleModel } from '@/presentation/shared/scene/ShuttleModel';
 import { Icon } from '@/ui/Icon';
@@ -54,7 +55,7 @@ function TransitObject({
     group.current.visible =
       !(destinationId === 'moon' || destinationId === 'station') || view.ratio < 4;
     if ((destinationId === 'earth' || destinationId === 'mars') && heading.current) {
-      const radius = destinationId === 'earth' ? 1.13 : 0.8;
+      const radius = mapObjectRadii[destinationId];
       const factor = destinationId === 'earth' ? 0.008 : 0.007;
       heading.current.scale.setScalar(
         1 +
@@ -78,42 +79,6 @@ function TransitObject({
     <group ref={group} {...props}>
       <group ref={heading}>{model}</group>
       {children}
-    </group>
-  );
-}
-function StationModel() {
-  return (
-    <group rotation={[0.2, 0.2, -0.3]} scale={0.7}>
-      <mesh rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.18, 0.18, 1.8, 20]} />
-        <meshStandardMaterial color="#d1dce2" metalness={0.6} roughness={0.4} />
-      </mesh>
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.24, 0.24, 1, 20]} />
-        <meshStandardMaterial color="#edf0e7" metalness={0.4} />
-      </mesh>
-      {[-1, 1].map((side) => (
-        <group key={side} position={[side * 0.9, 0, 0]}>
-          <mesh>
-            <boxGeometry args={[0.07, 2.2, 0.06]} />
-            <meshStandardMaterial color="#bba177" />
-          </mesh>
-          {[-1, 1].map((wing) => (
-            <group key={wing} position={[wing * 0.4, 0, 0]}>
-              <mesh>
-                <boxGeometry args={[0.65, 2, 0.035]} />
-                <meshStandardMaterial color="#1c578e" metalness={0.6} roughness={0.35} />
-              </mesh>
-              {[-0.7, -0.35, 0, 0.35, 0.7].map((y) => (
-                <mesh key={y} position={[0, y, 0.025]}>
-                  <boxGeometry args={[0.65, 0.018, 0.01]} />
-                  <meshStandardMaterial color="#6598b3" />
-                </mesh>
-              ))}
-            </group>
-          ))}
-        </group>
-      ))}
     </group>
   );
 }
@@ -142,11 +107,13 @@ function MapObjects({
   portal,
   visibleCard,
   onDismissCard,
+  onOpenEarthOverview,
   level,
 }: {
   level: SolarViewLevel;
   visibleCard: DestinationKey | null;
   onDismissCard(): void;
+  onOpenEarthOverview(): void;
   destinations: DestinationData[];
   selected: DestinationKey;
   onSelect(id: DestinationKey): void;
@@ -181,10 +148,7 @@ function MapObjects({
           position={mapPositions[destination.id]}
           model={
             destination.id === 'earth' || destination.id === 'moon' || destination.id === 'mars' ? (
-              <PlanetModel
-                kind={destination.id}
-                radius={destination.id === 'earth' ? 1.13 : destination.id === 'moon' ? 0.47 : 0.8}
-              />
+              <PlanetModel kind={destination.id} radius={mapObjectRadii[destination.id]} />
             ) : destination.id === 'station' ? (
               <StationModel />
             ) : (
@@ -259,6 +223,11 @@ function MapObjects({
                 style={{ pointerEvents: 'auto' }}
               >
                 <div className="fleet-map-callout">
+                  {destination.id === 'earth' && (
+                    <button className="fleet-earth-overview" onClick={onOpenEarthOverview}>
+                      Ver todo de la Tierra ↗
+                    </button>
+                  )}
                   <button
                     className="fleet-map-label"
                     aria-label={`Explorar ${destination.name} en el mapa 3D`}
@@ -293,11 +262,13 @@ export default function SpaceMapScene(props: {
   selected: DestinationKey;
   visibleCard: DestinationKey | null;
   onDismissCard(): void;
+  onOpenEarthOverview(): void;
   onSelect(id: DestinationKey): void;
 }) {
   const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [inspection, setInspection] = useState<DestinationKey | null>(null);
   const [view, setView] = useState<{ level: SolarViewLevel; zoom: number }>({
     level: 'mission',
     zoom: 0,
@@ -310,8 +281,16 @@ export default function SpaceMapScene(props: {
       ),
     [],
   );
-  const navigateZoom = (action: ZoomRequest['action'], value?: number) =>
+  const navigateZoom = (action: ZoomRequest['action'], value?: number) => {
+    if (action === 'mission' || action === 'system' || action === 'slider') setInspection(null);
     setRequest((previous) => ({ action, value, version: previous.version + 1 }));
+  };
+  const inspect = (id: DestinationKey) => {
+    setPaused(true);
+    setInspection(id);
+    setRequest((previous) => ({ action: 'focus', destination: id, version: previous.version + 1 }));
+    props.onSelect(id);
+  };
   const reducedMotion = useSyncExternalStore(
     subscribeReducedMotion,
     getReducedMotion,
@@ -320,6 +299,27 @@ export default function SpaceMapScene(props: {
   const motionPaused = paused || reducedMotion;
   return (
     <>
+      <div className="fleet-detail-presets" role="group" aria-label="Vistas de detalle 3D">
+        <span>Explorar de cerca</span>
+        {(
+          [
+            { id: 'earth', label: 'Tierra' },
+            { id: 'moon', label: 'Luna' },
+            { id: 'mars', label: 'Marte' },
+            { id: 'station', label: 'Aurora' },
+            { id: 'ship', label: 'Nave' },
+          ] as const
+        ).map((item) => (
+          <button
+            key={item.id}
+            aria-pressed={inspection === item.id}
+            onClick={() => inspect(item.id)}
+            aria-label={`Ver ${item.label} de cerca`}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
       <div className="fleet-scene" aria-label="Mapa espacial 3D interactivo">
         <div className="starfield" aria-hidden="true" />
         <div className="scene-overlay" ref={setOverlay} />
@@ -333,10 +333,11 @@ export default function SpaceMapScene(props: {
               gl={{ antialias: true, alpha: true }}
               frameloop="demand"
             >
-              <SpaceBackdrop />
-              <ambientLight intensity={0.9} />
-              <directionalLight position={[1.3, 4.2, 4]} intensity={2.7} color="#fff0d4" />
-              <directionalLight position={[4, -2, -3]} intensity={0.4} color="#91bcd4" />
+              <SpaceBackdrop brightness={0.22} />
+              <ambientLight intensity={0.28} />
+              <hemisphereLight args={['#dce5ef', '#080d19', 0.2]} />
+              <directionalLight position={[-7, 4, 6]} intensity={2.7} color="#fffaf3" />
+              <directionalLight position={[4, -2, -3]} intensity={0.18} color="#91bcd4" />
               <SceneMotion paused={motionPaused}>
                 <SolarNavigation
                   request={request}
@@ -356,13 +357,17 @@ export default function SpaceMapScene(props: {
         </MapBoundary>
         <div className="fleet-view-mode" role="status">
           <strong>
-            {view.level === 'mission'
-              ? 'Vista de misión'
-              : view.level === 'inner'
-                ? 'Contexto solar'
-                : 'Sistema solar'}
+            {inspection
+              ? `Detalle · ${props.destinations.find((destination) => destination.id === inspection)?.name}`
+              : view.level === 'mission'
+                ? 'Vista de misión'
+                : view.level === 'inner'
+                  ? 'Contexto solar'
+                  : 'Sistema solar'}
           </strong>
-          <span>Seguimiento Tierra ↔ Marte</span>
+          <span>
+            {inspection ? 'Inspección pausada · arrastra para rotar' : 'Seguimiento Tierra ↔ Marte'}
+          </span>
         </div>
         <div className="fleet-transit-controls">
           <span>Movimientos acelerados · órbitas y tamaños ilustrativos</span>
@@ -391,6 +396,10 @@ export default function SpaceMapScene(props: {
       </div>
       <div className="fleet-zoom-toolbar" aria-label="Escala de exploración">
         <div>
+          <button onClick={() => inspect(props.selected)}>
+            Acercar a{' '}
+            {props.destinations.find((destination) => destination.id === props.selected)?.name}
+          </button>
           <button onClick={() => navigateZoom('system')}>Ver sistema solar</button>
           <button onClick={() => navigateZoom('mission')}>Volver a la misión</button>
           {props.visibleCard && <button onClick={props.onDismissCard}>Cerrar tarjeta</button>}

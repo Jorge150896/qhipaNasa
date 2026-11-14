@@ -71,6 +71,10 @@ Las skills se informan mediante este documento común y sus referencias cruzadas
 
 ## Implementación de frontend
 
+Los contratos de reutilización de los componentes visuales compartidos están en `docs/development/reusable-3d.md`. `StationModel` reside ahora en `presentation/shared/scene` y no depende de la feature de mapa. `PlanetSurface`, `ShuttleExteriorModel` y `SpaceBackdrop` mantienen el mismo límite visual, sin repositorios ni navegación. El resumen de cambios de Tierra y explorador está en `docs/development/earth-and-explorer-delivery.md`.
+
+El explorador incorpora `launch-sites`, una feature independiente de catálogo histórico de sitios y videos. Screen/ViewModel/View y `LoadLaunchSites -> LaunchSitesRepository -> LocalLaunchSitesRepository`, compuestos en DI. No añade endpoints ni estado al flujo de misión. La URL conserva pestaña y sitio; el globo y el reproductor se cargan bajo demanda. `presentation/shared/scene/PlanetSurface` comparte texturas planetarias locales entre ambos visores, con liberación y fallback. Documentación en `frontend/src/presentation/features/launch-sites/README.md`.
+
 La guía operativa y los ciclos de vida de estado se documentan en `docs/development/frontend.md`. Los siguientes incrementos están en `docs/development/roadmap.md`. `MissionWorkspaceProvider` conserva el estado del flujo entre rutas y compone los casos de uso; el layout y las páginas Next permanecen delgadas.
 
 ## Reglas compartidas para nuevas contribuciones
