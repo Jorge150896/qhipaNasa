@@ -1,0 +1,4 @@
+interface:
+  display_name: "Java Spring · Clean Architecture"
+  short_description: "Backend NASA SOLID coordinado con Next.js"
+  default_prompt: "Usa $java-spring-clean-architecture para desarrollar el backend ASTRA con Java y Spring Boot, Clean Architecture y SOLID, coordinando sus contratos con el frontend Next.js."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Next React · Clean Architecture"
+  short_description: "Frontend NASA con SOLID y patrones de scotia"
+  default_prompt: "Usa $next-react-clean-architecture para desarrollar el frontend ASTRA con Next.js, React, Clean Architecture y SOLID, siguiendo los patrones adaptados de scotia y coordinando sus contratos con el backend Java y Spring Boot."
