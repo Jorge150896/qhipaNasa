@@ -217,7 +217,10 @@ test('móvil y sin modelo 3D: controles de salud y autorregistro disponibles', a
     page.getByRole('heading', { name: 'El visor 3D no está disponible', exact: true }),
   ).toBeVisible({ timeout: 15_000 });
   const health = page.getByRole('region', { name: 'Salud por sistemas', exact: true });
-  await page.getByRole('button', { name: /SpO₂.*Sin señal reciente/ }).click();
+  await page
+    .getByRole('group', { name: 'Lecturas de la instantánea' })
+    .getByRole('button', { name: 'SpO₂', exact: true })
+    .click();
   const oxygenCard = page.getByRole('complementary', { name: 'Saturación periférica' });
   await expect(oxygenCard).toContainText('Sin señal reciente');
   await expect(oxygenCard).toContainText('Última lectura disponible');
