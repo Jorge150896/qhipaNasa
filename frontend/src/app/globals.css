@@ -5,11 +5,14 @@
   --brand-purple: #8338ec;
   --brand-charcoal: #212529;
   --brand-light: #e9ecef;
-  --bg: #28133f;
-  --surface: #3b2457ed;
-  --surface-raised: #482b66;
-  --line: #765494;
-  --line-soft: #563670;
+  --bg: var(--brand-charcoal);
+  --surface: #251c30c9;
+  --surface-raised: #342347;
+  --line: #b48cd75c;
+  --line-soft: #d9bcff26;
+  --glass: linear-gradient(145deg, #3e255440, #19142177);
+  --glass-active: linear-gradient(125deg, #8338ec38, #46244a38);
+  --glass-glow: 0 0 24px #8338ec2b, inset 0 0 14px #fb56070e;
   --text: var(--brand-light);
   --muted: #ded0ed;
   --quiet: #c4aed9;
@@ -198,6 +201,8 @@ button:hover:not(:disabled) {
   font-size: 10px;
 }
 .app-shell {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: 218px minmax(0, 1fr);
   min-height: 100dvh;
@@ -206,8 +211,6 @@ button:hover:not(:disabled) {
   position: sticky;
   top: 0;
   height: 100dvh;
-  border-right: 1px solid var(--line-soft);
-  background: linear-gradient(180deg, #3b1c5ef5, #251336f5);
   display: flex;
   flex-direction: column;
   padding: 30px 14px 20px;
@@ -261,8 +264,10 @@ button:hover:not(:disabled) {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  overflow-y: auto;
 }
 .sidebar nav button {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 11px;
@@ -280,10 +285,10 @@ button:hover:not(:disabled) {
   background: #321d44;
 }
 .sidebar nav button[aria-current='page'] {
-  background: linear-gradient(100deg, var(--selection-soft), #39214e);
+  background: var(--glass-active);
   color: var(--selection-text);
-  border-color: var(--selection-border);
-  box-shadow: inset 3px 0 0 var(--selection);
+  border-color: #c79af36b;
+  box-shadow: var(--glass-glow);
 }
 .nav-count {
   display: grid;
@@ -302,7 +307,6 @@ button:hover:not(:disabled) {
   align-items: center;
   margin-top: auto;
   padding: 20px 8px 0;
-  border-top: 1px solid var(--line-soft);
   color: var(--quiet);
   font-size: 10px;
 }
@@ -318,14 +322,12 @@ button:hover:not(:disabled) {
 }
 .topbar {
   min-height: 69px;
-  border-bottom: 1px solid var(--line-soft);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   padding: 0 30px;
   gap: 20px;
-  background: #271735;
 }
 .breadcrumb {
   display: flex;
@@ -1291,7 +1293,6 @@ dd {
   gap: 10px;
   flex-wrap: wrap;
   padding: 16px 30px;
-  border-top: 1px solid var(--line-soft);
   color: #a7a2af;
   font-size: 9px;
 }
@@ -1369,7 +1370,6 @@ dd {
   .sidebar {
     padding-left: 9px;
     padding-right: 9px;
-    background: linear-gradient(180deg, #3b1c5ef5, #251336f5);
   }
   .sidebar nav button {
     font-size: 11px;
@@ -1552,10 +1552,7 @@ dd {
   .sidebar {
     height: auto;
     position: relative;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
     padding: 16px 14px 9px;
-    background: linear-gradient(180deg, #3b1c5ef5, #251336f5);
   }
   .brand {
     justify-content: flex-start;
@@ -1976,21 +1973,6 @@ dd {
   }
 }
 
-/* Space backdrop stays behind the readable purple surfaces. */
-.app-shell {
-  position: relative;
-  isolation: isolate;
-}
-.app-shell:not(:has(> .mission-background))::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    linear-gradient(110deg, #32164bd9, #451c6596 55%, #28103ddb),
-    url('/backgrounds/space-purple-orange-v1.png') center / cover no-repeat;
-}
 .brand-name {
   white-space: nowrap;
 }
@@ -2002,9 +1984,6 @@ dd {
   box-shadow:
     inset 0 1px 0 #ead7ff0d,
     0 8px 30px #14062318;
-}
-.topbar {
-  backdrop-filter: blur(12px);
 }
 
 ul.source-list {

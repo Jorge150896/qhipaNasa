@@ -1,4 +1,5 @@
 import { TumiHead } from './TumiHead';
+import { SpaceBackground } from '../space/SpaceBackground';
 import './tumi-loader.css';
 
 export function TumiLoader({
@@ -22,11 +23,7 @@ export function TumiLoader({
       aria-label="Cargando Qhipa Pacha"
       aria-busy={busy}
     >
-      <div className="tumi-loader-atmosphere" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
+      {variant === 'fullscreen' && <SpaceBackground paused={paused} />}
       <div className="tumi-loader-content">
         <p className="tumi-loader-brand">
           QHIPA <strong>PACHA</strong>

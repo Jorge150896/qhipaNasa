@@ -35,7 +35,7 @@
   padding: 14px 20px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: linear-gradient(110deg, #331e46, #2d1a3e);
+  background: var(--surface);
   margin-bottom: 20px;
 }
 .fleet-stats > div {
@@ -75,7 +75,7 @@
 }
 .fleet-map {
   min-width: 0;
-  background: #101422;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
@@ -240,8 +240,8 @@
 }
 .fleet-detail {
   padding: 22px;
-  border: 1px solid #482a63;
-  background: linear-gradient(160deg, #331e46, #2c1a3c);
+  border: 1px solid var(--line);
+  background: var(--surface);
   border-radius: var(--radius);
 }
 .fleet-detail > .eyebrow {
@@ -816,7 +816,6 @@
 /* Keep navigation outside the canvas and give the scene a quiet, readable frame. */
 .fleet-map-heading {
   gap: 16px;
-  background: linear-gradient(120deg, #241834, #171b2c);
 }
 .fleet-map-heading h2 {
   font-size: 20px;

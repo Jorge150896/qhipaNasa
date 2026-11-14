@@ -83,12 +83,14 @@
 
 .mission-overview-explorer .metric-card {
   padding: 12px 15px;
-  background: var(--selection-soft);
+  background: var(--glass);
+  border-color: var(--line-soft);
 }
 
 .mission-overview-explorer .metric-card[aria-pressed='true'] {
-  background: linear-gradient(135deg, #743db6, #502783);
-  box-shadow: inset 0 0 0 1px var(--selection-border);
+  background: var(--glass-active);
+  border-color: var(--selection-border);
+  box-shadow: var(--glass-glow);
 }
 
 .mission-overview-explorer .metric-number {
@@ -101,14 +103,12 @@
 }
 
 .mission-overview-explorer .scene-panel {
-  background: #191630;
+  background: var(--surface);
 }
 
 @media (min-width: 901px) {
   .overview-shell .topbar {
     min-height: 45px;
-    background: transparent;
-    border-bottom-color: transparent;
   }
 
   .mission-page.overview-page {

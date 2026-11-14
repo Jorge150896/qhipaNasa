@@ -4,7 +4,7 @@ Rama de trabajo: `feature/juanluis`. Implementación frontend sobre Next.js/Reac
 
 ## Cambios incluidos
 
-- Menú vertical «Tierra» con icono de globo, disponible desde el explorador y las pantallas de misión salvo Tripulación. Abre `/explore?destination=earth&tab=earth`; conserva un estado activo distinto del mapa.
+- Menú «Tierra» con icono de globo, disponible desde el explorador y todas las pantallas de misión, incluida Tripulación. Abre `/explore?destination=earth&tab=earth` y conserva un estado activo distinto del mapa.
 - Tres pestañas: mapa espacial, despegues y vista general de Tierra. Las entradas previas siguen funcionando y el lugar seleccionado se conserva en `site=<id>`.
 - Catálogo local de Kennedy, Vandenberg, Kourou, NASA Headquarters, Johnson, Goddard, Marshall y JPL. Incluye nombre completo, función, ubicación aproximada, fuentes oficiales y relación con la misión.
 - Card compacta junto a cada punto frontal del globo, con línea de conexión y selección individual. Los lugares próximos ya no se agrupan. Las etiquetas tienen una disposición visual específica para este catálogo; al ampliar el catálogo hay que revisar dicha disposición.

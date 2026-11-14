@@ -12,9 +12,8 @@
   display: flex;
   flex-direction: column;
   overflow: clip;
-  background: #160a2c;
+  background: var(--qhipa-dark);
   color: var(--qhipa-light);
-  font-family: Arial, Helvetica, sans-serif;
 }
 .qhipa-landing button {
   font: inherit;
@@ -49,36 +48,9 @@
   inset: -24px;
   transition: transform 750ms ease-out;
 }
-.qhipa-parallax-far {
-  transform: translate(calc(var(--qhipa-pointer-x) * -0.4), calc(var(--qhipa-pointer-y) * -0.4));
-}
-.qhipa-background-art {
-  position: absolute;
-  inset: -15px;
-  background: url('/backgrounds/space-purple-orange-v1.png') center / cover no-repeat;
-  opacity: 0.8;
-  animation: qhipa-nebula-drift 65s ease-in-out infinite alternate;
-}
-.qhipa-vignette {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(90deg, #14092590, #16092814 65%),
-    linear-gradient(0deg, #140923d9 0%, transparent 25%, transparent 78%, #14092380);
-}
-.qhipa-starfield {
-  opacity: 0.5;
-  background-image:
-    radial-gradient(1px 1px at 14% 30%, #fff9, transparent),
-    radial-gradient(2px 2px at 65% 70%, #ffe6a7, transparent),
-    radial-gradient(1px 1px at 85% 20%, #e9ecef, transparent);
-  background-size:
-    270px 230px,
-    410px 330px,
-    350px 290px;
-}
-.qhipa-parallax-mid {
-  transform: translate(calc(var(--qhipa-pointer-x) * -0.9), calc(var(--qhipa-pointer-y) * -0.9));
+.qhipa-landing[data-motion='active'] .space-background__nebula {
+  translate: calc(var(--qhipa-pointer-x) * -0.4) calc(var(--qhipa-pointer-y) * -0.4);
+  transition: translate 750ms ease-out;
 }
 .qhipa-parallax-near {
   transform: translate(calc(var(--qhipa-pointer-x) * 1.5), calc(var(--qhipa-pointer-y) * 1.5));
@@ -243,9 +215,9 @@
   justify-content: center;
   gap: 22px;
   padding: 18px 24px;
-  border: 1px solid #fff3cb;
-  border-radius: 13px;
-  background: linear-gradient(145deg, #fff0c4, var(--qhipa-yellow) 60%, #f6cf83);
+  border: 1px solid var(--qhipa-orange);
+  border-radius: 999px;
+  background: var(--qhipa-orange);
   color: var(--qhipa-dark);
   box-shadow:
     0 5px 22px #fb56071c,
@@ -278,9 +250,10 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  border: 0;
-  padding: 12px 0;
-  background: transparent;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  padding: 12px 18px;
+  background: var(--glass);
   color: #e9ecefc9;
   font-size: 12px !important;
 }
@@ -393,7 +366,6 @@
   width: min(1200px, calc(100% - 96px));
   margin: auto auto 0;
   padding: 24px 0 25px;
-  border-top: 1px solid #ead7ff14;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -436,14 +408,6 @@
 }
 .qhipa-landing[data-motion='paused'] .qhipa-parallax {
   transform: none;
-}
-@keyframes qhipa-nebula-drift {
-  from {
-    transform: translate(-4px, -3px) scale(1.04);
-  }
-  to {
-    transform: translate(10px, 8px) scale(1.07);
-  }
 }
 @keyframes qhipa-planet-drift {
   from {
@@ -567,12 +531,6 @@
   }
   .qhipa-flight-caption {
     bottom: -1%;
-  }
-  .qhipa-background-art {
-    background-position: 58% center;
-  }
-  .qhipa-vignette {
-    background: linear-gradient(180deg, #150a28a8, #1b0b3985 30%, #1a0b3520 65%, #140923da);
   }
   .qhipa-near-planet {
     width: 48px;

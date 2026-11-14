@@ -1,46 +1,50 @@
-.mission-background {
+.space-background {
   position: fixed;
   inset: 0;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
-  background: #212529;
+  background: var(--brand-charcoal);
 }
 
-.mission-background > span,
-.mission-background::after {
+.space-background > span,
+.space-background::after {
   position: absolute;
   inset: 0;
 }
 
-.mission-background > span {
+.space-background > span {
   inset: -7%;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
 }
 
-.mission-background__nebula {
+.space-background__nebula {
   opacity: 0.8;
   background-image: url('/backgrounds/mission-nebula-4k.webp');
   animation: mission-nebula-drift 96s ease-in-out infinite;
 }
 
-.mission-background__distant {
+.space-background__distant {
   background-image: url('/backgrounds/mission-stars-distant-4k.webp');
   animation: mission-distant-drift 96s ease-in-out infinite;
 }
 
-.mission-background__near {
+.space-background__near {
   background-image: url('/backgrounds/mission-stars-near-4k.webp');
   animation: mission-near-drift 48s ease-in-out infinite;
 }
 
-.mission-background::after {
+.space-background::after {
   content: '';
   background:
-    radial-gradient(ellipse at 52% 46%, #15151f99 0%, #19192363 35%, transparent 73%),
-    radial-gradient(ellipse at 48% 42%, transparent 26%, #10101885 100%);
+    radial-gradient(ellipse at 72% 48%, #0c0c1270, transparent 65%),
+    radial-gradient(ellipse at 48% 42%, #11101736, #0909108c);
+}
+
+.space-background[data-paused='true'] > span {
+  animation-play-state: paused;
 }
 
 @keyframes mission-nebula-drift {
@@ -82,7 +86,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mission-background > span {
+  .space-background > span {
     animation: none;
   }
 }

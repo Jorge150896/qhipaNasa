@@ -929,42 +929,23 @@
   scroll-margin-top: 80px;
 }
 
-/* The shell's sky continues through the body viewer and behind its controls. */
-.app-shell[data-mission-section='crew'] {
-  --crew-glass: linear-gradient(145deg, #3e255440, #19142177);
-  --crew-glass-edge: #d9bcff26;
-  --crew-glass-active: linear-gradient(125deg, #8338ec38, #46244a38);
-  --crew-glass-glow: 0 0 24px #8338ec2b, inset 0 0 14px #fb56070e;
-}
-
-[data-mission-section='crew'] .topbar,
-[data-mission-section='crew'] .sidebar,
-[data-mission-section='crew'] .app-footer {
-  border-color: transparent;
-  box-shadow: none;
-  background: transparent;
-  backdrop-filter: none;
-}
-
-[data-mission-section='crew'] .sidebar-bottom,
 .crew-page .crew-section-links,
 .crew-page .crew-history .crew-timeline {
   border-color: transparent;
 }
 
-[data-mission-section='crew'] .sidebar nav button[aria-current='page'],
 .crew-page .crew-picker button[aria-pressed='true'],
 .crew-page .crew-body-stage .metric-card[aria-pressed='true'] {
   border-color: #c79af36b;
-  background: var(--crew-glass-active);
-  box-shadow: var(--crew-glass-glow);
+  background: var(--glass-active);
+  box-shadow: var(--glass-glow);
 }
 
 .crew-page .crew-picker button:not([aria-pressed='true']),
 .crew-page .crew-body-stage .metric-card,
 .crew-page .crew-region-controls .button {
-  border-color: var(--crew-glass-edge);
-  background: var(--crew-glass);
+  border-color: var(--line-soft);
+  background: var(--glass);
   border-radius: 999px;
 }
 
@@ -1001,9 +982,9 @@
 }
 
 .crew-page .scene-panel:has(.crew-body-stage) .segmented {
-  border-color: var(--crew-glass-edge);
+  border-color: var(--line-soft);
   border-radius: 999px;
-  background: var(--crew-glass);
+  background: var(--glass);
 }
 
 .crew-page .scene-panel:has(.crew-body-stage) .segmented button {
@@ -1032,9 +1013,9 @@
 
 .crew-page .crew-body-stage .crew-hologram,
 .crew-page .crew-history {
-  border: 1px solid var(--crew-glass-edge);
+  border: 1px solid var(--line-soft);
   border-radius: 24px;
-  background: var(--crew-glass);
+  background: var(--glass);
   box-shadow: 0 15px 50px #130d222e;
 }
 
@@ -1074,10 +1055,4 @@
     align-self: start;
     margin: 16px 0 0;
   }
-}
-
-[data-mission-section='crew'] .mission-background::after {
-  background:
-    radial-gradient(ellipse at 72% 48%, #0c0c1270, transparent 65%),
-    radial-gradient(ellipse at 48% 42%, #11101736, #0909108c);
 }
