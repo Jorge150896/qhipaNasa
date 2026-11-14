@@ -8,6 +8,7 @@ import { DailyCheckScreen } from '../daily-check/DailyCheckScreen';
 import { ObservationsScreen } from '../observations/ObservationsScreen';
 import { SimulationScreen } from '../simulation/SimulationScreen';
 import { SourcesScreen } from '../sources/SourcesScreen';
+import { MonitoringScreen } from '../monitoring/MonitoringScreen';
 export function MissionFeatureScreen({
   section,
   data,
@@ -24,6 +25,8 @@ export function MissionFeatureScreen({
   onNavigate(section: MissionSection, anchor?: CrewEntryAnchor): void;
 }) {
   switch (section) {
+    case 'monitoring':
+      return <MonitoringScreen habitatId={habitatId} person={data.selected} />;
     case 'overview':
       return (
         <MissionOverviewScreen
@@ -64,6 +67,6 @@ export function MissionFeatureScreen({
     case 'simulation':
       return <SimulationScreen selected={data.scenario} onSelect={actions.selectScenario} />;
     case 'sources':
-      return <SourcesScreen habitatId={habitatId} />;
+      return <SourcesScreen />;
   }
 }

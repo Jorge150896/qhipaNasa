@@ -12,18 +12,16 @@ export interface CrewViewProps {
   onSelectTelemetrySensor(id: SensorKey): void;
   telemetryMetric?: MetricData;
   trendInCard: boolean;
-  sampleAt?: string;
-  synchronizedMoment?: CrewTimelineDetail;
-  onToggleSynchronization(): void;
   dashboard: Pick<
     MissionDashboardProps,
     'data' | 'habitatLabel' | 'scene' | 'mode' | 'onModeChange'
-  >;
+  > & {
+    onSelectMetric(id: SensorKey): void;
+  };
 }
 
 export interface CrewHologramData {
   title: string;
-  sensorId?: SensorKey;
   entryAction: string;
   recordKind?: 'vision' | 'fitness';
   icon: IconName;
@@ -42,7 +40,6 @@ export interface CrewModuleData {
   crewLocation: string;
   activity: string;
   occupiedId: string;
-  synchronizedMoment?: CrewTimelineDetail;
   crewInSelectedModule: boolean;
   timestamp: string;
   zones: { id: string; name: string; shortName: string; code?: string }[];

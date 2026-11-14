@@ -1,7 +1,5 @@
 import { Html, useGLTF } from '@react-three/drei';
-import { useEffect, useMemo, useRef, type RefObject } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import { Box3, PerspectiveCamera, Sphere, type Group, type PointLight } from 'three';
+import { useMemo, type RefObject } from 'react';
 import { bodyZones, type SceneBodyRegion, type SceneSensor } from './astronautBodyZones';
 const hotspots: {
   id: SceneSensor;
@@ -27,12 +25,10 @@ export function AstronautModel({
   portal,
   selectedSystem,
   activeBodyRegion,
-  onFrameDistance,
   onSelectSystem,
 }: {
   selectedSystem?: string;
   activeBodyRegion?: SceneBodyRegion;
-  onFrameDistance?(distance: number): void;
   onSelectSystem?(id: 'cardio' | 'fitness' | 'vision'): void;
   selected: SceneSensor;
   onSelect(id: SceneSensor): void;
@@ -41,61 +37,8 @@ export function AstronautModel({
   const gltf = useGLTF('/models/astronaut.glb');
   const model = useMemo(() => gltf.scene.clone(), [gltf.scene]);
   const highlight = activeBodyRegion && bodyZones[activeBodyRegion];
-  const camera = useThree((state) => state.camera);
-  const aspect = useThree(({ size }) => size.width / Math.max(1, size.height));
-  const radius = useMemo(() => {
-    const bounds = new Box3().setFromObject(model).getBoundingSphere(new Sphere());
-    bounds.center.y -= 1;
-    return bounds.radius + bounds.center.length() + 0.035;
-  }, [model]);
-  const astronaut = useRef<Group>(null);
-  const glint = useRef<PointLight>(null);
-  const glintTime = useRef(0);
-  const allowsMotion = useRef(false);
-  const elapsed = useRef(0);
-
-  useEffect(() => {
-    if (!onFrameDistance) return;
-    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-    function updateMotion() {
-      allowsMotion.current = !preference.matches;
-      if (preference.matches && astronaut.current) {
-        elapsed.current = 0;
-        astronaut.current.position.y = -1;
-      }
-    }
-    updateMotion();
-    preference.addEventListener('change', updateMotion);
-    return () => preference.removeEventListener('change', updateMotion);
-  }, [onFrameDistance]);
-
-  useEffect(() => {
-    glintTime.current = 0;
-  }, [activeBodyRegion]);
-
-  useEffect(() => {
-    if (!onFrameDistance || !(camera instanceof PerspectiveCamera) || aspect <= 0) return;
-
-    // A padded bounding sphere keeps the suit inside both camera axes at every orbit angle.
-    const vertical = (camera.fov * Math.PI) / 360;
-    const horizontal = Math.atan(Math.tan(vertical) * aspect);
-    onFrameDistance((radius * 1.1) / Math.sin(Math.min(vertical, horizontal)));
-  }, [aspect, camera, onFrameDistance, radius]);
-
-  useFrame((_, delta) => {
-    if (!onFrameDistance || !astronaut.current) return;
-    const step = allowsMotion.current ? Math.min(delta, 0.05) : 0;
-    elapsed.current = (elapsed.current + step) % 12;
-    astronaut.current.position.y = -1 + Math.sin((elapsed.current * Math.PI * 2) / 12) * 0.035;
-    if (glint.current) {
-      glintTime.current += step;
-      const pulse = Math.sin(Math.PI * Math.min(glintTime.current / 0.75, 1));
-      glint.current.intensity = allowsMotion.current ? 0.12 + 0.32 * pulse : 0.12;
-    }
-  });
-
   return (
-    <group ref={astronaut} position={[0, -1, 0]}>
+    <group position={[0, -1, 0]}>
       <primitive object={model} />
       {onSelectSystem &&
         touchableZones.map((zone) => (
@@ -113,17 +56,7 @@ export function AstronautModel({
             <meshBasicMaterial visible={false} />
           </mesh>
         ))}
-      {highlight && onFrameDistance && (
-        <pointLight
-          ref={glint}
-          position={[highlight.position[0], highlight.position[1], highlight.position[2] + 0.21]}
-          color="#ffd6bf"
-          intensity={0.12}
-          distance={0.54}
-          decay={2}
-        />
-      )}
-      {highlight && !onFrameDistance && (
+      {highlight && (
         <group position={highlight.position} scale={highlight.scale}>
           <mesh position-z={0.45}>
             <circleGeometry args={[1, 40]} />

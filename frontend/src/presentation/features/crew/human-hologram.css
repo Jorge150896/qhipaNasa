@@ -1,0 +1,93 @@
+.human-hologram-controls {
+  display: grid;
+  gap: 10px;
+  padding: 14px 18px;
+  background: var(--surface);
+}
+.human-hologram-controls > div {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.human-hologram-controls button {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 8px 14px;
+  background: var(--surface-raised);
+  font-size: 12px;
+}
+.human-hologram-controls button[aria-pressed='true'] {
+  background: var(--selection-soft);
+  border-color: var(--selection-border);
+  color: var(--selection-text);
+}
+.human-hologram-controls small {
+  color: var(--muted);
+}
+.human-hologram-shell {
+  min-width: 0;
+}
+.human-hologram-shell .telemetry-viewport {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  touch-action: none;
+  background: radial-gradient(ellipse at 50% 45%, #173943, #07101c 75%);
+  overflow: hidden;
+}
+.human-hologram-shell canvas {
+  position: relative;
+  z-index: 1;
+}
+.human-hologram-shell .telemetry-instructions {
+  position: absolute;
+  z-index: 2;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  color: #a5c5d1;
+  font-size: 11px;
+  pointer-events: none;
+  text-align: center;
+}
+.human-hologram-shell .body-readout {
+  width: 104px;
+  padding: 8px 10px;
+  background: #07131cdb;
+  border-left: 2px solid #528c99;
+  box-shadow: 0 0 20px #42e6ee12;
+  border-radius: 5px;
+  display: grid;
+  gap: 3px;
+  color: #e6edf5;
+  font-size: 11px;
+}
+.human-hologram-shell .body-readout strong {
+  color: #8ce0da;
+  font-size: 22px;
+  white-space: nowrap;
+}
+.human-hologram-shell .body-readout small {
+  font-size: 9px;
+  color: #a5c5d1;
+}
+.human-hologram-shell .body-readout.is-selected {
+  border-color: #b4ffff;
+  background: #123c48ed;
+}
+.human-hologram-shell .body-readout.attention {
+  border-color: var(--amber);
+}
+@media (max-width: 570px) {
+  .human-hologram-shell .telemetry-viewport {
+    height: 440px;
+  }
+  .human-hologram-shell .body-readout {
+    width: 85px;
+    padding: 6px;
+    font-size: 10px;
+  }
+  .human-hologram-shell .body-readout strong {
+    font-size: 18px;
+  }
+}

@@ -1,3 +1,4 @@
+import type { HealthMeasurement } from '../measurements/HealthMeasurement';
 import type { DailyCheckContext, DiscomfortRegion } from './dailyCheckContext';
 
 export type ScenarioId = 'baseline' | 'sleep-change' | 'sensor-gap';
@@ -5,6 +6,7 @@ export type MetricId = 'heartRate' | 'temperature' | 'oxygen' | 'respiration';
 export type DataQuality = 'available' | 'stale' | 'missing';
 export type Mood = 'good' | 'neutral' | 'low';
 export interface Sample {
+  measurement?: HealthMeasurement;
   at: string;
   value: number | null;
 }

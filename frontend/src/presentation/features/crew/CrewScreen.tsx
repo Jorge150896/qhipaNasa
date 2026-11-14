@@ -1,5 +1,8 @@
 'use client';
-import { useContext, useEffect, useEffectEvent } from 'react';
+import { useEffect, useEffectEvent } from 'react';
+import { useCrewHologramViewModel } from './useCrewHologramViewModel';
+import { HumanHologramSlot } from './components/HumanHologramSlot';
+import { HumanHologramControls } from './components/HumanHologramControls';
 import { useCrewViewModel } from './useCrewViewModel';
 import { CrewHealthScreen } from '../crew-health/CrewHealthScreen';
 import type { CrewScreenProps } from './types';
@@ -7,29 +10,14 @@ import type { SensorKey } from '../mission/types';
 import type { BodySystemKey } from '../crew-health/types';
 import { CrewView } from './components/CrewView';
 import { CrewTimeline } from './components/CrewTimeline';
-import {
-  CrewModuleLegend,
-  CrewModuleOriginBanner,
-  CrewModulePanel,
-} from './components/CrewModulePanel';
+import { CrewModuleOriginBanner, CrewModulePanel } from './components/CrewModulePanel';
 import { CrewHologram } from './components/CrewHologram';
-import { MetricCards } from '../../shared/mission/MetricCards';
 import { MissionSceneSlot } from '../../shared/mission/MissionSceneSlot';
-import { AssistantActionsContext } from '../mission-assistant/AssistantActionsContext';
-import { AvatarScreen } from './avatar/AvatarScreen';
 import './crew-explorer.css';
 
 export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenProps) {
-  const assistant = useContext(AssistantActionsContext);
   const model = useCrewViewModel(habitatId, data);
-
-  const hologramSensorId = model.hologram?.sensorId;
-  const telemetryId = model.telemetryMetric?.id;
-
-  function selectModule(id: string) {
-    model.stopSynchronization();
-    actions.selectZone(id);
-  }
+  const body = useCrewHologramViewModel(habitatId, data.selected.id);
 
   function selectSensor(id: SensorKey) {
     actions.selectMetric(id);
@@ -52,15 +40,11 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
     });
   }
 
-  function openOccupiedModule() {
-    actions.selectZone(data.selected.zoneId);
-    model.onModeChange('ship');
-    focusSection('crew-body');
-  }
-
   const openEntryAnchor = useEffectEvent(() => {
     if (window.location.hash === '#crew-module') {
-      openOccupiedModule();
+      actions.selectZone(model.moduleData.occupiedId);
+      model.onModeChange('ship');
+      focusSection('crew-body');
     } else if (window.location.hash === '#crew-health-entry') {
       focusSection('crew-health-entry');
     }
@@ -87,13 +71,9 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
     >
       {({ healthPanel, recordPreview, timelineRecords, timelineStatus }) => (
         <CrewView
-          avatarPanel={<AvatarScreen crewId={data.selected.id} crewName={data.selected.name} />}
           onOpenHistory={() => onNavigate('history')}
           telemetryMetric={model.telemetryMetric}
           trendInCard={model.trendInCard}
-          sampleAt={model.sampleAt}
-          synchronizedMoment={model.synchronizedMoment}
-          onToggleSynchronization={model.toggleSynchronization}
           onSelectTelemetrySensor={(id) => {
             model.selectTelemetrySensor(id);
             actions.selectMetric(id);
@@ -109,11 +89,6 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
               onToggleComparison={model.toggleComparison}
               onSelectComparisonSample={model.selectComparisonSample}
               onSelectMoment={model.selectTimelineMoment}
-              onAskTumi={
-                assistant && telemetryId
-                  ? (at, compareFrom) => assistant.askAboutReading(telemetryId, { at, compareFrom })
-                  : undefined
-              }
               onOpenModule={(origin) => {
                 model.openTimelineModule(origin);
                 actions.selectZone(origin.zone.id);
@@ -123,15 +98,23 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
           }
           dashboard={{
             data,
+            onSelectMetric: selectSensor,
             habitatLabel: model.habitatLabel,
             mode: model.mode,
             onModeChange: (mode) => {
-              if (mode === 'ship') actions.selectZone(data.selected.zoneId);
+              if (mode === 'ship') actions.selectZone(model.moduleData.occupiedId);
               model.onModeChange(mode);
             },
             scene: (
               <>
-                {model.mode === 'ship' && <CrewModuleLegend />}
+                {model.mode === 'crew' && (
+                  <HumanHologramControls
+                    display={body.display}
+                    appearance={body.appearance}
+                    onDisplayChange={body.selectDisplay}
+                    onAppearanceChange={body.selectAppearance}
+                  />
+                )}
                 {model.mode === 'ship' && model.moduleData.origin && (
                   <CrewModuleOriginBanner origin={model.moduleData.origin} />
                 )}
@@ -139,51 +122,43 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                   className={
                     model.mode === 'ship' && model.habitatKind === 'ship'
                       ? 'crew-scene-stage crew-shuttle-stage'
-                      : model.mode === 'crew'
-                        ? 'crew-scene-stage crew-body-stage'
-                        : 'crew-scene-stage'
+                      : 'crew-scene-stage'
                   }
                 >
-                  {model.mode === 'crew' && (
-                    <MetricCards
-                      labelsOnly
+                  {model.mode === 'crew' && body.display === 'hologram' ? (
+                    <HumanHologramSlot
+                      name={data.selected.name}
+                      appearance={body.appearance}
                       metrics={data.selected.metrics}
-                      selectedId={hologramSensorId}
+                      selected={data.metric.id}
                       onSelect={selectSensor}
                     />
+                  ) : (
+                    <MissionSceneSlot
+                      key={model.mode}
+                      habitatKind={model.habitatKind}
+                      mode={model.mode}
+                      selectedSensor={data.metric.id}
+                      selectedZone={data.selectedZone.id}
+                      modules={model.mode === 'ship' ? model.moduleData : undefined}
+                      showModuleCamera={model.mode === 'ship'}
+                      onSelectSensor={selectSensor}
+                      onSelectZone={actions.selectZone}
+                      selectedSystem={model.healthSystem}
+                      activeBodyRegion={model.activeBodyRegion}
+                      onSelectSystem={selectBodyRegion}
+                    />
                   )}
-                  <MissionSceneSlot
-                    key={model.mode}
-                    habitatKind={model.habitatKind}
-                    mode={model.mode}
-                    transparentBackground={model.mode === 'crew'}
-                    selectedSensor={data.metric.id}
-                    selectedZone={model.sceneZoneId}
-                    modules={model.mode === 'ship' ? model.moduleData : undefined}
-                    showModuleCamera={model.mode === 'ship'}
-                    onSelectSensor={selectSensor}
-                    onSelectZone={selectModule}
-                    selectedSystem={model.healthSystem}
-                    activeBodyRegion={model.activeBodyRegion}
-                    onSelectSystem={selectBodyRegion}
-                  />
                   {model.mode === 'crew' && model.hologram && (
                     <CrewHologram
                       data={model.hologram}
-                      onAskTumi={
-                        assistant && hologramSensorId
-                          ? () => assistant.askAboutReading(hologramSensorId)
-                          : undefined
-                      }
                       trendOpen={model.trendInCard}
                       onToggleTrend={model.toggleTrend}
                       recordPreview={model.hologram.recordKind ? recordPreview : undefined}
                       onClose={model.closeHologram}
                       onOpenHistory={() => focusSection('crew-health-history')}
                       onOpenTelemetryHistory={() => onNavigate('history')}
-                      onOpenModule={openOccupiedModule}
                       onOpenEntry={() => focusSection('crew-health-entry')}
-                      sampleAt={model.sampleAt}
                       onSelectTimelineSample={model.selectTimelineSample}
                       onOpenTimeline={() => focusSection('crew-timeline')}
                     />
@@ -191,7 +166,7 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                   {model.mode === 'ship' && (
                     <CrewModulePanel
                       data={model.moduleData}
-                      onSelectModule={selectModule}
+                      onSelectModule={actions.selectZone}
                       onOpenTimeline={() => focusSection('crew-timeline')}
                     />
                   )}

@@ -36,7 +36,6 @@ interface Props {
   selectedZone: string;
   modules?: HabitatModuleMarkers;
   showModuleCamera?: boolean;
-  transparentBackground?: boolean;
   onSelectSensor(id: SceneSensor): void;
   onSelectZone(id: string): void;
 }
@@ -81,7 +80,6 @@ function FitShuttleCamera() {
 
 export default function MissionScene(props: Props) {
   const [attempt, setAttempt] = useState(0);
-  const [fullBodyDistance, setFullBodyDistance] = useState(4.5);
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const [cameraReady, setCameraReady] = useState(false);
   const [cameraRequest, setCameraRequest] = useState<{
@@ -109,7 +107,7 @@ export default function MissionScene(props: Props) {
       className="scene-viewport"
       aria-label={props.mode === 'crew' ? 'Astronauta 3D interactivo' : 'Hábitat 3D conceptual'}
     >
-      {!props.transparentBackground && <div className="starfield" aria-hidden="true" />}
+      <div className="starfield" aria-hidden="true" />
       <div className="scene-overlay" ref={setOverlay} />
       {props.showModuleCamera && cameraReady && (
         <div className="crew-camera-controls" role="group" aria-label="Encuadre del visor">
@@ -148,27 +146,11 @@ export default function MissionScene(props: Props) {
             fallback={<SceneFallback />}
             gl={{ antialias: true, alpha: true }}
           >
-            {!props.transparentBackground && <SpaceBackdrop radius={100} />}
-            <ambientLight intensity={props.transparentBackground ? 0.85 : 1.8} />
-            <hemisphereLight
-              args={
-                props.transparentBackground
-                  ? ['#e9ecef', '#38294c', 1.25]
-                  : ['#e7f5ff', '#34445b', 2]
-              }
-            />
-            <directionalLight
-              position={[-3, 5, 4]}
-              intensity={props.transparentBackground ? 2.65 : 3.5}
-            />
-            <directionalLight
-              position={[3, 1, -3]}
-              color={props.transparentBackground ? '#a66af7' : '#69d9ec'}
-              intensity={2}
-            />
-            {props.transparentBackground && (
-              <directionalLight position={[-4, -1, -3]} color="#fb5607" intensity={0.6} />
-            )}
+            <SpaceBackdrop radius={100} />
+            <ambientLight intensity={1.8} />
+            <hemisphereLight args={['#e7f5ff', '#34445b', 2]} />
+            <directionalLight position={[-3, 5, 4]} intensity={3.5} />
+            <directionalLight position={[3, 1, -3]} color="#69d9ec" intensity={2} />
             <Suspense
               fallback={
                 <Html portal={{ current: overlay }} center>
@@ -184,7 +166,6 @@ export default function MissionScene(props: Props) {
                   portal={{ current: overlay }}
                   selectedSystem={props.selectedSystem}
                   activeBodyRegion={props.activeBodyRegion}
-                  onFrameDistance={props.transparentBackground ? setFullBodyDistance : undefined}
                   onSelectSystem={props.onSelectSystem}
                   selected={props.selectedSensor}
                   onSelect={props.onSelectSensor}
@@ -209,10 +190,8 @@ export default function MissionScene(props: Props) {
             <OrbitControls
               ref={attachControls}
               enablePan={false}
-              minDistance={props.transparentBackground ? fullBodyDistance : cutaway ? 3.7 : 2.8}
-              maxDistance={
-                props.transparentBackground ? Math.max(7, fullBodyDistance) : cutaway ? 16 : 7
-              }
+              minDistance={cutaway ? 3.7 : 2.8}
+              maxDistance={cutaway ? 16 : 7}
               maxPolarAngle={Math.PI * 0.8}
               makeDefault
             />
@@ -225,7 +204,7 @@ export default function MissionScene(props: Props) {
                 cutaway={cutaway}
               />
             )}
-            {props.mode === 'crew' && props.onSelectSystem && !props.transparentBackground && (
+            {props.mode === 'crew' && props.onSelectSystem && (
               <AstronautCameraFocus region={props.activeBodyRegion} controls={controls} />
             )}
           </Canvas>

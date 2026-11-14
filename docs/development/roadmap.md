@@ -2,7 +2,7 @@
 
 ## Base disponible
 
-Frontend Next.js con ocho secciones, arquitectura por capas, astronauta/nave 3D locales, escenarios deterministas, historial, registro diario y seguimiento persistido en navegador. Copiloto explicativo de escenario.
+Frontend Next.js con nueve secciones, arquitectura por capas, astronauta/nave 3D locales, escenarios deterministas, historial, registro diario y seguimiento persistido en navegador. Copiloto explicativo de escenario.
 
 ## Próximo incremento: integración Java
 
@@ -34,3 +34,5 @@ Implementar cada capacidad a partir de una necesidad concreta y sus consumidores
 ## Propuesta basada en las capturas del reto
 
 Ver [propuesta de evolución del dashboard](../product/dashboard-proposal.md): fichas explicativas, autoevaluación guiada, historial contextual, seguimiento y copiloto con evidencia. Son propuestas priorizadas, no módulos ya implementados ni instrucciones para construirlos todos a la vez.
+
+Monitoreo asistido ya implementa preparación, captura, repetición y registro local, con un consumidor HTTP configurable. El contrato de API es provisional y no hay proveedor conectado. Ver [configuración, ciclo de vida y límites](monitoring.md).

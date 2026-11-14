@@ -8,7 +8,7 @@ test('modelo local, sensores, nave, escenarios y diario persistido', async ({ pa
     (response) => response.url().endsWith('/models/astronaut.glb') && response.ok(),
   );
   await page.goto('/mission/overview');
-  await expect(page.getByRole('heading', { name: 'Tu resumen de misión' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Cada señal cuenta.' })).toBeVisible();
   await page.getByRole('button', { name: 'Consultar frecuencia cardíaca', exact: true }).waitFor();
   await modelRequest;
   await page.screenshot({ path: '../docs/qa/dashboard-desktop.png', fullPage: true });
@@ -133,14 +133,14 @@ test('cada sección conserva navegación y entrada directa después de separar f
 }) => {
   await page.goto('/missions/selene/overview');
   const sections = [
-    ['Tripulación', 'crew', 'Tripulación'],
+    ['Tripulación', 'crew', 'El lado humano de la misión.'],
     ['Entorno del hábitat', 'habitat', 'El espacio que habitan.'],
     ['Historial', 'history', 'Más allá de una lectura.'],
     ['Chequeo diario', 'journal', '¿Cómo va tu día a bordo?'],
     ['Observaciones', 'observations', 'De la señal al seguimiento.'],
     ['Simulación', 'simulation', 'Explora lo que cambia.'],
     ['Fuentes y alcance', 'sources', 'Datos con contexto.'],
-    ['Centro de misión', 'overview', 'Tu resumen de misión'],
+    ['Centro de misión', 'overview', 'Cada señal cuenta.'],
   ];
   for (const [label, section, heading] of sections) {
     await page
