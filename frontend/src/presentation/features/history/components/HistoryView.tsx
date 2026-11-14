@@ -1,3 +1,4 @@
+import styles from './measurement-trace.module.css';
 import type { CrewData, MetricData, SensorKey } from '../../mission/types';
 import { Panel } from '@/ui/Panel';
 import { Icon } from '@/ui/Icon';
@@ -45,7 +46,7 @@ export function HistoryView({
           <h3>Muestras y procedencia</h3>
         </div>
         <div className="table-scroll">
-          <table>
+          <table aria-label="Muestras y procedencia del tripulante">
             <thead>
               <tr>
                 <th>Hora de medición</th>
@@ -56,15 +57,32 @@ export function HistoryView({
             </thead>
             <tbody>
               {metric.history.map((row) => (
-                <tr key={row.time}>
+                <tr key={row.at}>
                   <td className="mono">{row.time}</td>
                   <td>{row.value}</td>
                   <td>
                     <span className={`badge ${row.missing ? 'amber' : ''}`}>
-                      {row.missing ? 'Ausente' : 'Disponible'}
+                      {row.trace?.quality ?? (row.missing ? 'Ausente' : 'Disponible')}
                     </span>
                   </td>
-                  <td>Sintético</td>
+                  <td>
+                    <span>{row.trace?.source ?? 'No documentado'}</span>
+                    {row.trace ? (
+                      <details className={styles.trace}>
+                        <summary>Ver origen</summary>
+                        <dl className={styles.fields}>
+                          {row.trace.fields.map((field) => (
+                            <div key={field.label}>
+                              <dt>{field.label}</dt>
+                              <dd>{field.value}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                      </details>
+                    ) : (
+                      'Sin trazabilidad disponible'
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

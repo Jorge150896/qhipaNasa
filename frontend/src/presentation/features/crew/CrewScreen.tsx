@@ -1,5 +1,8 @@
 'use client';
 import { useContext, useEffect, useEffectEvent } from 'react';
+import { useCrewHologramViewModel } from './useCrewHologramViewModel';
+import { HumanHologramSlot } from './components/HumanHologramSlot';
+import { HumanHologramControls } from './components/HumanHologramControls';
 import { useCrewViewModel } from './useCrewViewModel';
 import { CrewHealthScreen } from '../crew-health/CrewHealthScreen';
 import type { CrewScreenProps } from './types';
@@ -22,6 +25,7 @@ import './crew-explorer.css';
 export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenProps) {
   const assistant = useContext(AssistantActionsContext);
   const model = useCrewViewModel(habitatId, data);
+  const body = useCrewHologramViewModel(habitatId, data.selected.id);
 
   const hologramSensorId = model.hologram?.sensorId;
   const telemetryId = model.telemetryMetric?.id;
@@ -135,6 +139,17 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                 {model.mode === 'ship' && model.moduleData.origin && (
                   <CrewModuleOriginBanner origin={model.moduleData.origin} />
                 )}
+                {model.mode === 'crew' && (
+                  <details className="crew-body-display">
+                    <summary>Modelo corporal</summary>
+                    <HumanHologramControls
+                      display={body.display}
+                      appearance={body.appearance}
+                      onDisplayChange={body.selectDisplay}
+                      onAppearanceChange={body.selectAppearance}
+                    />
+                  </details>
+                )}
                 <div
                   className={
                     model.mode === 'ship' && model.habitatKind === 'ship'
@@ -152,21 +167,31 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                       onSelect={selectSensor}
                     />
                   )}
-                  <MissionSceneSlot
-                    key={model.mode}
-                    habitatKind={model.habitatKind}
-                    mode={model.mode}
-                    transparentBackground={model.mode === 'crew'}
-                    selectedSensor={data.metric.id}
-                    selectedZone={model.sceneZoneId}
-                    modules={model.mode === 'ship' ? model.moduleData : undefined}
-                    showModuleCamera={model.mode === 'ship'}
-                    onSelectSensor={selectSensor}
-                    onSelectZone={selectModule}
-                    selectedSystem={model.healthSystem}
-                    activeBodyRegion={model.activeBodyRegion}
-                    onSelectSystem={selectBodyRegion}
-                  />
+                  {model.mode === 'crew' && body.display === 'hologram' ? (
+                    <HumanHologramSlot
+                      name={data.selected.name}
+                      appearance={body.appearance}
+                      metrics={data.selected.metrics}
+                      selected={data.metric.id}
+                      onSelect={selectSensor}
+                    />
+                  ) : (
+                    <MissionSceneSlot
+                      key={model.mode}
+                      habitatKind={model.habitatKind}
+                      mode={model.mode}
+                      transparentBackground={model.mode === 'crew'}
+                      selectedSensor={data.metric.id}
+                      selectedZone={model.sceneZoneId}
+                      modules={model.mode === 'ship' ? model.moduleData : undefined}
+                      showModuleCamera={model.mode === 'ship'}
+                      onSelectSensor={selectSensor}
+                      onSelectZone={selectModule}
+                      selectedSystem={model.healthSystem}
+                      activeBodyRegion={model.activeBodyRegion}
+                      onSelectSystem={selectBodyRegion}
+                    />
+                  )}
                   {model.mode === 'crew' && model.hologram && (
                     <CrewHologram
                       data={model.hologram}

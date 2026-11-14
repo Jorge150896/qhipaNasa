@@ -1,6 +1,7 @@
 import type { MissionSection, ScenarioKey, SensorKey } from './types';
 export const navigation: { id: MissionSection; label: string; icon: string }[] = [
   { id: 'overview', label: 'Centro de misión', icon: 'orbit' },
+  { id: 'monitoring', label: 'Monitoreo', icon: 'chart' },
   { id: 'crew', label: 'Tripulación', icon: 'users' },
   { id: 'habitat', label: 'Entorno de la nave', icon: 'rocket' },
   { id: 'history', label: 'Historial', icon: 'chart' },
@@ -10,6 +11,10 @@ export const navigation: { id: MissionSection; label: string; icon: string }[] =
   { id: 'sources', label: 'Fuentes y alcance', icon: 'book' },
 ];
 export const sectionTitles: Record<MissionSection, { title: string; description: string }> = {
+  monitoring: {
+    title: 'Medir con contexto.',
+    description: 'Sesiones asistidas, calidad de señal y procedencia de cada lectura.',
+  },
   overview: {
     title: 'Cada señal cuenta.',
     description: 'Una mirada conjunta al cuerpo, al entorno y a la misión.',

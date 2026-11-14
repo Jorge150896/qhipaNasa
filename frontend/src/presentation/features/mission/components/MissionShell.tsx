@@ -120,7 +120,7 @@ export function MissionShell({
           <div className="topbar-status">
             <span className="demo-badge">
               <span className="status-dot" />
-              Datos simulados
+              {section === 'monitoring' ? 'Origen indicado en la sesión' : 'Datos simulados'}
             </span>
             <span className="avatar small">MC</span>
             {setLauncherHost && <div ref={attachLauncher} className="assistant-launcher-host" />}
@@ -129,7 +129,7 @@ export function MissionShell({
         <main id="mission-content">{children}</main>
         <footer className="app-footer">
           <span>Qhipa Pacha · Prototipo de monitorización de salud</span>
-          <span>Java API e IA · integración pendiente</span>
+          <span>API configurable · proveedor e IA pendientes</span>
         </footer>
       </div>
     </div>

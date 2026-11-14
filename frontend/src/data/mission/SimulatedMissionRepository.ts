@@ -1,3 +1,4 @@
+import { withSyntheticMeasurements } from './withSyntheticMeasurements';
 import type { MissionRepository } from '@/domain/mission/ports';
 import type {
   CrewMember,
@@ -108,7 +109,7 @@ export class SimulatedMissionRepository implements MissionRepository {
             },
           ]
         : [];
-    return {
+    return withSyntheticMeasurements({
       id: 'odyssey-01',
       name: 'Odyssey 01',
       missionDay: 42,
@@ -164,6 +165,6 @@ export class SimulatedMissionRepository implements MissionRepository {
           noise: 58,
         },
       ],
-    };
+    });
   }
 }

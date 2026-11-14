@@ -8,6 +8,7 @@ Todas las carpetas de esta tabla están en `frontend/src/presentation/features/`
 | --- | --- | --- | --- |
 | Mapa espacial | `space-map/` | `SpaceExplorerScreen` → `SpaceExplorerView` | `/explore` |
 | Centro de misión | `mission-overview/` | `MissionOverviewScreen` → `MissionOverviewView` | `/mission/overview` |
+| Monitoreo | `monitoring/` | `MonitoringScreen` → `MonitoringView` | `/mission/monitoring` |
 | Tripulación | `crew/` | `CrewScreen` → `CrewView` | `/mission/crew` |
 | Entorno de la nave | `habitat/` | `HabitatScreen` → `HabitatView` | `/mission/habitat` |
 | Historial | `history/` | `HistoryScreen` → `HistoryView` | `/mission/history` |
@@ -19,6 +20,8 @@ Todas las carpetas de esta tabla están en `frontend/src/presentation/features/`
 Otros hábitats conservan `/missions/[habitatId]/[section]` con las mismas secciones. No se cambian URLs al organizar carpetas.
 
 ## Propiedad del estado y operaciones
+
+- `monitoring/useMonitoringViewModel.ts`: sesión asistida independiente, consultas periódicas, cancelación y registro local por hábitat; ver [monitoring.md](monitoring.md). API configurable con contrato provisional, sin proveedor conectado.
 
 - `mission/MissionScreen.tsx`: shell, navegación, mensajes y estados de carga/error. `MissionFeatureScreen.tsx` elige el Screen de cada sección.
 - `mission/MissionWorkspaceProvider.tsx` y `mission/useMission.ts`: modelo del flujo existente. Mantienen persona, indicador, zona, escenario, datos, guardado y revisión entre secciones. Salir del hábitat desmonta el provider; los registros persistidos conservan sus claves.

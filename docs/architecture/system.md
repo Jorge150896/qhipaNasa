@@ -11,9 +11,9 @@ Confirmado por el usuario:
 - Ambos: Clean Architecture y SOLID, organización por funcionalidades y composición explícita.
 - Referencia estructural: scotia, adaptada de React Native a web y backend; no reutilizar datos ni reglas bancarias.
 
-Alcance trabajado: salud de la tripulación con contexto ambiental de la nave. Frontend implementado en `frontend/`: Next.js 16.4.5, React 19.3.1, TypeScript, Three.js y React Three Fiber. Incluye ocho secciones por hábitat, modelos 3D locales, escenarios sintéticos, historial, chequeo diario y revisión de observaciones con persistencia en navegador. El explorador `/explore` añade cinco objetos y cuatro hábitats sintéticos con 12 tripulantes únicos. La misión original y su diario se conservan.
+Alcance trabajado: salud de la tripulación con contexto ambiental de la nave. Frontend implementado en `frontend/`: Next.js 16.4.5, React 19.3.1, TypeScript, Three.js y React Three Fiber. Incluye nueve secciones por hábitat, modelos 3D locales, escenarios sintéticos, historial, chequeo diario y revisión de observaciones con persistencia en navegador. El explorador `/explore` añade cinco objetos y cuatro hábitats sintéticos con 12 tripulantes únicos. La misión original y su diario se conservan.
 
-Pendiente: backend Java/Spring Boot, base de datos, autenticación, despliegue, endpoints, tiempo real, datos científicos e IA. No generar esas integraciones por anticipado. No hay endpoints implementados. El copiloto usa un análisis determinista de escenario y no un modelo de IA.
+Backend ambiental implementado en `backend/`: Java 21/Spring Boot 3.5.16, con consultas RadLab y archivo de respuestas públicas en disco. Operaciones GET `/api/v1/radiation/instruments` y `/api/v1/radiation/readings`; consulta real y caché verificadas con TLS estándar. El frontend todavía no consume estas operaciones. Pendientes: persistencia clínica, autenticación, despliegue, endpoints personales, tiempo real e IA. El copiloto usa un análisis determinista de escenario y no un modelo de IA.
 
 ## Responsabilidades y estructura objetivo
 
@@ -30,7 +30,7 @@ Pendiente: backend Java/Spring Boot, base de datos, autenticación, despliegue, 
 | Backend `<feature>.adapter.out`    | Persistencia y servicios externos               | Implementa puertos, no define políticas                 |
 | Backend `<feature>.configuration`  | Beans y composición                             | Spring conecta Java puro con adapters                   |
 
-Frontend vive en `frontend/`; la raíz es un workspace npm. Backend todavía no existe. Esta tabla no obliga a crear carpetas vacías. Un único backend modular es el punto de partida; separar despliegues exige una necesidad demostrada.
+Frontend vive en `frontend/`; la raíz es un workspace npm. Backend vive en `backend/`; su módulo `radiation` sigue domain/application/adapter/configuration. Esta tabla no obliga a crear carpetas vacías. Un único backend modular es el punto de partida; separar despliegues exige una necesidad demostrada.
 
 ## Flujo de integración
 
@@ -46,7 +46,9 @@ Un Server Component puede consumir la API Java mediante una composición server-
 
 ## Contratos compartidos
 
-Cuando una feature necesite integración, crear o actualizar `docs/contracts/openapi.yaml` como contrato HTTP único y añadir ejemplos sintéticos coherentes. Ese archivo aún no existe: no asumir rutas o campos antes de definirlos. Usar una versión OpenAPI compatible con las herramientas seleccionadas. Si se genera desde Java, documentar origen y actualización; evitar mantener dos contratos divergentes.
+Monitoreo asistido añade una novena sección, con consumidor HTTP configurable separado de la demo y del estado de misión. `docs/contracts/openapi.yaml` distingue las operaciones ambientales Java implementadas de la propuesta personal pendiente de proveedor. No hay autenticación ni servidor de salud personal implementado. Ver [sesiones y ciclo de vida](../development/monitoring.md).
+
+Cuando una feature necesite integración, crear o actualizar `docs/contracts/openapi.yaml` como contrato HTTP único y añadir ejemplos sintéticos coherentes. La versión actual contiene operaciones ambientales implementadas y una operación raíz personal todavía provisional; no asumir que un proveedor implementa esta última. Usar una versión OpenAPI compatible con las herramientas seleccionadas. Si se genera desde Java, documentar origen y actualización; evitar mantener dos contratos divergentes.
 
 Para cada operación acordar:
 
@@ -92,3 +94,11 @@ Las secciones del menú tienen features de presentación independientes: `space-
 La portada `/` es la feature `landing`, independiente del flujo de misión. Screen traduce navegación; `useLandingViewModel` posee estado visual de movimiento/pausa/logo; View representa el hero y las capas decorativas. Las rutas de misión y sus providers permanecen intactos. Las ilustraciones se sirven localmente desde `public/backgrounds/` y `public/brand/`.
 
 La carga del Tumi es UI compartida en `presentation/shared/loading`, con variantes explícitas `fullscreen` y `content`. La introducción de 3000 ms se inicia únicamente desde el CTA de portada y su ViewModel. El provider de misión conserva la carga real sin retrasos visuales. Los Screens coordinan la navegación con `useTransition` y muestran espera dentro del contenido, preservando el shell. `/loading-preview` es una herramienta de revisión permanente.
+
+Las muestras sintéticas pueden incluir `Sample.measurement`, un contrato cuantitativo portable definido en `domain/measurements/HealthMeasurement.ts`. Los adaptadores lo construyen y presentación prepara su trazabilidad en Historial. La fuente de signos vitales personales todavía no está seleccionada; el contrato interno no los conecta a NASA. La integración ambiental RadLab tiene un contrato separado. Ver `docs/development/measurement-contract.md`.
+
+## Backend ambiental RadLab
+
+La composición conecta `GetRadiationSeries` con `RadLabClient` y `FileRadiationArchive`. Dominio y aplicación son Java puros. El repositorio de archivo conserva CSV original, hash y consultas versionadas mediante actualización atómica; no es una base clínica. No hay borrado automático ni TTL. Solo ISS/Columbus, DosTel1 y DosTel2, periodos históricos de hasta 24 h. No se sigue una redirección ni se desactiva TLS.
+
+La zona de los timestamps originales sin offset se interpreta mediante configuración (UTC por defecto) y se declara como hipótesis, conservando el texto original. No hay dosis personales, inferencias clínicas ni asociación con tripulantes ficticios. CORS permite orígenes de desarrollo explícitos; no implementa autenticación. Contrato único en `docs/contracts/openapi.yaml`, guía de frontend y límites en [radlab-backend.md](../development/radlab-backend.md).
