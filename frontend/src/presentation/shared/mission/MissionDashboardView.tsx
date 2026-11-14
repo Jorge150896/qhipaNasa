@@ -12,7 +12,6 @@ export interface MissionDashboardProps {
   actions: Pick<MissionActions, 'selectMetric' | 'selectZone'>;
   habitatLabel: string;
   scene: ReactNode;
-  layout?: 'overview';
   mode: 'crew' | 'ship';
   onModeChange(mode: 'crew' | 'ship'): void;
   onOpenHistory(): void;
@@ -23,44 +22,29 @@ export function MissionDashboardView({
   actions,
   habitatLabel,
   scene,
-  layout,
   mode,
   onModeChange,
   onOpenHistory,
   onOpenDailyCheck,
 }: MissionDashboardProps) {
-  const metrics = (
-    <MetricCards
-      metrics={data.selected.metrics}
-      selectedId={data.metric.id}
-      onSelect={actions.selectMetric}
-    />
-  );
-  const explorer = (
-    <MissionExplorerPanel
-      crewName={data.selected.name}
-      zoneName={data.selectedZone.name}
-      metric={data.metric}
-      habitatLabel={habitatLabel}
-      scene={scene}
-      mode={mode}
-      onModeChange={onModeChange}
-    />
-  );
-
   return (
     <>
-      {layout === 'overview' ? (
-        <div className="mission-overview-explorer">
-          {metrics}
-          {explorer}
-        </div>
-      ) : (
-        metrics
-      )}
+      <MetricCards
+        metrics={data.selected.metrics}
+        selectedId={data.metric.id}
+        onSelect={actions.selectMetric}
+      />
       <div className="dashboard-grid">
         <div className="main-column">
-          {layout !== 'overview' && explorer}
+          <MissionExplorerPanel
+            crewName={data.selected.name}
+            zoneName={data.selectedZone.name}
+            metric={data.metric}
+            habitatLabel={habitatLabel}
+            scene={scene}
+            mode={mode}
+            onModeChange={onModeChange}
+          />
           <Panel>
             <div className="panel-heading">
               <div>

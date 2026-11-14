@@ -43,9 +43,3 @@ En la sección **Historial**, una referencia de laboratorio acompaña la telemet
 Para reproducir la referencia, agrupar las filas por el sufijo de fase de `Sample Name` y calcular la mediana aritmética de las cuatro observaciones de cada fase para `glucose_value_milligram_per_deciliter`, `sodium_value_millimol_per_liter` y `potassium_value_millimol_per_liter`. Se verificaron cuatro muestras distintas con los tres valores presentes en cada fase. Las siete fases son L−92, L−44, L−3, R+1, R+45, R+82 y R+194. La fase R+194 figura en el CSV transformado. El archivo consultado tiene SHA-256 `5eb1e7f025dd8443a9e70111e62bc32afae3432753024489c5c013e401d709d9`.
 
 La app empaqueta únicamente medianas por fase. El panel permite cambiar entre glucosa, sodio y potasio y seleccionar una muestra con teclado o puntero. Cada barra representa un punto de muestreo y la distancia entre barras es categórica. El detalle muestra el día relativo a lanzamiento o regreso, la mediana y la unidad. La tabla y las fuentes se abren desde un desplegable. La referencia no participa en las alertas, la autoevaluación ni los diarios de personajes ficticios.
-
-## Fuentes en la app y recorrido de demostración
-
-**Fuentes y alcance** identifica el estudio de Inspiration4 como datos históricos reales, las lecturas de la misión como datos simulados y Chequeo diario y Autoevaluación como entradas manuales de este navegador. Los enlaces de investigación de NASA y la Agencia Espacial Canadiense aportan contexto científico. El artículo sobre CANS describe el instrumento y la demo carece de dosimetría.
-
-En **Tripulación**, abre la ficha de Respiración y usa **Ver módulo de la tripulación** para consultar la ubicación y las condiciones simuladas. Vuelve a **Astronauta** para retomar la ficha y elige **Preguntar a Tumi por esta lectura** o **Registrar cómo me siento**. El autorregistro se conserva como observación manual.

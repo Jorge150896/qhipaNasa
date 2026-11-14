@@ -29,6 +29,7 @@ export function MissionScreen({
       onNavigate={navigate}
       pendingCount={data?.pendingCount}
       missionName={data?.name}
+      onOpenEarth={() => startNavigation(() => router.push('/explore?destination=earth&tab=earth'))}
       onOpenExplorer={() =>
         startNavigation(() =>
           router.push(
@@ -64,7 +65,7 @@ export function MissionScreen({
           </button>
         </div>
       ) : (
-        <div className={`mission-page ${section}-page`}>
+        <div className="mission-page">
           <MissionPageHeader data={data} section={section} onSelectCrew={actions.selectCrew} />
           <MissionFeatureScreen
             section={section}

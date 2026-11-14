@@ -15,7 +15,7 @@ export const sectionTitles: Record<MissionSection, { title: string; description:
     description: 'Una mirada conjunta al cuerpo, al entorno y a la misión.',
   },
   crew: {
-    title: 'Tripulación',
+    title: 'El lado humano de la misión.',
     description: 'Explora los indicadores de cada tripulante en su contexto.',
   },
   habitat: {

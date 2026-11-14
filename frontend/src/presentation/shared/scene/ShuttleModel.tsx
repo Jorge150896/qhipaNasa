@@ -1,3 +1,4 @@
+import { ShuttleExteriorModel } from './ShuttleExteriorModel';
 import { useMemo, type RefObject } from 'react';
 import { Shape } from 'three';
 import { HabitatZoneMarker, type HabitatModuleMarkers } from './HabitatZoneMarker';
@@ -35,6 +36,15 @@ export function ShuttleModel({
     shape.closePath();
     return shape;
   }, []);
+  if (!modules)
+    return (
+      <ShuttleExteriorModel
+        selectedZone={selectedZone}
+        onSelectZone={onSelectZone}
+        portal={portal}
+        showZones={showZones}
+      />
+    );
   const material = { color: '#e0e6ee', roughness: 0.6, metalness: 0.2 };
   const noseOffset = modules ? -1.28 : 0;
   const tailOffset = modules ? 1.28 : 0;

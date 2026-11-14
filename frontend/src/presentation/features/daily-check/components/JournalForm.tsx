@@ -243,13 +243,6 @@ export function JournalForm({
           <button
             className="button primary"
             disabled={saving || (step === 0 && (!model.activity || !model.moment))}
-            id={
-              step === 1
-                ? 'assistant-target-review-check'
-                : step === 2
-                  ? 'assistant-target-save-check'
-                  : undefined
-            }
             type="submit"
           >
             {saving

@@ -15,7 +15,7 @@ export function MissionPersonalSummary({
 }) {
   return (
     <section className="mission-personal-summary" aria-labelledby="mission-personal-title">
-      <h1 id="mission-personal-title">Tu resumen de misión</h1>
+      <h2 id="mission-personal-title">Tu resumen de misión</h2>
       <div className="mission-personal-cards">
         <article className="panel mission-personal-card">
           <h3>

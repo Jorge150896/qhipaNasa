@@ -37,19 +37,11 @@ export function MissionExplorerPanel({
           <h3>{mode === 'crew' ? crewName : zoneName}</h3>
         </div>
         <div className="segmented">
-          <button
-            data-assistant-control="crew-body"
-            aria-pressed={mode === 'crew'}
-            onClick={() => onModeChange('crew')}
-          >
+          <button aria-pressed={mode === 'crew'} onClick={() => onModeChange('crew')}>
             <Icon name="users" size={14} />
             Astronauta
           </button>
-          <button
-            data-assistant-control="crew-ship"
-            aria-pressed={mode === 'ship'}
-            onClick={() => onModeChange('ship')}
-          >
+          <button aria-pressed={mode === 'ship'} onClick={() => onModeChange('ship')}>
             <Icon name="rocket" size={14} />
             {habitatLabel}
           </button>

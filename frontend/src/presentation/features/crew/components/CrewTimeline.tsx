@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import { Icon } from '@/ui/Icon';
 import type {
   ComparisonSlot,
@@ -16,7 +15,6 @@ export function CrewTimeline({
   onSelectComparisonSample,
   onSelectMoment,
   onOpenModule,
-  onAskTumi,
 }: {
   data: CrewTimelineData;
   comparison?: CrewTimelineComparison;
@@ -25,11 +23,10 @@ export function CrewTimeline({
   onSelectComparisonSample(slot: ComparisonSlot, at: string): void;
   onSelectMoment(id: string): void;
   onOpenModule(origin: CrewModuleOrigin): void;
-  onAskTumi?(at: string, compareFrom?: string): void;
 }) {
   return (
     <section
-      className="crew-timeline"
+      className="panel crew-timeline"
       id="crew-timeline"
       tabIndex={-1}
       aria-labelledby="crew-timeline-title"
@@ -40,7 +37,6 @@ export function CrewTimeline({
           <button
             type="button"
             className="button secondary"
-            id="assistant-target-compare"
             aria-expanded={Boolean(comparison)}
             onClick={onToggleComparison}
           >
@@ -53,7 +49,6 @@ export function CrewTimeline({
           data={comparison}
           onSelectSample={onSelectComparisonSample}
           onOpenModule={onOpenModule}
-          onAskTumi={onAskTumi}
         />
       ) : (
         <>
@@ -85,17 +80,7 @@ export function CrewTimeline({
                 </p>
               )}
             </div>
-            <TimelineDetail detail={data.detail} onOpenModule={onOpenModule}>
-              {data.detail.kind === 'sample' && onAskTumi && (
-                <button
-                  type="button"
-                  className="button secondary"
-                  onClick={() => onAskTumi(data.detail.at)}
-                >
-                  Preguntar a Tumi por esta muestra
-                </button>
-              )}
-            </TimelineDetail>
+            <TimelineDetail detail={data.detail} onOpenModule={onOpenModule} />
           </div>
         </>
       )}
@@ -107,11 +92,9 @@ function TimelineDetail({
   detail,
   label = 'Detalle del momento',
   onOpenModule,
-  children,
 }: {
   detail: CrewTimelineDetail;
   label?: string;
-  children?: ReactNode;
   onOpenModule(origin: CrewModuleOrigin): void;
 }) {
   const { zone } = detail;
@@ -170,7 +153,6 @@ function TimelineDetail({
           Ubicar módulo en el visor
         </button>
       )}
-      {children}
     </div>
   );
 }
@@ -181,12 +163,10 @@ function TimelineComparison({
   data,
   onSelectSample,
   onOpenModule,
-  onAskTumi,
 }: {
   data: CrewTimelineComparison;
   onSelectSample(slot: ComparisonSlot, at: string): void;
   onOpenModule(origin: CrewModuleOrigin): void;
-  onAskTumi?(at: string, compareFrom: string): void;
 }) {
   const { first, second } = data;
   return (
@@ -223,15 +203,6 @@ function TimelineComparison({
             'No se puede calcular la diferencia porque falta una lectura.'
           )}
         </p>
-      )}
-      {first && second && onAskTumi && (
-        <button
-          type="button"
-          className="button secondary"
-          onClick={() => onAskTumi(second.at, first.at)}
-        >
-          Preguntar a Tumi por la comparación
-        </button>
       )}
       {(first || second) && (
         <div className="crew-comparison-grid">

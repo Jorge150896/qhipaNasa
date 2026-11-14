@@ -64,6 +64,6 @@ export function MissionFeatureScreen({
     case 'simulation':
       return <SimulationScreen selected={data.scenario} onSelect={actions.selectScenario} />;
     case 'sources':
-      return <SourcesScreen habitatId={habitatId} />;
+      return <SourcesScreen />;
   }
 }

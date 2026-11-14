@@ -1,41 +1,26 @@
-import { useCallback, useContext, type ReactNode } from 'react';
-import { AssistantActionsContext } from '../../mission-assistant/AssistantActionsContext';
+import type { ReactNode } from 'react';
 import { navigation } from '../constants';
 import type { MissionSection } from '../types';
 import { Icon, type IconName } from '@/ui/Icon';
-import './mission-background.css';
 export function MissionShell({
   section,
   onNavigate,
   pendingCount = '0',
   missionName = 'Odyssey 01',
   onOpenExplorer,
+  onOpenEarth,
   children,
 }: {
-  section: MissionSection | 'explorer';
+  section: MissionSection | 'explorer' | 'earth';
   missionName?: string;
   onOpenExplorer?(): void;
+  onOpenEarth?(): void;
   onNavigate(section: MissionSection): void;
   pendingCount?: string;
   children: ReactNode;
 }) {
-  const setLauncherHost = useContext(AssistantActionsContext)?.setLauncherHost;
-  const attachLauncher = useCallback(
-    (host: HTMLDivElement | null) => setLauncherHost?.(host),
-    [setLauncherHost],
-  );
   return (
-    <div
-      className={section === 'overview' ? 'app-shell overview-shell' : 'app-shell'}
-      data-mission-section={section}
-    >
-      {section !== 'explorer' && (
-        <div className="mission-background" aria-hidden="true">
-          <span className="mission-background__nebula" />
-          <span className="mission-background__distant" />
-          <span className="mission-background__near" />
-        </div>
-      )}
+    <div className="app-shell">
       <a className="skip-link" href="#mission-content">
         Ir al contenido
       </a>
@@ -60,7 +45,6 @@ export function MissionShell({
         <nav aria-label="Navegación principal">
           {onOpenExplorer && (
             <button
-              id="assistant-target-map"
               aria-current={section === 'explorer' ? 'page' : undefined}
               onClick={onOpenExplorer}
             >
@@ -68,16 +52,24 @@ export function MissionShell({
               <span>Mapa espacial</span>
             </button>
           )}
+          {onOpenEarth && (
+            <button aria-current={section === 'earth' ? 'page' : undefined} onClick={onOpenEarth}>
+              <Icon name="earth" />
+              <span>Tierra</span>
+            </button>
+          )}
           {navigation.map((item) => (
             <button
               key={item.id}
-              id={`assistant-target-${item.id}`}
               aria-current={section === item.id ? 'page' : undefined}
               onClick={() => onNavigate(item.id)}
             >
               <Icon name={item.icon as IconName} />
               <span>
-                {item.id === 'habitat' && section !== 'explorer' && missionName !== 'Odyssey 01'
+                {item.id === 'habitat' &&
+                section !== 'explorer' &&
+                section !== 'earth' &&
+                missionName !== 'Odyssey 01'
                   ? 'Entorno del hábitat'
                   : item.label}
               </span>
@@ -98,7 +90,13 @@ export function MissionShell({
         <header className="topbar">
           <div className="breadcrumb">
             {missionName} <Icon name="chevron" size={13} />
-            <span>{section === 'explorer' ? 'Explorador espacial' : 'Centro de control'}</span>
+            <span>
+              {section === 'earth'
+                ? 'Tierra'
+                : section === 'explorer'
+                  ? 'Explorador espacial'
+                  : 'Centro de control'}
+            </span>
           </div>
           <div className="topbar-status">
             <span className="demo-badge">
@@ -106,7 +104,6 @@ export function MissionShell({
               Datos simulados
             </span>
             <span className="avatar small">MC</span>
-            {setLauncherHost && <div ref={attachLauncher} className="assistant-launcher-host" />}
           </div>
         </header>
         <main id="mission-content">{children}</main>

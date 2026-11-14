@@ -320,7 +320,6 @@ button:hover:not(:disabled) {
   min-height: 69px;
   border-bottom: 1px solid var(--line-soft);
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   padding: 0 30px;
@@ -339,10 +338,8 @@ button:hover:not(:disabled) {
 }
 .topbar-status {
   display: flex;
-  flex-wrap: wrap;
   gap: 20px;
   align-items: center;
-  margin-inline-start: auto;
 }
 .demo-badge {
   color: var(--muted);
@@ -1981,7 +1978,7 @@ dd {
   position: relative;
   isolation: isolate;
 }
-.app-shell:not(:has(> .mission-background))::before {
+.app-shell::before {
   content: '';
   position: fixed;
   inset: 0;
@@ -2005,19 +2002,4 @@ dd {
 }
 .topbar {
   backdrop-filter: blur(12px);
-}
-
-ul.source-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.source-list h3 a {
-  display: inline;
-  font-size: inherit;
-}
-
-.source-list h3 a svg {
-  vertical-align: middle;
 }

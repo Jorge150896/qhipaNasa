@@ -1,124 +1,95 @@
-import Link from 'next/link';
 import { Icon } from '@/ui/Icon';
 import { Panel } from '@/ui/Panel';
-
-const research = [
-  {
-    title: 'Cinco peligros del vuelo espacial',
-    description: 'Contexto para relacionar la misión, el entorno y la salud de la tripulación.',
-    url: 'https://www.nasa.gov/hrp/hazards/',
-  },
-  {
-    title: 'Riesgos de salud del vuelo espacial',
-    description: 'Fundamento para explicar áreas como visión, ejercicio y salud cardiovascular.',
-    url: 'https://www.nasa.gov/hrp/risks/',
-  },
-  {
-    title: 'Investigaciones de NASA en el espacio',
-    description: 'Incluye ARCHeR, referencia para los registros de sueño, actividad y bienestar.',
-    url: 'https://www.nasa.gov/hrp/ongoing-hrp-research/',
-  },
-  {
-    title: 'Human Health Countermeasures',
-    description: 'Referencia educativa que acompaña la autoevaluación por sistemas.',
-    url: 'https://www.nasa.gov/hrp/human-health-countermeasures/',
-  },
-  {
-    title: 'Monitoreo de radiación de la Agencia Espacial Canadiense',
-    description:
-      'Describe CANS, un instrumento para medir radiación de neutrones. La demo no cuenta con mediciones de radiación.',
-    url: 'https://www.asc-csa.gc.ca/eng/news/articles/2026/2026-02-26-monitoring-radiation-astronaut-health.asp',
-  },
-  {
-    title: 'Por qué se hacen experimentos en el espacio',
-    description: 'Explica cómo la investigación en órbita prepara misiones a la Luna y Marte.',
-    url: 'https://www.csa-asc.gc.ca/eng/iss/science/why-do-we-conduct-science-experiments-in-space.asp',
-  },
-];
-
-export function SourcesView({ nasaHistoryHref }: { nasaHistoryHref: string }) {
+export function SourcesView() {
   return (
     <>
-      <Panel label="Origen de los datos">
+      <Panel>
         <div className="panel-heading">
           <Icon name="book" />
-          <h2>Origen de los datos</h2>
+          <div>
+            <span className="eyebrow">TRANSPARENCIA DEL PROTOTIPO</span>
+            <h3>Qué representa esta aplicación</h3>
+          </div>
         </div>
         <div className="source-list">
           <article>
-            <span className="badge">Datos históricos reales</span>
-            <h3>Inspiration4 · OSD-575</h3>
+            <span className="badge">Referencia educativa</span>
+            <h3>Salud por sistemas · NASA HHC</h3>
             <p>
-              Historial muestra medianas por fase de glucosa, sodio y potasio de cuatro
-              participantes del estudio de Inspiration4, publicado en NASA Open Science Data
-              Repository. Es una referencia de laboratorio independiente de las lecturas de Odyssey
-              01.
+              Explicaciones de riesgos cardiovasculares, ejercicio, visión, equilibrio, nutrición,
+              inmunidad y EVA. Los autorregistros, comparaciones y revisiones son funciones de
+              demostración del equipo; no son un protocolo clínico de NASA. No hay telemetría real
+              ni diagnóstico automático.
             </p>
-            <p>DOI 10.26030/mc5d-p710 · CC0 1.0</p>
-            <p>
-              <Link href={nasaHistoryHref}>
-                Ver datos de Inspiration4 en Historial <Icon name="arrow" size={14} />
-              </Link>
-            </p>
-            <a href="https://osdr.nasa.gov/bio/repo/data/studies/OSD-575">
-              Abrir el estudio OSD-575 <Icon name="arrow" size={14} />
+            <a
+              href="https://www.nasa.gov/hrp/human-health-countermeasures/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Consultar Human Health Countermeasures
+              <Icon name="arrow" size={14} />
             </a>
           </article>
           <article>
-            <span className="badge">Datos simulados</span>
-            <h3>Lecturas de la misión</h3>
+            <span className="badge">Implementado</span>
+            <h3>Lecturas y escenarios sintéticos</h3>
             <p>
-              El escenario genera el pulso, la temperatura corporal, la SpO₂, la respiración y las
-              condiciones ambientales. Tripulación e Historial muestran su fecha, unidad y origen.
+              Tripulación ficticia por hábitat, cuatro indicadores corporales, tres zonas
+              ambientales y ocho muestras por indicador. El explorador reúne 12 personas únicas en
+              cuatro hábitats. Todos usan el mismo generador de escenarios sintéticos; no son
+              misiones reales. La fecha y el origen se muestran en la interfaz.
             </p>
           </article>
           <article>
-            <span className="badge">Entrada manual</span>
-            <h3>Chequeo diario y autorregistros</h3>
+            <span className="badge">Implementado</span>
+            <h3>Modelo visual del astronauta</h3>
             <p>
-              El usuario introduce observaciones y datos de demostración, como horas de sueño,
-              fatiga o duración del ejercicio. Se guardan en este navegador.
+              “Astronaut” de Poly by Google, licencia CC BY 2.0, distribuido en model-viewer.
+              Textura optimizada; geometría sin cambios. Servido desde esta aplicación. No
+              representa la anatomía ni las características reales de los tripulantes.
+            </p>
+            <a
+              href="https://github.com/google/model-viewer/tree/v3.5.0/packages/shared-assets/models"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Consultar colección de origen <Icon name="arrow" size={14} />
+            </a>
+          </article>
+          <article>
+            <span className="badge amber">Pendiente</span>
+            <h3>Datasets y reglas clínicas</h3>
+            <p>
+              Las explicaciones enlazan fuentes educativas de NASA. La integración de datasets y
+              criterios clínicos validados sigue pendiente. Los números de la demo son sintéticos y
+              no constituyen umbrales médicos.
+            </p>
+            <a
+              href="https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Consultar el reto de salud de astronautas <Icon name="arrow" size={14} />
+            </a>
+          </article>
+          <article>
+            <span className="badge amber">Pendiente</span>
+            <h3>Backend e inteligencia artificial</h3>
+            <p>
+              Java con Spring Boot será la autoridad de datos y operaciones. El copiloto actual usa
+              textos de escenario, sin llamadas a modelos de IA, diagnóstico ni prescripción.
+            </p>
+          </article>
+          <article>
+            <span className="badge">Solo navegador</span>
+            <h3>Persistencia del diario</h3>
+            <p>
+              Los registros ficticios permanecen en el almacenamiento local de este navegador. No
+              hay sincronización ni modo offline completo: una visita nueva necesita cargar la
+              aplicación.
             </p>
           </article>
         </div>
-      </Panel>
-
-      <Panel label="Investigación de referencia">
-        <div className="panel-heading">
-          <h2>Investigación de referencia</h2>
-          <a href="https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/?tab=resources">
-            Recursos del reto Space Apps
-          </a>
-        </div>
-        <ul className="source-list" role="list">
-          {research.map(({ title, description, url }) => (
-            <li key={url}>
-              <article>
-                <h3>
-                  <a href={url}>
-                    {title} <Icon name="arrow" size={14} />
-                  </a>
-                </h3>
-                <p>{description}</p>
-              </article>
-            </li>
-          ))}
-        </ul>
-      </Panel>
-
-      <Panel label="Alcance del prototipo">
-        <h2>Alcance del prototipo</h2>
-        <p>
-          Tumi explica los datos de demostración con contenido del proyecto. La conexión a sensores
-          e IA y la validación de criterios clínicos quedan pendientes. El diario se conserva
-          localmente y la aplicación requiere conexión para una primera visita.
-        </p>
-        <p>
-          Modelo “Astronaut” de Poly by Google, con licencia CC BY 2.0.{' '}
-          <a href="https://github.com/google/model-viewer/blob/v3.5.0/packages/shared-assets/models/Astronaut.glb">
-            Consultar el modelo original <Icon name="arrow" size={14} />
-          </a>
-        </p>
       </Panel>
     </>
   );

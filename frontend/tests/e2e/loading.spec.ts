@@ -107,9 +107,7 @@ test('pantalla completa solo desde Iniciar misión; carga interna conserva menú
   const started = Date.now();
   await page.getByRole('button', { name: 'Iniciar mi misión', exact: true }).click();
   await expect(page.locator('.tumi-loader--fullscreen')).toBeVisible();
-  await expect(
-    page.getByRole('heading', { name: 'Tu resumen de misión', exact: true }),
-  ).toBeVisible({
+  await expect(page.getByRole('heading', { name: 'Cada señal cuenta.', exact: true })).toBeVisible({
     timeout: 10_000,
   });
   expect(Date.now() - started).toBeGreaterThanOrEqual(2900);
@@ -143,7 +141,9 @@ test('pantalla completa solo desde Iniciar misión; carga interna conserva menú
     release();
   }
   await expect(page).toHaveURL(/\/mission\/crew$/);
-  await expect(page.getByRole('heading', { name: 'Tripulación', exact: true })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'El lado humano de la misión.', exact: true }),
+  ).toBeVisible();
   await expect(page.locator('.tumi-loader')).toHaveCount(0);
   await page.goto('/mission/history');
   await expect(

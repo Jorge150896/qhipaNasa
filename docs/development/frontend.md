@@ -2,6 +2,8 @@
 
 ## Decisiones implementadas
 
+El mapa mantiene el tema Qhipa Pacha y añade la pestaña de despegues de Tierra (`tab=launches`, `site=<id>`). El nuevo catálogo y su estado se aíslan en `launch-sites`, sin modificar `useMission` ni claves del diario. Al cambiar de sitio o salir se desmonta el video; el globo tiene lista HTML equivalente. El botón «Acercar a…» pausa el mapa para inspeccionar el objeto y «Volver a la misión» restaura su encuadre. Fuentes, límites, coordenadas y ciclo de vida en `frontend/src/presentation/features/launch-sites/README.md`.
+
 Workspace npm en la raíz y aplicación en `frontend/`. Next.js 16.4.5 y React 19.3.1 con TypeScript estricto. CSS propio, Lucide, Three.js, React Three Fiber y Drei. No hay servicios remotos ni variables de entorno necesarias para ejecutar la demo.
 
 `src/app/mission/layout.tsx` es Server Component y monta una isla cliente: `MissionWorkspaceProvider`. Esta isla conserva selección, escenario, snapshot y diario al navegar entre las secciones de misión. Las rutas y el layout raíz permanecen de servidor.
@@ -130,7 +132,7 @@ La ruta raíz monta `landing/LandingScreen.tsx`, con `useLandingViewModel` y `co
 
 ### Tema del dashboard
 
-La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md). El dashboard combina un fondo espacial animado con superficies moradas y acentos naranja. El centro del fondo se atenúa para facilitar la lectura y se usa una composición estática con movimiento reducido. Las variables comunes viven en `globals.css`; salud por sistemas y mapa conservan sus estilos locales con la misma familia visual.
+La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md). El dashboard comparte el fondo espacial de la portada, superficies moradas y acentos naranja, manteniendo la lectura de indicadores, estados y formularios. Las variables comunes viven en `globals.css`; salud por sistemas y mapa conservan sus estilos locales con la misma familia visual.
 
 ### Cielo compartido de las escenas 3D
 
@@ -142,6 +144,15 @@ La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md
 
 La introducción mínima de tres segundos pertenece ahora al ViewModel de portada y solo empieza tras «Iniciar mi misión». El provider de misión mantiene únicamente su carga real. Los Screens de misión/mapa usan `useTransition` para representar navegación pendiente dentro del área de información, con el shell interactivo. No hay fallback global a pantalla completa ni bloqueo global del scroll. Detalle en `features/loading-preview/README.md`.
 
+
 ### Chequeo diario por actividad
 
 `DailyCheckScreen` conecta el estado local de los cuatro pasos con la acción de guardado de `useMission`. El caso de uso `RecordDailyCheck` valida los datos generales y los campos permitidos por actividad. El diario mantiene su clave y versión con `context` y `discomfortRegion` opcionales. Los campos vacíos se omiten y los ceros ingresados se conservan. Al recargar, el chequeo del día UTC se puede editar con sus valores guardados. La consola muestra la instantánea sintética del escenario, separada de las respuestas ingresadas.
+
+# Detalle visual de cuerpos y nave
+
+El visor utiliza luz lateral neutra y relleno tenue, fondo atenuado y encuadre inicial más cercano. Los materiales planetarios limitan el relieve derivado del color a un efecto ilustrativo suave. El acceso de detalle incluye Aurora, estación conceptual que no representa la ISS. No se incorporan modelos remotos ni se altera la posición de los puntos geográficos.
+
+El selector HTML de destinos aparece antes del Canvas. «Ampliar mapa» desplaza la ficha debajo de la escena para aprovechar el ancho; «Restaurar distribución» recupera las columnas. Es estado visual local de `SpaceExplorerView`, se reinicia al recargar y conserva destino, URL y datos. En móvil la distribución sigue una columna y los controles tienen objetivos de al menos 44 px. El interior modular de nave integrado desde main usa `ShuttleModuleDeck`; la vista exterior del mapa conserva `ShuttleExteriorModel`.
+
+El mapa permite inspeccionar Tierra, Luna, Marte y nave con controles HTML. El enfoque pausa la simulación y ajusta la distancia a los límites visuales y al aspecto del viewport. `PlanetSurface` comparte textura, nubes, relieve y atmósfera entre el mapa y el globo geográfico; las capas opcionales fallidas no impiden seleccionar lugares. La nave mantiene sus zonas y el portal HTML independiente. Procedencia y límites de las texturas locales en `frontend/public/textures/ATTRIBUTION.md`.

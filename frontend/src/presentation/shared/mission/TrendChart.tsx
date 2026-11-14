@@ -5,13 +5,11 @@ export function TrendChart({
   metric,
   compact = false,
   animated = !compact,
-  selectedAt,
   onSelectSample,
 }: {
   metric: MetricData;
   compact?: boolean;
   animated?: boolean;
-  selectedAt?: string;
   onSelectSample?(at: string): void;
 }) {
   return (
@@ -20,7 +18,6 @@ export function TrendChart({
       metric={metric}
       compact={compact}
       animated={animated}
-      selectedAt={selectedAt}
       onSelectSample={onSelectSample}
     />
   );
@@ -30,22 +27,16 @@ function InteractiveTrend({
   metric,
   compact,
   animated,
-  selectedAt,
   onSelectSample,
 }: {
   metric: MetricData;
   compact: boolean;
   animated: boolean;
-  selectedAt?: string;
   onSelectSample?(at: string): void;
 }) {
   const id = useId();
   const [paused, setPaused] = useState(false);
-  const [localAt, setLocalAt] = useState<string>();
-  const activeIndex = metric.history.findIndex(
-    (sample) => sample.at === (onSelectSample ? selectedAt : localAt),
-  );
-  const selected = activeIndex >= 0 ? activeIndex : metric.history.length - 1;
+  const [selected, setSelected] = useState(metric.history.length - 1);
   const row = metric.history[selected];
   return (
     <div
@@ -95,18 +86,6 @@ function InteractiveTrend({
                 className="chart-gridline chart-grid-vertical"
               />
             ))}
-            {selectedAt && metric.chart.points[selected] && (
-              <line
-                x1={metric.chart.points[selected].x}
-                x2={metric.chart.points[selected].x}
-                y1="15"
-                y2="145"
-                stroke="var(--accent-hover)"
-                strokeDasharray="4 3"
-                vectorEffect="non-scaling-stroke"
-                aria-hidden="true"
-              />
-            )}
             {metric.chart.paths.map((path, i) => (
               <g key={i}>
                 <path
@@ -189,7 +168,7 @@ function InteractiveTrend({
             aria-label={`${sample.time}: ${sample.value}`}
             aria-pressed={selected === i}
             onClick={() => {
-              if (!onSelectSample) setLocalAt(sample.at);
+              setSelected(i);
               onSelectSample?.(sample.at);
             }}
           >

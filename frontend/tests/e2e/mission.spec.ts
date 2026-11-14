@@ -8,7 +8,7 @@ test('modelo local, sensores, nave, escenarios y diario persistido', async ({ pa
     (response) => response.url().endsWith('/models/astronaut.glb') && response.ok(),
   );
   await page.goto('/mission/overview');
-  await expect(page.getByRole('heading', { name: 'Tu resumen de misión' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Cada señal cuenta.' })).toBeVisible();
   await page.getByRole('button', { name: 'Consultar frecuencia cardíaca', exact: true }).waitFor();
   await modelRequest;
   await page.screenshot({ path: '../docs/qa/dashboard-desktop.png', fullPage: true });
@@ -93,11 +93,15 @@ test('móvil: sensores seleccionables y sin desbordamiento horizontal', async ({
 });
 
 test('un asset 3D fallido no impide consultar los indicadores', async ({ page }) => {
+  const requestedModel = page.waitForRequest('**/models/astronaut.glb');
   await page.route('**/models/astronaut.glb', (route) => route.abort());
   await page.goto('/mission/overview');
-  await expect(page.getByRole('heading', { name: 'El visor 3D no está disponible' })).toBeVisible();
+  // HTML controls must work while the deferred viewer is still loading.
   await page.getByRole('button', { name: /Temperatura.*Lectura disponible/ }).click();
   await expect(page.locator('.scene-reading strong')).toContainText(/36[.,]6/);
+  // Check the fallback after injecting the asset failure, not before its bundle loads.
+  await requestedModel;
+  await expect(page.getByRole('heading', { name: 'El visor 3D no está disponible' })).toBeVisible();
 });
 
 test('gráfica continua de demo, muestras consultables y cortes de señal', async ({ page }) => {
@@ -133,14 +137,14 @@ test('cada sección conserva navegación y entrada directa después de separar f
 }) => {
   await page.goto('/missions/selene/overview');
   const sections = [
-    ['Tripulación', 'crew', 'Tripulación'],
+    ['Tripulación', 'crew', 'El lado humano de la misión.'],
     ['Entorno del hábitat', 'habitat', 'El espacio que habitan.'],
     ['Historial', 'history', 'Más allá de una lectura.'],
     ['Chequeo diario', 'journal', '¿Cómo va tu día a bordo?'],
     ['Observaciones', 'observations', 'De la señal al seguimiento.'],
     ['Simulación', 'simulation', 'Explora lo que cambia.'],
     ['Fuentes y alcance', 'sources', 'Datos con contexto.'],
-    ['Centro de misión', 'overview', 'Tu resumen de misión'],
+    ['Centro de misión', 'overview', 'Cada señal cuenta.'],
   ];
   for (const [label, section, heading] of sections) {
     await page
