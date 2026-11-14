@@ -1,4 +1,5 @@
 'use client';
+import { publicAsset } from '@/presentation/shared/publicAsset';
 import type { HologramAppearance } from '../hologramTypes';
 import { Html, Line, useGLTF } from '@react-three/drei';
 import { useEffect, useMemo, useRef, type RefObject } from 'react';
@@ -64,8 +65,8 @@ function HumanBody({
 }: HologramProps & { portal: RefObject<HTMLElement> }) {
   const gltf = useGLTF(
     appearance === 'neutral'
-      ? '/models/human-hologram.glb'
-      : `/models/human-hologram-${appearance}.glb`,
+      ? publicAsset('/models/human-hologram.glb')
+      : publicAsset(`/models/human-hologram-${appearance}.glb`),
   );
   const body = gltf.nodes.HumanBody;
   if (!(body instanceof Mesh)) throw new Error('La malla humana no está disponible.');

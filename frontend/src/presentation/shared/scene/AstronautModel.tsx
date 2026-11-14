@@ -1,3 +1,4 @@
+import { publicAsset } from '@/presentation/shared/publicAsset';
 import { Html, useGLTF } from '@react-three/drei';
 import { useEffect, useMemo, useRef, type RefObject } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -38,7 +39,7 @@ export function AstronautModel({
   onSelect(id: SceneSensor): void;
   portal: RefObject<HTMLElement>;
 }) {
-  const gltf = useGLTF('/models/astronaut.glb');
+  const gltf = useGLTF(publicAsset('/models/astronaut.glb'));
   const model = useMemo(() => gltf.scene.clone(), [gltf.scene]);
   const highlight = activeBodyRegion && bodyZones[activeBodyRegion];
   const camera = useThree((state) => state.camera);

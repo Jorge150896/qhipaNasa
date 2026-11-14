@@ -1,11 +1,12 @@
+import { publicAsset } from '@/presentation/shared/publicAsset';
 import { useSceneTexture } from './useSceneTexture';
 import { PlanetAtmosphere } from './PlanetAtmosphere';
 
 type PlanetKind = 'earth' | 'moon' | 'mars';
 const surfaces = {
-  earth: { path: '/textures/2k_earth_daymap.jpg', color: '#316d97' },
-  moon: { path: '/textures/2k_moon.jpg', color: '#aaa9a5' },
-  mars: { path: '/textures/2k_mars.jpg', color: '#b96443' },
+  earth: { path: publicAsset('/textures/2k_earth_daymap.jpg'), color: '#316d97' },
+  moon: { path: publicAsset('/textures/2k_moon.jpg'), color: '#aaa9a5' },
+  mars: { path: publicAsset('/textures/2k_mars.jpg'), color: '#b96443' },
 };
 
 export function PlanetSurface({
@@ -24,11 +25,15 @@ export function PlanetSurface({
     onError: onTextureError,
     onReady: onTextureReady,
   });
-  const normal = useSceneTexture(kind === 'earth' ? '/textures/earth-normal.webp' : undefined);
-  const roughness = useSceneTexture(
-    kind === 'earth' ? '/textures/earth-roughness.webp' : undefined,
+  const normal = useSceneTexture(
+    kind === 'earth' ? publicAsset('/textures/earth-normal.webp') : undefined,
   );
-  const clouds = useSceneTexture(kind === 'earth' ? '/textures/earth-clouds.webp' : undefined);
+  const roughness = useSceneTexture(
+    kind === 'earth' ? publicAsset('/textures/earth-roughness.webp') : undefined,
+  );
+  const clouds = useSceneTexture(
+    kind === 'earth' ? publicAsset('/textures/earth-clouds.webp') : undefined,
+  );
   const materialKey = `${kind}:${Boolean(texture)}:${Boolean(normal)}:${Boolean(roughness)}`;
   return (
     <>

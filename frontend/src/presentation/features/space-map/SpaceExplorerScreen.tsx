@@ -1,7 +1,8 @@
 'use client';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState, useTransition } from 'react';
+import { destinationIds } from '@/domain/explorer/models';
 import { createSpaceExplorerDependencies } from '@/di/createSpaceExplorerDependencies.client';
 import { TumiLoader } from '../../shared/loading/TumiLoader';
 import { missionRoute } from '@/presentation/shared/missionRoutes';
@@ -26,15 +27,15 @@ const SpaceMapScene = dynamic(() => import('./components/SpaceMapScene'), {
     </div>
   ),
 });
-export function SpaceExplorerScreen({
-  destination = 'ship',
-  panel = 'network',
-  launchSite,
-}: {
-  destination?: DestinationKey;
-  panel?: 'network' | 'launches' | 'earth';
-  launchSite?: string;
-}) {
+export function SpaceExplorerScreen() {
+  const searchParams = useSearchParams();
+  const tab = searchParams.get('tab');
+  const panel = tab === 'earth' ? 'earth' : tab === 'launches' ? 'launches' : 'network';
+  const destination =
+    panel !== 'network'
+      ? 'earth'
+      : (destinationIds.find((id) => id === searchParams.get('destination')) ?? 'ship');
+  const launchSite = searchParams.get('site') ?? undefined;
   const router = useRouter();
   const [navigationPending, startNavigation] = useTransition();
   const navigateTo = (path: string) => startNavigation(() => router.push(path));

@@ -1,3 +1,4 @@
+import { publicAsset } from '@/presentation/shared/publicAsset';
 import Image from 'next/image';
 export function TumiFlight() {
   return (
@@ -6,7 +7,7 @@ export function TumiFlight() {
       <div className="qhipa-flight-halo" aria-hidden="true" />
       <div className="qhipa-tumi-float">
         <Image
-          src="/brand/tumi-rocket.png"
+          src={publicAsset('/brand/tumi-rocket.png')}
           alt="Tumi dorado sonriente viajando sobre un cohete, con detalles turquesa y una estela naranja"
           width={1224}
           height={1285}

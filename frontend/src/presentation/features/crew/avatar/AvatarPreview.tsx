@@ -1,3 +1,4 @@
+import { publicAsset } from '@/presentation/shared/publicAsset';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF, useTexture } from '@react-three/drei';
 import { Component, Suspense, useEffect, useMemo, type ReactNode } from 'react';
@@ -22,13 +23,15 @@ class PreviewBoundary extends Component<{ children: ReactNode; fallback: ReactNo
 }
 
 function BaseModel() {
-  const { scene } = useGLTF('/models/astronaut.glb');
+  const { scene } = useGLTF(publicAsset('/models/astronaut.glb'));
   return <primitive object={useMemo(() => scene.clone(), [scene])} />;
 }
 
 function SuitFinish({ selection }: { selection: AvatarSelection }) {
-  const { scene } = useGLTF('/models/astronaut.glb');
-  const map = useTexture(`/models/avatar/suit-${selection.bands}-${selection.controls}.webp`);
+  const { scene } = useGLTF(publicAsset('/models/astronaut.glb'));
+  const map = useTexture(
+    publicAsset(`/models/avatar/suit-${selection.bands}-${selection.controls}.webp`),
+  );
   const { model, materials, finish } = useMemo(() => {
     const finish = new Texture(map.image);
     finish.colorSpace = SRGBColorSpace;
@@ -78,7 +81,7 @@ function EquipmentView({ parts }: { parts: (AvatarPart | undefined)[] }) {
 }
 
 function MountedPart({ part }: { part: AvatarPart }) {
-  const { scene } = useGLTF(`/models/avatar/${part.file}`);
+  const { scene } = useGLTF(publicAsset(`/models/avatar/${part.file}`));
   const model = useMemo(() => scene.clone(), [scene]);
   const socket = sockets[part.socket];
   return (

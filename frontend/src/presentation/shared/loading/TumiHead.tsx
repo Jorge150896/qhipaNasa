@@ -1,4 +1,5 @@
 'use client';
+import { publicAsset } from '@/presentation/shared/publicAsset';
 import { useId } from 'react';
 
 /** Original reference pixels, revealed in independently animated SVG layers. */
@@ -9,7 +10,7 @@ export function TumiHead() {
       <defs>
         <image
           id={`${id}-original`}
-          href="/brand/tumi-head-reference.png"
+          href={publicAsset('/brand/tumi-head-reference.png')}
           width="576"
           height="498"
         />

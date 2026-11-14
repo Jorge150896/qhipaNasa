@@ -103,7 +103,7 @@
 [data-background='orbit']:is(.preview, .backgroundSample) {
   background:
     linear-gradient(#21252922, #21252933),
-    url('/backgrounds/space-purple-orange-v1.png') center / cover;
+    url('../../../../../public/backgrounds/space-purple-orange-v1.png') center / cover;
 }
 [data-background='hangar']:is(.preview, .backgroundSample) {
   background:
@@ -111,7 +111,7 @@
     linear-gradient(68deg, transparent 36%, #e9ecef50 36.5%, transparent 37.1%),
     linear-gradient(-68deg, transparent 36%, #e9ecef50 36.5%, transparent 37.1%),
     radial-gradient(ellipse at 50% 43%, #21252920, #21252988 64%, var(--avatar-dark) 88%),
-    url('/backgrounds/mission-stars-distant-4k.webp') center / cover,
+    url('../../../../../public/backgrounds/mission-stars-distant-4k.webp') center / cover,
     var(--avatar-dark);
 }
 .backgroundSample {

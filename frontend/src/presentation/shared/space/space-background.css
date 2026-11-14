@@ -22,17 +22,17 @@
 
 .space-background__nebula {
   opacity: 0.8;
-  background-image: url('/backgrounds/mission-nebula-4k.webp');
+  background-image: url('../../../../public/backgrounds/mission-nebula-4k.webp');
   animation: mission-nebula-drift 96s ease-in-out infinite;
 }
 
 .space-background__distant {
-  background-image: url('/backgrounds/mission-stars-distant-4k.webp');
+  background-image: url('../../../../public/backgrounds/mission-stars-distant-4k.webp');
   animation: mission-distant-drift 96s ease-in-out infinite;
 }
 
 .space-background__near {
-  background-image: url('/backgrounds/mission-stars-near-4k.webp');
+  background-image: url('../../../../public/backgrounds/mission-stars-near-4k.webp');
   animation: mission-near-drift 48s ease-in-out infinite;
 }
 

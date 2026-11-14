@@ -25,6 +25,12 @@ npm run test:e2e
 
 Desde la raíz, los scripts delegan al workspace `frontend`. Para cambiar el puerto: `npm run dev -- --port 3001`.
 
+## GitHub Pages
+
+En **Settings → Pages → Source**, selecciona **GitHub Actions**. El workflow **GitHub Pages** publica `frontend/out` con cada cambio en `main` y también se puede ejecutar desde **Actions**.
+
+Para generar esa misma exportación localmente, ejecuta `GITHUB_PAGES=true npm run build`. La compilación usa `/qhipaNasa` como ruta base por defecto. GitHub Actions obtiene la ruta base de la configuración de Pages. El sitio publicado ejecuta la demo en el navegador. Spring Boot requiere un alojamiento propio.
+
 ## Funciona en esta versión
 
 - Opción «Ver todo de la Tierra» al seleccionar Tierra, disponible en su tarjeta, marcador 3D y pestaña «Todo de la Tierra». Abre `/explore?destination=earth&tab=earth`, con el directorio de ocho lugares, sus funciones, los tres videos históricos y el globo interactivo. Elegir un lugar o video abre su tarjeta y conserva la selección en la URL.
