@@ -44,4 +44,6 @@ export interface ExplorerViewProps {
   onSelect(id: DestinationKey): void;
   onOpenCrew(habitatId: string): void;
   onRefresh(): void;
+  onOpenLaunchSites(): void;
+  onOpenEarthOverview(): void;
 }
