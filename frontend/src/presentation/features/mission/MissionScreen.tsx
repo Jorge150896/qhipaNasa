@@ -29,6 +29,11 @@ export function MissionScreen({
       onNavigate={navigate}
       pendingCount={data?.pendingCount}
       missionName={data?.name}
+      onOpenEarth={
+        section !== 'crew'
+          ? () => startNavigation(() => router.push('/explore?destination=earth&tab=earth'))
+          : undefined
+      }
       onOpenExplorer={() =>
         startNavigation(() =>
           router.push(

@@ -1,4 +1,5 @@
 import { Icon } from '@/ui/Icon';
+import { useState } from 'react';
 import type { ExplorerViewProps } from '../types';
 export function SpaceExplorerView({
   data,
@@ -7,7 +8,10 @@ export function SpaceExplorerView({
   onSelect,
   onOpenCrew,
   onRefresh,
+  onOpenLaunchSites,
+  onOpenEarthOverview,
 }: ExplorerViewProps) {
+  const [expandedMap, setExpandedMap] = useState(false);
   return (
     <div className="fleet-page">
       <div className="fleet-heading">
@@ -47,20 +51,24 @@ export function SpaceExplorerView({
           <small>Registros locales · {data.today}</small>
         </p>
       </div>
-      <div className="fleet-layout">
+      <div className={`fleet-layout${expandedMap ? ' fleet-layout-expanded' : ''}`}>
         <section className="fleet-map" aria-label="Exploración espacial">
           <div className="fleet-map-heading">
-            <span className="eyebrow">01 / MAPA DE LA RED</span>
-            <span className="mono">VISTA ESQUEMÁTICA</span>
-          </div>
-          {scene}
-          <div className="fleet-map-caption">
-            <span>
+            <div>
+              <span className="eyebrow">01 / MAPA DE LA RED</span>
+              <h2>Explora el espacio</h2>
+              <p>Elige un destino y descubre su tripulación.</p>
+            </div>
+            <button
+              className="button secondary fleet-expand-map"
+              aria-pressed={expandedMap}
+              onClick={() => setExpandedMap((value) => !value)}
+            >
               <Icon name="orbit" />
-              Arrastra para rotar · acerca con zoom · selecciona un objeto
-            </span>
-            <span>Detalle local ilustrativo · órbitas solares en UA</span>
+              {expandedMap ? 'Restaurar distribución' : 'Ampliar mapa'}
+            </button>
           </div>
+          <p className="fleet-destination-hint">Destinos · desliza para ver todos →</p>
           <div className="fleet-destinations" aria-label="Seleccionar destino">
             {data.destinations.map((destination) => (
               <button
@@ -77,6 +85,14 @@ export function SpaceExplorerView({
               </button>
             ))}
           </div>
+          {scene}
+          <div className="fleet-map-caption">
+            <span>
+              <Icon name="orbit" />
+              Arrastra para rotar · acerca con zoom · selecciona un objeto
+            </span>
+            <span>Órbitas y tamaños ilustrativos · datos de demostración</span>
+          </div>
         </section>
         <aside className="fleet-detail" aria-label="Detalle del destino" aria-live="polite">
           <p className="eyebrow">02 / DESTINO SELECCIONADO</p>
@@ -88,6 +104,16 @@ export function SpaceExplorerView({
             <Icon name={selected.id === 'ship' ? 'rocket' : 'orbit'} size={34} />
           </div>
           <p className="fleet-subtitle">{selected.subtitle}</p>
+          {selected.id === 'earth' && (
+            <div className="earth-destination-options">
+              <button className="button primary" onClick={onOpenEarthOverview}>
+                Ver todo de la Tierra
+              </button>
+              <button className="button primary" onClick={onOpenLaunchSites}>
+                Explorar puntos de despegue ↗
+              </button>
+            </div>
+          )}
           {selected.habitats.length === 0 ? (
             <p>Sin hábitats registrados para este destino.</p>
           ) : (
@@ -169,6 +195,13 @@ export function SpaceExplorerView({
           cuentan una vez.
         </p>
       </div>
+      <p className="launch-caption">
+        Superficies:{' '}
+        <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noreferrer">
+          Solar System Scope / INOVE · CC BY 4.0
+        </a>
+        . Aurora es una estación conceptual de demo, no la ISS real.
+      </p>
     </div>
   );
 }

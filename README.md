@@ -27,6 +27,10 @@ Desde la raíz, los scripts delegan al workspace `frontend`. Para cambiar el pue
 
 ## Funciona en esta versión
 
+- Opción «Ver todo de la Tierra» al seleccionar Tierra, disponible en su tarjeta, marcador 3D y pestaña «Todo de la Tierra». Abre `/explore?destination=earth&tab=earth`, con el directorio de ocho lugares, sus funciones, los tres videos históricos y el globo interactivo. Elegir un lugar o video abre su tarjeta y conserva la selección en la URL.
+
+- Pestaña «Despegues de la Tierra» en `/explore?destination=earth&tab=launches`: Kennedy, Vandenberg y Kourou, más las sedes NASA Headquarters, Johnson, Goddard, Marshall y JPL. Cada lugar abre una tarjeta con nombre completo, ciudad, función, fuentes y un video histórico de despegue relacionado, indicando dónde ocurrió realmente. Símbolos distintos y cards individuales junto a los puntos visibles; lista equivalente sin 3D. La URL conserva el sitio; los videos externos requieren conexión. Texturas locales de Solar System Scope / INOVE (CC BY 4.0). Aurora sigue siendo una estación ficticia.
+
 - Carga animada del Tumi con salto, sonrisa, rebote del tocado y spinner independiente. Introducción a pantalla completa de 3 segundos solo tras «Iniciar mi misión»; dentro de la app, carga limitada al área de información. Vista permanente en `/loading-preview`.
 
 - Salud por siete sistemas corporales en Tripulación: explicaciones y fuentes HHC, contexto, comparación descriptiva de series, autoevaluación guiada con confirmación, historial y siguientes pasos, revisión documental y análisis explicable de cada persona. Los registros de salud tienen almacenamiento separado del diario anterior.
@@ -72,6 +76,8 @@ Empezar por [CONTRIBUTING.md](CONTRIBUTING.md) y [AGENTS.md](AGENTS.md). Las ski
 La [propuesta de evolución del dashboard](docs/product/dashboard-proposal.md) relaciona las capturas del reto con las mejoras sugeridas y distingue ideas de funcionalidades implementadas.
 
 ## Recursos
+
+La entrega de Tierra y el explorador se documenta en [earth-and-explorer-delivery.md](docs/development/earth-and-explorer-delivery.md). Para usar los planetas, la estación y la nave en otras pantallas, consultar [modelos 3D reutilizables](docs/development/reusable-3d.md): contratos, ejemplo de composición, recursos, atribuciones y límites.
 
 Modelo “Astronaut” de Poly by Google, CC BY 2.0, distribuido en model-viewer. Textura adaptada con los colores de Qhipa Pacha. [Atribución y procedencia](frontend/public/models/ATTRIBUTION.md).
 

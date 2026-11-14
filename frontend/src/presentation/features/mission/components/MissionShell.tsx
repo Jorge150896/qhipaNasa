@@ -10,11 +10,13 @@ export function MissionShell({
   pendingCount = '0',
   missionName = 'Odyssey 01',
   onOpenExplorer,
+  onOpenEarth,
   children,
 }: {
-  section: MissionSection | 'explorer';
+  section: MissionSection | 'explorer' | 'earth';
   missionName?: string;
   onOpenExplorer?(): void;
+  onOpenEarth?(): void;
   onNavigate(section: MissionSection): void;
   pendingCount?: string;
   children: ReactNode;
@@ -29,7 +31,7 @@ export function MissionShell({
       className={section === 'overview' ? 'app-shell overview-shell' : 'app-shell'}
       data-mission-section={section}
     >
-      {section !== 'explorer' && (
+      {section !== 'explorer' && section !== 'earth' && (
         <div className="mission-background" aria-hidden="true">
           <span className="mission-background__nebula" />
           <span className="mission-background__distant" />
@@ -68,6 +70,12 @@ export function MissionShell({
               <span>Mapa espacial</span>
             </button>
           )}
+          {onOpenEarth && (
+            <button aria-current={section === 'earth' ? 'page' : undefined} onClick={onOpenEarth}>
+              <Icon name="earth" />
+              <span>Tierra</span>
+            </button>
+          )}
           {navigation.map((item) => (
             <button
               key={item.id}
@@ -77,7 +85,10 @@ export function MissionShell({
             >
               <Icon name={item.icon as IconName} />
               <span>
-                {item.id === 'habitat' && section !== 'explorer' && missionName !== 'Odyssey 01'
+                {item.id === 'habitat' &&
+                section !== 'explorer' &&
+                section !== 'earth' &&
+                missionName !== 'Odyssey 01'
                   ? 'Entorno del hábitat'
                   : item.label}
               </span>
@@ -98,7 +109,13 @@ export function MissionShell({
         <header className="topbar">
           <div className="breadcrumb">
             {missionName} <Icon name="chevron" size={13} />
-            <span>{section === 'explorer' ? 'Explorador espacial' : 'Centro de control'}</span>
+            <span>
+              {section === 'earth'
+                ? 'Tierra'
+                : section === 'explorer'
+                  ? 'Explorador espacial'
+                  : 'Centro de control'}
+            </span>
           </div>
           <div className="topbar-status">
             <span className="demo-badge">

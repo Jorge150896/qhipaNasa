@@ -8,6 +8,14 @@ export const mapPositions: Record<DestinationKey, [number, number, number]> = {
   station: [-4.8, -2.65, 0.2],
   ship: [-1, 0.4, 2],
 };
+/** Display bounds only; neither physical sizes nor astronomical scale. */
+export const mapObjectRadii: Record<DestinationKey, number> = {
+  earth: 1.13,
+  moon: 0.47,
+  mars: 0.8,
+  station: 1.7,
+  ship: 0.9,
+};
 /** Four minutes per continuous round trip, including both planetary turns. */
 export const transitDurationSeconds = 240;
 export function transitProgress(elapsedSeconds: number) {

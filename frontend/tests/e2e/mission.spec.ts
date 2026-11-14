@@ -93,11 +93,15 @@ test('móvil: sensores seleccionables y sin desbordamiento horizontal', async ({
 });
 
 test('un asset 3D fallido no impide consultar los indicadores', async ({ page }) => {
+  const requestedModel = page.waitForRequest('**/models/astronaut.glb');
   await page.route('**/models/astronaut.glb', (route) => route.abort());
   await page.goto('/mission/overview');
-  await expect(page.getByRole('heading', { name: 'El visor 3D no está disponible' })).toBeVisible();
+  // HTML controls must work while the deferred viewer is still loading.
   await page.getByRole('button', { name: /Temperatura.*Lectura disponible/ }).click();
   await expect(page.locator('.scene-reading strong')).toContainText(/36[.,]6/);
+  // Check the fallback after injecting the asset failure, not before its bundle loads.
+  await requestedModel;
+  await expect(page.getByRole('heading', { name: 'El visor 3D no está disponible' })).toBeVisible();
 });
 
 test('gráfica continua de demo, muestras consultables y cortes de señal', async ({ page }) => {

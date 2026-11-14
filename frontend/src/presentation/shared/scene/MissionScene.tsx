@@ -93,6 +93,8 @@ export default function MissionScene(props: Props) {
     setCameraReady(Boolean(instance));
   }, []);
   const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
+  const shuttleExterior =
+    props.mode === 'ship' && (!props.habitatKind || props.habitatKind === 'ship') && !props.modules;
   const cutaway = props.mode === 'ship' && props.habitatKind === 'ship' && Boolean(props.modules);
   const fullViewLabel =
     props.habitatKind === 'station'
@@ -148,23 +150,25 @@ export default function MissionScene(props: Props) {
             fallback={<SceneFallback />}
             gl={{ antialias: true, alpha: true }}
           >
-            {!props.transparentBackground && <SpaceBackdrop radius={100} />}
-            <ambientLight intensity={props.transparentBackground ? 0.85 : 1.8} />
+            {!props.transparentBackground && (
+              <SpaceBackdrop radius={100} brightness={shuttleExterior ? 0.65 : 1} />
+            )}
+            <ambientLight intensity={props.transparentBackground || shuttleExterior ? 0.85 : 1.8} />
             <hemisphereLight
               args={
                 props.transparentBackground
                   ? ['#e9ecef', '#38294c', 1.25]
-                  : ['#e7f5ff', '#34445b', 2]
+                  : ['#e7f5ff', '#34445b', shuttleExterior ? 0.8 : 2]
               }
             />
             <directionalLight
               position={[-3, 5, 4]}
-              intensity={props.transparentBackground ? 2.65 : 3.5}
+              intensity={props.transparentBackground ? 2.65 : shuttleExterior ? 2.4 : 3.5}
             />
             <directionalLight
               position={[3, 1, -3]}
               color={props.transparentBackground ? '#a66af7' : '#69d9ec'}
-              intensity={2}
+              intensity={shuttleExterior ? 0.9 : 2}
             />
             {props.transparentBackground && (
               <directionalLight position={[-4, -1, -3]} color="#fb5607" intensity={0.6} />
