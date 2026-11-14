@@ -173,7 +173,7 @@ export function ShuttleModuleDeck({
       {shuttleModules.map((module) => {
         const selected = selectedZone === module.id;
         const occupied = markers.occupiedId === module.id;
-        const trim = occupied ? '#ff9c69' : selected ? '#e5c7ff' : module.color;
+        const trim = selected ? '#e5c7ff' : module.color;
         return (
           <group key={module.id} position-z={module.z}>
             <group
@@ -200,7 +200,7 @@ export function ShuttleModuleDeck({
                   key={z}
                   at={[0, 0.039, z]}
                   size={[1.36, 0.08, 0.046]}
-                  color={selected || occupied ? trim : shell}
+                  color={selected ? trim : shell}
                 />
               ))}
               <ModuleEquipment id={module.id} />

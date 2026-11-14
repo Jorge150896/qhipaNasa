@@ -36,15 +36,7 @@ export function HabitatModel({
           >
             <capsuleGeometry args={[0.5, 0.8, 8, 24]} />
             <meshStandardMaterial
-              color={
-                modules?.occupiedId === zone
-                  ? '#f28e60'
-                  : selectedZone === zone
-                    ? modules
-                      ? '#ae83eb'
-                      : '#9ccecd'
-                    : '#d4dce1'
-              }
+              color={selectedZone === zone ? (modules ? '#ae83eb' : '#9ccecd') : '#d4dce1'}
               metalness={0.4}
               roughness={0.4}
             />

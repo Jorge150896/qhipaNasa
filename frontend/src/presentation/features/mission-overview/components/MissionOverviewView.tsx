@@ -26,7 +26,7 @@ export function MissionOverviewView({
         onOpenRecord={onOpenRecord}
         onReviewSignal={onReviewSignal}
       />
-      <MissionDashboardView {...dashboard} />
+      <MissionDashboardView {...dashboard} layout="overview" />
     </>
   );
 }

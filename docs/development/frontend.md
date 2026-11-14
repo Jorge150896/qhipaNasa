@@ -130,7 +130,7 @@ La ruta raíz monta `landing/LandingScreen.tsx`, con `useLandingViewModel` y `co
 
 ### Tema del dashboard
 
-La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md). El dashboard comparte el fondo espacial de la portada, superficies moradas y acentos naranja, manteniendo la lectura de indicadores, estados y formularios. Las variables comunes viven en `globals.css`; salud por sistemas y mapa conservan sus estilos locales con la misma familia visual.
+La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md). El dashboard combina un fondo espacial animado con superficies moradas y acentos naranja. El centro del fondo se atenúa para facilitar la lectura y se usa una composición estática con movimiento reducido. Las variables comunes viven en `globals.css`; salud por sistemas y mapa conservan sus estilos locales con la misma familia visual.
 
 ### Cielo compartido de las escenas 3D
 

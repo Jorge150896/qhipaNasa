@@ -1,3 +1,7 @@
+import {
+  formatTelemetryDifference,
+  getTelemetryContext,
+} from '../../shared/mission/describeTelemetry';
 import type { CrewHealthTimelineRecord } from '../crew-health/types';
 import type { MetricData, MissionData } from '../mission/types';
 import type {
@@ -96,15 +100,13 @@ export function mapCrewTimeline(
   };
 }
 
-function describeSample(
+export function describeSample(
   mission: MissionData,
   metric: MetricData,
   sample: MetricData['history'][number],
 ): CrewTimelineDetail {
-  const sameInstant = Date.parse(sample.at) === Date.parse(mission.capturedAt);
-  const zone = sameInstant
-    ? mission.zones.find(({ id }) => id === mission.selected.zoneId)
-    : undefined;
+  const context = getTelemetryContext(mission, sample.at);
+  const zone = context?.zone;
   return {
     kind: 'sample',
     at: sample.at,
@@ -112,7 +114,7 @@ function describeSample(
     title: metric.label,
     source: 'Muestra simulada',
     value: sample.value,
-    activity: sameInstant ? mission.selected.activity : undefined,
+    activity: context?.activity,
     zone,
     readings: zone?.readings,
     contextMessage: zone
@@ -120,11 +122,6 @@ function describeSample(
       : 'No hay ubicación, actividad ni lecturas ambientales registradas para este momento.',
   };
 }
-
-const signedNumber = new Intl.NumberFormat('es-PE', {
-  signDisplay: 'exceptZero',
-  maximumFractionDigits: 1,
-});
 
 export function mapCrewTimelineComparison(
   mission: MissionData,
@@ -135,7 +132,7 @@ export function mapCrewTimelineComparison(
   const second = metric.history.find(({ at }) => at === samples.second);
   const difference =
     first?.numericValue != null && second?.numericValue != null
-      ? `${signedNumber.format(second.numericValue - first.numericValue)} ${metric.unit === '%' ? 'puntos porcentuales' : metric.unit}`
+      ? formatTelemetryDifference(first.numericValue, second.numericValue, metric.unit)
       : undefined;
 
   return {

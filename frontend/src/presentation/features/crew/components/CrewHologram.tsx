@@ -8,16 +8,20 @@ import { CrewHologramDetails } from './CrewHologramDetails';
 export function CrewHologram({
   data,
   recordPreview,
+  onAskTumi,
   trendOpen,
   onToggleTrend,
   onClose,
   onOpenHistory,
   onOpenTelemetryHistory,
   onOpenEntry,
+  onOpenModule,
+  sampleAt,
   onSelectTimelineSample,
   onOpenTimeline,
 }: {
   data: CrewHologramData;
+  onAskTumi?(): void;
   recordPreview?: CrewHealthRecordPreview;
   trendOpen: boolean;
   onToggleTrend(): void;
@@ -25,6 +29,8 @@ export function CrewHologram({
   onOpenHistory(): void;
   onOpenTelemetryHistory(): void;
   onOpenEntry(): void;
+  onOpenModule(): void;
+  sampleAt?: string;
   onSelectTimelineSample(at: string): void;
   onOpenTimeline(): void;
 }) {
@@ -73,9 +79,10 @@ export function CrewHologram({
               {reading.timestamp
                 ? `${reading.status ? 'Última lectura disponible' : 'Última lectura'} · ${reading.timestamp}`
                 : 'Sin lecturas previas'}
+              {' · Datos simulados'}
             </p>
             <p>
-              <strong>Actividad de la misión</strong> · {data.activity}
+              <strong>Actividad de la misión</strong> · {data.activity} · {data.context}
             </p>
           </>
         )}
@@ -123,7 +130,12 @@ export function CrewHologram({
             <div id={trendId}>
               {trendOpen && (
                 <>
-                  <TrendChart metric={trend} compact onSelectSample={onSelectTimelineSample} />
+                  <TrendChart
+                    metric={trend}
+                    compact
+                    selectedAt={sampleAt}
+                    onSelectSample={onSelectTimelineSample}
+                  />
                   <button type="button" className="text-button" onClick={onOpenTimeline}>
                     Ver contexto en la línea de tiempo
                   </button>
@@ -138,13 +150,29 @@ export function CrewHologram({
           </button>
         )}
 
+        {reading && (
+          <button className="text-button" type="button" onClick={onOpenModule}>
+            <Icon name="rocket" size={15} />
+            Ver módulo de la tripulación
+          </button>
+        )}
+        {onAskTumi && (
+          <button className="text-button" type="button" onClick={onAskTumi}>
+            Preguntar a Tumi por esta lectura
+          </button>
+        )}
+        {trend && (
+          <button className="text-button" type="button" onClick={onOpenEntry}>
+            <Icon name="clipboard" size={15} />
+            {data.entryAction}
+          </button>
+        )}
         <CrewHologramDetails
           key={data.title}
           data={data}
           sessions={recordPreview?.sessions}
           onOpenHistory={onOpenHistory}
           onOpenTelemetryHistory={onOpenTelemetryHistory}
-          onOpenEntry={onOpenEntry}
         />
       </div>
     </aside>

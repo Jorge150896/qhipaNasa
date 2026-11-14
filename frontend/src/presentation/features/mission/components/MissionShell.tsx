@@ -1,7 +1,9 @@
-import type { ReactNode } from 'react';
+import { useCallback, useContext, type ReactNode } from 'react';
+import { AssistantActionsContext } from '../../mission-assistant/AssistantActionsContext';
 import { navigation } from '../constants';
 import type { MissionSection } from '../types';
 import { Icon, type IconName } from '@/ui/Icon';
+import './mission-background.css';
 export function MissionShell({
   section,
   onNavigate,
@@ -17,8 +19,23 @@ export function MissionShell({
   pendingCount?: string;
   children: ReactNode;
 }) {
+  const setLauncherHost = useContext(AssistantActionsContext)?.setLauncherHost;
+  const attachLauncher = useCallback(
+    (host: HTMLDivElement | null) => setLauncherHost?.(host),
+    [setLauncherHost],
+  );
   return (
-    <div className="app-shell">
+    <div
+      className={section === 'overview' ? 'app-shell overview-shell' : 'app-shell'}
+      data-mission-section={section}
+    >
+      {section !== 'explorer' && (
+        <div className="mission-background" aria-hidden="true">
+          <span className="mission-background__nebula" />
+          <span className="mission-background__distant" />
+          <span className="mission-background__near" />
+        </div>
+      )}
       <a className="skip-link" href="#mission-content">
         Ir al contenido
       </a>
@@ -43,6 +60,7 @@ export function MissionShell({
         <nav aria-label="Navegación principal">
           {onOpenExplorer && (
             <button
+              id="assistant-target-map"
               aria-current={section === 'explorer' ? 'page' : undefined}
               onClick={onOpenExplorer}
             >
@@ -53,6 +71,7 @@ export function MissionShell({
           {navigation.map((item) => (
             <button
               key={item.id}
+              id={`assistant-target-${item.id}`}
               aria-current={section === item.id ? 'page' : undefined}
               onClick={() => onNavigate(item.id)}
             >
@@ -87,6 +106,7 @@ export function MissionShell({
               Datos simulados
             </span>
             <span className="avatar small">MC</span>
+            {setLauncherHost && <div ref={attachLauncher} className="assistant-launcher-host" />}
           </div>
         </header>
         <main id="mission-content">{children}</main>

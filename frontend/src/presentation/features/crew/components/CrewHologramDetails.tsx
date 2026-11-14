@@ -12,16 +12,14 @@ export function CrewHologramDetails({
   sessions,
   onOpenHistory,
   onOpenTelemetryHistory,
-  onOpenEntry,
 }: {
   data: CrewHologramData;
   sessions?: ExerciseSessionPreview[];
   onOpenHistory(): void;
   onOpenTelemetryHistory(): void;
-  onOpenEntry(): void;
 }) {
   const [open, setOpen] = useState(false);
-  const { reading, trend } = data;
+  const { reading } = data;
 
   return (
     <details className="crew-hologram-more" onToggle={(event) => setOpen(event.currentTarget.open)}>
@@ -46,12 +44,6 @@ export function CrewHologramDetails({
         <Icon name="clock" size={15} />
         {reading ? 'Ver historial de mediciones' : 'Ver mis autorregistros'}
       </button>
-      {trend && (
-        <button className="text-button" type="button" onClick={onOpenEntry}>
-          <Icon name="clipboard" size={15} />
-          {data.entryAction}
-        </button>
-      )}
     </details>
   );
 }

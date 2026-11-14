@@ -353,25 +353,79 @@
   gap: 6px;
 }
 
+.crew-module-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0;
+  padding: 8px 14px;
+  list-style: none;
+  background: #201431;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.crew-module-legend li,
+.crew-module-selection-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.crew-module-legend li:first-child svg,
+.crew-location-icon {
+  color: #ffb68c;
+}
+
+.crew-module-legend li:last-child svg,
+.crew-selection-icon,
+.crew-module-selection-label {
+  color: #e0c5ff;
+}
+
+.crew-module-selection-label {
+  margin: 0;
+  font-size: 12px;
+}
+
 .scene-hotspot.crew-module-marker {
+  position: relative;
   display: grid;
   justify-items: center;
+  min-height: 36px;
   padding: 5px 7px;
+  border-color: #8e76a5;
+  box-shadow: none;
+}
+
+.scene-hotspot.crew-module-marker[aria-pressed='true'] {
+  background: #553b79;
+  color: #f7efff;
+  border-color: #dcc0ff;
+  box-shadow: 0 0 0 2px #dcc0ff45;
+}
+
+.crew-marker-occupancy,
+.crew-marker-selection {
+  position: absolute;
+  top: -8px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  color: #212529;
+  pointer-events: none;
 }
 
 .crew-marker-occupancy {
-  color: #ffc19b;
-  font-size: 9px;
-  line-height: 1.3;
+  left: -7px;
+  background: #ffb68c;
 }
 
-.crew-module-marker[data-occupied] {
-  border-color: #fb8650;
-  box-shadow: 0 0 10px #fb560766;
-}
-
-.crew-module-marker[data-occupied][aria-pressed='true'] .crew-marker-occupancy {
-  color: #42211a;
+.crew-marker-selection {
+  right: -7px;
+  background: #e0c5ff;
 }
 
 .crew-scene-stage.crew-shuttle-stage:has(.crew-module-panel) {
@@ -414,11 +468,6 @@
   gap: 2px 5px;
 }
 
-.shuttle-marker .crew-marker-occupancy {
-  grid-column: 1 / -1;
-  grid-row: 1;
-}
-
 .shuttle-marker-code {
   font-weight: 700;
 }
@@ -448,15 +497,14 @@
     font-size: 9px;
   }
 
-  .crew-module-marker:not(.shuttle-marker)[data-occupied] {
-    position: relative;
-    top: -15px;
+  .crew-module-picker .button,
+  .crew-shuttle-stage .crew-module-picker .button {
+    min-height: 44px;
   }
 }
 
 @container (max-width: 700px) {
-  .shuttle-marker .crew-marker-name,
-  .shuttle-marker .crew-marker-occupancy {
+  .shuttle-marker .crew-marker-name {
     display: none;
   }
 
@@ -465,11 +513,6 @@
     min-width: 34px;
     min-height: 34px;
     padding: 4px;
-  }
-
-  .scene-hotspot.shuttle-marker[data-occupied] {
-    outline: 2px solid #ffad82;
-    outline-offset: 2px;
   }
 }
 
@@ -739,4 +782,302 @@
 .crew-camera-controls .button:hover,
 .crew-camera-controls .button:focus-visible {
   background: var(--selection-soft);
+}
+
+.crew-sync-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+.crew-sync-actions .button {
+  min-height: 38px;
+}
+
+.crew-sync-actions .button[aria-pressed='true'] {
+  background: var(--selection-soft);
+  border-color: var(--selection-border);
+}
+
+.crew-sync-status {
+  border-left: 2px solid #ffad82;
+  background: #211532;
+  padding: 9px 12px;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+.crew-sync-status p {
+  margin: 3px 0 0;
+}
+
+.crew-page-heading {
+  margin-bottom: 12px;
+}
+
+.crew-page-heading h1 {
+  font-size: clamp(1.65rem, 3vw, 2.3rem);
+}
+
+.crew-page-toolbar {
+  margin-bottom: 10px;
+}
+
+.crew-section-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #b58df54d;
+}
+
+.crew-section-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: #b58df5;
+}
+
+.crew-section-links a:hover {
+  color: #ffbd96;
+}
+
+.crew-metric-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 8px;
+  padding: 12px;
+}
+
+.crew-metric-picker .metric-card {
+  justify-content: center;
+  min-height: 44px;
+  padding: 9px 10px;
+  border-radius: 8px;
+}
+
+.crew-metric-picker .metric-label {
+  color: inherit;
+}
+
+.crew-body-stage {
+  background: linear-gradient(135deg, #291746, #140e27 75%);
+}
+
+.crew-body-stage .crew-hologram {
+  border-color: #b58df580;
+  background: #28183e;
+  box-shadow: none;
+}
+
+@media (min-width: 1000px) {
+  .crew-scene-stage.crew-body-stage {
+    grid-template-columns: minmax(125px, 16%) minmax(0, 1fr);
+  }
+
+  .crew-scene-stage.crew-body-stage:has(.crew-hologram) {
+    grid-template-columns: minmax(125px, 16%) minmax(0, 1fr) minmax(255px, 32%);
+  }
+
+  .crew-metric-picker {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.mission-page.crew-page {
+  inline-size: 100%;
+  max-inline-size: none;
+  gap: 12px;
+}
+
+.crew-history {
+  scroll-margin-top: 90px;
+}
+
+.crew-history h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.crew-history .crew-timeline {
+  border-top: 1px solid #b58df54d;
+  padding-top: 14px;
+}
+
+.crew-chart-panel a {
+  text-decoration: underline;
+}
+
+.crew-page-heading {
+  flex-wrap: wrap;
+}
+
+.crew-page-heading .snapshot-time {
+  display: flex;
+}
+
+.crew-page-heading .snapshot-time span {
+  white-space: normal;
+}
+
+.crew-now {
+  scroll-margin-top: 80px;
+}
+
+/* The shell's sky continues through the body viewer and behind its controls. */
+.app-shell[data-mission-section='crew'] {
+  --crew-glass: linear-gradient(145deg, #3e255440, #19142177);
+  --crew-glass-edge: #d9bcff26;
+  --crew-glass-active: linear-gradient(125deg, #8338ec38, #46244a38);
+  --crew-glass-glow: 0 0 24px #8338ec2b, inset 0 0 14px #fb56070e;
+}
+
+[data-mission-section='crew'] .topbar,
+[data-mission-section='crew'] .sidebar,
+[data-mission-section='crew'] .app-footer {
+  border-color: transparent;
+  box-shadow: none;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+[data-mission-section='crew'] .sidebar-bottom,
+.crew-page .crew-section-links,
+.crew-page .crew-history .crew-timeline {
+  border-color: transparent;
+}
+
+[data-mission-section='crew'] .sidebar nav button[aria-current='page'],
+.crew-page .crew-picker button[aria-pressed='true'],
+.crew-page .crew-body-stage .metric-card[aria-pressed='true'] {
+  border-color: #c79af36b;
+  background: var(--crew-glass-active);
+  box-shadow: var(--crew-glass-glow);
+}
+
+.crew-page .crew-picker button:not([aria-pressed='true']),
+.crew-page .crew-body-stage .metric-card,
+.crew-page .crew-region-controls .button {
+  border-color: var(--crew-glass-edge);
+  background: var(--crew-glass);
+  border-radius: 999px;
+}
+
+.crew-page .crew-body-stage .metric-card,
+.crew-page .crew-history {
+  backdrop-filter: blur(12px);
+}
+
+.crew-page .crew-body-stage .metric-card {
+  min-height: 51px;
+  padding-inline: 16px;
+}
+
+.crew-page .crew-body-stage .metric-card .metric-label {
+  font-size: 13px;
+}
+
+.crew-page .crew-body-stage .metric-card[aria-pressed='true'] svg {
+  color: #ffad81;
+}
+
+.crew-page .scene-panel:has(.crew-body-stage),
+.crew-page .crew-body-stage {
+  border: 0;
+  background: transparent;
+}
+
+.crew-page .scene-panel:has(.crew-body-stage) {
+  overflow: visible;
+}
+
+.crew-page .scene-panel:has(.crew-body-stage) .scene-panel-header {
+  padding-inline: 0;
+}
+
+.crew-page .scene-panel:has(.crew-body-stage) .segmented {
+  border-color: var(--crew-glass-edge);
+  border-radius: 999px;
+  background: var(--crew-glass);
+}
+
+.crew-page .scene-panel:has(.crew-body-stage) .segmented button {
+  border-radius: 999px;
+}
+
+.crew-page .crew-body-stage .scene-viewport {
+  min-width: 0;
+  contain: inline-size;
+  background: transparent;
+}
+
+.crew-page .crew-body-stage .scene-hotspot {
+  border-color: #dfae964f;
+  border-radius: 999px;
+  background: #21182c9e;
+  box-shadow: 0 0 16px #8338ec35;
+}
+
+.crew-page .crew-body-stage .scene-hotspot[aria-pressed='true'] {
+  color: #fff0e5;
+  border-color: #ff9f62a3;
+  background: #5b302cc7;
+  box-shadow: 0 0 18px #fb56075c;
+}
+
+.crew-page .crew-body-stage .crew-hologram,
+.crew-page .crew-history {
+  border: 1px solid var(--crew-glass-edge);
+  border-radius: 24px;
+  background: var(--crew-glass);
+  box-shadow: 0 15px 50px #130d222e;
+}
+
+.crew-page .crew-body-stage .crew-hologram {
+  backdrop-filter: blur(16px);
+}
+
+.crew-page .crew-body-stage .crew-hologram::before {
+  display: none;
+}
+
+@media (min-width: 1000px) {
+  .crew-page .crew-scene-stage.crew-body-stage,
+  .crew-page .crew-scene-stage.crew-body-stage:has(.crew-hologram) {
+    grid-template-columns: minmax(270px, 34%) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(24px, 5vw, 88px);
+  }
+
+  .crew-page .crew-body-stage .crew-metric-picker {
+    grid-column: 1;
+    grid-row: 1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 25px 0 0;
+  }
+
+  .crew-page .crew-body-stage > .scene-viewport,
+  .crew-page .crew-body-stage:has(.crew-hologram) > .scene-viewport {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    height: clamp(410px, 66vh, 690px);
+  }
+
+  .crew-page .crew-body-stage .crew-hologram {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+    margin: 16px 0 0;
+  }
+}
+
+[data-mission-section='crew'] .mission-background::after {
+  background:
+    radial-gradient(ellipse at 72% 48%, #0c0c1270, transparent 65%),
+    radial-gradient(ellipse at 48% 42%, #11101736, #0909108c);
 }

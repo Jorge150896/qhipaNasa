@@ -932,3 +932,11 @@
   background: var(--selection-soft);
   font-size: 12px;
 }
+
+.health-metric-disclosure > summary {
+  width: fit-content;
+  min-height: 44px;
+  align-content: center;
+  cursor: pointer;
+  color: var(--selection-text);
+}

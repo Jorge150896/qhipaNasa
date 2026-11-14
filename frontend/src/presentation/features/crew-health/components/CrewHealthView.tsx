@@ -113,6 +113,31 @@ export function CrewHealthView({
       </section>
       <div className="health-layout">
         <div className="health-main-column">
+          <section
+            className="panel"
+            id="crew-health-entry"
+            tabIndex={-1}
+            aria-label="Autorregistro de salud"
+          >
+            <HealthEntryForm
+              key={`${data.scope}:${data.system.id}`}
+              system={data.system}
+              name={data.name}
+              disabled={disabled}
+              zones={data.recordZones}
+              onSave={onSave}
+              savedEntryId={message?.entryId}
+              onOpenTimelineRecord={onOpenTimelineRecord}
+            />
+            {message?.operation === 'entry' && (
+              <p
+                className={`health-notice ${message.error ? 'health-error' : ''}`}
+                role={message.error ? 'alert' : 'status'}
+              >
+                {message.text}
+              </p>
+            )}
+          </section>
           <section className="panel health-system-detail" id="crew-health-readings" tabIndex={-1}>
             <div className="health-title">
               <span className="icon-chip">
@@ -124,49 +149,54 @@ export function CrewHealthView({
               </div>
             </div>
             <p>{data.system.overview}</p>
-            <h4>Indicadores disponibles</h4>
+
             {data.metrics.length > 0 && (
               <p>Telemetría sintética de la misión · {data.sensorDate}</p>
             )}
             {data.metrics.length ? (
-              <div className="health-metrics">
-                {data.metrics.map((metric) => (
-                  <article key={metric.id}>
-                    <div>
-                      <span>{metric.label}</span>
-                      <strong>
-                        {metric.value}
-                        <small>{metric.unit}</small>
-                      </strong>
-                    </div>
-                    <span className={`badge ${metric.qualityTone === 'attention' ? 'amber' : ''}`}>
-                      {metric.quality}
-                    </span>
-                    <p>{metric.meaning}</p>
-                    <p>{metric.lastReading}</p>
-                    <dl>
+              <details className="health-metric-disclosure">
+                <summary>Consultar indicadores del sistema</summary>
+                <div className="health-metrics">
+                  {data.metrics.map((metric) => (
+                    <article key={metric.id}>
                       <div>
-                        <dt>Referencia de esta serie</dt>
-                        <dd>{metric.comparison?.reference ?? 'Sin referencia disponible'}</dd>
+                        <span>{metric.label}</span>
+                        <strong>
+                          {metric.value}
+                          <small>{metric.unit}</small>
+                        </strong>
                       </div>
-                      <div>
-                        <dt>Cambio descriptivo</dt>
-                        <dd>{metric.comparison?.difference ?? 'Sin comparación disponible'}</dd>
-                      </div>
-                    </dl>
-                    <button
-                      className="text-button"
-                      onClick={() => {
-                        onSelectMetric(metric.id);
-                        onOpenHistory();
-                      }}
-                    >
-                      Ver serie de {metric.shortLabel.toLowerCase()}
-                      <Icon name="arrow" size={13} />
-                    </button>
-                  </article>
-                ))}
-              </div>
+                      <span
+                        className={`badge ${metric.qualityTone === 'attention' ? 'amber' : ''}`}
+                      >
+                        {metric.quality}
+                      </span>
+                      <p>{metric.meaning}</p>
+                      <p>{metric.lastReading}</p>
+                      <dl>
+                        <div>
+                          <dt>Referencia de esta serie</dt>
+                          <dd>{metric.comparison?.reference ?? 'Sin referencia disponible'}</dd>
+                        </div>
+                        <div>
+                          <dt>Cambio descriptivo</dt>
+                          <dd>{metric.comparison?.difference ?? 'Sin comparación disponible'}</dd>
+                        </div>
+                      </dl>
+                      <button
+                        className="text-button"
+                        onClick={() => {
+                          onSelectMetric(metric.id);
+                          onOpenHistory();
+                        }}
+                      >
+                        Ver serie de {metric.shortLabel.toLowerCase()}
+                        <Icon name="arrow" size={13} />
+                      </button>
+                    </article>
+                  ))}
+                </div>
+              </details>
             ) : (
               <div className="health-empty">
                 <Icon name="clipboard" />
@@ -200,31 +230,6 @@ export function CrewHealthView({
                 </p>
               </details>
             </div>
-          </section>
-          <section
-            className="panel"
-            id="crew-health-entry"
-            tabIndex={-1}
-            aria-label="Autorregistro de salud"
-          >
-            <HealthEntryForm
-              key={`${data.scope}:${data.system.id}`}
-              system={data.system}
-              name={data.name}
-              disabled={disabled}
-              zones={data.recordZones}
-              onSave={onSave}
-              savedEntryId={message?.entryId}
-              onOpenTimelineRecord={onOpenTimelineRecord}
-            />
-            {message?.operation === 'entry' && (
-              <p
-                className={`health-notice ${message.error ? 'health-error' : ''}`}
-                role={message.error ? 'alert' : 'status'}
-              >
-                {message.text}
-              </p>
-            )}
           </section>
           <section
             className="panel"

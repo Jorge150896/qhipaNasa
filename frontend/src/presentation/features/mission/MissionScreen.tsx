@@ -64,7 +64,7 @@ export function MissionScreen({
           </button>
         </div>
       ) : (
-        <div className="mission-page">
+        <div className={`mission-page ${section}-page`}>
           <MissionPageHeader data={data} section={section} onSelectCrew={actions.selectCrew} />
           <MissionFeatureScreen
             section={section}

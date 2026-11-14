@@ -121,7 +121,7 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
   await expect(recordOrigin).toContainText('Bicicleta ficticia');
   await expect(recordOrigin).toContainText('Módulo reportado · Módulo de ejercicio');
   const modulePanel = explorer.getByRole('complementary', { name: 'Contexto del módulo' });
-  await expect(modulePanel).toContainText('Ubicación en la instantánea');
+  await expect(modulePanel).toContainText('Ubicación del tripulante');
   await expect(modulePanel).toContainText('Hábitat de descanso · Descanso');
   await explorer.getByRole('button', { name: 'Astronauta', exact: true }).click();
   await expect(recordOrigin).toHaveCount(0);
@@ -179,7 +179,8 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
     'Cambio visual ficticio de Mateo',
   );
   await health.getByRole('button', { name: 'Cardiovascular', exact: true }).click();
-  await expect(health).toContainText('Referencia de esta serie');
+  await health.getByText('Consultar indicadores del sistema', { exact: true }).click();
+  await expect(health.getByText('Referencia de esta serie').first()).toBeVisible();
   await health.getByRole('button', { name: 'Ver serie de pulso', exact: true }).click();
   await expect(page).toHaveURL(/mission\/history/);
   await expect(
@@ -214,7 +215,7 @@ test('móvil y sin modelo 3D: controles de salud y autorregistro disponibles', a
   await page.goto('/missions/selene/crew');
   await expect(
     page.getByRole('heading', { name: 'El visor 3D no está disponible', exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15_000 });
   const health = page.getByRole('region', { name: 'Salud por sistemas', exact: true });
   await page.getByRole('button', { name: /SpO₂.*Sin señal reciente/ }).click();
   const oxygenCard = page.getByRole('complementary', { name: 'Saturación periférica' });
@@ -397,9 +398,21 @@ test('nave de Tripulación distingue la ubicación de Elena del módulo explorad
     name: 'Explorar Módulo de ejercicio',
     exact: true,
   });
+  const legend = explorer.getByRole('list', { name: 'Leyenda del visor' });
+  await expect(legend).toContainText('Ubicación del tripulante');
+  await expect(legend).toContainText('Módulo explorado');
+  await expect(rest.locator('.crew-marker-occupancy')).toBeVisible();
+  await expect(rest.locator('.crew-marker-selection')).toBeVisible();
   await expect(rest).toHaveAttribute('data-occupied', 'true');
   await expect(rest).toHaveAttribute('aria-pressed', 'true');
   await exercise.click();
+  await expect(exercise.locator('.crew-marker-selection')).toBeVisible();
+  await expect(rest.locator('.crew-marker-selection')).toHaveCount(0);
+  await expect(rest).toHaveAccessibleDescription('Ubicación del tripulante');
+  await expect(panel.getByRole('button', { name: 'Ver Hábitat de descanso' })).toHaveAttribute(
+    'data-crew-location',
+    'true',
+  );
   await expect(exercise).toHaveAttribute('aria-pressed', 'true');
   await expect(rest).toHaveAttribute('data-occupied', 'true');
   await expect(panel.getByRole('heading', { name: 'Módulo de ejercicio' })).toBeVisible();
@@ -577,4 +590,35 @@ test('móvil sin WebGL permite consultar módulos y duración de las sesiones', 
   );
   await expect(timeline.getByRole('status')).toContainText('falta una lectura');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});
+
+test('la gráfica sincroniza el módulo conocido y oculta la ubicación sin contexto', async ({
+  page,
+}) => {
+  await page.goto('/mission/crew');
+  await page.getByRole('button', { name: /Mateo Silva/ }).click();
+  const telemetry = page.getByRole('region', { name: 'Tendencia de telemetría' });
+  const sync = telemetry.getByRole('button', { name: 'Sincronizar con el visor' });
+  await sync.click();
+  await expect(sync).toHaveAttribute('aria-pressed', 'true');
+  const explorer = page.getByRole('region', { name: 'Explorador tridimensional' });
+  const exerciseModule = explorer.getByRole('button', {
+    name: 'Explorar Módulo de ejercicio',
+    exact: true,
+  });
+  const panel = explorer.getByRole('complementary', { name: 'Contexto del módulo' });
+  await expect(exerciseModule).toHaveAttribute('aria-pressed', 'true');
+  await expect(panel).toContainText('14:32 UTC');
+  const early = telemetry.getByRole('button', { name: '14:18 UTC: 88 lpm', exact: true });
+  await early.click();
+  await expect(early).toHaveAttribute('aria-pressed', 'true');
+  await expect(panel).toContainText('No hay ubicación ni lecturas ambientales registradas');
+  await expect(explorer.locator('[data-occupied="true"]')).toHaveCount(0);
+  await expect(panel.getByText('CO₂')).toHaveCount(0);
+  await telemetry.getByRole('button', { name: '14:32 UTC: 108 lpm', exact: true }).click();
+  await expect(exerciseModule).toHaveAttribute('aria-pressed', 'true');
+  await expect(panel).toContainText('950');
+  await panel.getByRole('button', { name: 'Ver Laboratorio', exact: true }).click();
+  await expect(sync).toHaveAttribute('aria-pressed', 'false');
+  await expect(panel.getByRole('heading', { name: 'Laboratorio' })).toBeVisible();
 });

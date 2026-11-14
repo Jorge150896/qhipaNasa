@@ -6,7 +6,7 @@ import { useMissionDashboardViewModel } from '../../shared/mission/useMissionDas
 import type { SceneBodyRegion } from '../../shared/scene/astronautBodyZones';
 import { shuttleModules } from '../../shared/scene/shuttleModules';
 import type { CrewHealthTimelineRecord } from '../crew-health/types';
-import { mapCrewTimeline, mapCrewTimelineComparison } from './mapCrewTimeline';
+import { describeSample, mapCrewTimeline, mapCrewTimelineComparison } from './mapCrewTimeline';
 import type {
   ComparisonSlot,
   CrewHologramData,
@@ -75,6 +75,17 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
     system?.id === 'vision' || system?.id === 'fitness' ? system.id : metric?.id;
   const telemetryMetric =
     systemBySensor[mission.metric.id] === healthSystem ? mission.metric : undefined;
+  const [syncScope, setSyncScope] = useState<string>();
+  if (syncScope && syncScope !== timelineScope) setSyncScope(undefined);
+  const currentSelection = timeline?.scope === timelineScope ? timeline.selection : undefined;
+  const selectedSample =
+    currentSelection?.kind === 'sample' && currentSelection.metricId === telemetryMetric?.id
+      ? telemetryMetric?.history.find(({ at }) => at === currentSelection.at)
+      : undefined;
+  const synchronizedMoment =
+    syncScope === timelineScope && selectedSample && telemetryMetric
+      ? describeSample(mission, telemetryMetric, selectedSample)
+      : undefined;
   const comparisonScope = `${timelineScope}:${telemetryMetric?.id ?? ''}`;
   const [comparison, setComparison] = useState<{
     scope: string;
@@ -95,6 +106,7 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
   const hologram: CrewHologramData | null = system
     ? {
         title: preview?.kind === 'sensor' ? (metric?.label ?? system.label) : system.label,
+        sensorId: metric?.id,
         icon: metric?.id === 'respiration' ? 'wind' : system.icon,
         entryAction:
           system.id === 'vision'
@@ -131,12 +143,19 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
       }
     : null;
 
+  const displayedZone = synchronizedMoment
+    ? mission.zones.find(({ id }) => id === synchronizedMoment.zone?.id)
+    : mission.selectedZone;
+  const occupiedId = synchronizedMoment
+    ? (synchronizedMoment.zone?.id ?? '')
+    : mission.selected.zoneId;
   const moduleData: CrewModuleData = {
+    synchronizedMoment,
     crewName: mission.selected.name,
     crewLocation: mission.selected.location,
     activity: mission.selected.activity,
-    occupiedId: mission.selected.zoneId,
-    crewInSelectedModule: mission.selectedZone.id === mission.selected.zoneId,
+    occupiedId,
+    crewInSelectedModule: displayedZone?.id === occupiedId,
     timestamp: `${mission.date} · ${mission.time}`,
     zones:
       dashboard.habitatKind === 'ship'
@@ -151,11 +170,13 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
             name: zone.name,
             shortName: moduleShortNames[zone.id] ?? zone.name,
           })),
-    selected: mission.selectedZone,
-    origin: moduleOrigin?.scope === timelineScope ? moduleOrigin.data : undefined,
+    selected: displayedZone ?? mission.selectedZone,
+    origin:
+      !synchronizedMoment && moduleOrigin?.scope === timelineScope ? moduleOrigin.data : undefined,
   };
 
   function selectSensorSystem(id: SensorKey) {
+    setSyncScope(undefined);
     setOpenTrend(false);
     const systemId = systemBySensor[id];
     selectHealthSystem(systemId);
@@ -163,6 +184,7 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
   }
 
   function selectBodyRegion(systemId: BodySystemKey) {
+    setSyncScope(undefined);
     setOpenTrend(false);
     const sensorId = directSensorBySystem[systemId];
     selectHealthSystem(systemId);
@@ -173,14 +195,13 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
   return {
     ...dashboard,
     onModeChange(mode: 'crew' | 'ship') {
+      setSyncScope(undefined);
       setModuleOrigin(undefined);
-      if (mode === 'ship') {
-        setPreview(null);
-        setOpenTrend(false);
-      }
+      setOpenTrend(false);
       dashboard.onModeChange(mode);
     },
     openTimelineModule(origin: CrewModuleOrigin) {
+      setSyncScope(undefined);
       setModuleOrigin({ scope: timelineScope, data: origin });
       setPreview(null);
       setOpenTrend(false);
@@ -188,6 +209,24 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
     },
     healthSystem,
     telemetryMetric,
+    sampleAt: selectedSample?.at,
+    synchronizedMoment,
+    sceneZoneId: displayedZone?.id ?? '',
+    stopSynchronization: () => setSyncScope(undefined),
+    toggleSynchronization() {
+      if (synchronizedMoment) {
+        setSyncScope(undefined);
+        return;
+      }
+      const sample = selectedSample ?? telemetryMetric?.history.at(-1);
+      if (!sample || !telemetryMetric) return;
+      setSyncScope(timelineScope);
+      setModuleOrigin(undefined);
+      setPreview(null);
+      setOpenTrend(false);
+      selectTimeline({ kind: 'sample', at: sample.at, metricId: telemetryMetric.id });
+      dashboard.onModeChange('ship');
+    },
     moduleData,
     canCompare,
     comparison:
@@ -217,6 +256,7 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
       );
     },
     selectTimelineMoment(id: string) {
+      setSyncScope(undefined);
       selectTimeline(
         id === 'snapshot'
           ? { kind: 'snapshot' }
@@ -224,6 +264,7 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
       );
     },
     openSavedTimelineRecord(id: string) {
+      setSyncScope(undefined);
       setComparison(undefined);
       selectTimeline({ kind: 'record', id });
     },
@@ -237,6 +278,7 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
     trendInCard: openTrend && Boolean(hologram?.trend),
     toggleTrend: () => setOpenTrend((open) => !open),
     selectHealthSystem(id: BodySystemKey) {
+      setSyncScope(undefined);
       selectHealthSystem(id);
       setPreview(null);
       setOpenTrend(false);
@@ -244,6 +286,7 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
     },
     selectSensorSystem,
     selectTelemetrySensor(id: SensorKey) {
+      setSyncScope(undefined);
       selectHealthSystem(systemBySensor[id]);
       setPreview(null);
       setOpenTrend(false);

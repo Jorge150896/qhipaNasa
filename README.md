@@ -37,13 +37,13 @@ Desde la raíz, los scripts delegan al workspace `frontend`. Para cambiar el pue
 - Diarios separados por hábitat; la clave original de Odyssey permanece intacta. Selección de destino en URL y alternativa HTML sin WebGL.
 
 - Centro de misión original con sus tres tripulantes ficticios, más perfiles por hábitat.
-- Astronauta 3D con rotación, zoom y sensores seleccionables; modelo GLB local de unos 305 KB. Fallback si no hay WebGL o falla el asset.
+- Astronauta 3D con rotación, zoom y sensores seleccionables; modelo GLB local con detalles morados y naranjas. Fallback si no hay WebGL o falla el asset.
 - Odyssey 01 en corte 3D interactivo dentro de Tripulación, con cinco módulos, ubicación del tripulante y lecturas ambientales simuladas. La distribución de la nave es ilustrativa.
 - Frecuencia cardíaca, temperatura, SpO₂ y respiración; historial, unidades, hora UTC, procedencia y calidad de datos visibles.
 - Escenarios de rutina, cambio de sueño y pérdida de señal. Las muestras ausentes no se reemplazan por valores antiguos ni se interpolan.
 - Chequeo diario de demostración con sueño, ánimo y fatiga; seguimiento de observaciones.
 - Persistencia local de chequeos y revisiones entre recargas, con validación de esquema y manejo de errores de almacenamiento.
-- Copiloto explicativo determinista con evidencia y límites, identificado como demo.
+- Tumi, guía local que explica lecturas y comparaciones simuladas en el contexto de la actividad y el entorno, y señala controles. [Guía de conocimiento](frontend/src/presentation/features/mission-assistant/README.md).
 - Navegación por ocho secciones, rutas directas, estados de carga/error/vacío, responsive y controles accesibles.
 
 No existe un modo offline completo ni sincronización: el almacenamiento local conserva registros, pero una visita nueva necesita cargar la app. No introducir datos de salud reales en esta demo.
@@ -73,6 +73,6 @@ La [propuesta de evolución del dashboard](docs/product/dashboard-proposal.md) r
 
 ## Recursos
 
-Modelo “Astronaut” de Poly by Google, CC BY 2.0, distribuido en model-viewer. Textura redimensionada y comprimida; geometría sin cambios. [Atribución y procedencia](frontend/public/models/ATTRIBUTION.md).
+Modelo “Astronaut” de Poly by Google, CC BY 2.0, distribuido en model-viewer. Textura adaptada con los colores de Qhipa Pacha. [Atribución y procedencia](frontend/public/models/ATTRIBUTION.md).
 
 La UI y todas las mediciones son una propuesta del equipo; no implican validación o respaldo de NASA. Los recursos científicos del reto deben seleccionarse y documentarse antes de una entrega oficial.
