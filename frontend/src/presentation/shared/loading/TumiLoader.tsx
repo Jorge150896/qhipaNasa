@@ -1,4 +1,4 @@
-import { TumiHead } from './TumiHead';
+import { TumiLoadingAnimation } from './TumiLoadingAnimation';
 import { SpaceBackground } from '../space/SpaceBackground';
 import './tumi-loader.css';
 
@@ -29,10 +29,8 @@ export function TumiLoader({
           QHIPA <strong>PACHA</strong>
         </p>
         <div className="tumi-loader-stage">
-          <div className="tumi-loader-halo" aria-hidden="true" />
-          <TumiHead />
+          <TumiLoadingAnimation paused={paused} />
         </div>
-        <div className="tumi-loader-spinner" aria-hidden="true" />
         <div role="status" className="tumi-loader-message">
           <h1>{title}</h1>
           <p>{description}</p>

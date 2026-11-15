@@ -1,5 +1,8 @@
 # Verificación de la base frontend
 
+## Publicación del loader giratorio (2026-11-15)
+
+Se incorporaron sobre main todos los cambios pendientes del loader: componente de reproducción, video local, poster, estilos, vista previa, capturas y documentación del recurso. Validación de la integración: build, TypeScript y ESLint aprobados; los tres E2E de loading.spec.ts pasaron en puerto 3083, con escritorio, móvil, pausa/reanudación, movimiento reducido, recarga y carga interna/fullscreen. npm run check se detuvo en formato global por 287 archivos; no ejecutó las etapas siguientes de tests/build. El build se comprobó por separado. No se ejecutó toda la suite E2E ni se repitieron pruebas unitarias para esta entrega visual.
 ## Verificación de publicación (2026-11-15)
 
 La copia aislada para publicar en main aprobó build, TypeScript, ESLint y los dos E2E de navegación en puerto 3082 (escritorio, móvil, teclado y recarga). `npm run check` se detuvo en Prettier por diferencias de formato en 304 archivos; no llegó a ejecutar sus etapas posteriores de tests y build. El build se ejecutó por separado y pasó. Se conservaron fuera de esta publicación los cambios pendientes del loader de Tumi.
@@ -183,3 +186,6 @@ Validación del alcance final de carga: `npm run check` aprobado (39 pruebas uni
 
 Limpieza de los elementos señalados en las capturas: build actualizado aprobado, 104 pruebas unitarias aprobadas y seis pruebas E2E aprobadas (retiro de elementos en escritorio/móvil con recarga, navegación, Tumi y selección corporal desde Personalización, incluido fallo del modelo). TypeScript y ESLint pasaron en la ejecución de check; check completo se detuvo por diferencias de formato preexistentes en 283 archivos. No se reformateó el proyecto completo.
 
+
+
+Carga con giros del Tumi: MP4 local de 308 × 308 y 4,15 segundos, con poster estático. Build, TypeScript y ESLint aprobados. Tres pruebas E2E de loading.spec.ts aprobadas sobre el build actualizado: bucle real, pausa/reanudación, móvil, movimiento reducido dinámico, recarga e integración de la carga interna y fullscreen. Capturas tumi-spin-loader-desktop.png y tumi-spin-loader-mobile.png revisadas. npm run check se detuvo por diferencias de formato preexistentes en 287 archivos; no se reformateó el repositorio completo.

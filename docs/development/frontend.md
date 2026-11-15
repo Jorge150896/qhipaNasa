@@ -150,7 +150,7 @@ La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md
 
 ### Carga animada del Tumi
 
-`presentation/shared/loading/TumiLoader` representa carga de misión y mapa dentro del contenido; su variante fullscreen se reserva para iniciar misión desde la portada y la vista de revisión. `TumiHead` revela la referencia PNG original en capas SVG: cabeza, tocado, expresión y sombra tienen animaciones coordinadas, con spinner independiente y movimiento reducido. La imagen original se conserva sin redibujar; el loader es una capa de viewport completo y sin bordes. `/loading-preview` permite revisar el bucle sin depender de una carga real.
+
 
 La introducción mínima de tres segundos pertenece ahora al ViewModel de portada y solo empieza tras «Iniciar mi misión». El provider de misión mantiene únicamente su carga real. Los Screens de misión/mapa usan `useTransition` para representar navegación pendiente dentro del área de información, con el shell interactivo. No hay fallback global a pantalla completa ni bloqueo global del scroll. Detalle en `features/loading-preview/README.md`.
 
