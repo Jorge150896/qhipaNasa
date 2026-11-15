@@ -27,6 +27,46 @@ export const guideControls = [
 ] as const;
 
 export const actionTips = {
+  'start-mission': {
+    label: 'Iniciar mi misión',
+    text: 'Abre el panel de la tripulación para consultar sus lecturas y actividades.',
+  },
+  'more-sections': {
+    label: 'Más',
+    text: 'Muestra las secciones adicionales de la misión.',
+  },
+  'explorer-mars': {
+    label: 'Mapa de Marte',
+    text: 'Acércate a Marte y consulta la Base Ares y su tripulación.',
+  },
+  'explorer-earth': {
+    label: 'Centros en Tierra',
+    text: 'Explora los centros de apoyo y los sitios de lanzamiento del planeta.',
+  },
+  'crew-now': {
+    label: 'Ahora',
+    text: 'Consulta las lecturas del tripulante seleccionado y su ubicación actual.',
+  },
+  'crew-health': {
+    label: 'Salud por sistemas',
+    text: 'Explora las lecturas y los registros por sistema del cuerpo.',
+  },
+  'crew-avatar': {
+    label: 'Personalización',
+    text: 'Abre las opciones de apariencia del astronauta.',
+  },
+  'crew-module': {
+    label: 'Ver módulo',
+    text: 'Abre el visor del módulo que ocupa este tripulante y consulta sus condiciones.',
+  },
+  'check-context': {
+    label: 'Continuar a autoevaluación',
+    text: 'Pasa a las preguntas de bienestar después de elegir la actividad y el momento.',
+  },
+  'scenario-result': {
+    label: 'Resultado del escenario',
+    text: 'Abre Tripulación para consultar cómo se refleja el escenario seleccionado.',
+  },
   compare: {
     label: 'Comparar dos muestras',
     text: 'Elige dos horas del mismo indicador y compara sus valores y el contexto disponible.',

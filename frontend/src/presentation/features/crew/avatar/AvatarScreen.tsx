@@ -4,6 +4,8 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { AvatarView } from './components/AvatarView';
 import { useAvatarViewModel } from './useAvatarViewModel';
+import { avatarBackgrounds } from './catalog';
+import { useTumiViewContext } from '../../mission-assistant/useTumiViewContext';
 import styles from './avatar.module.css';
 
 const AvatarPreview = dynamic(
@@ -17,6 +19,18 @@ const AvatarPreview = dynamic(
 export function AvatarScreen({ crewId, crewName }: { crewId: string; crewName: string }) {
   const [open, setOpen] = useState(false);
   const model = useAvatarViewModel(crewId);
+  useTumiViewContext(
+    open ? 'Personalización del astronauta' : undefined,
+    [
+      `Equipo visible de ${crewName}: ${
+        model.parts
+          .filter(Boolean)
+          .map((part) => part?.label)
+          .join(', ') || 'sin accesorios ni herramientas seleccionados'
+      }. Fondo: ${avatarBackgrounds.find(({ id }) => id === model.selection.background)?.label ?? 'sin seleccionar'}.`,
+    ],
+    1,
+  );
   return (
     <details
       id="crew-avatar"

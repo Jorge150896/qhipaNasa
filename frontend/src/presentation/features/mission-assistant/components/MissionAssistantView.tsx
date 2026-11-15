@@ -1,7 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
+import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
 import { createPortal } from 'react-dom';
 import { Icon } from '@/ui/Icon';
 import { AppearanceOptions } from '@/ui/AppearanceOptions';
+import { TumiModeOptions } from '@/presentation/shared/tumi/TumiModeOptions';
 import { TumiHead } from '@/presentation/shared/loading/TumiHead';
 import type { useMissionAssistantViewModel } from '../useMissionAssistantViewModel';
 import { AssistantRobot } from './AssistantRobot';
@@ -34,6 +36,7 @@ export function MissionAssistantView({
   const launcher = useRef<HTMLButtonElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   const restoreFocus = useRef(false);
+  const portraitId = useId();
   const { open, messages } = model;
   const { context } = model;
   useEffect(() => {
@@ -80,10 +83,18 @@ export function MissionAssistantView({
           }}
         >
           <header className="assistant-header">
-            <AssistantRobot />
+            {model.usesOpenAi ? (
+              <span className="assistant-gpt-portrait" data-emotion={model.reaction}>
+                <TumiTechPortrait id={portraitId} emotion={model.reaction} />
+              </span>
+            ) : (
+              <AssistantRobot />
+            )}
             <div>
               <h2 id="assistant-title">Tumi</h2>
-              <small>Guía local de Qhipa Pacha</small>
+              <small>
+                {model.usesOpenAi ? 'GPT · Contexto de la pantalla' : 'Guía local de Qhipa Pacha'}
+              </small>
             </div>
             <button
               type="button"
@@ -96,24 +107,13 @@ export function MissionAssistantView({
             </button>
           </header>
           <AppearanceOptions />
-          {!landing && (
-            <div className="assistant-mode" role="group" aria-label="Modo de Tumi">
-              <span>Modo</span>
-              <button type="button" aria-pressed={!following} onClick={() => onChangeMode(false)}>
-                Fijo
-              </button>
-              <button
-                type="button"
-                aria-pressed={following}
-                onClick={() => {
-                  restoreFocus.current = true;
-                  onChangeMode(true);
-                }}
-              >
-                Guía con el puntero
-              </button>
-            </div>
-          )}
+          <TumiModeOptions
+            following={following}
+            onChangeMode={(enabled) => {
+              if (enabled) restoreFocus.current = true;
+              onChangeMode(enabled);
+            }}
+          />
           {context && (
             <div className="assistant-context" aria-label="Dato en conversación">
               <div>
@@ -159,7 +159,17 @@ export function MissionAssistantView({
                 )}
               </div>
             ))}
+            {model.busy && (
+              <p className="assistant-bubble" role="status">
+                Tumi está pensando…
+              </p>
+            )}
           </div>
+          {model.remoteStatus && (
+            <p className="assistant-voice-status" role="status">
+              {model.remoteStatus}
+            </p>
+          )}
           {!landing && (
             <div className="assistant-suggestions">
               {(explorer
@@ -171,7 +181,12 @@ export function MissionAssistantView({
                     '¿Cómo se relaciona la lectura con el entorno?',
                   ]
               ).map((question) => (
-                <button key={question} type="button" onClick={() => model.ask(question)}>
+                <button
+                  key={question}
+                  type="button"
+                  disabled={model.busy}
+                  onClick={() => model.ask(question)}
+                >
                   {question}
                 </button>
               ))}
@@ -201,7 +216,11 @@ export function MissionAssistantView({
               >
                 {model.listening ? 'Detener' : 'Dictar'}
               </button>
-              <button className="button primary" type="submit" disabled={!model.draft.trim()}>
+              <button
+                className="button primary"
+                type="submit"
+                disabled={model.busy || !model.draft.trim()}
+              >
                 Enviar
               </button>
             </form>

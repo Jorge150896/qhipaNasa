@@ -6,7 +6,7 @@ Las respuestas locales usan la persona seleccionada, la calidad y la hora de su 
 
 El dictado requiere un navegador que admita reconocimiento en el dispositivo y un paquete de voz en español. El micrófono se solicita al elegir Dictar. La transcripción queda como borrador hasta pulsar Enviar y la escritura siempre está disponible.
 
-Tumi empieza en modo Fijo. La Guía con el puntero se activa en el chat y acompaña el cursor por el panel. Los controles con ayuda se resaltan al pasar el puntero o recibir foco por teclado. En pantallas táctiles, el primer toque explica el control y el segundo lo usa. «Salir de guía» o Escape devuelven a Tumi al modo Fijo. Con movimiento reducido se muestran los avisos sin desplazar el robot.
+Tumi empieza en modo Autónomo. La Guía local se activa en el chat y acompaña el cursor por el panel. Los controles con ayuda se resaltan al pasar el puntero o recibir foco por teclado. En pantallas táctiles, el primer toque explica el control y el segundo lo usa. «Salir de guía» o Escape devuelven a Tumi al modo Autónomo. Con movimiento reducido se muestran los avisos sin desplazar el robot.
 
 Las tarjetas de telemetría ofrecen «Preguntar por este dato» desde la guía. Con teclado, enfoca la tarjeta y pulsa `?`. El chat conserva la lectura, la persona y la hora de origen hasta quitar el contexto o seleccionar otra tarjeta. «¿Qué cambió?» compara con la primera muestra disponible de la serie y señala cuándo falta una lectura vigente.
 

@@ -1,3 +1,6 @@
+import type { TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
+export type { TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
+
 export interface CursorAssistantData {
   paused: boolean;
   open: boolean;
@@ -11,38 +14,6 @@ export interface CursorAssistantData {
   busy: boolean;
   error: string;
 }
-
-export type TumiEmotion =
-  | 'angry'
-  | 'neutral'
-  | 'happy'
-  | 'joy'
-  | 'wink'
-  | 'laughing'
-  | 'surprised'
-  | 'curious'
-  | 'thinking'
-  | 'understanding'
-  | 'approved'
-  | 'amazed'
-  | 'focused'
-  | 'motivated'
-  | 'achieved'
-  | 'doubtful'
-  | 'confused'
-  | 'worried'
-  | 'sad'
-  | 'tired'
-  | 'sleeping'
-  | 'error'
-  | 'greeting'
-  | 'searching'
-  | 'writing'
-  | 'processing'
-  | 'loading'
-  | 'online'
-  | 'farewell'
-  | 'shy';
 
 export type Speak = (
   text: string,

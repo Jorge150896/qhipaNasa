@@ -18,6 +18,7 @@ export function ExplorerTabs({
         <button
           key={tab.id}
           id={`explorer-tab-${tab.id}`}
+          data-assistant-control={tab.id === 'network' ? 'map' : `explorer-${tab.id}`}
           role="tab"
           aria-selected={active === tab.id}
           aria-controls="explorer-panel"

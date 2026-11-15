@@ -5,11 +5,15 @@ import {
   useEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type CSSProperties,
   type ReactNode,
 } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { startLocalDictation } from '@/infrastructure/speech/localDictation';
+import { tumiConversation, tumiUsesOpenAi } from '@/di/createTumiDependencies.client';
+import type { TumiScreenContext } from '@/domain/assistant/TumiConversation';
+import { isTumiMobile, subscribeToTumiViewport } from '@/presentation/shared/tumi/tumiViewport';
 import { missionRoute } from '@/presentation/shared/missionRoutes';
 import { AssistantActionsContext } from './AssistantActionsContext';
 import type { MissionData, SensorKey } from '../mission/types';
@@ -21,6 +25,7 @@ import { AssistantCoachmark } from './components/AssistantCoachmark';
 import { AssistantRobot } from './components/AssistantRobot';
 import './mission-assistant.css';
 import { CursorAssistantScreen } from '../cursor-assistant/CursorAssistantScreen';
+import { mapTumiContext } from './mapTumiContext';
 
 interface Point {
   left: number;
@@ -42,8 +47,47 @@ export function MissionAssistantScreen({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const model = useMissionAssistantViewModel(data, startLocalDictation, explorer);
+  const views = useRef(
+    new Map<symbol, { path: string; context: TumiScreenContext; priority: number }>(),
+  );
+  const registerView = useCallback(
+    (context: TumiScreenContext, priority: number) => {
+      const id = Symbol();
+      views.current.set(id, { path: pathname, context, priority });
+      return () => {
+        views.current.delete(id);
+      };
+    },
+    [pathname],
+  );
+  function getContext(reading?: ReturnType<typeof captureMetricContext>) {
+    const currentViews = [...views.current.values()]
+      .filter((entry) => entry.path === pathname)
+      .sort((a, b) => a.priority - b.priority);
+    const mainView = currentViews[0]?.context.view;
+    return mapTumiContext(
+      pathname,
+      data,
+      mainView
+        ? {
+            view: mainView,
+            details: currentViews
+              .map(({ context }) => context.details)
+              .filter(Boolean)
+              .join('\n'),
+          }
+        : undefined,
+      reading,
+    );
+  }
+  const model = useMissionAssistantViewModel(
+    data,
+    startLocalDictation,
+    explorer,
+    tumiUsesOpenAi ? { conversation: tumiConversation, getContext, pathname } : undefined,
+  );
   const [following, setFollowing] = useState(false);
+  const mobile = useSyncExternalStore(subscribeToTumiViewport, isTumiMobile, () => false);
   const describe = useCallback((id: string) => getControlTip(id, data), [data]);
   const exitCoach = useCallback(() => setFollowing(false), []);
   const [guide, setGuide] = useState<{ id: string; path: string; explanation: string }>();
@@ -131,6 +175,14 @@ export function MissionAssistantScreen({
     model.show();
   }
 
+  function changeGuideMode(enabled: boolean) {
+    setFollowing(enabled);
+    if (enabled) {
+      setGuide(undefined);
+      model.hide();
+    }
+  }
+
   function openSources() {
     model.hide();
     router.push(missionRoute(habitatId, 'sources'));
@@ -144,11 +196,24 @@ export function MissionAssistantScreen({
   }
 
   return (
-    <AssistantActionsContext value={{ askAboutReading, setLauncherHost }}>
+    <AssistantActionsContext
+      value={{
+        askAboutReading,
+        askQuestion(question) {
+          open();
+          model.ask(question, { useReading: false });
+        },
+        setLauncherHost,
+        registerView,
+      }}
+    >
       {children}
       <CursorAssistantScreen
+        getContext={getContext}
         onOpenChat={landing ? undefined : open}
-        suspended={model.open || following || Boolean(targetId)}
+        following={following}
+        onChangeMode={changeGuideMode}
+        suspended={model.open || (following && !mobile) || Boolean(targetId)}
       />
       {!(targetId && point && !model.open) && (
         <MissionAssistantView
@@ -161,10 +226,7 @@ export function MissionAssistantScreen({
           onOpen={open}
           onClose={model.hide}
           following={following}
-          onChangeMode={(enabled) => {
-            setFollowing(enabled);
-            if (enabled) model.hide();
-          }}
+          onChangeMode={changeGuideMode}
         />
       )}
       {following && !model.open && !targetId && (

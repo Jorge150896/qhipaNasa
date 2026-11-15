@@ -33,6 +33,19 @@
   box-shadow: 0 0 0 3px #ff975c22;
 }
 
+.assistant-gpt-portrait {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px;
+}
+
+.assistant-gpt-portrait svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .assistant-robot-face {
   display: flex;
   gap: 5px;
@@ -274,8 +287,16 @@
 
 .assistant-follow-robot {
   inset: 0 auto auto 0;
+  width: 58px;
   visibility: hidden;
   transition: transform 90ms ease-out;
+}
+
+.assistant-follow-robot > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 3px 7px #180d2655);
 }
 
 .assistant-follow-robot[data-visible='true'] {

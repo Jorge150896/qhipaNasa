@@ -1,4 +1,5 @@
 'use client';
+import { isTumiMobile } from '@/presentation/shared/tumi/tumiViewport';
 import { useEffect, useRef, type Dispatch, type RefObject } from 'react';
 import { clampPoint, isFree, type Point, type Rect, type TumiEvent } from './behavior';
 import type { TumiEmotion } from './types';
@@ -65,7 +66,8 @@ export function useTumiMotion(
     };
     const paint = () => {
       position.current = current;
-      element.style.transform = 'translate3d(' + current.x + 'px,' + current.y + 'px,0)';
+      if (isTumiMobile()) element.style.removeProperty('transform');
+      else element.style.transform = 'translate3d(' + current.x + 'px,' + current.y + 'px,0)';
       element.style.setProperty(
         '--panel-x',
         Math.max(12, Math.min(innerWidth - Math.min(340, innerWidth - 24) - 12, current.x - 120)) +
@@ -100,7 +102,7 @@ export function useTumiMotion(
           ) + 'px';
       }
       // An open panel always takes precedence; the character itself never blocks a control.
-      element.dataset.obstructed = String(!open && !free(current));
+      element.dataset.obstructed = String(!isTumiMobile() && !open && !free(current));
     };
     const rest = () => {
       element.dataset.moving = 'false';
@@ -139,6 +141,7 @@ export function useTumiMotion(
       timer = setTimeout(decide, 9000 + Math.random() * 11000);
       if (
         document.hidden ||
+        isTumiMobile() ||
         stopped ||
         open ||
         dragging ||
@@ -150,9 +153,8 @@ export function useTumiMotion(
       scan();
       const { w, h } = dimensions();
       const candidates: Point[] = [];
-      const mobile = innerWidth < 600;
       for (let i = 0; i < 24; i++) {
-        const edge = Math.floor(Math.random() * (mobile ? 2 : 4));
+        const edge = Math.floor(Math.random() * 4);
         candidates.push(
           clamp(
             edge === 0
@@ -192,6 +194,16 @@ export function useTumiMotion(
       frame = requestAnimationFrame(tick);
     };
     const relocate = () => {
+      if (isTumiMobile()) {
+        const { w, h } = dimensions();
+        current = target = {
+          x: Math.max(0, innerWidth - w - 8),
+          y: Math.max(0, (innerHeight - h) / 2),
+        };
+        cancelAnimationFrame(frame);
+        paint();
+        return;
+      }
       scan();
       current = clamp(current);
       target = current;
@@ -232,7 +244,7 @@ export function useTumiMotion(
       }
     };
     const down = (e: PointerEvent) => {
-      if (open || stopped || e.button !== 0) return;
+      if (isTumiMobile() || open || stopped || e.button !== 0) return;
       dragging = true;
       dragged = false;
       dragStart = { x: e.clientX, y: e.clientY };

@@ -1,4 +1,34 @@
-import type { TumiEmotion } from '../types';
+export type TumiEmotion =
+  | 'angry'
+  | 'neutral'
+  | 'happy'
+  | 'joy'
+  | 'wink'
+  | 'laughing'
+  | 'surprised'
+  | 'curious'
+  | 'thinking'
+  | 'understanding'
+  | 'approved'
+  | 'amazed'
+  | 'focused'
+  | 'motivated'
+  | 'achieved'
+  | 'doubtful'
+  | 'confused'
+  | 'worried'
+  | 'sad'
+  | 'tired'
+  | 'sleeping'
+  | 'error'
+  | 'greeting'
+  | 'searching'
+  | 'writing'
+  | 'processing'
+  | 'loading'
+  | 'online'
+  | 'farewell'
+  | 'shy';
 
 /** Scalable interpretation of the supplied expression board; no raster background or halo. */
 export function TumiTechPortrait({ id, emotion }: { id: string; emotion: TumiEmotion }) {

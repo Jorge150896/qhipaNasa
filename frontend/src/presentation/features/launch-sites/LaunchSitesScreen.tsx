@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { createLaunchSitesDependencies } from '@/di/createLaunchSitesDependencies.client';
 import { useLaunchSitesViewModel } from './useLaunchSitesViewModel';
 import { LaunchSitesView } from './components/LaunchSitesView';
+import { useTumiViewContext } from '../mission-assistant/useTumiViewContext';
 import './launch-sites.css';
 
 const LaunchGlobe = dynamic(() => import('./components/LaunchGlobe'), {
@@ -22,6 +23,16 @@ export function LaunchSitesScreen({
 }) {
   const dependencies = useMemo(() => createLaunchSitesDependencies(), []);
   const model = useLaunchSitesViewModel(dependencies, selectedId);
+  const site = model.selected;
+  useTumiViewContext('Centros en Tierra', [
+    `Lugares disponibles: ${model.sites.map(({ name, category }) => `${name} (${category})`).join(', ')}.`,
+    ...(site
+      ? [
+          `Lugar abierto: ${site.fullName}, ${site.region}. ${site.role}`,
+          `Video histórico: ${site.mission}, ${site.date}. Lugar del lanzamiento: ${site.videoLocation}. ${site.videoRelation}`,
+        ]
+      : []),
+  ]);
   if (model.status === 'loading') return <p role="status">Cargando centros en Tierra…</p>;
   if (model.status === 'error')
     return (

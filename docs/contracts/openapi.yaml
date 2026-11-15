@@ -10,6 +10,43 @@ info:
 servers:
   - url: https://monitoring.example.invalid
 paths:
+  /api/v1/tumi/replies:
+    servers: [{ url: 'http://127.0.0.1:8080' }]
+    post:
+      operationId: askTumi
+      summary: Generar una respuesta de texto para el chat flotante de Tumi
+      description: >-
+        Disponible en desarrollo local. Envía el mensaje y el contexto acotado de la vista a OpenAI desde el servidor.
+        El cliente omite el diario privado, los borradores y la transcripción previa.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message: { type: string, minLength: 1, maxLength: 600 }
+                context:
+                  type: object
+                  required: [view, details]
+                  properties:
+                    view: { type: string, minLength: 1, maxLength: 100 }
+                    details: { type: string, maxLength: 6000 }
+      responses:
+        '200':
+          description: Respuesta del modelo
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [text, reaction]
+                properties:
+                  text: { type: string }
+                  reaction: { enum: [happy, curious, understanding, focused] }
+        '400': { description: Mensaje inválido }
+        '403': { description: Solicitud fuera de la interfaz local o desde un origen no permitido }
+        '503': { description: Tumi no está configurado o el proveedor no pudo responder }
   /api/v1/radiation/instruments:
     servers: [{ url: 'http://localhost:8080' }]
     get:

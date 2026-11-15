@@ -1,6 +1,10 @@
 'use client';
 import { useCallback, useEffect, useEffectEvent, useReducer, useRef, useState } from 'react';
-import type { TumiConversation, TumiMessage } from '@/domain/assistant/TumiConversation';
+import type {
+  TumiConversation,
+  TumiMessage,
+  TumiScreenContext,
+} from '@/domain/assistant/TumiConversation';
 import { detectTextEmotion } from '@/domain/assistant/detectTextEmotion';
 import { autonomousEmotion, reactionToText } from './emotions';
 import { transitionTumi } from './behavior';
@@ -15,6 +19,7 @@ export function useCursorAssistantViewModel(
   conversation: TumiConversation,
   speak?: Speak,
   suspended = false,
+  getContext?: () => TumiScreenContext,
 ) {
   const actor = useRef<HTMLDivElement>(null);
   const [state, dispatch] = useReducer(transitionTumi, 'resting');
@@ -132,14 +137,17 @@ export function useCursorAssistantViewModel(
         [...previous, { id: ++sequence.current, role: 'user' as const, text }].slice(-40),
       );
       try {
-        const answer = await conversation.reply(text, controller.signal);
+        const answer = await conversation.reply(text, controller.signal, getContext?.());
         if (controller.signal.aborted) return;
         setMessages((previous) =>
-          [...previous, { id: ++sequence.current, role: 'assistant' as const, text: answer }].slice(
-            -40,
-          ),
+          [
+            ...previous,
+            { id: ++sequence.current, role: 'assistant' as const, text: answer.text },
+          ].slice(-40),
         );
-        setEmotion(reactionToText(textEmotion));
+        setEmotion(
+          textEmotion === 'neutral' ? (answer.reaction ?? 'neutral') : reactionToText(textEmotion),
+        );
       } catch {
         if (!controller.signal.aborted) {
           setError('No pude responder. Puedes volver a enviar tu pregunta.');

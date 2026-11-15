@@ -1,9 +1,9 @@
-import type { TumiConversation } from '@/domain/assistant/TumiConversation';
+import type { TumiConversation, TumiReply } from '@/domain/assistant/TumiConversation';
 import { detectTextEmotion, emotionalAcknowledgement } from '@/domain/assistant/detectTextEmotion';
 
 /** Local navigation guide, not a language model or a medical advisor. */
 export class LocalTumiConversation implements TumiConversation {
-  async reply(message: string, signal: AbortSignal): Promise<string> {
+  async reply(message: string, signal: AbortSignal): Promise<TumiReply> {
     signal.throwIfAborted();
     await new Promise<void>((resolve, reject) => {
       const abort = () => {
@@ -17,6 +17,10 @@ export class LocalTumiConversation implements TumiConversation {
       signal.addEventListener('abort', abort, { once: true });
     });
     signal.throwIfAborted();
+    return { text: this.replyText(message) };
+  }
+
+  private replyText(message: string): string {
     const text = message.toLocaleLowerCase('es');
     const acknowledgement = emotionalAcknowledgement(detectTextEmotion(message));
     const asksForGuide =

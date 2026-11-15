@@ -88,6 +88,24 @@ test('portada permite movimiento autónomo moderado y arrastre con permanencia t
   const placed = await actor.evaluate((element) => (element as HTMLElement).style.transform);
   await page.clock.runFor(20000);
   expect(await actor.evaluate((element) => (element as HTMLElement).style.transform)).toBe(placed);
+
+  await page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true }).click();
+  const panel = page.getByRole('region', { name: 'Asistente Tumi', exact: true });
+  await panel.getByRole('button', { name: 'Guía local' }).click();
+  await expect(actor).toHaveCount(0);
+  const follower = page.locator('.assistant-follow-robot');
+  await page.mouse.move(180, 140);
+  await expect(follower.locator('svg')).toBeVisible();
+  await expect(follower).toHaveAttribute('style', /translate3d\(196px, 156px, 0(?:px)?\)/);
+  await page.mouse.move(330, 210);
+  await expect(follower).toHaveAttribute('style', /translate3d\(346px, 226px, 0(?:px)?\)/);
+  await page.getByRole('button', { name: 'Iniciar mi misión' }).hover();
+  await expect(page.locator('.assistant-coach-tip')).toContainText(
+    'Abre el panel de la tripulación',
+  );
+  await page.getByRole('button', { name: 'Salir de guía' }).click();
+  await expect(follower).toHaveCount(0);
+  await expect(actor).toHaveCount(1);
 });
 
 test.describe('interacción táctil', () => {

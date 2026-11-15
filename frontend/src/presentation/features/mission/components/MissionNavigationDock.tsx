@@ -90,6 +90,7 @@ export function MissionNavigationDock({
           type="button"
           ref={more}
           id="mission-dock-more"
+          data-assistant-control="more-sections"
           className={`${styles.item} ${styles.more}`}
           aria-expanded={expanded}
           aria-controls="mission-dock-secondary"

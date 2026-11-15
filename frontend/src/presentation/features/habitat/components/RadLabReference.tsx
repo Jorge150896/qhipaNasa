@@ -1,4 +1,5 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
+import { useTumiViewContext } from '../../mission-assistant/useTumiViewContext';
 import series from './radlab-dostel1.json';
 
 const readings = series.readings.map(([at, value]) => ({
@@ -22,8 +23,19 @@ const path = readings
 
 export function RadLabReference() {
   const id = useId();
+  const [open, setOpen] = useState(false);
+  useTumiViewContext(
+    open ? 'Radiación histórica en la ISS' : undefined,
+    [
+      `NASA RadLab, módulo Columbus de la ISS, DosTel1. Serie histórica (separada de la simulación) de ${series.query.from} a ${series.query.to}: ${series.count} registros. Rango ${number.format(min)} a ${number.format(max)} µGy/h. UTC asumido para el archivo original.`,
+    ],
+    1,
+  );
   return (
-    <details className="panel radlab-reference">
+    <details
+      className="panel radlab-reference"
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+    >
       <summary>Radiación histórica en la ISS · NASA RadLab</summary>
       <p>DosTel1 · Módulo Columbus · 1 de marzo de 2022 · 00:00 a 01:00 UTC</p>
       <p className="sub">
