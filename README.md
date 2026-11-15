@@ -33,6 +33,8 @@ Para generar esa misma exportación localmente, ejecuta `GITHUB_PAGES=true npm r
 
 ## Funciona en esta versión
 
+- **Tumi flotante** acompaña con movimiento autónomo, arrastre, expresiones y respuestas locales a señales del texto. Puedes escuchar su saludo, ocultarlo o abrir el chat contextual. [Guía de Tumi](docs/development/tumi-ia.md).
+
 - **Centros en Tierra** reúne en un globo los centros de operaciones y apoyo, los sitios de lanzamiento y tres videos históricos. Se abre dentro de Mapa espacial. La ficha muestra la función del lugar, sus fuentes y dónde ocurrió el despegue relacionado. Los enlaces anteriores conservan el sitio seleccionado.
 
 - **Simulación**: «Pérdida de señal» abre el caso de SpO₂ de Elena en Odyssey. La captura rápida muestra el nuevo resultado con su propia hora y conserva los huecos del historial. Para guardar tus respuestas junto a las lecturas de la misión, usa Monitoreo diario.

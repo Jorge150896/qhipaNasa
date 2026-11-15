@@ -2,6 +2,10 @@
 
 Monitoreo diario reúne las respuestas, las lecturas corporales y las condiciones del hábitat en un solo formulario. [Las sesiones anteriores](monitoring.md) se consultan en Tripulación → Historial.
 
+## Acompañante animado Tumi
+
+[La guía de Tumi](tumi-ia.md) describe el acompañante flotante, sus expresiones y sus respuestas locales. `MissionAssistantScreen` monta una instancia en portada, explorador y misión. Al abrir el chat contextual, se suspende el acompañante. Ambos paneles comparten la apariencia de la app.
+
 ## Decisiones implementadas
 
 La pestaña Centros en Tierra reúne los centros de apoyo y los sitios de lanzamiento (`tab=earth`, `site=<id>`). Los enlaces con `tab=launches` se normalizan conservando el sitio. El nuevo catálogo y su estado se aíslan en `launch-sites`, sin modificar `useMission` ni claves del diario. Al cambiar de sitio o salir se desmonta el video; el globo tiene lista HTML equivalente. El botón «Acercar a…» pausa el mapa para inspeccionar el objeto y «Volver a la misión» restaura su encuadre. Fuentes, límites, coordenadas y ciclo de vida en `frontend/src/presentation/features/launch-sites/README.md`.

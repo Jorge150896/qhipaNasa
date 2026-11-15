@@ -1,5 +1,51 @@
 # Verificación de la base frontend
 
+## Entrega de Tumi en juanluis3 (2026-11-15)
+
+Se consolidaron uso, arquitectura, evolución, recursos, límites de detección emocional, accesibilidad y futura integración en [la guía de Tumi IA](../development/tumi-ia.md), con referencias desde README, documentación frontend y arquitectura. El panel final conserva ojo tachado para ocultar y X únicamente en la cabecera; se retiraron la pausa manual y la X inferior. La pausa al abrir conversación sigue siendo automática.
+
+TypeScript y ESLint aprobados; `npm run check` se detiene en formato global por 279 archivos preexistentes. El build actualizado de los controles finales pasó. Los cuatro casos de `cursor-assistant.spec.ts` pasaron en el puerto 3075: tono triste/feliz/enojado/neutral, conversación y controles, chat de misión y recarga, autonomía/arrastre y móvil táctil con movimiento reducido. La ejecución unitaria completa más reciente aprobó 107 pruebas. Se actualizaron las capturas de Tumi con los controles finales. No se declara aprobada la suite E2E completa del proyecto ni el formato global.
+
+## Reacciones emocionales de Tumi (2026-11-15)
+
+Detección local orientativa de señales de alegría, tristeza, enojo y mezcla en texto español/emojis, con normalización, negaciones cercanas y algunas exclusiones de terceros. El rostro se ajusta tras responder y vuelve a neutral ante mensajes sin señales. El adapter local ofrece respuestas cálidas y tranquilas a mensajes emocionales; una consulta explícita de navegación conserva prioridad. Sin proveedor de IA, perfil emocional, almacenamiento de estas inferencias ni diagnóstico. Ironía, citas y negaciones complejas pueden interpretarse mal.
+
+Temporizador facial independiente: primera variación en 8–12 segundos y siguientes cada 8–15, sin repetición inmediata. Emociones suaves y cansancio/sueño tras inactividad, sin tristeza/enojo aleatorios. Se suspende durante conversación, pausa, voz, ocultación, guía contextual, pestaña oculta o movimiento reducido.
+
+TypeScript, ESLint, build y 107 pruebas unitarias aprobados. Cuatro E2E aprobados sobre el build actualizado en puerto 3074: secuencia tristeza/alegría/enojo/negación-neutral y respuestas correspondientes, controles/chat de misión/recarga, autonomía/arrastre y móvil táctil con movimiento reducido. Captura de enojo revisada: `tumi-emotion-angry.png`; también se conserva `tumi-emotion-sad.png`. El formato de los archivos de la entrega pasa por separado. `npm run check` sigue detenido en formato global; no se reformatearon archivos ajenos ni se ejecutó toda la suite E2E del proyecto.
+
+## Tumi IA autónomo y conversación local (2026-11-15)
+
+Nueva cabeza tecnológica vectorial basada en la lámina de expresiones del usuario; se conserva la referencia original en `public/brand/tumi-ia-expression-reference.jpeg`. Se revisó un fotograma del video de 4,15 segundos como referencia de reacción facial. No es una copia exacta de píxeles ni una malla 3D. El loader y los modelos de misión permanecen intactos.
+
+Máquina de estados, emociones independientes, decisiones espaciadas de movimiento, selección de destinos/recorridos libres, arrastre con permanencia temporal, pausa y ocultación. Panel próximo con mensajes, espera, cierre/minimización y acceso al chat contextual de misión. Adapter local cancelable bajo el puerto `TumiConversation`; la UI informa que no hay IA conectada. No hay llamadas a un proveedor ni persistencia de conversación.
+
+TypeScript, ESLint, 91 pruebas unitarias y build aprobados. Tres E2E aprobados sobre el build final en puerto 3073: conversación y estados, pausa/ocultar/restaurar, acceso al chat de misión y recarga; autonomía y arrastre con permanencia; móvil táctil, movimiento reducido, respuesta fuera del alcance local, Escape y ancho sin desbordamiento. Capturas revisadas: `tumi-ia-desktop.png` y `tumi-ia-mobile.png`. No se ejecutó toda la suite del proyecto.
+
+Las primeras ejecuciones detectaron un destino repetido sin alternativa, Escape después de perder foco al enviar y un panel que cambiaba de posición al crecer el contenido. Se añadieron destinos cercanos seguros, Escape mientras el panel está abierto y reserva estable de espacio para colocarlo. La prueba de pausa comprueba también el estado antes de cerrar.
+
+`npm run check` se ejecutó: TypeScript y ESLint pasan; el formato global se detiene por 279 archivos existentes. Los archivos de esta entrega pasan Prettier por separado. La prevención de obstáculos es geométrica: si no hay recorrido libre, el personaje permanece quieto o deja un acceso compacto; no comprende semánticamente todo el contenido ni garantiza adaptación a cualquier overlay de terceros.
+
+## Recorte alfa de Tumi (2026-11-15)
+
+Se sustituyó el JPEG usado por el acompañante por `tumi-cursor-clean.png`, derivado transparente generado con la herramienta integrada de edición; se conserva el original y se documenta el prompt en `public/brand/tumi-cursor-clean.md`. PNG RGBA de 1412 × 1114 con fondo alfa cero; se retiró el `drop-shadow` CSS. Se mantiene tamaño visual de 75 px, capas de animación y contorno propio del dibujo. No se declara identidad exacta de píxeles entre la edición y su fuente.
+
+TypeScript, ESLint y build aprobados. Dos casos E2E aprobados en puerto 3063: fuente PNG, lectura de alfa transparente, ausencia de filtro CSS, seguimiento/pausa/acceso a chat y móvil con movimiento reducido. Captura de escritorio revisada sobre fondo oscuro. No se ejecutó toda la suite. `npm run check` se detiene por formato preexistente en 282 archivos ajenos al cambio.
+
+## Tumi 75 px y seguimiento direccional (2026-11-15)
+
+Retrato aumentado de 60 a 75 px de ancho sin sustituir la imagen. Separación reducida, inclinación y giro suaves según dirección horizontal, retorno a ángulo neutro en reposo y asentamiento de posición tras detenerse. En táctil, gestos pasivos sobre contenido, liberación al soltar/cancelar y exclusión de controles. TypeScript, ESLint y build aprobados. En puerto 3061 pasaron táctil, voz, evitación de botones y movimiento reducido; la prueba de escritorio detectó un asentamiento incompleto con pocos cuadros. Tras ajustar el asentamiento pasó el caso completo de escritorio, con derecha/izquierda y retorno neutro, en puerto 3062. No se ejecutó la suite completa. El check global se detiene por formato preexistente en 283 archivos fuera de la feature.
+
+## Tumi compacto y expresivo (2026-11-15)
+
+Personaje reducido a 96 × 80 px, recorte SVG suavizado por curvas, bienvenida breve, reposo discreto y capas independientes de sombrero y boca usando la referencia original. Saludo con voz solo tras pulsar «Escuchar saludo»; cancelación al ocultar/desmontar, preferencia por voz española local y sincronización temporal de boca con eventos de reproducción. Las voces dependen del navegador y no se verificó calidad audible en todos los sistemas.
+
+TypeScript, ESLint, 87 pruebas unitarias y build aprobados. Cuatro casos de `cursor-assistant.spec.ts` aprobados sobre producción (puerto 3060): seguimiento y acceso al chat existente, voz sin autoplay con eventos simulados, botón libre en el destino del personaje, móvil y movimiento reducido. Captura de escritorio revisada visualmente. Los eventos de voz se sustituyen en el E2E; no se certifica el motor de síntesis del sistema. Prettier pasa en los archivos del cambio; `npm run check` sigue detenido por formato preexistente en 283 archivos ajenos. No se ejecutó la suite completa de navegador.
+
+## Acompañante del cursor (2026-11-15)
+
+Imagen JPEG original conservada y recortada visualmente mediante SVG. Seguimiento con separación, retraso, inclinación y reposo; pausa, ocultación y acceso al chat local de misión. TypeScript, ESLint, 87 pruebas unitarias y build aprobados. Los dos recorridos del acompañante pasan: escritorio con acceso al chat (puerto 3058) y móvil/movimiento reducido tras esperar hidratación (puerto 3059). Las primeras ejecuciones detectaron un cálculo de suavizado dependiente del ritmo de cuadros y una lectura de posición anterior a la hidratación; se corrigieron. No se ejecutó toda la suite E2E. Capturas `cursor-assistant-desktop.png` y `cursor-assistant-mobile.png`, revisadas visualmente. `npm run check` se detiene por diferencias preexistentes de formato en 283 archivos fuera de esta feature; los archivos nuevos y modificados del asistente pasan Prettier. El servidor local del puerto 3000 respondió HTTP 200 e incluye la referencia de Tumi.
+
 Cierre documental y reutilización 3D (2026-11-14): se extrajo `StationModel` a componentes compartidos sin cambiar su geometría. Se añadieron guías de entrega y reutilización con contratos, ejemplo, recursos, licencias y límites. TypeScript, ESLint, 53 pruebas unitarias y build aprobados; cuatro recorridos de `visual-models.spec.ts` aprobados sobre producción (puerto 3054). El check global se detiene en Prettier por 176 archivos con formato preexistente. No se ejecutó toda la suite de navegador. Se verificó main sin commits pendientes mediante SSH por 443 con la identidad de host GitHub ya confiada.
 
 Cards individuales junto a todos los puntos (2026-11-14): `LaunchPointCard` reemplaza la agrupación visual en el globo. Cada punto frontal mantiene nombre y acceso al detalle, con línea de conexión y oclusión posterior. La ficha ampliada reserva espacio para un único video. TypeScript, ESLint, 53 pruebas unitarias y build pasan; seis E2E de `launch-sites.spec.ts` pasan sobre producción (puerto 3052), incluidos ocho lugares en móvil, recarga, selección por card, textura fallida y alternativa sin WebGL. Se corrigió la prueba de centrado para medir el punto geográfico, dado que ahora la card está desplazada a su costado. El check global se detiene por formato preexistente en 176 archivos. No se ejecutó la suite completa.
