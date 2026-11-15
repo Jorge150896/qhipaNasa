@@ -12,11 +12,15 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 import org.qhipapacha.astra.tumi.adapter.in.web.TumiController;
 import org.qhipapacha.astra.tumi.adapter.out.external.OpenAiResponsesClient;
 import org.qhipapacha.astra.tumi.application.usecase.AskTumi;
+import org.qhipapacha.astra.tumi.application.usecase.TumiDailyQuota;
 import org.qhipapacha.astra.tumi.domain.TumiReply;
 import org.qhipapacha.astra.tumi.domain.TumiScreenContext;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -64,7 +68,7 @@ class TumiTest {
 
   @Test
   void servesLocalRequestsAndRejectsNonLoopback() throws Exception {
-    var mvc = MockMvcBuilders.standaloneSetup(new TumiController(new AskTumi((message, context) -> new TumiReply("Hola", "happy")))).build();
+    var mvc = MockMvcBuilders.standaloneSetup(new TumiController(new AskTumi((message, context) -> new TumiReply("Hola", "happy")), "")).build();
     var path = "/api/v1/tumi/replies";
     mvc.perform(post(path).contentType("application/json").content("{\"message\":\"Hola\"}"))
         .andExpect(status().isOk())
@@ -85,5 +89,33 @@ class TumiTest {
               return request;
             }))
         .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void publicDemoRequiresItsOriginAndLimitsPaidRequests() throws Exception {
+    var quota = new TumiDailyQuota(Clock.fixed(Instant.parse("2026-11-15T00:00:00Z"), ZoneOffset.UTC), 1);
+    var ask = new AskTumi((message, context) -> {
+      quota.take();
+      return new TumiReply("Hola", "happy");
+    });
+    var origin = "https://example.github.io";
+    var mvc = MockMvcBuilders.standaloneSetup(new TumiController(ask, origin)).build();
+    var path = "/api/v1/tumi/replies";
+
+    mvc.perform(post(path).contentType("application/json").content("{\"message\":\"Hola\"}"))
+        .andExpect(status().isForbidden());
+    mvc.perform(post(path).header("Origin", "https://other.example").contentType("application/json")
+            .content("{\"message\":\"Hola\"}"))
+        .andExpect(status().isForbidden());
+    mvc.perform(post(path).header("Origin", origin).contentType("application/json")
+            .content("{\"message\":\"\"}"))
+        .andExpect(status().isBadRequest());
+    mvc.perform(post(path).header("Origin", origin).contentType("application/json")
+            .content("{\"message\":\"Hola\"}"))
+        .andExpect(status().isOk());
+    mvc.perform(post(path).header("Origin", origin).contentType("application/json")
+            .content("{\"message\":\"Hola\"}"))
+        .andExpect(status().isTooManyRequests())
+        .andExpect(jsonPath("$.code").value("daily_limit"));
   }
 }

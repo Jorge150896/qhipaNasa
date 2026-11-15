@@ -2,7 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import type { MissionData } from '../mission/types';
 import { answerMissionQuestion } from './explainMission';
 import type { AssistantMessage, AssistantMetricContext, AssistantReply } from './types';
-import type { TumiConversation, TumiScreenContext } from '@/domain/assistant/TumiConversation';
+import {
+  TumiDailyLimitError,
+  type TumiConversation,
+  type TumiScreenContext,
+} from '@/domain/assistant/TumiConversation';
 import { detectTextEmotion } from '@/domain/assistant/detectTextEmotion';
 import { reactionToText } from '../cursor-assistant/emotions';
 import type { TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
@@ -136,9 +140,13 @@ export function useMissionAssistantViewModel(
             ? (remoteReply.reaction ?? 'happy')
             : reactionToText(textEmotion),
         );
-      } catch {
+      } catch (error) {
         if (controller.signal.aborted) return;
-        setRemoteStatus('GPT no está disponible. Tumi respondió con la guía local.');
+        setRemoteStatus(
+          error instanceof TumiDailyLimitError
+            ? `${error.message} Tumi respondió con la guía local.`
+            : 'GPT no está disponible. Tumi respondió con la guía local.',
+        );
         answer(trimmed, reply);
         setReaction('understanding');
       } finally {

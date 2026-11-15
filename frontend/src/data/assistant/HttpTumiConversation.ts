@@ -1,4 +1,5 @@
 import {
+  TumiDailyLimitError,
   tumiReactions,
   type TumiConversation,
   type TumiReply,
@@ -6,17 +7,20 @@ import {
 } from '@/domain/assistant/TumiConversation';
 
 export class HttpTumiConversation implements TumiConversation {
+  constructor(private readonly origin: string) {}
+
   async reply(
     message: string,
     signal: AbortSignal,
     context?: TumiScreenContext,
   ): Promise<TumiReply> {
-    const response = await fetch('http://127.0.0.1:8080/api/v1/tumi/replies', {
+    const response = await fetch(new URL('/api/v1/tumi/replies', this.origin), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message, context }),
       signal,
     });
+    if (response.status === 429) throw new TumiDailyLimitError();
     if (!response.ok) throw new Error('Tumi no está disponible.');
     const body: unknown = await response.json();
     if (

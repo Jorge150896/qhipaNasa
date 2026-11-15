@@ -16,6 +16,12 @@ export interface TumiScreenContext {
   details: string;
 }
 
+export class TumiDailyLimitError extends Error {
+  constructor() {
+    super('Tumi alcanzó el límite diario de GPT.');
+  }
+}
+
 /** Client port. Providers preserve cancellation and explicit errors. */
 export interface TumiConversation {
   reply(message: string, signal: AbortSignal, context?: TumiScreenContext): Promise<TumiReply>;
