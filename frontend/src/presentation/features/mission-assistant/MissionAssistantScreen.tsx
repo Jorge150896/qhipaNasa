@@ -11,6 +11,8 @@ import {
 } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { startLocalDictation } from '@/infrastructure/speech/localDictation';
+import { speakInBrowser } from '@/infrastructure/speech/browserVoice';
+import { useTumiReplyAudio } from '@/presentation/shared/tumi/useTumiReplyAudio';
 import { tumiConversation, tumiUsesOpenAi } from '@/di/createTumiDependencies.client';
 import type { TumiScreenContext } from '@/domain/assistant/TumiConversation';
 import { isTumiMobile, subscribeToTumiViewport } from '@/presentation/shared/tumi/tumiViewport';
@@ -20,7 +22,7 @@ import type { MissionData, SensorKey } from '../mission/types';
 import type { AssistantSelection } from './types';
 import { useMissionAssistantViewModel } from './useMissionAssistantViewModel';
 import { MissionAssistantView } from './components/MissionAssistantView';
-import { captureMetricContext, getControlTip } from './explainMission';
+import { captureMetricContext, getControlTip, tryAnswerMissionQuestion } from './explainMission';
 import { AssistantCoachmark } from './components/AssistantCoachmark';
 import { AssistantRobot } from './components/AssistantRobot';
 import './mission-assistant.css';
@@ -48,22 +50,37 @@ export function MissionAssistantScreen({
   const pathname = usePathname();
   const router = useRouter();
   const views = useRef(
-    new Map<symbol, { path: string; context: TumiScreenContext; priority: number }>(),
+    new Map<
+      symbol,
+      {
+        path: string;
+        context: TumiScreenContext;
+        priority: number;
+        localAnswer?: (question: string) => string | undefined;
+      }
+    >(),
   );
   const registerView = useCallback(
-    (context: TumiScreenContext, priority: number) => {
+    (
+      context: TumiScreenContext,
+      priority: number,
+      localAnswer?: (question: string) => string | undefined,
+    ) => {
       const id = Symbol();
-      views.current.set(id, { path: pathname, context, priority });
+      views.current.set(id, { path: pathname, context, priority, localAnswer });
       return () => {
         views.current.delete(id);
       };
     },
     [pathname],
   );
-  function getContext(reading?: ReturnType<typeof captureMetricContext>) {
-    const currentViews = [...views.current.values()]
+  function visibleViews() {
+    return [...views.current.values()]
       .filter((entry) => entry.path === pathname)
       .sort((a, b) => a.priority - b.priority);
+  }
+  function getContext(reading?: ReturnType<typeof captureMetricContext>) {
+    const currentViews = visibleViews();
     const mainView = currentViews[0]?.context.view;
     return mapTumiContext(
       pathname,
@@ -80,11 +97,19 @@ export function MissionAssistantScreen({
       reading,
     );
   }
+  function getViewAnswer(question: string) {
+    return visibleViews()
+      .find((entry) => entry.localAnswer)
+      ?.localAnswer?.(question);
+  }
+  const audio = useTumiReplyAudio(speakInBrowser, pathname);
   const model = useMissionAssistantViewModel(
     data,
     startLocalDictation,
     explorer,
     tumiUsesOpenAi ? { conversation: tumiConversation, getContext, pathname } : undefined,
+    getViewAnswer,
+    audio,
   );
   const [following, setFollowing] = useState(false);
   const mobile = useSyncExternalStore(subscribeToTumiViewport, isTumiMobile, () => false);
@@ -205,6 +230,13 @@ export function MissionAssistantScreen({
       {children}
       <CursorAssistantScreen
         getContext={getContext}
+        getLocalReply={
+          !data
+            ? undefined
+            : (question) =>
+                getViewAnswer(question) ?? tryAnswerMissionQuestion(question, data)?.text
+        }
+        audio={audio}
         onOpenChat={landing ? undefined : open}
         following={following}
         onChangeMode={changeGuideMode}
@@ -213,6 +245,11 @@ export function MissionAssistantScreen({
       {!(targetId && point && !model.open) && (
         <MissionAssistantView
           model={model}
+          replyFormat={audio.selectedFormat}
+          onChangeReplyFormat={audio.select}
+          audioPlaying={audio.playing}
+          audioStatus={audio.status}
+          onStopAudio={audio.stop}
           explorer={explorer}
           landing={landing}
           onGuide={guideTo}

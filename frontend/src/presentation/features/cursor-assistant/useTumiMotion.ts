@@ -33,6 +33,9 @@ export function useTumiMotion(
       dragOrigin = current,
       dragged = false;
     let obstacles: Rect[] = [];
+    const panel = open ? document.querySelector<HTMLElement>('.cursor-assistant-panel') : null;
+    const dialogue = panel?.querySelector<HTMLElement>('.tumi-dialogue');
+    const viewport = window.visualViewport;
     const dimensions = () => ({ w: element.offsetWidth, h: element.offsetHeight });
     const clamp = (p: Point) => {
       const { w, h } = dimensions();
@@ -68,38 +71,45 @@ export function useTumiMotion(
       position.current = current;
       if (isTumiMobile()) element.style.removeProperty('transform');
       else element.style.transform = 'translate3d(' + current.x + 'px,' + current.y + 'px,0)';
-      element.style.setProperty(
-        '--panel-x',
-        Math.max(12, Math.min(innerWidth - Math.min(340, innerWidth - 24) - 12, current.x - 120)) +
-          'px',
-      );
-      element.style.setProperty(
-        '--panel-y',
-        Math.max(
-          12,
-          Math.min(innerHeight - Math.min(510, innerHeight - 100) - 12, current.y - 360),
-        ) + 'px',
-      );
-      const panel = document.querySelector<HTMLElement>('.cursor-assistant-panel');
-      if (panel) {
-        const pw = Math.min(340, innerWidth - 24),
-          ph = Math.min(510, innerHeight - 100);
-        const leftRoom = current.x >= pw + 12;
-        const rightRoom = current.x + element.offsetWidth + pw + 24 <= innerWidth;
-        const sideX = leftRoom ? current.x - pw - 12 : current.x + element.offsetWidth + 12;
-        panel.style.left =
-          Math.max(
-            12,
-            Math.min(innerWidth - pw - 12, leftRoom || rightRoom ? sideX : current.x - 120),
-          ) + 'px';
-        panel.style.top =
-          Math.max(
-            12,
-            Math.min(
-              innerHeight - ph - 12,
-              leftRoom || rightRoom ? current.y - 180 : current.y - ph - 12,
-            ),
-          ) + 'px';
+      element.dataset.bubbleSide = current.x < 240 ? 'right' : 'left';
+      if (panel && dialogue) {
+        const top = viewport?.offsetTop ?? 0;
+        const left = viewport?.offsetLeft ?? 0;
+        const height = viewport?.height ?? innerHeight;
+        const right = left + (viewport?.width ?? innerWidth);
+        panel.style.setProperty('--tumi-viewport-height', height + 'px');
+        const pw = panel.offsetWidth;
+        const ph = panel.offsetHeight;
+        const anchor = element.getBoundingClientRect();
+        const centerX = (anchor.left + anchor.right) / 2;
+        const centerY = (anchor.top + anchor.bottom) / 2;
+        const side =
+          anchor.left - 12 - pw >= left + 8
+            ? 'left'
+            : anchor.right + 12 + pw <= right - 8
+              ? 'right'
+              : anchor.top - top > top + height - anchor.bottom
+                ? 'above'
+                : 'below';
+        const x =
+          side === 'left'
+            ? anchor.left - pw - 12
+            : side === 'right'
+              ? anchor.right + 12
+              : centerX - pw / 2;
+        const y =
+          side === 'above'
+            ? anchor.top - ph - 12
+            : side === 'below'
+              ? anchor.bottom + 12
+              : centerY - dialogue.offsetHeight / 2;
+        const bubbleX = Math.max(left + 8, Math.min(right - pw - 8, x));
+        const bubbleY = Math.max(top + 8, Math.min(top + height - ph - 8, y));
+        panel.dataset.side = side;
+        panel.style.left = bubbleX + 'px';
+        panel.style.top = bubbleY + 'px';
+        panel.style.setProperty('--tumi-anchor-x', centerX - bubbleX + 'px');
+        panel.style.setProperty('--tumi-anchor-y', centerY - bubbleY + 'px');
       }
       // An open panel always takes precedence; the character itself never blocks a control.
       element.dataset.obstructed = String(!isTumiMobile() && !open && !free(current));
@@ -146,6 +156,9 @@ export function useTumiMotion(
         open ||
         dragging ||
         reduced.matches ||
+        element.querySelector(
+          '.cursor-assistant-bubble:hover, .cursor-assistant-bubble:focus-within',
+        ) ||
         performance.now() < heldUntil ||
         performance.now() - lastActivity < 1700
       )
@@ -308,6 +321,10 @@ export function useTumiMotion(
       rescanTimer = setTimeout(relocate, 100);
     });
     observer.observe(document.body, { subtree: true, childList: true });
+    const panelResize = panel ? new ResizeObserver(paint) : undefined;
+    if (panel) panelResize?.observe(panel);
+    viewport?.addEventListener('resize', paint);
+    viewport?.addEventListener('scroll', paint);
     relocate();
     timer = setTimeout(decide, 9000);
     window.addEventListener('pointermove', activity, { passive: true });
@@ -327,6 +344,9 @@ export function useTumiMotion(
       clearTimeout(timer);
       clearTimeout(rescanTimer);
       observer.disconnect();
+      panelResize?.disconnect();
+      viewport?.removeEventListener('resize', paint);
+      viewport?.removeEventListener('scroll', paint);
       window.removeEventListener('pointermove', activity);
       window.removeEventListener('keydown', activity);
       window.removeEventListener('resize', relocate);

@@ -2,6 +2,7 @@ import type { TumiScreenContext } from '@/domain/assistant/TumiConversation';
 import { scenarioOptions } from '../mission/constants';
 import type { MissionData, ZoneData } from '../mission/types';
 import type { AssistantMetricContext, AssistantSample } from './types';
+import { getTumiCrewNames } from './tumiCrewNames';
 
 const views: Record<string, string> = {
   crew: 'Tripulación',
@@ -43,17 +44,18 @@ export function mapTumiContext(
     const { selected } = mission;
     const scenario = scenarioOptions.find(({ id }) => id === mission.scenario)?.label;
     facts.push(
-      `Misión ${mission.name}. Escenario sintético: ${scenario ?? mission.scenario}. Fecha y hora de la instantánea: ${mission.capturedAt}.`,
+      `Misión ${mission.name}. Escenario de simulación: ${scenario ?? mission.scenario}. Fecha y hora del registro: ${mission.capturedAt}.`,
     );
     if (section !== 'simulation') {
+      const aliases = getTumiCrewNames(selected).slice(1);
       facts.push(
-        `Tripulante ficticio seleccionado: ${selected.name}, ${selected.role}. En la instantánea: ${selected.activity}, ${selected.location}.`,
-        `Lecturas de la instantánea de ${selected.name}: ${selected.metrics
+        `Persona en pantalla: ${selected.name}, ${selected.role}${aliases.length ? ` (también llamada ${aliases.join(', ')})` : ''}. Actividad: ${selected.activity}. Lugar: ${selected.location}.`,
+        `Lecturas simuladas de ${selected.name}: ${selected.metrics
           .map(({ label, value, unit, quality, history }) => {
             const last = history.findLast((entry) => !entry.missing);
             return `${label}: ${value === '—' ? 'sin muestra vigente' : `${value} ${unit}`} (${quality}${last ? `; última muestra disponible ${last.time}` : ''})`;
           })
-          .join('; ')}. Origen: telemetría sintética.`,
+          .join('; ')}.`,
       );
     }
   }

@@ -3,6 +3,7 @@ export function speakInBrowser(
   text: string,
   callbacks: {
     onStart(): void;
+    onWordBoundary?(charIndex: number): void;
     onEnd(): void;
     onError(message: string): void;
   },
@@ -39,6 +40,11 @@ export function speakInBrowser(
     clearTimeout(timer);
     if (!disposed) callbacks.onStart();
   };
+  if (callbacks.onWordBoundary) {
+    utterance.onboundary = ({ name, charIndex }) => {
+      if (active && !disposed && (!name || name === 'word')) callbacks.onWordBoundary?.(charIndex);
+    };
+  }
   utterance.onend = () => {
     finish();
     if (!disposed) callbacks.onEnd();

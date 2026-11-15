@@ -7,10 +7,7 @@ export const avatarPalette = {
 
 export type SuitColor = 'purple' | 'orange';
 
-export type AvatarBackground = 'studio' | 'orbit' | 'hangar';
-
 export interface AvatarSelection {
-  background: AvatarBackground;
   decoration: string;
   tool: string;
   bands: SuitColor;

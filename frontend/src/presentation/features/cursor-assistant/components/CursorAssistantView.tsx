@@ -1,9 +1,11 @@
 import { TumiModeOptions } from '@/presentation/shared/tumi/TumiModeOptions';
-import { AppearanceOptions } from '@/ui/AppearanceOptions';
+import { TumiReplyOptions } from '@/presentation/shared/tumi/TumiReplyOptions';
+import type { TumiReplyFormat } from '@/presentation/shared/tumi/useTumiReplyAudio';
 import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
-import { EyeOff, X } from 'lucide-react';
-import { useEffect, useId, useRef, type RefObject } from 'react';
+import { Ellipsis, EyeOff, Send, Volume2, VolumeX, X } from 'lucide-react';
+import { Fragment, useEffect, useId, useRef, useState, type RefObject } from 'react';
 import type { CursorAssistantData, TumiEmotion } from '../types';
+import { TumiSpeechBubble } from './TumiSpeechBubble';
 
 export function CursorAssistantView({
   data,
@@ -18,6 +20,11 @@ export function CursorAssistantView({
   onOpenChat,
   following,
   onChangeMode,
+  replyFormat,
+  onChangeReplyFormat,
+  audioStatus,
+  transcriptText,
+  spokenWords,
   onGreet,
   onStopVoice,
 }: {
@@ -33,13 +40,25 @@ export function CursorAssistantView({
   onOpenChat?(): void;
   following: boolean;
   onChangeMode(following: boolean): void;
+  replyFormat: TumiReplyFormat;
+  onChangeReplyFormat(format: TumiReplyFormat): void;
+  audioStatus: string;
+  transcriptText?: string;
+  spokenWords?: number;
   onGreet(): void;
   onStopVoice(): void;
 }) {
   const id = useId();
   const panel = useRef<HTMLElement>(null);
   const wasOpen = useRef(false);
-  const messagesEnd = useRef<HTMLDivElement>(null);
+  const input = useRef<HTMLInputElement>(null);
+  const message = data.messages.findLast(({ role }) => role === 'assistant');
+  const hasReply = Boolean(message && message !== data.messages[0]);
+  const words = message?.text.match(/\S+|\s+/g) ?? [];
+  const matchingSpeech = message !== undefined && transcriptText === message.text;
+  const [revealedMessage, setRevealedMessage] = useState<number>();
+  const revealing = data.open && !data.busy && message?.id !== revealedMessage && !matchingSpeech;
+  const step = Math.min(125, 7200 / Math.max(words.length, 1));
   useEffect(() => {
     if (!data.open) return;
     const escape = (event: KeyboardEvent) => {
@@ -52,10 +71,7 @@ export function CursorAssistantView({
     return () => window.removeEventListener('keydown', escape);
   }, [data.open, onToggle]);
   useEffect(() => {
-    messagesEnd.current?.scrollIntoView({ block: 'nearest' });
-  }, [data.messages, data.busy]);
-  useEffect(() => {
-    if (data.open) panel.current?.querySelector('button')?.focus();
+    if (data.open) (input.current ?? panel.current)?.focus({ preventScroll: true });
     else if (wasOpen.current && !data.hidden) actor.current?.querySelector('button')?.focus();
     wasOpen.current = data.open;
   }, [data.open, data.hidden, actor]);
@@ -71,7 +87,7 @@ export function CursorAssistantView({
         ref={actor}
         className="cursor-assistant"
         data-paused={data.paused || data.open}
-        data-speaking={data.speaking}
+        data-speaking={data.speaking || revealing}
         data-state={data.state}
         data-emotion={data.emotion}
       >
@@ -90,84 +106,145 @@ export function CursorAssistantView({
         >
           <TumiTechPortrait id={id} emotion={data.emotion} />
         </button>
+        {!data.open && !following && !data.paused && !data.speaking && (
+          <TumiSpeechBubble onOpen={onToggle} />
+        )}
       </div>
       <button className="cursor-assistant-restore tumi-safe-launcher" onClick={onToggle}>
         Abrir Tumi
       </button>
       {data.open && (
         <section id={id} ref={panel} className="cursor-assistant-panel" aria-label="Asistente Tumi">
-          <div className="tumi-chat-heading">
-            <strong>Tumi</strong>
-            <span>{usesOpenAi ? 'Chat con GPT' : 'Guía local'}</span>
-            <button
-              className="tumi-icon-button"
-              aria-label="Cerrar conversación"
-              title="Cerrar conversación"
-              onClick={onToggle}
+          <div className="tumi-dialogue">
+            <div className="tumi-chat-messages" role="log" aria-label="Conversación con Tumi">
+              {data.busy ? (
+                <p className="tumi-thinking">¡Un momentito, estoy pensando! ✨</p>
+              ) : (
+                message && (
+                  <p key={message.id} data-role="assistant">
+                    <span className="sr-only">{message.text}</span>
+                    <span
+                      aria-hidden="true"
+                      data-reveal={matchingSpeech ? 'audio' : revealing ? 'text' : 'done'}
+                    >
+                      {words.map((word, index) =>
+                        index % 2 ? (
+                          <Fragment key={index}>{word}</Fragment>
+                        ) : (
+                          <span
+                            className="tumi-chat-word"
+                            key={index}
+                            data-visible={
+                              matchingSpeech ? index / 2 < (spokenWords ?? 0) : undefined
+                            }
+                            style={{ animationDelay: `${(index / 2) * step}ms` }}
+                            onAnimationEnd={
+                              index === words.length - 1
+                                ? () => setRevealedMessage(message.id)
+                                : undefined
+                            }
+                          >
+                            {word}
+                          </span>
+                        ),
+                      )}
+                    </span>
+                  </p>
+                )
+              )}
+            </div>
+            <form
+              className="tumi-chat-compose"
+              onSubmit={(event) => {
+                event.preventDefault();
+                onSend();
+                input.current?.focus({ preventScroll: true });
+              }}
             >
-              <X size={18} aria-hidden="true" />
-            </button>
-          </div>
-          <AppearanceOptions />
-          <TumiModeOptions following={following} onChangeMode={onChangeMode} />
-          <p className="tumi-chat-disclaimer">
-            {usesOpenAi
-              ? 'OpenAI recibe tu mensaje y el contexto de demostración de esta pantalla.'
-              : 'Sin IA conectada · Respuestas locales sobre la web'}
-          </p>
-          <div
-            className="tumi-chat-messages"
-            role="log"
-            aria-label="Conversación con Tumi"
-            aria-live="polite"
-            aria-relevant="additions"
-          >
-            {data.messages.map((message) => (
-              <p key={message.id} data-role={message.role}>
-                <span>{message.role === 'user' ? 'Tú' : 'Tumi'}</span>
-                {message.text}
-              </p>
-            ))}
-            {data.busy && <p role="status">Tumi está pensando…</p>}
-            <div ref={messagesEnd} />
-          </div>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              onSend();
-            }}
-          >
-            <label htmlFor={id + '-message'}>Mensaje para Tumi</label>
-            <div className="tumi-chat-compose">
+              <label className="sr-only" htmlFor={id + '-message'}>
+                Mensaje para Tumi
+              </label>
               <input
+                ref={input}
                 id={id + '-message'}
                 value={data.draft}
                 onChange={(event) => onDraft(event.target.value)}
                 maxLength={600}
                 autoComplete="off"
-                placeholder="¿Qué quieres explorar?"
+                placeholder="Pregúntame algo…"
               />
-              <button type="submit" disabled={data.busy || !data.draft.trim()}>
-                Enviar
+              <button
+                type="submit"
+                className="tumi-icon-button tumi-send"
+                aria-label="Enviar"
+                title="Enviar"
+                disabled={data.busy || !data.draft.trim()}
+              >
+                <Send size={17} aria-hidden="true" />
               </button>
-            </div>
-          </form>
-          {data.error && <p role="alert">{data.error}</p>}
-          <div className="tumi-chat-controls">
-            <button onClick={data.speaking ? onStopVoice : onGreet}>
-              {data.speaking ? 'Detener voz' : 'Escuchar saludo'}
-            </button>
-            {data.voiceStatus && <p role="status">{data.voiceStatus}</p>}
-            {onOpenChat && <button onClick={onOpenChat}>Abrir chat contextual</button>}
+            </form>
+            {data.error && <p role="alert">{data.error}</p>}
+          </div>
+          <div className="tumi-chat-footer">
+            <details className="tumi-chat-options">
+              <summary className="tumi-icon-button" title="Opciones">
+                <Ellipsis size={20} aria-hidden="true" />
+                <span className="sr-only">Opciones</span>
+              </summary>
+              <div className="tumi-chat-settings">
+                <TumiReplyOptions format={replyFormat} onChange={onChangeReplyFormat} />
+                <TumiModeOptions following={following} onChangeMode={onChangeMode} />
+                <p className="tumi-chat-disclaimer">
+                  {usesOpenAi
+                    ? 'OpenAI recibe tu mensaje y el contexto de demostración de esta pantalla.'
+                    : 'Sin IA conectada · Respuestas locales sobre la web'}
+                </p>
+                <div className="tumi-chat-controls">
+                  {onOpenChat && (
+                    <button type="button" onClick={onOpenChat}>
+                      Abrir chat contextual
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="tumi-icon-button"
+                    onClick={onHide}
+                    aria-label="Ocultar Tumi"
+                    title="Ocultar Tumi"
+                  >
+                    <EyeOff size={18} aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+            </details>
             <button
-              className="tumi-icon-button"
-              onClick={onHide}
-              aria-label="Ocultar Tumi"
-              title="Ocultar Tumi"
+              type="button"
+              className="tumi-icon-button tumi-chat-audio"
+              onClick={data.speaking ? onStopVoice : onGreet}
+              aria-label={
+                data.speaking ? 'Detener voz' : hasReply ? 'Escuchar respuesta' : 'Escuchar saludo'
+              }
+              title={
+                data.speaking ? 'Detener voz' : hasReply ? 'Escuchar respuesta' : 'Escuchar saludo'
+              }
             >
-              <EyeOff size={20} aria-hidden="true" />
+              {data.speaking ? (
+                <VolumeX size={18} aria-hidden="true" />
+              ) : (
+                <Volume2 size={18} aria-hidden="true" />
+              )}
+            </button>
+            <button
+              type="button"
+              className="tumi-icon-button tumi-close"
+              aria-label="Cerrar conversación"
+              title="Cerrar conversación"
+              onClick={onToggle}
+            >
+              <X size={17} aria-hidden="true" />
             </button>
           </div>
+          {audioStatus && <p role="status">{audioStatus}</p>}
         </section>
       )}
     </>

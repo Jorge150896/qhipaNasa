@@ -16,6 +16,8 @@ Rutas relativas a `frontend/src/presentation/shared/scene/`:
 | `SpaceBackdrop` | Fondo generado localmente; `radius` y `brightness` opcionales. El radio debe quedar dentro del plano lejano de la cámara. |
 | `AstronautModel` / `HabitatModel` | Componentes existentes con sensores o módulos. Sus contratos completos están en sus props; para un visor de misión usar `MissionSceneSlot`. |
 
+El astronauta usa `AstronautLighting` y `useAstronautFinish` en el visor de misión y en la vista de personalización. El acabado conserva el GLB y las texturas originales y ajusta el brillo de cada zona a partir de sus colores. Los reflejos se generan con luces locales y se calculan una vez por visor.
+
 `space-map/components/PlanetModel` añade la animación del flujo y depende de su reloj. Para reutilizar una superficie estática, importar `PlanetSurface`. `StationModel` se extrajo del mapa sin cambiar su geometría, para que tenga consumidores independientes.
 
 ## Ejemplo mínimo de composición

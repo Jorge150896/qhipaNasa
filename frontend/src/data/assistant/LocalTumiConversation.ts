@@ -28,16 +28,18 @@ export class LocalTumiConversation implements TumiConversation {
         text,
       );
     if (acknowledgement && !asksForGuide) return acknowledgement;
-    if (/hola|gracias|tumi/.test(text))
-      return '¡Qué alegría acompañarte! Puedo orientarte sobre el mapa espacial, la Tierra, la tripulación y el monitoreo diario. ¿Qué quieres explorar?';
     if (/tierra|despegue|estaci[oó]n|nasa/.test(text))
-      return 'En el mapa espacial abre la pestaña «Centros en Tierra». Encontrarás lugares, sus fichas y videos históricos relacionados. Las sedes NASA no son todas estaciones de lanzamiento.';
+      return 'Vamos a Tierra. Abre «Centros en Tierra» desde el mapa y elige el lugar que te dé curiosidad. Ahí puedes ver qué hace ese centro y explorar sus videos.';
     if (/mapa|marte|luna|nave|explor/.test(text))
-      return 'Abre Mapa espacial para explorar los destinos. Selecciona un cuerpo para ver su ficha y sus opciones. Las órbitas y tamaños de la escena son ilustrativos.';
+      return 'Abre Mapa espacial y elige el lugar que te dé curiosidad. Si tocas Marte, por ejemplo, podrás conocer la Base Ares y ver quién está allí.';
     if (/salud|pulso|sensor|tripula|chequeo|monitoreo/.test(text))
-      return 'Tripulación reúne los sistemas y sus lecturas de demostración. Monitoreo diario permite registrar tu autoevaluación. Para explicar una lectura concreta, usa el chat de misión; los datos de esta web son sintéticos y no ofrecen diagnóstico.';
+      return 'Si quieres saber cómo va alguien, abre Tripulación, elige su nombre y miramos sus lecturas de la simulación. Si quieres contar cómo vas tú, empieza en Monitoreo diario.';
     if (/qu[eé].*puedes|ayuda|funciona/.test(text))
-      return 'Soy una guía local: puedo explicar cómo encontrar el mapa, la Tierra, Tripulación y Monitoreo diario. Puedes arrastrarme a un espacio libre u ocultarme. Todavía no tengo un modelo de IA conectado.';
-    return 'Aún no tengo una IA conectada para responder preguntas abiertas. Puedo ayudarte a encontrar el mapa, los lugares de la Tierra, Tripulación o Monitoreo diario. ¿Cuál te interesa?';
+      return 'Puedo acompañarte por el mapa, la tripulación o tu chequeo diario. ¿Por dónde empezamos?';
+    if (
+      /^[¡!.,\s]*(?:hola(?:\s+tumi)?|(?:muchas\s+)?gracias(?:\s+tumi)?|tumi)[¡!.,\s]*$/.test(text)
+    )
+      return '¡Qué alegría acompañarte! Puedo orientarte sobre el mapa espacial, la Tierra, la tripulación y el monitoreo diario. ¿Qué quieres explorar?';
+    return 'No entendí bien tu pregunta. ¿Me la cuentas de otra forma y me dices qué pantalla, lectura o lugar te interesa?';
   }
 }

@@ -1,6 +1,8 @@
 'use client';
 
 import { useContext, useEffect, useEffectEvent } from 'react';
+import { speakInBrowser } from '@/infrastructure/speech/browserVoice';
+import { useTumiReplyAudio } from '@/presentation/shared/tumi/useTumiReplyAudio';
 import { AssistantActionsContext } from '../mission-assistant/AssistantActionsContext';
 import { useTumiViewContext } from '../mission-assistant/useTumiViewContext';
 import type { DailyCheckScreenProps } from './types';
@@ -17,7 +19,8 @@ export function DailyCheckScreen(props: DailyCheckScreenProps) {
 }
 
 function DailyCheckSession({ data, saving, onSave }: DailyCheckScreenProps) {
-  const model = useDailyCheckViewModel(data, onSave);
+  const audio = useTumiReplyAudio(speakInBrowser);
+  const model = useDailyCheckViewModel(data, onSave, audio);
   const askTumi = useContext(AssistantActionsContext)?.askQuestion;
   useTumiViewContext('Monitoreo diario', [
     `Paso actual: ${['Contexto', 'Autoevaluación', 'Confirmación', 'Resultado'][model.step]}.`,
@@ -40,5 +43,19 @@ function DailyCheckSession({ data, saving, onSave }: DailyCheckScreenProps) {
   useEffect(() => {
     openEntry();
   }, []);
-  return <DailyCheckView data={data} saving={saving} model={model} onAskTumi={askTumi} />;
+  return (
+    <DailyCheckView
+      data={data}
+      saving={saving}
+      model={model}
+      onAskTumi={
+        askTumi
+          ? (question) => {
+              audio.stop();
+              askTumi(question);
+            }
+          : undefined
+      }
+    />
+  );
 }

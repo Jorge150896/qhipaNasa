@@ -52,7 +52,8 @@ test('gráfica continua de demo, muestras consultables y cortes de señal', asyn
   await expect(sweep).toHaveCSS('animation-play-state', 'running');
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
   await nav.getByRole('button', { name: 'Simulación', exact: true }).click();
-  await page.getByRole('button', { name: /Pérdida de señal/ }).click();
+  await page.goto('/mission/simulation#perdida-de-senal');
+  await expect(page.getByRole('region', { name: 'Faltan 3 lecturas de SpO₂' })).toBeVisible();
   await nav.getByRole('button', { name: 'Tripulación', exact: true }).click();
   await page
     .getByRole('navigation', { name: 'Secciones de Tripulación' })
@@ -77,7 +78,7 @@ test('cada sección conserva navegación y entrada directa después de separar f
   const sections = [
     ['Tripulación', 'crew', 'Tripulación'],
     ['Monitoreo diario', 'journal', 'Monitoreo diario'],
-    ['Simulación', 'simulation', 'Explora lo que cambia.'],
+    ['Simulación', 'simulation', 'Simulación'],
   ];
   for (const [label, section, heading] of sections) {
     await page

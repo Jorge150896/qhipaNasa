@@ -8,5 +8,9 @@ import type { AssistantSelection } from './types';
 export const AssistantActionsContext = createContext<{
   askAboutReading(id: SensorKey, selection?: AssistantSelection): void;
   askQuestion(question: string): void;
-  registerView(context: TumiScreenContext, priority: number): () => void;
+  registerView(
+    context: TumiScreenContext,
+    priority: number,
+    localAnswer?: (question: string) => string | undefined,
+  ): () => void;
 } | null>(null);

@@ -1,9 +1,7 @@
 import { useEffect, useId, useState } from 'react';
-import { Flower2, MessageCircle, Pause, Play, Send } from 'lucide-react';
-import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
-import type { DailyCheckViewModel } from '../types';
+import { Flower2, MessageCircle, Pause, Play, Send, Volume2 } from 'lucide-react';
+import { TumiTechPortrait, type TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
 
-type Mood = DailyCheckViewModel['values']['mood'];
 const breathSeconds = 4;
 
 function GuidedBreathing() {
@@ -48,29 +46,81 @@ function GuidedBreathing() {
 
 export function DailyWellbeingWelcome({
   personName,
-  mood,
+  result = false,
+  audioLabel,
   reply,
+  words,
+  spokenWords,
+  speaking,
+  emotion,
+  playing,
+  audioStatus,
+  onToggleAudio,
 }: {
   personName: string;
-  mood: Mood;
+  result?: boolean;
+  audioLabel: string;
   reply: string;
+  words: string[];
+  spokenWords?: number;
+  speaking: boolean;
+  emotion: TumiEmotion;
+  playing: boolean;
+  audioStatus: string;
+  onToggleAudio(): void;
 }) {
   const portraitId = useId();
   return (
-    <div className="daily-welcome">
+    <div className="daily-welcome" data-result={result || undefined}>
       <div className="daily-tumi">
-        <div className="daily-tumi-art">
-          <TumiTechPortrait id={portraitId} emotion={mood === 'low' ? 'understanding' : 'happy'} />
+        <div className="daily-tumi-art" data-speaking={speaking} data-emotion={emotion}>
+          <TumiTechPortrait id={portraitId} emotion={emotion} />
         </div>
         <div className="daily-tumi-bubble">
           <p className="daily-tumi-name">Tumi</p>
-          <h3>Hola, {personName.split(' ')[0]}.</h3>
-          <p className="daily-tumi-reply" role="status">
-            {reply}
-          </p>
+          <h3>{result ? 'Chequeo completo' : `Hola, ${personName.split(' ')[0]}.`}</h3>
+          {spokenWords !== undefined && (
+            <p className="daily-tumi-reply daily-tumi-transcript">
+              <span className="sr-only">{reply}</span>
+              {words.map((word, index) => (
+                <span
+                  aria-hidden="true"
+                  key={index}
+                  data-visible={index < spokenWords}
+                  data-current={speaking && index + 1 === spokenWords}
+                >
+                  {word}
+                </span>
+              ))}
+            </p>
+          )}
+          {result && spokenWords === undefined && !playing && !audioStatus && (
+            <p className="daily-tumi-reply">{reply}</p>
+          )}
+          <button
+            type="button"
+            className="button secondary daily-tumi-audio"
+            onClick={onToggleAudio}
+          >
+            {playing ? (
+              <Pause aria-hidden="true" size={18} />
+            ) : (
+              <Volume2 aria-hidden="true" size={18} />
+            )}
+            {playing ? 'Detener audio' : audioLabel}
+          </button>
+          {audioStatus && (
+            <div className="daily-tumi-reply" role="status">
+              <p>{audioStatus}</p>
+              <details>
+                <summary>Leer respuesta</summary>
+                <p>{reply}</p>
+              </details>
+            </div>
+          )}
         </div>
       </div>
-      <GuidedBreathing />
+      {!result && <GuidedBreathing />}
     </div>
   );
 }

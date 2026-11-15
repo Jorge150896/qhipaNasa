@@ -1,0 +1,5873 @@
+{
+  "id": "odyssey-confinement-30d-v1",
+  "source": "synthetic",
+  "habitatId": "odyssey",
+  "habitatName": "Odyssey 01",
+  "period": {
+    "fromUtc": "2026-10-10",
+    "toUtcInclusive": "2026-11-08",
+    "days": 30
+  },
+  "crew": {
+    "mateo": {
+      "name": "Mateo Silva",
+      "trajectory": "stable"
+    },
+    "lucia": {
+      "name": "Lucía Vega",
+      "trajectory": "variable-recovery"
+    },
+    "elena": {
+      "name": "Elena Torres",
+      "trajectory": "progressive-strain"
+    }
+  },
+  "proposedQuestionnaire": {
+    "lookback": "Últimas 24 horas",
+    "ordinalScale": {
+      "0": "Nada",
+      "1": "Poco",
+      "2": "Algo",
+      "3": "Bastante",
+      "4": "Mucho"
+    },
+    "requestSupportValues": [
+      true,
+      false,
+      null
+    ],
+    "nullMeaning": "Sin responder o no medido, según el campo",
+    "questions": {
+      "perceivedIsolation": "En las últimas 24 horas, ¿cuánto te afectó tener menos contacto con otras personas?",
+      "perceivedConfinement": "En las últimas 24 horas, ¿cuánto te afectó pasar tiempo en un espacio cerrado?",
+      "routineInterference": "En las últimas 24 horas, ¿cuánto te costó mantener tu rutina?",
+      "requestSupport": "¿Te gustaría hablar en privado con el equipo de apoyo?"
+    }
+  },
+  "references": {
+    "environment": {
+      "path": "frontend/src/data/environment/iss-rr9-2018-08-20.json",
+      "sourceUrl": "https://visualization.osdr.nasa.gov/eda/",
+      "seriesDate": "2018-08-20",
+      "rows": 288,
+      "use": "Variación ambiental reescalada a Odyssey. Los valores y fechas generados son sintéticos."
+    },
+    "confinement": [
+      "https://www.nasa.gov/hrp/hazard-isolation-and-confinement/",
+      "https://www.nasa.gov/mission/hera/",
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0093298"
+    ],
+    "missionBaseline": "frontend/src/data/mission/SimulatedMissionRepository.ts"
+  },
+  "nightlyCabin": [
+    {
+      "id": "odyssey-rest-2026-10-10",
+      "fromUtc": "2026-10-09T23:30:00Z",
+      "toUtc": "2026-10-10T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 23.3,
+      "co2Ppm": 599,
+      "relativeHumidityPct": 48,
+      "noiseDb": 44,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 1
+    },
+    {
+      "id": "odyssey-rest-2026-10-11",
+      "fromUtc": "2026-10-10T23:30:00Z",
+      "toUtc": "2026-10-11T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 23.1,
+      "co2Ppm": 629,
+      "relativeHumidityPct": 48,
+      "noiseDb": 45,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 10
+    },
+    {
+      "id": "odyssey-rest-2026-10-12",
+      "fromUtc": "2026-10-11T23:30:00Z",
+      "toUtc": "2026-10-12T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 23.1,
+      "co2Ppm": 634,
+      "relativeHumidityPct": 48,
+      "noiseDb": 46,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 19
+    },
+    {
+      "id": "odyssey-rest-2026-10-13",
+      "fromUtc": "2026-10-12T23:30:00Z",
+      "toUtc": "2026-10-13T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 23.1,
+      "co2Ppm": 649,
+      "relativeHumidityPct": 48,
+      "noiseDb": 47,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 28
+    },
+    {
+      "id": "odyssey-rest-2026-10-14",
+      "fromUtc": "2026-10-13T23:30:00Z",
+      "toUtc": "2026-10-14T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 23.1,
+      "co2Ppm": 659,
+      "relativeHumidityPct": 48,
+      "noiseDb": 44,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 37
+    },
+    {
+      "id": "odyssey-rest-2026-10-15",
+      "fromUtc": "2026-10-14T23:30:00Z",
+      "toUtc": "2026-10-15T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 23.1,
+      "co2Ppm": 700,
+      "relativeHumidityPct": 46,
+      "noiseDb": 45,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 46
+    },
+    {
+      "id": "odyssey-rest-2026-10-16",
+      "fromUtc": "2026-10-15T23:30:00Z",
+      "toUtc": "2026-10-16T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 23.3,
+      "co2Ppm": 730,
+      "relativeHumidityPct": 48,
+      "noiseDb": 46,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 55
+    },
+    {
+      "id": "odyssey-rest-2026-10-17",
+      "fromUtc": "2026-10-16T23:30:00Z",
+      "toUtc": "2026-10-17T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 23.1,
+      "co2Ppm": 760,
+      "relativeHumidityPct": 48,
+      "noiseDb": 47,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 64
+    },
+    {
+      "id": "odyssey-rest-2026-10-18",
+      "fromUtc": "2026-10-17T23:30:00Z",
+      "toUtc": "2026-10-18T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 23.1,
+      "co2Ppm": 765,
+      "relativeHumidityPct": 48,
+      "noiseDb": 44,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 73
+    },
+    {
+      "id": "odyssey-rest-2026-10-19",
+      "fromUtc": "2026-10-18T23:30:00Z",
+      "toUtc": "2026-10-19T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 23.3,
+      "co2Ppm": 760,
+      "relativeHumidityPct": 48,
+      "noiseDb": 45,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 82
+    },
+    {
+      "id": "odyssey-rest-2026-10-20",
+      "fromUtc": "2026-10-19T23:30:00Z",
+      "toUtc": "2026-10-20T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 25.1,
+      "co2Ppm": 1120,
+      "relativeHumidityPct": 51,
+      "noiseDb": 54.0,
+      "event": "ventilation-maintenance",
+      "source": "synthetic",
+      "rr9ReferenceRow": 91
+    },
+    {
+      "id": "odyssey-rest-2026-10-21",
+      "fromUtc": "2026-10-20T23:30:00Z",
+      "toUtc": "2026-10-21T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 24.6,
+      "co2Ppm": 1180,
+      "relativeHumidityPct": 51,
+      "noiseDb": 55.0,
+      "event": "ventilation-maintenance",
+      "source": "synthetic",
+      "rr9ReferenceRow": 100
+    },
+    {
+      "id": "odyssey-rest-2026-10-22",
+      "fromUtc": "2026-10-21T23:30:00Z",
+      "toUtc": "2026-10-22T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 24.6,
+      "co2Ppm": 1186,
+      "relativeHumidityPct": 49,
+      "noiseDb": 52.0,
+      "event": "ventilation-maintenance",
+      "source": "synthetic",
+      "rr9ReferenceRow": 109
+    },
+    {
+      "id": "odyssey-rest-2026-10-23",
+      "fromUtc": "2026-10-22T23:30:00Z",
+      "toUtc": "2026-10-23T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.4,
+      "co2Ppm": 910,
+      "relativeHumidityPct": 48,
+      "noiseDb": 45,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 118
+    },
+    {
+      "id": "odyssey-rest-2026-10-24",
+      "fromUtc": "2026-10-23T23:30:00Z",
+      "toUtc": "2026-10-24T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.6,
+      "co2Ppm": 961,
+      "relativeHumidityPct": 46,
+      "noiseDb": 46,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 127
+    },
+    {
+      "id": "odyssey-rest-2026-10-25",
+      "fromUtc": "2026-10-24T23:30:00Z",
+      "toUtc": "2026-10-25T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.6,
+      "co2Ppm": 831,
+      "relativeHumidityPct": 48,
+      "noiseDb": 47,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 136
+    },
+    {
+      "id": "odyssey-rest-2026-10-26",
+      "fromUtc": "2026-10-25T23:30:00Z",
+      "toUtc": "2026-10-26T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.6,
+      "co2Ppm": 830,
+      "relativeHumidityPct": 48,
+      "noiseDb": 44,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 145
+    },
+    {
+      "id": "odyssey-rest-2026-10-27",
+      "fromUtc": "2026-10-26T23:30:00Z",
+      "toUtc": "2026-10-27T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.4,
+      "co2Ppm": 817,
+      "relativeHumidityPct": 48,
+      "noiseDb": 45,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 154
+    },
+    {
+      "id": "odyssey-rest-2026-10-28",
+      "fromUtc": "2026-10-27T23:30:00Z",
+      "toUtc": "2026-10-28T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.4,
+      "co2Ppm": 802,
+      "relativeHumidityPct": 48,
+      "noiseDb": 46,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 163
+    },
+    {
+      "id": "odyssey-rest-2026-10-29",
+      "fromUtc": "2026-10-28T23:30:00Z",
+      "toUtc": "2026-10-29T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.6,
+      "co2Ppm": 767,
+      "relativeHumidityPct": 48,
+      "noiseDb": 47,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 172
+    },
+    {
+      "id": "odyssey-rest-2026-10-30",
+      "fromUtc": "2026-10-29T23:30:00Z",
+      "toUtc": "2026-10-30T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.4,
+      "co2Ppm": 762,
+      "relativeHumidityPct": 48,
+      "noiseDb": 44,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 181
+    },
+    {
+      "id": "odyssey-rest-2026-10-31",
+      "fromUtc": "2026-10-30T23:30:00Z",
+      "toUtc": "2026-10-31T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 24.0,
+      "co2Ppm": 1022,
+      "relativeHumidityPct": 50,
+      "noiseDb": 50.8,
+      "event": "warm-cabin",
+      "source": "synthetic",
+      "rr9ReferenceRow": 190
+    },
+    {
+      "id": "odyssey-rest-2026-11-01",
+      "fromUtc": "2026-10-31T23:30:00Z",
+      "toUtc": "2026-11-01T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 24.0,
+      "co2Ppm": 1027,
+      "relativeHumidityPct": 50,
+      "noiseDb": 51.8,
+      "event": "warm-cabin",
+      "source": "synthetic",
+      "rr9ReferenceRow": 199
+    },
+    {
+      "id": "odyssey-rest-2026-11-02",
+      "fromUtc": "2026-11-01T23:30:00Z",
+      "toUtc": "2026-11-02T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 24.0,
+      "co2Ppm": 1016,
+      "relativeHumidityPct": 50,
+      "noiseDb": 52.8,
+      "event": "warm-cabin",
+      "source": "synthetic",
+      "rr9ReferenceRow": 208
+    },
+    {
+      "id": "odyssey-rest-2026-11-03",
+      "fromUtc": "2026-11-02T23:30:00Z",
+      "toUtc": "2026-11-03T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.6,
+      "co2Ppm": 712,
+      "relativeHumidityPct": 48,
+      "noiseDb": 44,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 217
+    },
+    {
+      "id": "odyssey-rest-2026-11-04",
+      "fromUtc": "2026-11-03T23:30:00Z",
+      "toUtc": "2026-11-04T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.4,
+      "co2Ppm": 707,
+      "relativeHumidityPct": 48,
+      "noiseDb": 45,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 226
+    },
+    {
+      "id": "odyssey-rest-2026-11-05",
+      "fromUtc": "2026-11-04T23:30:00Z",
+      "toUtc": "2026-11-05T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.6,
+      "co2Ppm": 697,
+      "relativeHumidityPct": 48,
+      "noiseDb": 46,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 235
+    },
+    {
+      "id": "odyssey-rest-2026-11-06",
+      "fromUtc": "2026-11-05T23:30:00Z",
+      "toUtc": "2026-11-06T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.6,
+      "co2Ppm": 697,
+      "relativeHumidityPct": 48,
+      "noiseDb": 47,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 244
+    },
+    {
+      "id": "odyssey-rest-2026-11-07",
+      "fromUtc": "2026-11-06T23:30:00Z",
+      "toUtc": "2026-11-07T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.6,
+      "co2Ppm": 682,
+      "relativeHumidityPct": 48,
+      "noiseDb": 44,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 253
+    },
+    {
+      "id": "odyssey-rest-2026-11-08",
+      "fromUtc": "2026-11-07T23:30:00Z",
+      "toUtc": "2026-11-08T07:30:00Z",
+      "zoneId": "habitat",
+      "gravity": "microgravity",
+      "airTemperatureC": 22.6,
+      "co2Ppm": 687,
+      "relativeHumidityPct": 48,
+      "noiseDb": 45,
+      "event": "normal",
+      "source": "synthetic",
+      "rr9ReferenceRow": 262
+    }
+  ],
+  "crewDays": [
+    {
+      "crewId": "mateo",
+      "day": 1,
+      "missionDay": 13,
+      "dateUtc": "2026-10-10",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-10",
+      "telemetryContext": {
+        "atUtc": "2026-10-10T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-10T07:45:00Z",
+          "value": 69,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-10T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-10T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-10T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-10T08:00:00Z",
+        "sleepHours": 6.9,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 1,
+      "missionDay": 13,
+      "dateUtc": "2026-10-10",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-10",
+      "telemetryContext": {
+        "atUtc": "2026-10-10T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-10T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-10T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-10T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-10T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-10T08:00:00Z",
+        "sleepHours": 7.4,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 1,
+      "missionDay": 13,
+      "dateUtc": "2026-10-10",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-10",
+      "telemetryContext": {
+        "atUtc": "2026-10-10T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-10T07:45:00Z",
+          "value": 71,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-10T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-10T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-10T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-10T08:00:00Z",
+        "sleepHours": 7.2,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 2,
+      "missionDay": 14,
+      "dateUtc": "2026-10-11",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-11",
+      "telemetryContext": {
+        "atUtc": "2026-10-11T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-11T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-11T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-11T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-11T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-11T08:00:00Z",
+        "sleepHours": 7.2,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 2,
+      "missionDay": 14,
+      "dateUtc": "2026-10-11",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-11",
+      "telemetryContext": {
+        "atUtc": "2026-10-11T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-11T07:45:00Z",
+          "value": 77,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-11T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-11T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-11T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-11T08:00:00Z",
+        "sleepHours": 7.7,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 2,
+      "missionDay": 14,
+      "dateUtc": "2026-10-11",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-11",
+      "telemetryContext": {
+        "atUtc": "2026-10-11T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-11T07:45:00Z",
+          "value": 72,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-11T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-11T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-11T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-11T08:00:00Z",
+        "sleepHours": 7.5,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 3,
+      "missionDay": 15,
+      "dateUtc": "2026-10-12",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-12",
+      "telemetryContext": {
+        "atUtc": "2026-10-12T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-12T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-12T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-12T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-12T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-12T08:00:00Z",
+        "sleepHours": 7.1,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 3,
+      "missionDay": 15,
+      "dateUtc": "2026-10-12",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-12",
+      "telemetryContext": {
+        "atUtc": "2026-10-12T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-12T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-12T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-12T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-12T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-12T08:00:00Z",
+        "sleepHours": 7.3,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 3,
+      "missionDay": 15,
+      "dateUtc": "2026-10-12",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-12",
+      "telemetryContext": {
+        "atUtc": "2026-10-12T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-12T07:45:00Z",
+          "value": 69,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-12T07:45:00Z",
+          "value": 36.4,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-12T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-12T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-12T08:00:00Z",
+        "sleepHours": 7.0,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 4,
+      "missionDay": 16,
+      "dateUtc": "2026-10-13",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-13",
+      "telemetryContext": {
+        "atUtc": "2026-10-13T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-13T07:45:00Z",
+          "value": 72,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-13T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-13T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-13T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-13T08:00:00Z",
+        "sleepHours": 7.4,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 4,
+      "missionDay": 16,
+      "dateUtc": "2026-10-13",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-13",
+      "telemetryContext": {
+        "atUtc": "2026-10-13T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-13T07:45:00Z",
+          "value": 76,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-13T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-13T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-13T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-13T08:00:00Z",
+        "sleepHours": 7.6,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 4,
+      "missionDay": 16,
+      "dateUtc": "2026-10-13",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-13",
+      "telemetryContext": {
+        "atUtc": "2026-10-13T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-13T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-13T07:45:00Z",
+          "value": 36.4,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-13T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-13T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-13T08:00:00Z",
+        "sleepHours": 7.1,
+        "fatigue": 2,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 5,
+      "missionDay": 17,
+      "dateUtc": "2026-10-14",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-14",
+      "telemetryContext": {
+        "atUtc": "2026-10-14T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-14T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-14T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-14T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-14T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-14T08:00:00Z",
+        "sleepHours": 7.0,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 5,
+      "missionDay": 17,
+      "dateUtc": "2026-10-14",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-14",
+      "telemetryContext": {
+        "atUtc": "2026-10-14T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-14T07:45:00Z",
+          "value": 73,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-14T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-14T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-14T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-14T08:00:00Z",
+        "sleepHours": 7.1,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 5,
+      "missionDay": 17,
+      "dateUtc": "2026-10-14",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-14",
+      "telemetryContext": {
+        "atUtc": "2026-10-14T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-14T07:45:00Z",
+          "value": 71,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-14T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-14T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-14T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-14T08:00:00Z",
+        "sleepHours": 7.4,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 6,
+      "missionDay": 18,
+      "dateUtc": "2026-10-15",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-15",
+      "telemetryContext": {
+        "atUtc": "2026-10-15T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-15T07:45:00Z",
+          "value": 71,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-15T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-15T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-15T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-15T08:00:00Z",
+        "sleepHours": 7.3,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 6,
+      "missionDay": 18,
+      "dateUtc": "2026-10-15",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-15",
+      "telemetryContext": {
+        "atUtc": "2026-10-15T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-15T07:45:00Z",
+          "value": 74,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-15T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-15T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-15T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-15T08:00:00Z",
+        "sleepHours": 7.2,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 6,
+      "missionDay": 18,
+      "dateUtc": "2026-10-15",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-15",
+      "telemetryContext": {
+        "atUtc": "2026-10-15T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-15T07:45:00Z",
+          "value": 71,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-15T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-15T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-15T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-15T08:00:00Z",
+        "sleepHours": 7.3,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 7,
+      "missionDay": 19,
+      "dateUtc": "2026-10-16",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-16",
+      "telemetryContext": {
+        "atUtc": "2026-10-16T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-16T07:45:00Z",
+          "value": 68,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-16T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-16T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-16T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-16T08:00:00Z",
+        "sleepHours": 6.8,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 7,
+      "missionDay": 19,
+      "dateUtc": "2026-10-16",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-16",
+      "telemetryContext": {
+        "atUtc": "2026-10-16T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-16T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-16T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-16T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-16T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-16T08:00:00Z",
+        "sleepHours": 7.5,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 7,
+      "missionDay": 19,
+      "dateUtc": "2026-10-16",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-16",
+      "telemetryContext": {
+        "atUtc": "2026-10-16T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-16T07:45:00Z",
+          "value": 73,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-16T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-16T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-16T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-16T08:00:00Z",
+        "sleepHours": 7.5,
+        "fatigue": 2,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 8,
+      "missionDay": 20,
+      "dateUtc": "2026-10-17",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-17",
+      "telemetryContext": {
+        "atUtc": "2026-10-17T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-17T07:45:00Z",
+          "value": 69,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-17T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-17T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-17T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-17T08:00:00Z",
+        "sleepHours": 6.9,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 8,
+      "missionDay": 20,
+      "dateUtc": "2026-10-17",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-17",
+      "telemetryContext": {
+        "atUtc": "2026-10-17T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-17T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-17T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-17T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-17T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-17T08:00:00Z",
+        "sleepHours": 7.4,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 8,
+      "missionDay": 20,
+      "dateUtc": "2026-10-17",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-17",
+      "telemetryContext": {
+        "atUtc": "2026-10-17T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-17T07:45:00Z",
+          "value": 72,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-17T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-17T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-17T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-17T08:00:00Z",
+        "sleepHours": 7.0,
+        "fatigue": 2,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 9,
+      "missionDay": 21,
+      "dateUtc": "2026-10-18",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-18",
+      "telemetryContext": {
+        "atUtc": "2026-10-18T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-18T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-18T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-18T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-18T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-18T08:00:00Z",
+        "sleepHours": 7.2,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 9,
+      "missionDay": 21,
+      "dateUtc": "2026-10-18",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-18",
+      "telemetryContext": {
+        "atUtc": "2026-10-18T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-18T07:45:00Z",
+          "value": 77,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-18T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-18T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-18T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-18T08:00:00Z",
+        "sleepHours": 7.7,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 9,
+      "missionDay": 21,
+      "dateUtc": "2026-10-18",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-18",
+      "telemetryContext": {
+        "atUtc": "2026-10-18T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-18T07:45:00Z",
+          "value": 73,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-18T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-18T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-18T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-18T08:00:00Z",
+        "sleepHours": 7.2,
+        "fatigue": 2,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 10,
+      "missionDay": 22,
+      "dateUtc": "2026-10-19",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-19",
+      "telemetryContext": {
+        "atUtc": "2026-10-19T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-19T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-19T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-19T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-19T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-19T08:00:00Z",
+        "sleepHours": 7.1,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 10,
+      "missionDay": 22,
+      "dateUtc": "2026-10-19",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-19",
+      "telemetryContext": {
+        "atUtc": "2026-10-19T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-19T07:45:00Z",
+          "value": 78,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-19T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-19T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-19T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-19T08:00:00Z",
+        "sleepHours": 6.7,
+        "fatigue": 3,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "alta",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 0,
+          "routineInterference": 1,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 10,
+      "missionDay": 22,
+      "dateUtc": "2026-10-19",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-19",
+      "telemetryContext": {
+        "atUtc": "2026-10-19T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-19T07:45:00Z",
+          "value": 71,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-19T07:45:00Z",
+          "value": 36.4,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-19T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-19T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-19T08:00:00Z",
+        "sleepHours": 6.7,
+        "fatigue": 2,
+        "mood": "low",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "alta",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 1,
+          "routineInterference": 2,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 11,
+      "missionDay": 23,
+      "dateUtc": "2026-10-20",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-20",
+      "telemetryContext": {
+        "atUtc": "2026-10-20T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-20T07:45:00Z",
+          "value": 72,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-20T07:45:00Z",
+          "value": 36.9,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-20T07:45:00Z",
+          "value": 99,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-20T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-20T08:00:00Z",
+        "sleepHours": 7.2,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 1,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 11,
+      "missionDay": 23,
+      "dateUtc": "2026-10-20",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-20",
+      "telemetryContext": {
+        "atUtc": "2026-10-20T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-20T07:45:00Z",
+          "value": 79,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-20T07:45:00Z",
+          "value": 36.8,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-20T07:45:00Z",
+          "value": 99,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-20T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-20T08:00:00Z",
+        "sleepHours": 6.4,
+        "fatigue": 4,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "alta",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 2,
+          "routineInterference": 2,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 11,
+      "missionDay": 23,
+      "dateUtc": "2026-10-20",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-20",
+      "telemetryContext": {
+        "atUtc": "2026-10-20T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-20T07:45:00Z",
+          "value": 72,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-20T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-20T07:45:00Z",
+          "value": 99,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-20T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-20T08:00:00Z",
+        "sleepHours": 6.3,
+        "fatigue": 4,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "habitual",
+        "note": "Dejé el ejercicio para otro momento. El módulo se sentía cerrado.",
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 2,
+          "routineInterference": 1,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 12,
+      "missionDay": 24,
+      "dateUtc": "2026-10-21",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-21",
+      "telemetryContext": {
+        "atUtc": "2026-10-21T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-21T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-21T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-21T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-21T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-21T08:00:00Z",
+        "sleepHours": 6.8,
+        "fatigue": 2,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": "Percibí más ruido, pero mantuve mi rutina.",
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 1,
+          "routineInterference": 1,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 12,
+      "missionDay": 24,
+      "dateUtc": "2026-10-21",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-21",
+      "telemetryContext": {
+        "atUtc": "2026-10-21T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-21T07:45:00Z",
+          "value": 73,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-21T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-21T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-21T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-21T08:00:00Z",
+        "sleepHours": 6.6,
+        "fatigue": 3,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 2,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 1,
+          "routineInterference": 1,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 12,
+      "missionDay": 24,
+      "dateUtc": "2026-10-21",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-21",
+      "telemetryContext": {
+        "atUtc": "2026-10-21T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-21T07:45:00Z",
+          "value": 74,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-21T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-21T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-21T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-21T08:00:00Z",
+        "sleepHours": 6.5,
+        "fatigue": 4,
+        "mood": "low",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "alta",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 2,
+          "routineInterference": 2,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 13,
+      "missionDay": 25,
+      "dateUtc": "2026-10-22",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-22",
+      "telemetryContext": {
+        "atUtc": "2026-10-22T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-22T07:45:00Z",
+          "value": 71,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-22T07:45:00Z",
+          "value": 36.8,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-22T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-22T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-22T08:00:00Z",
+        "sleepHours": 7.1,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 1,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 13,
+      "missionDay": 25,
+      "dateUtc": "2026-10-22",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-22",
+      "telemetryContext": {
+        "atUtc": "2026-10-22T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-22T07:45:00Z",
+          "value": 77,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-22T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-22T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-22T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-22T08:00:00Z",
+        "sleepHours": 6.0,
+        "fatigue": 4,
+        "mood": "low",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "alta",
+        "note": "Hubo carga de trabajo extra y me costó descansar.",
+        "proposedAnswers": {
+          "perceivedIsolation": 2,
+          "perceivedConfinement": 2,
+          "routineInterference": 2,
+          "requestSupport": false
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 13,
+      "missionDay": 25,
+      "dateUtc": "2026-10-22",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-22",
+      "telemetryContext": {
+        "atUtc": "2026-10-22T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-22T07:45:00Z",
+          "value": 73,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-22T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-22T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-22T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-22T08:00:00Z",
+        "sleepHours": 6.4,
+        "fatigue": 4,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 2,
+          "perceivedConfinement": 2,
+          "routineInterference": 1,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 14,
+      "missionDay": 26,
+      "dateUtc": "2026-10-23",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-23",
+      "telemetryContext": {
+        "atUtc": "2026-10-23T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-23T07:45:00Z",
+          "value": 68,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-23T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": null,
+          "value": null,
+          "unit": "%",
+          "quality": "missing"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-23T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-23T08:00:00Z",
+        "sleepHours": 6.8,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 14,
+      "missionDay": 26,
+      "dateUtc": "2026-10-23",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-23",
+      "telemetryContext": {
+        "atUtc": "2026-10-23T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-23T07:45:00Z",
+          "value": 78,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-23T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-23T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-23T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-23T08:00:00Z",
+        "sleepHours": 6.8,
+        "fatigue": 3,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "alta",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 0,
+          "routineInterference": 1,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 14,
+      "missionDay": 26,
+      "dateUtc": "2026-10-23",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-23",
+      "telemetryContext": {
+        "atUtc": "2026-10-23T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-23T07:45:00Z",
+          "value": 76,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-23T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-23T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-23T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-23T08:00:00Z",
+        "sleepHours": 6.9,
+        "fatigue": 3,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 2,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 1,
+          "routineInterference": 1,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 15,
+      "missionDay": 27,
+      "dateUtc": "2026-10-24",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-24",
+      "telemetryContext": {
+        "atUtc": "2026-10-24T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-24T07:45:00Z",
+          "value": 69,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-24T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-24T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-24T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-24T08:00:00Z",
+        "sleepHours": 6.9,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 15,
+      "missionDay": 27,
+      "dateUtc": "2026-10-24",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-24",
+      "telemetryContext": {
+        "atUtc": "2026-10-24T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-24T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-24T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-24T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-24T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-24T08:00:00Z",
+        "sleepHours": 7.4,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 15,
+      "missionDay": 27,
+      "dateUtc": "2026-10-24",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-24",
+      "telemetryContext": {
+        "atUtc": "2026-10-24T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-24T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-24T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-24T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-24T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-24T08:00:00Z",
+        "sleepHours": 6.5,
+        "fatigue": 3,
+        "mood": "low",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 2,
+        "workloadPreviousDay": "alta",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 1,
+          "routineInterference": 2,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 16,
+      "missionDay": 28,
+      "dateUtc": "2026-10-25",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-25",
+      "telemetryContext": {
+        "atUtc": "2026-10-25T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-25T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-25T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-25T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-25T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-25T08:00:00Z",
+        "sleepHours": 7.2,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 16,
+      "missionDay": 28,
+      "dateUtc": "2026-10-25",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-25",
+      "telemetryContext": {
+        "atUtc": "2026-10-25T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-25T07:45:00Z",
+          "value": 77,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-25T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-25T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-25T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-25T08:00:00Z",
+        "sleepHours": 7.7,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 16,
+      "missionDay": 28,
+      "dateUtc": "2026-10-25",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-25",
+      "telemetryContext": {
+        "atUtc": "2026-10-25T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-25T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-25T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-25T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-25T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-25T08:00:00Z",
+        "sleepHours": 6.7,
+        "fatigue": 3,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 2,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 2,
+          "perceivedConfinement": 2,
+          "routineInterference": 2,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 17,
+      "missionDay": 29,
+      "dateUtc": "2026-10-26",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-26",
+      "telemetryContext": {
+        "atUtc": "2026-10-26T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-26T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-26T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-26T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-26T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-26T08:00:00Z",
+        "sleepHours": 7.1,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 17,
+      "missionDay": 29,
+      "dateUtc": "2026-10-26",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-26",
+      "telemetryContext": {
+        "atUtc": "2026-10-26T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-26T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-26T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-26T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-26T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-26T08:00:00Z",
+        "sleepHours": 7.3,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 17,
+      "missionDay": 29,
+      "dateUtc": "2026-10-26",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-26",
+      "telemetryContext": {
+        "atUtc": "2026-10-26T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-26T07:45:00Z",
+          "value": 73,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-26T07:45:00Z",
+          "value": 36.4,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-26T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-26T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-26T08:00:00Z",
+        "sleepHours": 6.1,
+        "fatigue": 3,
+        "mood": "low",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 2,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 2,
+          "perceivedConfinement": 2,
+          "routineInterference": 2,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 18,
+      "missionDay": 30,
+      "dateUtc": "2026-10-27",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-27",
+      "telemetryContext": {
+        "atUtc": "2026-10-27T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-27T07:45:00Z",
+          "value": 72,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-27T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-27T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-27T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-27T08:00:00Z",
+        "sleepHours": 7.4,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 18,
+      "missionDay": 30,
+      "dateUtc": "2026-10-27",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-27",
+      "telemetryContext": {
+        "atUtc": "2026-10-27T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-27T07:45:00Z",
+          "value": 76,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-27T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-27T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-27T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-27T08:00:00Z",
+        "sleepHours": 7.6,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 18,
+      "missionDay": 30,
+      "dateUtc": "2026-10-27",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-27",
+      "telemetryContext": {
+        "atUtc": "2026-10-27T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-27T07:45:00Z",
+          "value": 74,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-27T07:45:00Z",
+          "value": 36.4,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-27T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-27T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-27T08:00:00Z",
+        "sleepHours": 6.1,
+        "fatigue": 3,
+        "mood": "low",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 2,
+          "perceivedConfinement": 2,
+          "routineInterference": 2,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 19,
+      "missionDay": 31,
+      "dateUtc": "2026-10-28",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-28",
+      "telemetryContext": {
+        "atUtc": "2026-10-28T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-28T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-28T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-28T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-28T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-28T08:00:00Z",
+        "sleepHours": 7.0,
+        "fatigue": 1,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 19,
+      "missionDay": 31,
+      "dateUtc": "2026-10-28",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-28",
+      "telemetryContext": {
+        "atUtc": "2026-10-28T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-28T07:45:00Z",
+          "value": 73,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-28T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": null,
+          "value": null,
+          "unit": "%",
+          "quality": "missing"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-28T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-28T08:00:00Z",
+        "sleepHours": 7.1,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 19,
+      "missionDay": 31,
+      "dateUtc": "2026-10-28",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-28",
+      "telemetryContext": {
+        "atUtc": "2026-10-28T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-28T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-28T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-28T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-28T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-28T08:00:00Z",
+        "sleepHours": 6.3,
+        "fatigue": 3,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": null,
+          "perceivedConfinement": 2,
+          "routineInterference": 2,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 20,
+      "missionDay": 32,
+      "dateUtc": "2026-10-29",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-29",
+      "telemetryContext": {
+        "atUtc": "2026-10-29T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-29T07:45:00Z",
+          "value": 71,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-29T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-29T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-29T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-29T08:00:00Z",
+        "sleepHours": 7.3,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 20,
+      "missionDay": 32,
+      "dateUtc": "2026-10-29",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-29",
+      "telemetryContext": {
+        "atUtc": "2026-10-29T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-29T07:45:00Z",
+          "value": 77,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-29T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-29T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-29T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-29T08:00:00Z",
+        "sleepHours": 6.5,
+        "fatigue": 3,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "alta",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 0,
+          "routineInterference": 1,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 20,
+      "missionDay": 32,
+      "dateUtc": "2026-10-29",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-29",
+      "telemetryContext": {
+        "atUtc": "2026-10-29T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-29T07:45:00Z",
+          "value": 76,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-29T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-29T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-29T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-29T08:00:00Z",
+        "sleepHours": 6.1,
+        "fatigue": 3,
+        "mood": "low",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 2,
+          "perceivedConfinement": 2,
+          "routineInterference": 2,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 21,
+      "missionDay": 33,
+      "dateUtc": "2026-10-30",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-30",
+      "telemetryContext": {
+        "atUtc": "2026-10-30T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-30T07:45:00Z",
+          "value": 68,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-30T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-30T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-30T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-30T08:00:00Z",
+        "sleepHours": 6.8,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 21,
+      "missionDay": 33,
+      "dateUtc": "2026-10-30",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-30",
+      "telemetryContext": {
+        "atUtc": "2026-10-30T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-30T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-30T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-30T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-30T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-30T08:00:00Z",
+        "sleepHours": 7.5,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 21,
+      "missionDay": 33,
+      "dateUtc": "2026-10-30",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-30",
+      "telemetryContext": {
+        "atUtc": "2026-10-30T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-30T07:45:00Z",
+          "value": 79,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-30T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-30T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-30T07:45:00Z",
+          "value": 16,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-30T08:00:00Z",
+        "sleepHours": 6.3,
+        "fatigue": 4,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "alta",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 3,
+          "perceivedConfinement": 2,
+          "routineInterference": 3,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 22,
+      "missionDay": 34,
+      "dateUtc": "2026-10-31",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-31",
+      "telemetryContext": {
+        "atUtc": "2026-10-31T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-31T07:45:00Z",
+          "value": 69,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-31T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-31T07:45:00Z",
+          "value": 99,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-31T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-31T08:00:00Z",
+        "sleepHours": 6.8,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 1,
+          "routineInterference": 1,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 22,
+      "missionDay": 34,
+      "dateUtc": "2026-10-31",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-31",
+      "telemetryContext": {
+        "atUtc": "2026-10-31T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-31T07:45:00Z",
+          "value": 78,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-31T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-31T07:45:00Z",
+          "value": 99,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-31T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-31T08:00:00Z",
+        "sleepHours": 6.4,
+        "fatigue": 4,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "alta",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 2,
+          "perceivedConfinement": 1,
+          "routineInterference": 2,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 22,
+      "missionDay": 34,
+      "dateUtc": "2026-10-31",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-10-31",
+      "telemetryContext": {
+        "atUtc": "2026-10-31T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-10-31T07:45:00Z",
+          "value": 76,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-10-31T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-10-31T07:45:00Z",
+          "value": 99,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-10-31T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-10-31T08:00:00Z",
+        "sleepHours": 5.6,
+        "fatigue": 5,
+        "mood": "low",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 4,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 3,
+          "perceivedConfinement": 3,
+          "routineInterference": 2,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 23,
+      "missionDay": 35,
+      "dateUtc": "2026-11-01",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-01",
+      "telemetryContext": {
+        "atUtc": "2026-11-01T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-01T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-01T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-01T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-01T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-01T08:00:00Z",
+        "sleepHours": 7.1,
+        "fatigue": 2,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 1,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 23,
+      "missionDay": 35,
+      "dateUtc": "2026-11-01",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-01",
+      "telemetryContext": {
+        "atUtc": "2026-11-01T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-01T07:45:00Z",
+          "value": 80,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-01T07:45:00Z",
+          "value": 36.8,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-01T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-01T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-01T08:00:00Z",
+        "sleepHours": 6.7,
+        "fatigue": 4,
+        "mood": "low",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "alta",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 2,
+          "perceivedConfinement": 2,
+          "routineInterference": 2,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 23,
+      "missionDay": 35,
+      "dateUtc": "2026-11-01",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-01",
+      "telemetryContext": {
+        "atUtc": "2026-11-01T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-01T07:45:00Z",
+          "value": 78,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-01T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": null,
+          "value": null,
+          "unit": "%",
+          "quality": "missing"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-01T07:45:00Z",
+          "value": 16,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-01T08:00:00Z",
+        "sleepHours": 5.8,
+        "fatigue": 5,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 4,
+        "workloadPreviousDay": "habitual",
+        "note": "Me gustaría hablar en privado sobre cómo estoy llevando estos días.",
+        "proposedAnswers": {
+          "perceivedIsolation": 4,
+          "perceivedConfinement": 4,
+          "routineInterference": 3,
+          "requestSupport": true
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 24,
+      "missionDay": 36,
+      "dateUtc": "2026-11-02",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-02",
+      "telemetryContext": {
+        "atUtc": "2026-11-02T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-02T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-02T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-02T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-02T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-02T08:00:00Z",
+        "sleepHours": 7.0,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 1,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 24,
+      "missionDay": 36,
+      "dateUtc": "2026-11-02",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-02",
+      "telemetryContext": {
+        "atUtc": "2026-11-02T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-02T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-02T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-02T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-02T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-02T08:00:00Z",
+        "sleepHours": 6.9,
+        "fatigue": 3,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 2,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 1,
+          "routineInterference": 1,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 24,
+      "missionDay": 36,
+      "dateUtc": "2026-11-02",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-02",
+      "telemetryContext": {
+        "atUtc": "2026-11-02T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-02T07:45:00Z",
+          "value": 76,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-02T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-02T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-02T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-02T08:00:00Z",
+        "sleepHours": 5.2,
+        "fatigue": 5,
+        "mood": "low",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 4,
+        "workloadPreviousDay": "alta",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 3,
+          "perceivedConfinement": 4,
+          "routineInterference": 4,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 25,
+      "missionDay": 37,
+      "dateUtc": "2026-11-03",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-03",
+      "telemetryContext": {
+        "atUtc": "2026-11-03T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-03T07:45:00Z",
+          "value": 72,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-03T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-03T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-03T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-03T08:00:00Z",
+        "sleepHours": 7.4,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 25,
+      "missionDay": 37,
+      "dateUtc": "2026-11-03",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-03",
+      "telemetryContext": {
+        "atUtc": "2026-11-03T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-03T07:45:00Z",
+          "value": 76,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-03T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-03T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-03T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-03T08:00:00Z",
+        "sleepHours": 7.6,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 25,
+      "missionDay": 37,
+      "dateUtc": "2026-11-03",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-03",
+      "telemetryContext": {
+        "atUtc": "2026-11-03T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-03T07:45:00Z",
+          "value": 76,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-03T07:45:00Z",
+          "value": 36.4,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-03T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-03T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-03T08:00:00Z",
+        "sleepHours": 5.5,
+        "fatigue": 4,
+        "mood": "low",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 3,
+          "perceivedConfinement": 3,
+          "routineInterference": 3,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 26,
+      "missionDay": 38,
+      "dateUtc": "2026-11-04",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-04",
+      "telemetryContext": {
+        "atUtc": "2026-11-04T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-04T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-04T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-04T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-04T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-04T08:00:00Z",
+        "sleepHours": 7.0,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 1,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 26,
+      "missionDay": 38,
+      "dateUtc": "2026-11-04",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-04",
+      "telemetryContext": {
+        "atUtc": "2026-11-04T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-04T07:45:00Z",
+          "value": 73,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-04T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-04T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-04T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-04T08:00:00Z",
+        "sleepHours": 7.1,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": "Recuperé tiempo para ejercitarme y dormir.",
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 26,
+      "missionDay": 38,
+      "dateUtc": "2026-11-04",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-04",
+      "telemetryContext": {
+        "atUtc": "2026-11-04T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-04T07:45:00Z",
+          "value": 78,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-04T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-04T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-04T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-04T08:00:00Z",
+        "sleepHours": 5.7,
+        "fatigue": 4,
+        "mood": "neutral",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 3,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 3,
+          "perceivedConfinement": 3,
+          "routineInterference": 3,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 27,
+      "missionDay": 39,
+      "dateUtc": "2026-11-05",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-05",
+      "telemetryContext": {
+        "atUtc": "2026-11-05T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-05T07:45:00Z",
+          "value": 71,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-05T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-05T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-05T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-05T08:00:00Z",
+        "sleepHours": 7.3,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 27,
+      "missionDay": 39,
+      "dateUtc": "2026-11-05",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-05",
+      "telemetryContext": {
+        "atUtc": "2026-11-05T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-05T07:45:00Z",
+          "value": 74,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-05T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-05T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-05T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-05T08:00:00Z",
+        "sleepHours": 7.2,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 27,
+      "missionDay": 39,
+      "dateUtc": "2026-11-05",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-05",
+      "telemetryContext": {
+        "atUtc": "2026-11-05T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-05T07:45:00Z",
+          "value": 79,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-05T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-05T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-05T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-05T08:00:00Z",
+        "sleepHours": 5.5,
+        "fatigue": 4,
+        "mood": "low",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 4,
+        "workloadPreviousDay": "alta",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 3,
+          "perceivedConfinement": 3,
+          "routineInterference": 4,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 28,
+      "missionDay": 40,
+      "dateUtc": "2026-11-06",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-06",
+      "telemetryContext": {
+        "atUtc": "2026-11-06T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-06T07:45:00Z",
+          "value": 68,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-06T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-06T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-06T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-06T08:00:00Z",
+        "sleepHours": 6.8,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 28,
+      "missionDay": 40,
+      "dateUtc": "2026-11-06",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-06",
+      "telemetryContext": {
+        "atUtc": "2026-11-06T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-06T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-06T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-06T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-06T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-06T08:00:00Z",
+        "sleepHours": 7.5,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 28,
+      "missionDay": 40,
+      "dateUtc": "2026-11-06",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-06",
+      "telemetryContext": {
+        "atUtc": "2026-11-06T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-06T07:45:00Z",
+          "value": 80,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-06T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-06T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-06T07:45:00Z",
+          "value": 16,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-06T08:00:00Z",
+        "sleepHours": 5.8,
+        "fatigue": 4,
+        "mood": "low",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 4,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 4,
+          "perceivedConfinement": 3,
+          "routineInterference": 3,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 29,
+      "missionDay": 41,
+      "dateUtc": "2026-11-07",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-07",
+      "telemetryContext": {
+        "atUtc": "2026-11-07T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-07T07:45:00Z",
+          "value": 69,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-07T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-07T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-07T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-07T08:00:00Z",
+        "sleepHours": 6.9,
+        "fatigue": 1,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 29,
+      "missionDay": 41,
+      "dateUtc": "2026-11-07",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-07",
+      "telemetryContext": {
+        "atUtc": "2026-11-07T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-07T07:45:00Z",
+          "value": 75,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-07T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-07T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-07T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-07T08:00:00Z",
+        "sleepHours": 7.4,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 29,
+      "missionDay": 41,
+      "dateUtc": "2026-11-07",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-07",
+      "telemetryContext": {
+        "atUtc": "2026-11-07T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-07T07:45:00Z",
+          "value": 79,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-07T07:45:00Z",
+          "value": 36.5,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-07T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-07T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-07T08:00:00Z",
+        "sleepHours": 5.3,
+        "fatigue": 4,
+        "mood": "low",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 4,
+        "workloadPreviousDay": "habitual",
+        "note": "Me gustaría hablar en privado sobre cómo estoy llevando estos días.",
+        "proposedAnswers": {
+          "perceivedIsolation": 4,
+          "perceivedConfinement": 3,
+          "routineInterference": 3,
+          "requestSupport": true
+        }
+      }
+    },
+    {
+      "crewId": "mateo",
+      "day": 30,
+      "missionDay": 42,
+      "dateUtc": "2026-11-08",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-08",
+      "telemetryContext": {
+        "atUtc": "2026-11-08T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-08T07:45:00Z",
+          "value": 70,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-08T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-08T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-08T07:45:00Z",
+          "value": 14,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-08T08:00:00Z",
+        "sleepHours": 7.2,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 0,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "lucia",
+      "day": 30,
+      "missionDay": 42,
+      "dateUtc": "2026-11-08",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-08",
+      "telemetryContext": {
+        "atUtc": "2026-11-08T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-08T07:45:00Z",
+          "value": 77,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-08T07:45:00Z",
+          "value": 36.7,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-08T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-08T07:45:00Z",
+          "value": 15,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-08T08:00:00Z",
+        "sleepHours": 7.7,
+        "fatigue": 2,
+        "mood": "good",
+        "exerciseDonePreviousDay": true,
+        "restInterruptions": 1,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 0,
+          "perceivedConfinement": 0,
+          "routineInterference": 0,
+          "requestSupport": null
+        }
+      }
+    },
+    {
+      "crewId": "elena",
+      "day": 30,
+      "missionDay": 42,
+      "dateUtc": "2026-11-08",
+      "source": "synthetic",
+      "nightId": "odyssey-rest-2026-11-08",
+      "telemetryContext": {
+        "atUtc": "2026-11-08T07:45:00Z",
+        "zoneId": "habitat",
+        "activity": "rest"
+      },
+      "readings": [
+        {
+          "id": "heartRate",
+          "at": "2026-11-08T07:45:00Z",
+          "value": 80,
+          "unit": "lpm",
+          "quality": "available"
+        },
+        {
+          "id": "temperature",
+          "at": "2026-11-08T07:45:00Z",
+          "value": 36.6,
+          "unit": "°C",
+          "quality": "available"
+        },
+        {
+          "id": "oxygen",
+          "at": "2026-11-08T07:45:00Z",
+          "value": 98,
+          "unit": "%",
+          "quality": "available"
+        },
+        {
+          "id": "respiration",
+          "at": "2026-11-08T07:45:00Z",
+          "value": 16,
+          "unit": "rpm",
+          "quality": "available"
+        }
+      ],
+      "checkIn": {
+        "atUtc": "2026-11-08T08:00:00Z",
+        "sleepHours": 5.2,
+        "fatigue": 4,
+        "mood": "low",
+        "exerciseDonePreviousDay": false,
+        "restInterruptions": 4,
+        "workloadPreviousDay": "habitual",
+        "note": null,
+        "proposedAnswers": {
+          "perceivedIsolation": 4,
+          "perceivedConfinement": 4,
+          "routineInterference": 4,
+          "requestSupport": null
+        }
+      }
+    }
+  ],
+  "summary": {
+    "mateo": {
+      "days1to7": {
+        "averageSleepHours": 7.1,
+        "averageFatigue": 1.14,
+        "averagePerceivedIsolation": 0,
+        "averagePerceivedConfinement": 0,
+        "exerciseDaysReported": 5,
+        "averageRestingHeartRateLpm": 70,
+        "moodDays": {
+          "good": 7
+        }
+      },
+      "days24to30": {
+        "averageSleepHours": 7.09,
+        "averageFatigue": 1.29,
+        "averagePerceivedIsolation": 0.14,
+        "averagePerceivedConfinement": 0.14,
+        "exerciseDaysReported": 5,
+        "averageRestingHeartRateLpm": 70,
+        "moodDays": {
+          "good": 7
+        }
+      }
+    },
+    "lucia": {
+      "days1to7": {
+        "averageSleepHours": 7.4,
+        "averageFatigue": 2,
+        "averagePerceivedIsolation": 0,
+        "averagePerceivedConfinement": 0,
+        "exerciseDaysReported": 5,
+        "averageRestingHeartRateLpm": 75,
+        "moodDays": {
+          "good": 7
+        }
+      },
+      "days24to30": {
+        "averageSleepHours": 7.34,
+        "averageFatigue": 2.14,
+        "averagePerceivedIsolation": 0.14,
+        "averagePerceivedConfinement": 0.14,
+        "exerciseDaysReported": 5,
+        "averageRestingHeartRateLpm": 75,
+        "moodDays": {
+          "neutral": 1,
+          "good": 6
+        }
+      }
+    },
+    "elena": {
+      "days1to7": {
+        "averageSleepHours": 7.29,
+        "averageFatigue": 2,
+        "averagePerceivedIsolation": 0,
+        "averagePerceivedConfinement": 0,
+        "exerciseDaysReported": 5,
+        "averageRestingHeartRateLpm": 71,
+        "moodDays": {
+          "good": 5,
+          "neutral": 2
+        }
+      },
+      "days24to30": {
+        "averageSleepHours": 5.46,
+        "averageFatigue": 4.14,
+        "averagePerceivedIsolation": 3.43,
+        "averagePerceivedConfinement": 3.29,
+        "exerciseDaysReported": 1,
+        "averageRestingHeartRateLpm": 78.29,
+        "moodDays": {
+          "low": 6,
+          "neutral": 1
+        }
+      }
+    }
+  }
+}

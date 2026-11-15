@@ -9,6 +9,7 @@ import {
 } from '@/domain/assistant/TumiConversation';
 import { detectTextEmotion } from '@/domain/assistant/detectTextEmotion';
 import { reactionToText } from '../cursor-assistant/emotions';
+import type { TumiReplyAudio } from '@/presentation/shared/tumi/useTumiReplyAudio';
 import type { TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
 
 type Dictation = (callbacks: {
@@ -26,6 +27,8 @@ export function useMissionAssistantViewModel(
     getContext(reading?: AssistantMetricContext): TumiScreenContext;
     pathname: string;
   },
+  getLocalAnswer?: (question: string) => string | undefined,
+  audio?: Pick<TumiReplyAudio, 'readReply' | 'stop'>,
 ) {
   const [open, setOpen] = useState(false);
   const [context, setContext] = useState<AssistantMetricContext>();
@@ -55,6 +58,7 @@ export function useMissionAssistantViewModel(
         { id: id + 1, role: 'assistant' as const, reply },
       ].slice(-60),
     );
+    audio?.readReply(reply.text);
   }
 
   function stop() {
@@ -86,6 +90,7 @@ export function useMissionAssistantViewModel(
     show: () => setOpen(true),
     hide() {
       stop();
+      audio?.stop();
       request.current?.abort();
       setVoiceStatus('');
       setOpen(false);
@@ -99,19 +104,22 @@ export function useMissionAssistantViewModel(
         setContext(undefined);
         previousReading.current = undefined;
       }
-      const { discussedMetric, ...reply } = answerMissionQuestion(
-        trimmed,
-        data,
-        useReading ? context : undefined,
-        previous &&
-          data &&
-          previous.crewId === data.selected.id &&
-          previous.scenario === data.scenario &&
-          previous.capturedAt === data.capturedAt
-          ? previous
-          : undefined,
-        explorer,
-      );
+      const viewAnswer = !useReading || !context ? getLocalAnswer?.(trimmed) : undefined;
+      const { discussedMetric, ...reply } = viewAnswer
+        ? { text: viewAnswer }
+        : answerMissionQuestion(
+            trimmed,
+            data,
+            useReading ? context : undefined,
+            previous &&
+              data &&
+              previous.crewId === data.selected.id &&
+              previous.scenario === data.scenario &&
+              previous.capturedAt === data.capturedAt
+              ? previous
+              : undefined,
+            explorer,
+          );
       if (discussedMetric) previousReading.current = discussedMetric;
       setDraft('');
       setVoiceStatus('');
@@ -119,7 +127,9 @@ export function useMissionAssistantViewModel(
       const textEmotion = detectTextEmotion(trimmed);
       if (!remote || reply.destination) {
         answer(trimmed, reply);
-        setReaction(reactionToText(textEmotion));
+        setReaction(
+          viewAnswer && textEmotion === 'neutral' ? 'understanding' : reactionToText(textEmotion),
+        );
         return;
       }
 
@@ -145,7 +155,7 @@ export function useMissionAssistantViewModel(
         setRemoteStatus(
           error instanceof TumiDailyLimitError
             ? `${error.message} Tumi respondió con la guía local.`
-            : 'GPT no está disponible. Tumi respondió con la guía local.',
+            : 'Te respondo con lo que tengo a mano.',
         );
         answer(trimmed, reply);
         setReaction('understanding');
@@ -162,6 +172,7 @@ export function useMissionAssistantViewModel(
         setVoiceStatus('');
         return;
       }
+      audio?.stop();
       setVoiceStatus('');
       const cancel = dictate({
         onText(text) {

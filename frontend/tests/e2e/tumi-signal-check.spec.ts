@@ -4,8 +4,7 @@ test('Simulación guía a Elena desde una señal ausente hasta una nueva captura
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/mission/simulation');
-  await page.getByRole('button', { name: /Pérdida de señal/ }).click();
+  await page.goto('/mission/simulation#perdida-de-senal');
 
   const signal = page.getByRole('region', { name: 'Faltan 3 lecturas de SpO₂' });
   await expect(signal).toContainText('14:26 UTC');

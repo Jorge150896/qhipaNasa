@@ -40,11 +40,12 @@ export function MissionFeatureScreen({
       }
       return (
         <SimulationScreen
-          selected={data.scenario}
-          onSelect={actions.selectScenario}
+          crew={data.selected}
+          habitatId={habitatId}
+          onNavigate={onNavigate}
+          onOpenSignalScenario={() => actions.selectScenario('sensor-gap')}
           signal={signal && { personId: signal.person.id, metric: signal.metric }}
           onOpenSignalEvidence={openSignalEvidence}
-          onOpenResult={() => (signal ? openSignalEvidence(signal.person.id) : onNavigate('crew'))}
         />
       );
     }

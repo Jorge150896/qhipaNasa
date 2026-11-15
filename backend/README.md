@@ -16,6 +16,10 @@ Abre `backend/.env.tumi.local` o créalo con permisos privados. Deja una línea 
 
 `POST /api/v1/tumi/replies` recibe hasta 600 caracteres de mensaje y un resumen acotado de la pantalla. Usa GPT-5.4 mini por defecto. El chat flotante y el contextual comparten la integración. El contexto puede incluir lecturas simuladas y puntos seleccionados de archivos públicos. El diario, sus borradores y el historial de mensajes quedan fuera de esta llamada.
 
+`TumiVoice.java` define la voz conversada para ambos chats. Tumi empieza por lo que se preguntó, explica qué significa en palabras cotidianas y propone un siguiente paso vinculado a la pantalla o al registro. Los apodos reconocidos, como «Lena» para Elena Torres, se resuelven con la identidad que aporta la app.
+
+Cuando una respuesta parece una ficha de pantalla, Tumi pide una reformulación dentro del mismo límite de espera. Ese mensaje puede usar hasta dos llamadas al proveedor. La cuota pública cuenta mensajes de la app.
+
 ### GPT en GitHub Pages
 
 1. Publica el backend Java como servicio HTTPS. En un proveedor con Docker, usa `backend/` como raíz y `Dockerfile` como archivo de imagen. El contenedor escucha en el `PORT` del proveedor o en 8080.

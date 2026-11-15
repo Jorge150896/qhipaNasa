@@ -26,17 +26,19 @@ Arrastre con Pointer Events, captura del puntero y umbral de 6 px para separar c
 
 ## Conversación y futura integración
 
+El globo de Tumi aparece brevemente al lado del personaje mientras navegas. Al pulsarlo se abre el chat. El botón «Escuchar respuesta» vuelve a leer la última respuesta con la voz del navegador. El texto hablado desarrolla unidades y separadores que en el chat aparecen abreviados.
+
 `domain/assistant/detectTextEmotion` identifica señales textuales sencillas de alegría, tristeza o enojo en español y algunos emojis. Normaliza acentos/mayúsculas, contempla negaciones cercanas y evita algunos relatos sobre terceros. Señales contradictorias producen una reacción comprensiva; textos sin señales vuelven a neutral. No es IA, diagnóstico ni reconocimiento fiable de sentimientos: puede fallar con ironía, citas, contexto o negaciones complejas. No se crea un perfil emocional ni se guarda el resultado.
 
 Al enviar un mensaje, Tumi piensa y después conserva la expresión acorde al tono detectado; el adapter local ofrece una respuesta cálida ante mensajes emocionales. La reacción de enojo es leve y su respuesta permanece tranquila. Una consulta explícita de navegación conserva prioridad sobre la respuesta emocional genérica.
 
 En autonomía, un temporizador independiente varía la expresión cada 8–15 segundos (primera variación en 8–12), evitando repetir inmediatamente la anterior. Usa curiosidad, alegría, guiño, sorpresa, timidez o entusiasmo, y cansancio/sueño tras inactividad. No elige tristeza o enojo al azar. Se suspende durante chat, voz, pausa, ocultación, guía de misión, pestaña oculta o movimiento reducido. Los cambios faciales no reinician el recorrido ni mueven el panel.
 
-El panel cercano permite enviar hasta 600 caracteres, conserva hasta 40 mensajes en memoria y se cierra con Escape, con devolución de foco. Abrirlo suspende desplazamientos automáticamente; no ofrece un botón de pausa manual. Se puede ocultar la mascota con el ojo tachado y cerrar la conversación únicamente con la X de la cabecera: la X inferior fue retirada. Los iconos mantienen nombres accesibles y área de pulsación de 44 px. No guarda conversaciones ni usa micrófono. La voz de saludo sigue siendo explícita y depende del navegador.
+El globo de Tumi aparece por unos segundos y se puede abrir con el lápiz o pulsando al personaje. Omite las invitaciones mientras hay un campo de texto activo y pausa su cierre si recibe foco. El saludo y la última respuesta aparecen palabra por palabra dentro del mismo globo que contiene el campo de hasta 600 caracteres. La boca acompaña la aparición del texto y el audio. Con movimiento reducido se muestra el texto completo de inmediato. El cierre devuelve el foco a Tumi. El menú **Opciones** conserva el formato Texto/Audio, la guía, el chat contextual y la opción de ocultar al personaje.
 
-`domain/assistant/TumiConversation` es el puerto asíncrono cancelable. `data/assistant/LocalTumiConversation` implementa orientación determinista sobre la web; `di/createTumiDependencies.client` lo inyecta. La interfaz anuncia «Sin IA conectada». Preguntas abiertas reciben una explicación de ese límite. El chat de misión existente sigue accesible mediante «Conversar con Tumi» y conserva su contexto; no se duplican sus reglas médicas.
+El acompañante reutiliza la configuración de GPT y el contexto de la vista. La guía local orienta sobre la app y pide reformular las dudas que no reconoce. La conversación se conserva en memoria durante la visita.
 
-Para incorporar IA real, sustituir el adapter mediante DI y acordar el contrato con Java/Spring Boot. No hay endpoint inventado, credenciales en frontend ni petición a un proveedor. Cerrar/ocultar/desmontar aborta la operación; resultados obsoletos no actualizan mensajes. Los errores recuperables conservan el texto para reintentar.
+Cerrar u ocultar Tumi, o salir de la pantalla, cancela las consultas pendientes. Los errores recuperables conservan el texto para reintentar.
 
 ## Validación
 

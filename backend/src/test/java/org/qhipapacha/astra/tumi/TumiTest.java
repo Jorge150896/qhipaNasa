@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 import org.qhipapacha.astra.tumi.adapter.in.web.TumiController;
@@ -50,17 +51,65 @@ class TumiTest {
     try {
       var endpoint = URI.create("http://127.0.0.1:" + server.getAddress().getPort() + "/v1/responses");
       var client = new OpenAiResponsesClient(HttpClient.newHttpClient(), mapper, endpoint, "test-key", "test-model");
-      var context = new TumiScreenContext("Tripulación · Historial", "SpO₂: 98 % a las 14:32 UTC");
-      assertThat(new AskTumi(client).execute(" Hola ", context))
+      var context = new TumiScreenContext("Tripulación · Historial",
+          "Persona en pantalla: Elena Torres, Comandante (también llamada Lena). SpO₂: 98 % a las 14:32 UTC");
+      assertThat(new AskTumi(client).execute(" ¿Cómo está Lena? ", context))
           .isEqualTo(new TumiReply("Tumi conectado.", "focused"));
       assertThat(authorization.get()).isEqualTo("Bearer test-key");
       var input = mapper.readTree(requestBody.get().path("input").asText());
-      assertThat(input.path("mensaje").asText()).isEqualTo("Hola");
+      assertThat(input.path("mensaje").asText()).isEqualTo("¿Cómo está Elena?");
       assertThat(input.path("pantalla").path("details").asText()).isEqualTo(context.details());
+      assertThat(requestBody.get().path("instructions").asText())
+          .contains("comienza por su nombre y su rol o actividad")
+          .contains("«Lena» se refiere a Elena Torres")
+          .contains("con el ritmo de una conversación de voz")
+          .contains("con un paso pequeño y concreto")
+          .contains("responde con una proyección de la simulación")
+          .contains("sin usar registros posteriores")
+          .contains("sugiere acordar un momento con el equipo de apoyo");
       assertThat(requestBody.get().at("/text/format/type").asText()).isEqualTo("json_schema");
       assertThat(requestBody.get().path("store").asBoolean(true)).isFalse();
       assertThatThrownBy(() -> new AskTumi(client).execute(" ".repeat(601), null))
           .isInstanceOf(AskTumi.InvalidMessage.class);
+    } finally {
+      server.stop(0);
+    }
+  }
+
+  @Test
+  void rewritesAScreenReportBeforeReturningIt() throws Exception {
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    var mapper = new ObjectMapper();
+    var calls = new AtomicInteger();
+    var revision = new AtomicReference<JsonNode>();
+    var draft = "Veo la opción en Monitoreo diario > Contexto.";
+    var friendly = "Puedes empezar por contar cómo te fue hoy. Al final, podrás revisar lo que anotaste.";
+    server.createContext("/v1/responses", exchange -> {
+      try (exchange) {
+        var request = mapper.readTree(exchange.getRequestBody());
+        int call = calls.incrementAndGet();
+        if (call == 2) revision.set(request);
+        var answer = mapper.createObjectNode()
+            .put("text", call == 1 ? draft : friendly)
+            .put("reaction", "understanding");
+        var response = mapper.createObjectNode().put("status", "completed");
+        response.putArray("output").addObject().put("type", "message").putArray("content")
+            .addObject().put("type", "output_text").put("text", answer.toString());
+        byte[] bytes = mapper.writeValueAsBytes(response);
+        exchange.sendResponseHeaders(200, bytes.length);
+        exchange.getResponseBody().write(bytes);
+      }
+    });
+    server.start();
+    try {
+      var endpoint = URI.create("http://127.0.0.1:" + server.getAddress().getPort() + "/v1/responses");
+      var client = new OpenAiResponsesClient(HttpClient.newHttpClient(), mapper, endpoint, "test-key", "test-model");
+      assertThat(client.reply("¿Cómo empiezo?", new TumiScreenContext("Monitoreo diario", "Contexto")))
+          .isEqualTo(new TumiReply(friendly, "understanding"));
+      assertThat(calls.get()).isEqualTo(2);
+      assertThat(mapper.readTree(revision.get().path("input").asText()).path("borrador").asText())
+          .isEqualTo(draft);
+      assertThat(revision.get().path("instructions").asText()).contains("Redacta de nuevo el borrador");
     } finally {
       server.stop(0);
     }

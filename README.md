@@ -39,7 +39,7 @@ Para generar esa misma exportación localmente, ejecuta `GITHUB_PAGES=true npm r
 
 - **Centros en Tierra** reúne en un globo los centros de operaciones y apoyo, los sitios de lanzamiento y tres videos históricos. Se abre dentro de Mapa espacial. La ficha muestra la función del lugar, sus fuentes y dónde ocurrió el despegue relacionado. Los enlaces anteriores conservan el sitio seleccionado.
 
-- **Simulación**: «Pérdida de señal» abre el caso de SpO₂ de Elena en Odyssey. La captura rápida muestra el nuevo resultado con su propia hora y conserva los huecos del historial. Para guardar tus respuestas junto a las lecturas de la misión, usa Monitoreo diario.
+- **Simulación** reúne la Ruta emocional y la prueba de hábitos. La [demostración de pérdida de señal](http://127.0.0.1:3000/mission/simulation#perdida-de-senal) sigue disponible por enlace directo.
 
 - Carga animada con el video local del Tumi dorado y sus giros originales, en bucle silencioso; imagen estática con movimiento reducido. Introducción breve a pantalla completa solo tras «Iniciar mi misión»; dentro de la app, carga limitada al área de información. Vista permanente en `/loading-preview`.
 

@@ -1,9 +1,13 @@
 'use client';
-import { tumiConversation, tumiUsesOpenAi } from '@/di/createTumiDependencies.client';
+import {
+  localTumiConversation,
+  tumiConversation,
+  tumiUsesOpenAi,
+} from '@/di/createTumiDependencies.client';
 import { useCursorAssistantViewModel } from './useCursorAssistantViewModel';
 import { CursorAssistantView } from './components/CursorAssistantView';
 import './cursor-assistant.css';
-import { speakInBrowser } from '@/infrastructure/speech/browserVoice';
+import type { TumiReplyAudio } from '@/presentation/shared/tumi/useTumiReplyAudio';
 import { useTumiMotion } from './useTumiMotion';
 import type { TumiScreenContext } from '@/domain/assistant/TumiConversation';
 
@@ -13,18 +17,24 @@ export function CursorAssistantScreen({
   onChangeMode,
   suspended = false,
   getContext,
+  getLocalReply,
+  audio,
 }: {
   onOpenChat?(): void;
   following: boolean;
   onChangeMode(following: boolean): void;
   suspended?: boolean;
   getContext(): TumiScreenContext;
+  getLocalReply?(question: string): string | undefined;
+  audio: TumiReplyAudio;
 }) {
   const model = useCursorAssistantViewModel(
     tumiConversation,
-    speakInBrowser,
+    audio,
     suspended,
     getContext,
+    getLocalReply,
+    tumiUsesOpenAi ? localTumiConversation : undefined,
   );
   useTumiMotion(model.actor, {
     stopped: model.data.paused || suspended || following,
@@ -45,8 +55,16 @@ export function CursorAssistantScreen({
       onToggle={model.toggle}
       onHide={model.hide}
       onShow={model.show}
-      onGreet={model.greet}
-      onStopVoice={model.stopVoice}
+      replyFormat={audio.selectedFormat}
+      onChangeReplyFormat={audio.select}
+      audioStatus={audio.status}
+      transcriptText={audio.transcriptText}
+      spokenWords={audio.spokenWords}
+      onGreet={() => {
+        const line = model.data.messages.findLast(({ role }) => role === 'assistant');
+        if (line) audio.replayReply(line.text, { transcript: true });
+      }}
+      onStopVoice={audio.stop}
       following={following}
       onChangeMode={(enabled) => {
         model.close();

@@ -1,4 +1,4 @@
-import type { AvatarBackground, AvatarPart, AvatarSelection } from './types';
+import type { AvatarPart, AvatarSelection } from './types';
 
 export const partOptions = {
   decoration: [
@@ -14,15 +14,8 @@ export const partOptions = {
 } satisfies Record<'decoration' | 'tool', AvatarPart[]>;
 
 export const defaultAvatar: AvatarSelection = {
-  background: 'studio',
   decoration: '',
   tool: '',
   bands: 'orange',
   controls: 'purple',
 };
-
-export const avatarBackgrounds = [
-  { id: 'studio', label: 'Estudio orbital' },
-  { id: 'orbit', label: 'Órbita' },
-  { id: 'hangar', label: 'Hangar' },
-] satisfies { id: AvatarBackground; label: string }[];

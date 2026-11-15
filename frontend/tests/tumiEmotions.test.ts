@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import { detectTextEmotion } from '@/domain/assistant/detectTextEmotion';
+import { getDirectWellbeingMood, tumiWellbeingReplies } from '@/domain/assistant/tumiWellbeing';
 import { autonomousEmotion } from '@/presentation/features/cursor-assistant/emotions';
 import { useCursorAssistantViewModel } from '@/presentation/features/cursor-assistant/useCursorAssistantViewModel';
 
@@ -35,6 +36,17 @@ describe('señales emocionales locales', () => {
       expect(['sad', 'angry', 'error']).not.toContain(mood);
     }
     expect(autonomousEmotion('neutral', true, 0.99)).toBe('sleeping');
+  });
+  it('responde en el chat flotante con el mismo mensaje que el selector de ánimo', async () => {
+    const reply = vi.fn(async () => ({ text: 'Respuesta de la IA' }));
+    const { result } = renderHook(() => useCursorAssistantViewModel({ reply }));
+    act(() => result.current.setDraft('Hoy me siento triste 😢'));
+    await act(async () => result.current.send());
+    expect(result.current.data.messages.at(-1)?.text).toBe(tumiWellbeingReplies.low);
+    expect(reply).not.toHaveBeenCalled();
+    expect(getDirectWellbeingMood('¿Estoy triste?')).toBeUndefined();
+    expect(getDirectWellbeingMood('Elena está triste')).toBeUndefined();
+    expect(getDirectWellbeingMood('Estoy triste y quiero ver el mapa')).toBeUndefined();
   });
   it('conserva la reacción al texto después de responder y se reinicia con otro mensaje', async () => {
     const { result } = renderHook(() =>

@@ -29,5 +29,6 @@ it('envía la muestra elegida sin atribuirle la ubicación actual ni incluir not
   expect(context.details.split('\n')[0]).toContain(sample.value);
   expect(context.details.split('\n')[0]).toContain('Sin ubicación ni ambiente registrados');
   expect(context.details).not.toContain('Nota privada');
-  expect(context.details).toContain('Origen: telemetría sintética');
+  expect(context.details).toContain('Lecturas simuladas de Elena Torres');
+  expect(context.details).toContain('Elena Torres, Comandante (también llamada Lena)');
 });

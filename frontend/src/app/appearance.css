@@ -1,12 +1,8 @@
 /* Shared surfaces and controls for the app chrome and all screen content. */
 :root {
-  color-scheme: light;
   --field: light-dark(#f6eff9, #372546);
   --warm-surface: light-dark(#fff0e6, #503346);
   --welcome-gradient: linear-gradient(124deg, #50326c, #3b295a 56%, #633e56);
-  --space-light:
-    radial-gradient(ellipse at 78% 4%, #ffdec99e, transparent 42%),
-    radial-gradient(ellipse at 16% 47%, #e9d7ffbd, transparent 64%), #f8f1fb;
   --dock-bg: light-dark(#fcf7ff, #201e41);
   --dock-hover: light-dark(#f0e4fa, #ffffff11);
   --dock-shadow: 0 12px 32px light-dark(#60438029, #100c2490);
@@ -55,43 +51,6 @@
     linear-gradient(145deg, #180a31e8, #170a2bd1 68%, #1e0c3ad6);
 }
 
-:root:not([data-appearance='dark']) {
-  --bg: #f8f1fb;
-  --welcome-gradient: linear-gradient(124deg, #f2e3fc, #ece1fa 56%, #ffe9db);
-  --surface: #fffaff;
-  --surface-raised: #f3eafa;
-  --text: #31213e;
-  --muted: #584666;
-  --quiet: #675674;
-  --line: #cbb6dc;
-  --line-soft: #e1d3eb;
-  --glass: linear-gradient(145deg, #faf2ff, #fffaf6);
-  --glass-active: linear-gradient(125deg, #ecdcfb, #fce8de);
-  --glass-glow: 0 7px 18px #673da319;
-  --accent: #993e19;
-  --accent-hover: #7c2c0f;
-  --accent-soft: #fce8e4;
-  --selection: #6d35ad;
-  --selection-soft: #f0e1fd;
-  --selection-border: #8754bb;
-  --selection-text: #422455;
-  --amber: #80510a;
-  --danger: #8f3142;
-  --radius: 18px;
-}
-
-:root:not([data-appearance='dark']) .space-background {
-  background: var(--space-light);
-}
-
-:root:not([data-appearance='dark']) .space-background::after {
-  background: none;
-}
-
-:root:not([data-appearance='dark']) .space-background > span {
-  background-image: none;
-}
-
 .panel {
   border-radius: var(--radius);
   box-shadow: var(--panel-shadow);
@@ -104,17 +63,4 @@
 
 .button.primary:hover:not(:disabled) {
   background: var(--primary-hover);
-}
-
-.assistant-appearance button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-
-@media (max-width: 760px) {
-  .assistant-appearance button {
-    min-height: 44px;
-  }
 }

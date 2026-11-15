@@ -2,22 +2,22 @@ export const guideControls = [
   {
     id: 'map',
     label: 'Mapa espacial',
-    text: 'Explora la nave, la estación y otros destinos de la misión.',
+    text: 'Elige un lugar que te dé curiosidad y vemos qué hay allí. Puedes empezar por la nave o la estación.',
   },
   {
     id: 'simulation',
     label: 'Simulación',
-    text: 'Cambia el escenario de demostración para explorar distintos datos.',
+    text: 'Elige una situación y veamos cómo cambia la misión. Puedes empezar por «Cambio en el descanso».',
   },
   {
     id: 'crew',
     label: 'Tripulación',
-    text: 'Elige un tripulante y explora sus indicadores y autorregistros. Cambia de Astronauta a Nave, Estación o Base para consultar los módulos.',
+    text: 'Elige un nombre y vemos juntos cómo le ha ido. Si te da curiosidad dónde está, abre el visor del hábitat para conocer su módulo.',
   },
   {
     id: 'history',
     label: 'Historial',
-    text: 'Abre Tripulación → Historial para ver cómo cambió una señal y consultar su procedencia.',
+    text: 'En Tripulación, toca Historial y elige el día que te interese. Ahí podemos comparar sus lecturas con las de otro momento.',
   },
   {
     id: 'journal',
@@ -58,10 +58,6 @@ export const actionTips = {
   'check-context': {
     label: 'Continuar a autoevaluación',
     text: 'Pasa a las preguntas de bienestar después de elegir la actividad y el momento.',
-  },
-  'scenario-result': {
-    label: 'Resultado del escenario',
-    text: 'Abre Tripulación para consultar cómo se refleja el escenario seleccionado.',
   },
   compare: {
     label: 'Comparar dos muestras',
@@ -120,7 +116,7 @@ export const missionTopics = [
   },
   {
     question: /\b(sin senal|sensor caido|muestras? ausentes?|sin muestra|perdida de senal)\b/,
-    text: 'Una muestra ausente aparece como un hueco en la serie. Puedes consultar la última muestra disponible con su hora y probar el caso Pérdida de señal en Simulación.',
+    text: 'Una muestra ausente aparece como un hueco en la serie. Puedes consultar la última muestra disponible con su hora o abrir el caso con el enlace directo de pérdida de señal indicado en la documentación.',
     target: 'simulation',
   },
   {

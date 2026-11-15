@@ -1,0 +1,200 @@
+.monthly-wellbeing {
+  display: grid;
+  min-width: 0;
+  gap: 17px;
+  margin: 0 0 22px;
+  padding: clamp(12px, 2.4vw, 24px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--glass);
+}
+
+.monthly-wellbeing-header,
+.monthly-wellbeing-trend-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 9px;
+}
+
+.monthly-wellbeing h3 {
+  font-size: clamp(19px, 2.4vw, 26px);
+  font-weight: 700;
+}
+
+.monthly-wellbeing h4,
+.monthly-wellbeing h5 {
+  margin: 0;
+  font-weight: 650;
+  font-size: 15px;
+}
+
+.monthly-wellbeing-values {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+  margin: 8px 0;
+}
+
+.monthly-wellbeing-values div {
+  min-width: 0;
+  padding: 7px 9px;
+  border: 1px solid var(--line-soft);
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.monthly-wellbeing-values dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+.monthly-wellbeing-values dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-weight: 650;
+}
+
+.monthly-wellbeing-trend {
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 13px;
+  background: var(--surface);
+}
+
+.monthly-wellbeing-trend-header label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.monthly-wellbeing-trend-header select {
+  min-height: 44px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  background: var(--field);
+}
+
+.monthly-wellbeing-trend-header output {
+  color: var(--accent);
+  font-weight: 650;
+}
+.monthly-wellbeing-plot {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+  height: 124px;
+}
+.monthly-wellbeing-scale {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 11px;
+}
+.monthly-wellbeing-bars {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(30, minmax(0, 1fr));
+  gap: clamp(1px, 0.4vw, 5px);
+  border-bottom: 1px solid var(--line);
+}
+.monthly-wellbeing-bars span {
+  display: flex;
+  align-items: end;
+  min-width: 0;
+}
+.monthly-wellbeing-bars i {
+  width: 100%;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
+  background: var(--selection-border);
+}
+.monthly-wellbeing-bars span[data-selected='true'] {
+  outline: 1px dashed var(--accent);
+  outline-offset: -1px;
+}
+.monthly-wellbeing-bars span[data-selected='true'] i {
+  background: var(--accent);
+}
+.monthly-wellbeing-bars span[data-absent='true'] {
+  background: repeating-linear-gradient(135deg, var(--line-soft) 0 1px, transparent 1px 5px);
+}
+.monthly-wellbeing-range {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.monthly-wellbeing-range button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 6px;
+  justify-content: center;
+}
+.monthly-wellbeing-range label {
+  flex: 1;
+  min-width: 0;
+}
+.monthly-wellbeing-range input {
+  width: 100%;
+  height: 36px;
+  accent-color: var(--accent);
+}
+.monthly-wellbeing-back {
+  transform: rotate(180deg);
+}
+.monthly-wellbeing-dates {
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 50px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.monthly-wellbeing-day-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+.monthly-wellbeing-day-grid .monthly-wellbeing-values {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.monthly-wellbeing-note {
+  margin-top: 8px;
+  padding: 7px 10px;
+  border-inline-start: 2px solid var(--accent);
+}
+
+@media (max-width: 650px) {
+  .monthly-wellbeing-day-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .monthly-wellbeing-values {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.monthly-wellbeing-bars[data-mood='true'] {
+  border-bottom: 0;
+  margin: 4px 0;
+  background: linear-gradient(var(--line-soft), var(--line-soft)) center / 100% 1px no-repeat;
+}
+
+.monthly-wellbeing-bars[data-mood='true'] span {
+  position: relative;
+  justify-content: center;
+}
+
+.monthly-wellbeing-bars[data-mood='true'] i {
+  position: absolute;
+  width: min(100%, 9px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translateY(50%);
+}

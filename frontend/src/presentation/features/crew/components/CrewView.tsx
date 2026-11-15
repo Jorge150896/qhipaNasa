@@ -14,6 +14,7 @@ export function CrewView({
   avatarPanel,
   environmentReferences,
   timelinePanel,
+  monthlyWellbeing,
   onSelectTimelineSample,
   telemetryMetric,
   trendInCard,
@@ -24,6 +25,7 @@ export function CrewView({
   nasaHistory,
 }: CrewViewProps & {
   timelinePanel: ReactNode;
+  monthlyWellbeing: ReactNode;
   avatarPanel: ReactNode;
   nasaHistory: ReactNode;
   environmentReferences: ReactNode;
@@ -98,6 +100,7 @@ export function CrewView({
             <Icon name="arrow" size={14} />
           </a>
         </div>
+        {monthlyWellbeing}
         <section className="crew-chart-panel" aria-label="Tendencia de telemetría">
           <div className="panel-heading">
             <div>

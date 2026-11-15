@@ -48,9 +48,9 @@ export function detectTextEmotion(message: string): TextEmotion {
 export function emotionalAcknowledgement(emotion: TextEmotion): string | null {
   switch (emotion) {
     case 'sad':
-      return 'Suena a que estás pasando un momento triste. Te escucho; si quieres, cuéntame qué ocurrió.';
+      return tumiWellbeingReplies.low;
     case 'happy':
-      return '¡Qué alegría leerte así! Me encanta compartir ese entusiasmo contigo. ¿Quieres contarme qué pasó?';
+      return tumiWellbeingReplies.good;
     case 'angry':
       return 'Parece que algo te ha molestado. Te escucho con calma; podemos ir paso a paso. ¿Qué ocurrió?';
     case 'mixed':
@@ -59,3 +59,4 @@ export function emotionalAcknowledgement(emotion: TextEmotion): string | null {
       return null;
   }
 }
+import { tumiWellbeingReplies } from './tumiWellbeing';

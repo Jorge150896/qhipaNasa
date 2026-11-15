@@ -11,7 +11,7 @@ export function MissionPageHeader({
   onSelectCrew: MissionActions['selectCrew'];
 }) {
   const title = sectionTitles[section];
-  const showCrewPicker = section === 'crew' || section === 'journal';
+  const showCrewPicker = section === 'crew' || section === 'journal' || section === 'simulation';
   return (
     <>
       <div className={`page-heading${section === 'crew' ? ' crew-page-heading' : ''}`}>
@@ -44,7 +44,7 @@ export function MissionPageHeader({
               </button>
             ))}
           </div>
-          {section !== 'crew' && (
+          {section === 'journal' && (
             <div className="crew-context">
               <span className="status-dot" />
               {data.selected.activity} · {data.selected.location}

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Crosshair, Orbit, RotateCcw } from 'lucide-react';
-import { avatarBackgrounds, partOptions } from '../catalog';
+import { appBackgrounds, type AppBackground } from '@/presentation/shared/space/appBackground';
+import { partOptions } from '../catalog';
 import { avatarPalette, type AvatarSelection, type SuitColor } from '../types';
 import styles from '../avatar.module.css';
 
@@ -17,12 +18,16 @@ const colors = [
 export function AvatarView({
   crewName,
   selection,
+  background,
   preview,
+  onBackgroundChange,
   onSelect,
   onReset,
 }: {
   crewName: string;
   selection: AvatarSelection;
+  background: AppBackground;
+  onBackgroundChange(background: AppBackground): void;
   preview: ReactNode;
   onSelect<K extends keyof AvatarSelection>(slot: K, value: AvatarSelection[K]): void;
   onReset(): void;
@@ -40,7 +45,7 @@ export function AvatarView({
       </header>
       <div className={styles.layout}>
         <figure className={styles.figure}>
-          <div className={styles.preview} data-background={selection.background}>
+          <div className={styles.preview} data-background={background}>
             {preview}
           </div>
           <figcaption>
@@ -119,14 +124,14 @@ export function AvatarView({
             ))}
           </fieldset>
           <fieldset>
-            <legend>Fondo del visor</legend>
+            <legend>Fondo de la app</legend>
             <div className={styles.choices}>
-              {avatarBackgrounds.map(({ id, label }) => (
+              {appBackgrounds.map(({ id, label }) => (
                 <button
                   type="button"
                   key={id}
-                  aria-pressed={selection.background === id}
-                  onClick={() => onSelect('background', id)}
+                  aria-pressed={background === id}
+                  onClick={() => onBackgroundChange(id)}
                 >
                   <span
                     aria-hidden="true"

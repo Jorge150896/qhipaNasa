@@ -3,6 +3,7 @@ import { Html, useGLTF } from '@react-three/drei';
 import { useEffect, useMemo, useRef, type RefObject } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Box3, PerspectiveCamera, Sphere, type Group, type PointLight } from 'three';
+import { useAstronautFinish } from './useAstronautFinish';
 import { bodyZones, type SceneBodyRegion, type SceneSensor } from './astronautBodyZones';
 const hotspots: {
   id: SceneSensor;
@@ -36,11 +37,11 @@ export function AstronautModel({
   onFrameDistance?(distance: number): void;
   onSelectSystem?(id: 'cardio' | 'fitness' | 'vision'): void;
   selected: SceneSensor;
-  onSelect(id: SceneSensor): void;
+  onSelect?(id: SceneSensor): void;
   portal: RefObject<HTMLElement>;
 }) {
   const gltf = useGLTF(publicAsset('/models/astronaut.glb'));
-  const model = useMemo(() => gltf.scene.clone(), [gltf.scene]);
+  const model = useAstronautFinish(gltf.scene);
   const highlight = activeBodyRegion && bodyZones[activeBodyRegion];
   const camera = useThree((state) => state.camera);
   const aspect = useThree(({ size }) => size.width / Math.max(1, size.height));
@@ -106,7 +107,7 @@ export function AstronautModel({
             scale={bodyZones[zone].scale}
             onClick={(event) => {
               event.stopPropagation();
-              if (zone === 'heartRate') onSelect(zone);
+              if (zone === 'heartRate') onSelect?.(zone);
               else onSelectSystem(zone);
             }}
           >
@@ -165,28 +166,29 @@ export function AstronautModel({
             </button>
           </Html>
         ))}
-      {hotspots
-        .filter(({ id }) => id !== 'respiration' || onSelectSystem)
-        .map((item) => (
-          <Html
-            portal={portal}
-            style={{ pointerEvents: 'auto' }}
-            key={item.id}
-            position={item.position}
-            center
-            zIndexRange={[20, 0]}
-          >
-            <button
-              type="button"
-              className="scene-hotspot"
-              aria-label={`Consultar ${item.name}`}
-              aria-pressed={(activeBodyRegion ?? selected) === item.id}
-              onClick={() => onSelect(item.id)}
+      {onSelect &&
+        hotspots
+          .filter(({ id }) => id !== 'respiration' || onSelectSystem)
+          .map((item) => (
+            <Html
+              portal={portal}
+              style={{ pointerEvents: 'auto' }}
+              key={item.id}
+              position={item.position}
+              center
+              zIndexRange={[20, 0]}
             >
-              {item.label}
-            </button>
-          </Html>
-        ))}
+              <button
+                type="button"
+                className="scene-hotspot"
+                aria-label={`Consultar ${item.name}`}
+                aria-pressed={(activeBodyRegion ?? selected) === item.id}
+                onClick={() => onSelect(item.id)}
+              >
+                {item.label}
+              </button>
+            </Html>
+          ))}
     </group>
   );
 }

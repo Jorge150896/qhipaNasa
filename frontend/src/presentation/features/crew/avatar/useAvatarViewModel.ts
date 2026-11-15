@@ -1,8 +1,15 @@
 import { useState } from 'react';
+import {
+  defaultAppBackground,
+  type AppBackground,
+} from '@/presentation/shared/space/appBackground';
 import { defaultAvatar, partOptions } from './catalog';
 import type { AvatarSelection } from './types';
 
-export function useAvatarViewModel(crewId: string) {
+export function useAvatarViewModel(
+  crewId: string,
+  selectBackground: (background: AppBackground) => void,
+) {
   const [avatars, setAvatars] = useState<Record<string, AvatarSelection>>({});
   const selection = avatars[crewId] ?? defaultAvatar;
   return {
@@ -18,6 +25,7 @@ export function useAvatarViewModel(crewId: string) {
       }));
     },
     reset() {
+      selectBackground(defaultAppBackground);
       setAvatars((previous) => ({ ...previous, [crewId]: defaultAvatar }));
     },
   };

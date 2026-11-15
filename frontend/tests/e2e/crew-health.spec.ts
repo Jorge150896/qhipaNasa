@@ -324,7 +324,8 @@ test('móvil sin WebGL permite consultar módulos y duración de las sesiones', 
   await expect(moment).toContainText('15 min');
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
   await nav.getByRole('button', { name: 'Simulación', exact: true }).click();
-  await page.getByRole('button', { name: /Pérdida de señal/ }).click();
+  await page.goto('/mission/simulation#perdida-de-senal');
+  await expect(page.getByRole('region', { name: 'Faltan 3 lecturas de SpO₂' })).toBeVisible();
   await nav.getByRole('button', { name: 'Tripulación', exact: true }).click();
   await page
     .getByRole('navigation', { name: 'Secciones de Tripulación' })
@@ -421,7 +422,7 @@ test('la gráfica sincroniza el módulo conocido y oculta la ubicación sin cont
   await expect(panel.getByRole('heading', { name: 'Laboratorio' })).toBeVisible();
 });
 
-test('las etiquetas del astronauta son legibles en claro, incluso al seleccionar un punto', async ({
+test('las etiquetas del astronauta son legibles en oscuro, incluso al seleccionar un punto', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -429,16 +430,16 @@ test('las etiquetas del astronauta son legibles en claro, incluso al seleccionar
   const vision = page.getByRole('button', { name: 'Explorar visión y sistema neuroocular' });
   const pulse = page.getByRole('button', { name: 'Consultar frecuencia cardíaca' });
   await expect(vision).toBeVisible();
-  await expect(vision).toHaveCSS('color', 'rgb(49, 33, 62)');
-  await expect(vision).toHaveCSS('background-color', 'rgb(243, 234, 250)');
+  await expect(vision).toHaveCSS('color', 'rgb(251, 244, 255)');
+  await expect(vision).toHaveCSS('background-color', 'rgb(50, 27, 75)');
 
   await vision.click();
   await expect(vision).toHaveAttribute('aria-pressed', 'true');
-  await expect(vision).toHaveCSS('color', 'rgb(153, 62, 25)');
-  await expect(vision).toHaveCSS('background-color', 'rgb(255, 240, 230)');
-  await expect(pulse).toHaveCSS('color', 'rgb(49, 33, 62)');
+  await expect(vision).toHaveCSS('color', 'rgb(255, 163, 110)');
+  await expect(vision).toHaveCSS('background-color', 'rgb(74, 40, 59)');
+  await expect(pulse).toHaveCSS('color', 'rgb(251, 244, 255)');
 
   await page.setViewportSize({ width: 1440, height: 1000 });
   await expect(pulse).toBeVisible();
-  await expect(pulse).toHaveCSS('color', 'rgb(49, 33, 62)');
+  await expect(pulse).toHaveCSS('color', 'rgb(251, 244, 255)');
 });

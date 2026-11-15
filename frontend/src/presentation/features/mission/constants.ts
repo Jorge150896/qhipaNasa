@@ -14,8 +14,9 @@ export const sectionTitles: Record<MissionSection, { title: string; description:
     description: 'Registra cómo te sientes y revisa las lecturas de tu cuerpo y del entorno.',
   },
   simulation: {
-    title: 'Explora lo que cambia.',
-    description: 'Escenarios reproducibles para demostrar el comportamiento de ASTRA.',
+    title: 'Simulación',
+    description:
+      'Explora los hábitos y el bienestar de la tripulación durante una misión simulada.',
   },
   sources: {
     title: 'Datos con contexto.',

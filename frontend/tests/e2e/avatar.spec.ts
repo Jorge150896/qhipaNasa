@@ -18,7 +18,14 @@ test('personaliza cada tripulante y carga sus piezas bajo demanda', async ({ pag
   );
   await editor.getByRole('button', { name: 'Baliza flotante' }).click();
   await beacon;
-  await editor.getByRole('button', { name: 'Órbita' }).click();
+  await expect(editor.getByRole('button', { name: 'Órbita' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await expect(page.locator('.space-background')).toHaveCSS(
+    'background-image',
+    /space-purple-orange-v1/,
+  );
   await expect(editor.locator('div[data-background]')).toHaveAttribute('data-background', 'orbit');
   const probe = page.waitForResponse(
     (response) => response.url().endsWith('/probe.glb') && response.ok(),
@@ -39,8 +46,9 @@ test('personaliza cada tripulante y carga sus piezas bajo demanda', async ({ pag
     .click();
   await texture;
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+  await editor.getByRole('button', { name: 'Fondo original' }).click();
   await page.getByRole('button', { name: /Mateo Silva/ }).click();
-  await expect(editor.getByRole('button', { name: 'Estudio orbital' })).toHaveAttribute(
+  await expect(editor.getByRole('button', { name: 'Fondo original' })).toHaveAttribute(
     'aria-pressed',
     'true',
   );
@@ -54,11 +62,53 @@ test('personaliza cada tripulante y carga sus piezas bajo demanda', async ({ pag
     'aria-pressed',
     'true',
   );
-  await page.reload();
-  await page.getByRole('button', { name: 'Personalización', exact: true }).click();
-  await page.getByText('Personalizar astronauta', { exact: true }).click();
-  await expect(editor.getByRole('button', { name: 'Estudio orbital' })).toHaveAttribute(
+  await expect(page.locator('html')).toHaveAttribute('data-app-background', 'orbit');
+  await expect(editor.getByRole('button', { name: 'Órbita' })).toHaveAttribute(
     'aria-pressed',
     'true',
   );
+  await page.reload();
+  await page.getByRole('button', { name: 'Personalización', exact: true }).click();
+  await page.getByText('Personalizar astronauta', { exact: true }).click();
+  await expect(editor.getByRole('button', { name: 'Órbita' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+});
+
+test('aplica Órbita al retirar Hangar y conserva el fondo original al cambiarlo', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const key = 'astra.appearance.background.v1';
+    if (localStorage.getItem(key) === null) localStorage.setItem(key, 'hangar');
+  });
+  await page.goto('/mission/crew');
+  const background = page.locator('.space-background');
+  await expect(background).toHaveCSS('background-image', /space-purple-orange/);
+  await page.getByRole('button', { name: 'Personalización', exact: true }).click();
+  await page.getByText('Personalizar astronauta', { exact: true }).click();
+  const editor = page.locator('#crew-avatar');
+  await expect(editor.getByRole('button', { name: 'Hangar' })).toHaveCount(0);
+  await expect(editor.getByRole('button', { name: 'Órbita' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await page.getByRole('navigation').getByRole('button', { name: 'Monitoreo diario' }).click();
+  await expect(page).toHaveURL(/\/mission\/journal$/);
+  await expect(page.locator('.journal-page')).toHaveCSS('background-image', /rgba/);
+  await expect(page.locator('.daily-wellbeing .panel').first()).toHaveCSS(
+    'background-image',
+    /rgba/,
+  );
+
+  await page.getByRole('navigation').getByRole('button', { name: 'Tripulación' }).click();
+  await page.getByRole('button', { name: 'Personalización', exact: true }).click();
+  await page.getByText('Personalizar astronauta', { exact: true }).click();
+  await editor.getByRole('button', { name: 'Fondo original' }).click();
+  await expect(background).toHaveCSS('background-image', 'none');
+  await page.reload();
+  await expect(background).toHaveCSS('background-image', 'none');
+  await page.goto('/');
+  await expect(background).toHaveCSS('background-image', 'none');
 });

@@ -13,6 +13,7 @@ import { Canvas, useThree } from '@react-three/fiber';
 import { Html, OrbitControls } from '@react-three/drei';
 import { MathUtils, PerspectiveCamera } from 'three';
 import { Icon } from '@/ui/Icon';
+import { AstronautLighting } from './AstronautLighting';
 import { AstronautModel } from './AstronautModel';
 import type { SceneBodyRegion, SceneSensor } from './astronautBodyZones';
 import { AstronautCameraFocus } from './AstronautCameraFocus';
@@ -39,7 +40,7 @@ interface Props {
   modules?: HabitatModuleMarkers;
   showModuleCamera?: boolean;
   transparentBackground?: boolean;
-  onSelectSensor(id: SceneSensor): void;
+  onSelectSensor?(id: SceneSensor): void;
   onSelectZone(id: string): void;
 }
 function SceneFallback({ onRetry }: { onRetry?(): void }) {
@@ -154,33 +155,28 @@ export default function MissionScene(props: Props) {
             {!props.transparentBackground && (
               <SpaceBackdrop radius={100} brightness={shuttleExterior ? 0.65 : 1} />
             )}
-            <ambientLight
-              intensity={
-                props.transparentBackground || shuttleExterior ? 0.85 : martian ? 0.75 : 1.8
-              }
-            />
-            <hemisphereLight
-              args={
-                props.transparentBackground
-                  ? ['#e9ecef', '#38294c', 1.25]
-                  : martian
-                    ? ['#ffe2ce', '#513123', 0.9]
-                    : ['#e7f5ff', '#34445b', shuttleExterior ? 0.8 : 2]
-              }
-            />
-            <directionalLight
-              position={[-3, 5, 4]}
-              intensity={
-                props.transparentBackground ? 2.65 : shuttleExterior ? 2.4 : martian ? 2 : 3.5
-              }
-            />
-            <directionalLight
-              position={[3, 1, -3]}
-              color={props.transparentBackground ? '#a66af7' : '#69d9ec'}
-              intensity={shuttleExterior ? 0.9 : martian ? 0.55 : 2}
-            />
-            {props.transparentBackground && (
-              <directionalLight position={[-4, -1, -3]} color="#fb5607" intensity={0.6} />
+            {props.mode === 'crew' ? (
+              <AstronautLighting />
+            ) : (
+              <>
+                <ambientLight intensity={shuttleExterior ? 0.85 : martian ? 0.75 : 1.8} />
+                <hemisphereLight
+                  args={
+                    martian
+                      ? ['#ffe2ce', '#513123', 0.9]
+                      : ['#e7f5ff', '#34445b', shuttleExterior ? 0.8 : 2]
+                  }
+                />
+                <directionalLight
+                  position={[-3, 5, 4]}
+                  intensity={shuttleExterior ? 2.4 : martian ? 2 : 3.5}
+                />
+                <directionalLight
+                  position={[3, 1, -3]}
+                  color="#69d9ec"
+                  intensity={shuttleExterior ? 0.9 : martian ? 0.55 : 2}
+                />
+              </>
             )}
             <Suspense
               fallback={

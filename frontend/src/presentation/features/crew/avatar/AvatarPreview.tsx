@@ -2,7 +2,9 @@ import { publicAsset } from '@/presentation/shared/publicAsset';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF, useTexture } from '@react-three/drei';
 import { Component, Suspense, useEffect, useMemo, type ReactNode } from 'react';
-import { Mesh, MeshStandardMaterial, RepeatWrapping, SRGBColorSpace, Texture } from 'three';
+import { RepeatWrapping, SRGBColorSpace, Texture } from 'three';
+import { AstronautLighting } from '@/presentation/shared/scene/AstronautLighting';
+import { useAstronautFinish } from '@/presentation/shared/scene/useAstronautFinish';
 import type { AvatarPart, AvatarSelection } from './types';
 
 const sockets = {
@@ -24,7 +26,8 @@ class PreviewBoundary extends Component<{ children: ReactNode; fallback: ReactNo
 
 function BaseModel() {
   const { scene } = useGLTF(publicAsset('/models/astronaut.glb'));
-  return <primitive object={useMemo(() => scene.clone(), [scene])} />;
+  const model = useAstronautFinish(scene);
+  return <primitive object={model} />;
 }
 
 function SuitFinish({ selection }: { selection: AvatarSelection }) {
@@ -32,34 +35,17 @@ function SuitFinish({ selection }: { selection: AvatarSelection }) {
   const map = useTexture(
     publicAsset(`/models/avatar/suit-${selection.bands}-${selection.controls}.webp`),
   );
-  const { model, materials, finish } = useMemo(() => {
+  const finish = useMemo(() => {
     const finish = new Texture(map.image);
     finish.colorSpace = SRGBColorSpace;
     finish.flipY = false;
     finish.wrapS = RepeatWrapping;
     finish.wrapT = RepeatWrapping;
     finish.needsUpdate = true;
-    const model = scene.clone();
-    const materials = new Map<MeshStandardMaterial, MeshStandardMaterial>();
-    model.traverse((node) => {
-      if (!(node instanceof Mesh) || !(node.material instanceof MeshStandardMaterial)) return;
-      const original = node.material;
-      let material = materials.get(original);
-      if (!material) {
-        material = original.clone();
-        material.map = finish;
-        materials.set(original, material);
-      }
-      node.material = material;
-    });
-    return { model, materials, finish };
-  }, [scene, map]);
-  useEffect(() => {
-    return () => {
-      materials.forEach((material) => material.dispose());
-      finish.dispose();
-    };
-  }, [finish, materials]);
+    return finish;
+  }, [map]);
+  const model = useAstronautFinish(scene, finish);
+  useEffect(() => () => finish.dispose(), [finish]);
   return <primitive object={model} />;
 }
 
@@ -102,10 +88,7 @@ export function AvatarPreview({
   return (
     <PreviewBoundary fallback={fallback}>
       <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0.1, 4.2], fov: 36 }} fallback={fallback}>
-        <ambientLight intensity={1.15} />
-        <hemisphereLight args={['#E9ECEF', '#212529', 1.45]} />
-        <directionalLight position={[-3, 4, 5]} intensity={2.6} />
-        <directionalLight position={[2, 2, -3]} color="#a66af7" intensity={1.55} />
+        <AstronautLighting />
         <Suspense fallback={null}>
           <group position={[0, -1.03, 0]}>
             <PreviewBoundary

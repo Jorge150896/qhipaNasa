@@ -1,4 +1,7 @@
-import { useRef, useState } from 'react';
+import type { TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
+import { tumiWellbeingReplies } from '@/domain/assistant/tumiWellbeing';
+import type { TumiReplyAudio } from '@/presentation/shared/tumi/useTumiReplyAudio';
+import { useEffect, useRef, useState } from 'react';
 import {
   activityFields,
   activityFieldLimits,
@@ -50,11 +53,32 @@ const fields = {
   handDiscomfort: { label: 'Molestias en manos', unit: '/ 5' },
 };
 const moods = { good: 'Bien', neutral: 'Regular', low: 'Bajo' };
-const tumiReplies = {
-  good: '¡Qué gusto! ¿Hubo algo que te hizo sonreír hoy?',
-  neutral: 'Gracias por contármelo. Puedes dejar una nota si quieres recordar algo de hoy.',
-  low: 'Gracias por decírmelo. Podemos ir con calma. Si quieres, cuéntame qué fue difícil.',
+const tumiExpressions = {
+  greeting: ['greeting', 'happy', 'curious'],
+  result: ['approved', 'happy', 'understanding'],
+  good: ['joy', 'happy', 'curious'],
+  neutral: ['thinking', 'understanding', 'curious'],
+  low: ['worried', 'understanding', 'neutral'],
+} satisfies Record<string, TumiEmotion[]>;
+const greeting = 'Estoy aquí para escucharte. ¿Cómo te sientes hoy?';
+const spokenNumber = new Intl.NumberFormat('es');
+const spokenMoments = {
+  before: 'antes de la actividad',
+  after: 'después de la actividad',
+  incident: 'durante una incidencia',
 };
+
+function describeSavedCheck(
+  name: string,
+  values: CheckFormValues,
+  activity: DailyActivity,
+  moment: DailyMoment,
+) {
+  const mood = values.mood ? ` y ánimo ${moods[values.mood].toLowerCase()}` : '';
+  const exercise = values.exerciseDone === true ? ' También anotaste que hiciste ejercicio.' : '';
+  return `Listo, ${name}. Guardé tu chequeo de ${activities[activity].label.toLowerCase()} ${spokenMoments[moment]}. Registraste ${spokenNumber.format(Number(values.sleep))} horas de sueño${mood}.${exercise} Gracias por tomarte este momento para ti.`;
+}
+
 const empty: CheckFormValues = { sleep: '', fatigue: '', note: '' };
 const exerciseLabel = (value?: boolean) =>
   value === undefined ? 'Sin responder' : value ? 'Sí' : 'No';
@@ -90,8 +114,20 @@ function describeContext(context: NonNullable<CheckFormValues['context']>) {
   });
 }
 
-export function useDailyCheckViewModel(data: MissionData, onSave: DailyCheckScreenProps['onSave']) {
+export function useDailyCheckViewModel(
+  data: MissionData,
+  onSave: DailyCheckScreenProps['onSave'],
+  audio: Pick<TumiReplyAudio, 'play' | 'playing' | 'spokenWords' | 'status' | 'stop'>,
+) {
   const [step, setStep] = useState(0);
+  const [savedReply, setSavedReply] = useState('');
+  const sessionActive = useRef(false);
+  useEffect(() => {
+    sessionActive.current = true;
+    return () => {
+      sessionActive.current = false;
+    };
+  }, []);
   const [activity, setActivity] = useState<DailyActivity | undefined>(
     data.dailyCheckDraft?.context?.activity,
   );
@@ -147,6 +183,13 @@ export function useDailyCheckViewModel(data: MissionData, onSave: DailyCheckScre
   const healthReport =
     values.healthReport?.systemId === healthArea ? values.healthReport : undefined;
 
+  const tumiReply =
+    step === 3 ? savedReply : values.mood ? tumiWellbeingReplies[values.mood] : greeting;
+  const tumiWords = tumiReply.split(/\s+/);
+  const speaking = audio.playing && audio.spokenWords !== undefined;
+  const expressions = tumiExpressions[step === 3 ? 'result' : (values.mood ?? 'greeting')];
+  const phase = Math.min(2, Math.floor(((audio.spokenWords ?? 0) * 3) / tumiWords.length));
+
   return {
     step,
     activity,
@@ -158,9 +201,24 @@ export function useDailyCheckViewModel(data: MissionData, onSave: DailyCheckScre
     moments: dailyMoments.map((id) => ({ id, label: moments[id] })),
     regions: discomfortRegions.map((id) => ({ id, label: regions[id] })),
     moods,
-    tumiReply: values.mood
-      ? tumiReplies[values.mood]
-      : 'Estoy aquí para escucharte. ¿Cómo te sientes hoy?',
+    tumiReply,
+    tumiAudioLabel:
+      step === 3 ? 'Escuchar resumen' : values.mood ? 'Escuchar respuesta' : 'Escuchar saludo',
+    tumiWords,
+    tumiSpokenWords: audio.spokenWords,
+    tumiSpeaking: speaking,
+    tumiExpression: speaking ? expressions[phase] : expressions[1],
+    tumiAudioPlaying: audio.playing,
+    tumiAudioStatus: audio.status,
+    toggleTumiAudio() {
+      if (audio.playing) audio.stop();
+      else audio.play(tumiReply, { transcript: true });
+    },
+    selectMood(mood?: CheckFormValues['mood']) {
+      setValues((current) => ({ ...current, mood }));
+      if (mood) audio.play(tumiWellbeingReplies[mood], { transcript: true });
+      else audio.stop();
+    },
     measurementsForm,
     attachment: mapDailyCheckAttachment(attachment),
     healthArea,
@@ -253,31 +311,42 @@ export function useDailyCheckViewModel(data: MissionData, onSave: DailyCheckScre
     async advance() {
       if (!context || pending.current) return;
       if (step < 2) {
+        if (step === 1) audio.stop();
         setStep(step + 1);
         return;
       }
       if (step !== 2) return;
       pending.current = true;
       setFailed(false);
+      let saved = false;
       try {
-        if (
-          await onSave({
-            ...values,
-            context,
-            healthReport,
-            attachment,
-            discomfortRegion: region || undefined,
-          })
-        )
-          setStep(3);
-        else setFailed(true);
+        saved = await onSave({
+          ...values,
+          context,
+          healthReport,
+          attachment,
+          discomfortRegion: region || undefined,
+        });
       } catch {
-        setFailed(true);
+        saved = false;
       } finally {
         pending.current = false;
       }
+      if (sessionActive.current && !saved) setFailed(true);
+      if (!sessionActive.current || !saved) return;
+
+      const summary = describeSavedCheck(
+        data.selected.name.split(' ')[0],
+        values,
+        context.activity,
+        context.moment,
+      );
+      setSavedReply(summary);
+      setStep(3);
+      audio.play(summary, { transcript: true });
     },
     edit() {
+      audio.stop();
       setStep(0);
     },
   };

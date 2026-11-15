@@ -6,7 +6,6 @@ export interface CursorAssistantData {
   open: boolean;
   hidden: boolean;
   speaking: boolean;
-  voiceStatus: string;
   state: import('./behavior').TumiState;
   emotion: TumiEmotion;
   draft: string;
@@ -14,12 +13,3 @@ export interface CursorAssistantData {
   busy: boolean;
   error: string;
 }
-
-export type Speak = (
-  text: string,
-  callbacks: {
-    onStart(): void;
-    onEnd(): void;
-    onError(message: string): void;
-  },
-) => () => void;

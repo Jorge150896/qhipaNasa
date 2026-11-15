@@ -7,20 +7,30 @@ import {
   type TumiScreenContext,
 } from '@/domain/assistant/TumiConversation';
 import { detectTextEmotion } from '@/domain/assistant/detectTextEmotion';
+import { getDirectWellbeingMood, tumiWellbeingReplies } from '@/domain/assistant/tumiWellbeing';
 import { autonomousEmotion, reactionToText } from './emotions';
 import { transitionTumi } from './behavior';
-import type { Speak, TumiEmotion } from './types';
+import type { TumiReplyAudio } from '@/presentation/shared/tumi/useTumiReplyAudio';
+import type { TumiEmotion } from './types';
 
 const greetings = [
-  '¡Hola! ¿Necesitas algo?',
+  '¡Hola! Soy Tumi. ¿En qué te ayudo?',
   '¿En qué puedo ayudarte?',
   '¡Hola! Soy Tumi, tu asistente virtual. ¿Qué te gustaría saber?',
 ];
+const followUps = [
+  '¿Te ayudo con alguna otra cosita?',
+  '¿Hay algo más que te gustaría saber? ✨',
+  'Aquí estoy si tienes otra preguntita. ♡',
+];
+
 export function useCursorAssistantViewModel(
   conversation: TumiConversation,
-  speak?: Speak,
+  audio?: Pick<TumiReplyAudio, 'playing' | 'readReply' | 'stop'>,
   suspended = false,
   getContext?: () => TumiScreenContext,
+  getLocalReply?: (question: string) => string | undefined,
+  fallback?: TumiConversation,
 ) {
   const actor = useRef<HTMLDivElement>(null);
   const [state, dispatch] = useReducer(transitionTumi, 'resting');
@@ -28,15 +38,13 @@ export function useCursorAssistantViewModel(
   const [paused, setPaused] = useState(false);
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [speaking, setSpeaking] = useState(false);
-  const [voiceStatus, setVoiceStatus] = useState('');
+  const speaking = audio?.playing ?? false;
   const [draft, setDraft] = useState('');
   const [messages, setMessages] = useState<TumiMessage[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const request = useRef<AbortController | null>(null);
   const sequence = useRef(0);
-  const cancelVoice = useRef<(() => void) | undefined>(undefined);
   const reaction = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const opening = useRef(0);
   useEffect(() => {
@@ -74,7 +82,6 @@ export function useCursorAssistantViewModel(
   useEffect(
     () => () => {
       request.current?.abort();
-      cancelVoice.current?.();
       clearTimeout(reaction.current);
     },
     [],
@@ -88,8 +95,7 @@ export function useCursorAssistantViewModel(
     request.current = null;
     setBusy(false);
     setError('');
-    cancelVoice.current?.();
-    setSpeaking(false);
+    audio?.stop();
     setOpen(false);
     setEmotion('farewell');
     dispatch('REST');
@@ -114,7 +120,6 @@ export function useCursorAssistantViewModel(
       open,
       hidden,
       speaking,
-      voiceStatus,
       state,
       emotion,
       draft,
@@ -138,14 +143,40 @@ export function useCursorAssistantViewModel(
         [...previous, { id: ++sequence.current, role: 'user' as const, text }].slice(-40),
       );
       try {
-        const answer = await conversation.reply(text, controller.signal, getContext?.());
+        const signal = controller.signal;
+        const answer = await (async () => {
+          const mood = getDirectWellbeingMood(text);
+          if (mood) {
+            return {
+              text: tumiWellbeingReplies[mood],
+              reaction: mood === 'good' ? ('happy' as const) : ('understanding' as const),
+            };
+          }
+          if (!fallback) {
+            const localReply = getLocalReply?.(text);
+            if (localReply) return { text: localReply };
+          }
+          try {
+            return await conversation.reply(text, signal, getContext?.());
+          } catch (error) {
+            if (!fallback || signal.aborted || error instanceof TumiDailyLimitError) throw error;
+            const localReply = getLocalReply?.(text);
+            return localReply ? { text: localReply } : fallback.reply(text, signal);
+          }
+        })();
         if (controller.signal.aborted) return;
+        const reply = answer.text.trim();
+        const textWithFollowUp =
+          !reply || /\?[\s✨♡:3]*$|si (?:quieres|te apetece), (?:cuéntame|podemos)/iu.test(reply)
+            ? reply
+            : `${reply} ${followUps[Math.floor(sequence.current / 2) % followUps.length]}`;
         setMessages((previous) =>
           [
             ...previous,
-            { id: ++sequence.current, role: 'assistant' as const, text: answer.text },
+            { id: ++sequence.current, role: 'assistant' as const, text: textWithFollowUp },
           ].slice(-40),
         );
+        audio?.readReply(textWithFollowUp, { transcript: true });
         setEmotion(
           textEmotion === 'neutral' ? (answer.reaction ?? 'neutral') : reactionToText(textEmotion),
         );
@@ -154,7 +185,7 @@ export function useCursorAssistantViewModel(
           setError(
             error instanceof TumiDailyLimitError
               ? error.message
-              : 'No pude responder. Puedes volver a enviar tu pregunta.',
+              : 'Uy, no pude responder esta vez. ¿Probamos de nuevo?',
           );
           setDraft(text);
           setEmotion('worried');
@@ -166,36 +197,6 @@ export function useCursorAssistantViewModel(
           dispatch('OPEN');
         }
       }
-    },
-    greet: () => {
-      cancelVoice.current?.();
-      setSpeaking(false);
-      setVoiceStatus('');
-      if (!speak) {
-        setVoiceStatus('La voz no está disponible.');
-        return;
-      }
-      cancelVoice.current = speak(
-        '¡Hola! Soy Tumi. Qué alegría acompañarte. Vamos a explorar juntos.',
-        {
-          onStart: () => {
-            setSpeaking(true);
-            setEmotion('joy');
-          },
-          onEnd: () => {
-            setSpeaking(false);
-            setEmotion('happy');
-          },
-          onError: (message) => {
-            setSpeaking(false);
-            setVoiceStatus(message);
-          },
-        },
-      );
-    },
-    stopVoice: () => {
-      cancelVoice.current?.();
-      setSpeaking(false);
     },
     close,
     toggle: () => {

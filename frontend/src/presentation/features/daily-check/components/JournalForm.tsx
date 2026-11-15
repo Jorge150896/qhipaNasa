@@ -35,6 +35,22 @@ export function JournalForm({
     if (!saving) void model.advance();
   }
 
+  const tumi = (
+    <DailyWellbeingWelcome
+      personName={personName}
+      result={step === 3}
+      audioLabel={model.tumiAudioLabel}
+      reply={model.tumiReply}
+      words={model.tumiWords}
+      spokenWords={model.tumiSpokenWords}
+      speaking={model.tumiSpeaking}
+      emotion={model.tumiExpression}
+      playing={model.tumiAudioPlaying}
+      audioStatus={model.tumiAudioStatus}
+      onToggleAudio={model.toggleTumiAudio}
+    />
+  );
+
   return (
     <form
       id="daily-check-form"
@@ -45,11 +61,7 @@ export function JournalForm({
     >
       {step < 2 && (
         <>
-          <DailyWellbeingWelcome
-            personName={personName}
-            mood={values.mood}
-            reply={model.tumiReply}
-          />
+          {tumi}
           <fieldset className="daily-mood">
             <legend>¿Cómo describirías tu ánimo?</legend>
             <div className="daily-mood-options">
@@ -61,7 +73,7 @@ export function JournalForm({
                       type="radio"
                       name="mood"
                       checked={values.mood === mood}
-                      onChange={() => model.setValues({ ...values, mood })}
+                      onChange={() => model.selectMood(mood)}
                     />
                     <MoodIcon aria-hidden="true" size={23} />
                     {mood === 'low' ? 'Triste' : model.moods[mood]}
@@ -70,11 +82,7 @@ export function JournalForm({
               })}
             </div>
             {values.mood && (
-              <button
-                type="button"
-                className="text-button"
-                onClick={() => model.setValues({ ...values, mood: undefined })}
-              >
+              <button type="button" className="text-button" onClick={() => model.selectMood()}>
                 Quitar respuesta de ánimo
               </button>
             )}
@@ -333,16 +341,16 @@ export function JournalForm({
         </>
       )}
       {step === 3 ? (
-        <div className="daily-check-result">
-          <Icon name="checked" size={25} />
-          <div>
+        <>
+          {tumi}
+          <div className="daily-check-result">
+            <Icon name="checked" size={25} />
             <strong>Chequeo guardado</strong>
-            <p>Tu registro está disponible en el diario de la tripulación de este navegador.</p>
+            <button type="button" className="button secondary" onClick={model.edit}>
+              Editar chequeo del día
+            </button>
           </div>
-          <button type="button" className="button secondary" onClick={model.edit}>
-            Editar chequeo del día
-          </button>
-        </div>
+        </>
       ) : (
         <div className="form-footer">
           {step > 0 && (

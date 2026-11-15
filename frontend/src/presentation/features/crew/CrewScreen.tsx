@@ -29,6 +29,7 @@ import { AvatarScreen } from './avatar/AvatarScreen';
 import { CabinHistoryScreen } from '../habitat/CabinHistoryScreen';
 import { NasaHistoryScreen } from '../history/NasaHistoryScreen';
 import { RadLabReference } from '../habitat/components/RadLabReference';
+import { MonthlyWellbeingScreen } from './monthly-wellbeing/MonthlyWellbeingScreen';
 import '../habitat/habitat.css';
 import './crew-explorer.css';
 
@@ -180,6 +181,11 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
             </>
           }
           nasaHistory={section === 'history' && <NasaHistoryScreen />}
+          monthlyWellbeing={
+            section === 'history' && (
+              <MonthlyWellbeingScreen habitatId={habitatId} crewId={data.selected.id} />
+            )
+          }
           telemetryMetric={model.telemetryMetric}
           trendInCard={model.trendInCard}
           sampleAt={model.sampleAt}

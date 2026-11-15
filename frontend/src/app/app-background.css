@@ -1,0 +1,20 @@
+:root {
+  --background-orbit:
+    linear-gradient(#14092155, #14092170),
+    url('../../public/backgrounds/space-purple-orange-v1.png') center / cover;
+}
+
+:root[data-app-background='orbit'] body {
+  background: var(--background-orbit);
+  background-attachment: fixed;
+}
+
+:root[data-app-background='orbit'][data-appearance] .space-background {
+  background: var(--background-orbit);
+}
+
+:root[data-app-background='orbit'][data-appearance] .space-background::after,
+:root[data-app-background='orbit'] .space-background > span,
+:root[data-app-background='orbit'] .qhipa-atmosphere {
+  display: none;
+}

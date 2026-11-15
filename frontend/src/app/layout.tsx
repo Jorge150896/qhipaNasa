@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { appearanceStorageKey } from '@/ui/appAppearance';
+import { AppBackgroundProvider } from '@/presentation/shared/space/AppBackgroundProvider';
+import { defaultAppBackground } from '@/presentation/shared/space/appBackground';
 import './globals.css';
 import './appearance.css';
+import './app-background.css';
 export const metadata: Metadata = {
   title: 'Qhipa Pacha · Mission Intelligence',
   description:
@@ -10,15 +12,10 @@ export const metadata: Metadata = {
 };
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="es" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{if(localStorage.getItem(${JSON.stringify(appearanceStorageKey)})==='dark')document.documentElement.dataset.appearance='dark'}catch{}`,
-          }}
-        />
-      </head>
-      <body>{children}</body>
+    <html lang="es" data-appearance="dark" data-app-background={defaultAppBackground}>
+      <body>
+        <AppBackgroundProvider>{children}</AppBackgroundProvider>
+      </body>
     </html>
   );
 }

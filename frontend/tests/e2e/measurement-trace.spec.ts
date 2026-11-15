@@ -22,7 +22,8 @@ test('procedencia consultable por muestra, persona, ausencia y recarga en móvil
     .getByRole('navigation', { name: 'Navegación principal' })
     .getByRole('button', { name: 'Simulación', exact: true })
     .click();
-  await page.getByRole('button', { name: /Pérdida de señal/ }).click();
+  await page.goto('/mission/simulation#perdida-de-senal');
+  await expect(page.getByRole('region', { name: 'Faltan 3 lecturas de SpO₂' })).toBeVisible();
   await page
     .getByRole('navigation', { name: 'Navegación principal' })
     .getByRole('button', { name: 'Tripulación', exact: true })

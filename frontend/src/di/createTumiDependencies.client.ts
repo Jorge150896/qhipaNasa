@@ -11,7 +11,8 @@ const apiOrigin = localMode
     : undefined;
 
 export const tumiUsesOpenAi = Boolean(apiOrigin);
+export const localTumiConversation = new LocalTumiConversation();
 
 export const tumiConversation = apiOrigin
   ? new HttpTumiConversation(apiOrigin)
-  : new LocalTumiConversation();
+  : localTumiConversation;

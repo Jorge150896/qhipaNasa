@@ -1,7 +1,8 @@
 import { useEffect, useId, useRef } from 'react';
 import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
 import { Icon } from '@/ui/Icon';
-import { AppearanceOptions } from '@/ui/AppearanceOptions';
+import { TumiReplyOptions } from '@/presentation/shared/tumi/TumiReplyOptions';
+import type { TumiReplyFormat } from '@/presentation/shared/tumi/useTumiReplyAudio';
 import { TumiModeOptions } from '@/presentation/shared/tumi/TumiModeOptions';
 import { TumiHead } from '@/presentation/shared/loading/TumiHead';
 import type { useMissionAssistantViewModel } from '../useMissionAssistantViewModel';
@@ -17,6 +18,11 @@ export function MissionAssistantView({
   onClose,
   following,
   onChangeMode,
+  replyFormat,
+  onChangeReplyFormat,
+  audioPlaying,
+  audioStatus,
+  onStopAudio,
 }: {
   model: ReturnType<typeof useMissionAssistantViewModel>;
   explorer: boolean;
@@ -27,6 +33,11 @@ export function MissionAssistantView({
   onClose(): void;
   following: boolean;
   onChangeMode(enabled: boolean): void;
+  replyFormat: TumiReplyFormat;
+  onChangeReplyFormat(format: TumiReplyFormat): void;
+  audioPlaying: boolean;
+  audioStatus: string;
+  onStopAudio(): void;
 }) {
   const log = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
@@ -118,7 +129,7 @@ export function MissionAssistantView({
               <Icon name="close" />
             </button>
           </header>
-          <AppearanceOptions />
+          <TumiReplyOptions format={replyFormat} onChange={onChangeReplyFormat} />
           <TumiModeOptions
             following={following}
             onChangeMode={(enabled) => {
@@ -146,7 +157,7 @@ export function MissionAssistantView({
               </div>
               <p className="assistant-bubble">
                 {landing
-                  ? '¡Hola! Soy Tumi. Desde aquí puedes elegir cómo quieres ver Qhipa Pacha.'
+                  ? '¡Hola! Soy Tumi. Puedo responderte por texto o audio.'
                   : explorer
                     ? 'Soy Tumi. Puedo guiarte por el mapa y mostrarte dónde consultar las lecturas de una tripulación.'
                     : 'Soy Tumi. Puedo explicar qué mide una lectura, qué cambió y qué se registró en el entorno a la misma hora.'}
@@ -177,6 +188,16 @@ export function MissionAssistantView({
               </p>
             )}
           </div>
+          {audioPlaying && (
+            <button type="button" className="text-button" onClick={onStopAudio}>
+              Detener voz
+            </button>
+          )}
+          {audioStatus && (
+            <p className="assistant-voice-status" role="status">
+              {audioStatus}
+            </p>
+          )}
           {model.remoteStatus && (
             <p className="assistant-voice-status" role="status">
               {model.remoteStatus}

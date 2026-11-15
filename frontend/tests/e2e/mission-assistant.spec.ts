@@ -1,6 +1,32 @@
 import { expect, test } from '@playwright/test';
 import { openTumiChat } from './tumi-chat-helpers';
 
+test('Tumi presenta a Elena en lenguaje cotidiano y ofrece mirar cómo le ha ido', async ({
+  page,
+}) => {
+  await page.goto('/mission/journal');
+  await openTumiChat(page);
+  const chat = page.getByRole('region', { name: 'Tumi', exact: true });
+  const answer = chat.getByRole('log').locator('[data-role="assistant"]').last();
+
+  await chat.getByRole('textbox').fill('Háblame de Elena.');
+  await chat.getByRole('button', { name: 'Enviar' }).click();
+  await expect(answer).toContainText('Elena Torres es nuestra comandante en Odyssey 01');
+  await expect(answer).toContainText('ahora está descansando');
+  await expect(answer).not.toContainText(/72|SpO₂|14:32/);
+
+  await chat.getByRole('textbox').fill('¿Cuáles son las lecturas de Lena?');
+  await chat.getByRole('button', { name: 'Enviar' }).click();
+  await expect(answer).toContainText('8 de noviembre de 2026');
+  await expect(answer).toContainText('72 latidos por minuto');
+  await expect(answer).toContainText('98 por ciento de saturación de oxígeno');
+  await expect(answer).toContainText('¿Vemos en Historial');
+
+  await chat.getByRole('textbox').fill('¿Cómo se siente Elena?');
+  await chat.getByRole('button', { name: 'Enviar' }).click();
+  await expect(answer).toContainText('mirar su chequeo');
+});
+
 test('Tumi explica la lectura seleccionada y conserva el chat entre secciones', async ({
   page,
 }) => {
@@ -62,7 +88,7 @@ test('Tumi permite revisar la transcripción local antes de enviarla', async ({ 
   await chat.getByRole('textbox').fill('¿Y dónde estaba?');
   await chat.getByRole('button', { name: 'Enviar' }).click();
   const followUp = chat.getByRole('log').locator('[data-role="assistant"]').last();
-  await expect(followUp).toContainText('Frecuencia cardíaca');
+  await expect(followUp).toContainText(/frecuencia cardíaca/i);
   await expect(followUp).toContainText('A las 14:32 UTC: Hábitat de descanso');
 });
 

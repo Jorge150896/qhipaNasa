@@ -1,3 +1,4 @@
+import { detectTextEmotion, emotionalAcknowledgement } from '@/domain/assistant/detectTextEmotion';
 import { metricMeaning } from '../crew-health/constants';
 import type { MissionData, SensorKey } from '../mission/types';
 import type {
@@ -11,6 +12,7 @@ import {
   getTelemetryContext,
 } from '../../shared/mission/describeTelemetry';
 import { actionTips, guideControls, missionTopics } from './missionKnowledge';
+import { getTumiCrewNames } from './tumiCrewNames';
 
 export function getControlTip(id: string, data: MissionData | null) {
   const control = guideControls.find((item) => item.id === id);
@@ -33,6 +35,38 @@ const signals: [SensorKey, RegExp][] = [
   ['respiration', /\b(respir\w*|rpm)\b/],
 ];
 
+const crewActivities: Record<string, string> = {
+  Descanso: 'está descansando',
+  Ejercicio: 'está haciendo ejercicio',
+  Investigación: 'está investigando',
+};
+
+const reportedMoods: Record<string, string> = {
+  Bien: 'se sentía bien',
+  Regular: 'se sentía más o menos',
+  Bajo: 'tenía el ánimo bajo',
+};
+
+function introduceCrew(data: MissionData, asksHowTheyFeel: boolean): AssistantReply {
+  const { name, role, activity, location, id } = data.selected;
+  const introduction =
+    role === 'Comandante'
+      ? `${name} es nuestra comandante en ${data.name}.`
+      : `${name} forma parte de ${data.name} como ${role.toLowerCase()}.`;
+  const currentActivity = crewActivities[activity] ?? `está en «${location}»`;
+  if (asksHowTheyFeel) {
+    const last = data.checks.find(({ crewId }) => crewId === id);
+    const feeling = last && reportedMoods[last.mood];
+    const mood = feeling
+      ? `En su último chequeo, contó que ${feeling}.`
+      : 'Para saber cómo se siente, lo más útil sería preguntarle o mirar su chequeo cuando lo registre.';
+    return { text: `En la simulación, ${name.split(' ')[0]} ${currentActivity}. ${mood}` };
+  }
+  return {
+    text: `${introduction} En la simulación, ahora ${currentActivity}. Si quieres, podemos mirar juntos cómo le ha ido estos días.`,
+  };
+}
+
 function normalize(question: string) {
   return question
     .toLowerCase()
@@ -42,6 +76,7 @@ function normalize(question: string) {
 }
 
 const sampleDate = new Intl.DateTimeFormat('es-PE', { dateStyle: 'medium', timeZone: 'UTC' });
+const spokenDate = new Intl.DateTimeFormat('es-PE', { dateStyle: 'long', timeZone: 'UTC' });
 
 export function captureMetricContext(
   id: string,
@@ -103,7 +138,7 @@ function explainMetricContext(
 
   const { sample, reference } = context;
   const isSample = context.explicitSample;
-  const intro = `${metric.label} de ${crewName} · ${isSample ? 'Muestra simulada' : 'Instantánea simulada'} · ${date}, ${time}.`;
+  const intro = `Veamos la ${metric.label.toLowerCase()} de ${crewName}. Esta toma es de la simulación, del ${date} a las ${time}.`;
   const lines = [intro];
   if (!sample) {
     lines.push(`Sin lectura vigente. ${metric.lastReading}`);
@@ -116,6 +151,7 @@ function explainMetricContext(
       lines.push(
         'Hay contexto para esa hora, pero falta el valor del indicador para compararlo con el entorno.',
       );
+    lines.push('Podemos buscar la última toma disponible en Historial.');
     return { text: lines.join('\n') };
   }
 
@@ -159,6 +195,11 @@ function explainMetricContext(
   }
   if (!asksRelationship && (asksChange || /\bpor que\b/.test(query)))
     lines.push('La serie por sí sola no establece la causa del cambio.');
+  lines.push(
+    asksRelationship
+      ? 'Si quieres seguir explorando, elige otra hora en Historial y vemos si hay datos del lugar.'
+      : 'Podemos seguir por Historial y mirar cómo cambió a lo largo del día.',
+  );
   return { text: lines.join('\n') };
 }
 
@@ -168,13 +209,20 @@ function describeLocation({ reading, zone, activity }: AssistantSample) {
     : `Ubicación no registrada a las ${reading.time}.`;
 }
 
-export function answerMissionQuestion(
+function findMentionedCrew(question: string, data: MissionData) {
+  const words = new Set(normalize(question).split(/[^a-z0-9]+/));
+  return data.crew.find((member) =>
+    getTumiCrewNames(member).some((name) => words.has(normalize(name))),
+  );
+}
+
+export function tryAnswerMissionQuestion(
   question: string,
   data: MissionData | null,
   context?: AssistantMetricContext,
   previousMetric?: AssistantMetricContext,
   explorer = false,
-): AssistantReply & { discussedMetric?: AssistantMetricContext } {
+): (AssistantReply & { discussedMetric?: AssistantMetricContext }) | undefined {
   const query = normalize(question);
   if (/\b(diagnostic\w*|tratamiento|medicamento|medicar|me duele|que enfermedad)\b/.test(query)) {
     return {
@@ -182,11 +230,10 @@ export function answerMissionQuestion(
     };
   }
 
-  const words = new Set(query.split(/[^a-z0-9]+/));
-  const namedCrew = data?.crew.find(({ name }) => words.has(normalize(name.split(' ')[0])));
+  const namedCrew = data && findMentionedCrew(question, data);
   if (namedCrew && namedCrew.id !== data?.selected.id) {
     return {
-      text: `Selecciona a ${namedCrew.name} en Tripulación para consultar sus lecturas.`,
+      text: `Vamos a mirar el registro de ${namedCrew.name}. Elige su nombre en Tripulación y vemos juntos lo que anotó.`,
       target: 'crew',
     };
   }
@@ -199,6 +246,35 @@ export function answerMissionQuestion(
 
   const namedSignals = signals.filter(([, pattern]) => pattern.test(query));
   const namedMetric = namedSignals.length === 1 ? namedSignals[0][0] : undefined;
+  const asksHowTheyFeel = /\b(como (?:se siente|se sintio)|como (?:esta|anda|va|le va))\b/.test(
+    query,
+  );
+  const asksAboutSelected =
+    /\b(quien es|que hace|que esta haciendo|(?:cuentame|hablame) (?:sobre|de))\b/.test(query) ||
+    asksHowTheyFeel ||
+    Boolean(
+      namedCrew &&
+      getTumiCrewNames(namedCrew).some(
+        (name) => query.replace(/[¿?!.]/g, '').trim() === normalize(name),
+      ),
+    );
+  const refersToCrew =
+    namedCrew ||
+    /\b(tripulante|astronauta|seleccionad[oa])\b/.test(query) ||
+    /^(?:como (?:se siente|esta|anda|va|le va)|que esta haciendo)[?!. ]*$/.test(
+      query.trim().replace(/^¿/, ''),
+    );
+  const asksForReadings = /\b(datos|lecturas|mediciones|signos|valores|resultados)\b/.test(query);
+  if (
+    data &&
+    !topic &&
+    !namedSignals.length &&
+    !asksForReadings &&
+    asksAboutSelected &&
+    refersToCrew
+  ) {
+    return introduceCrew(data, asksHowTheyFeel);
+  }
   const followsReading =
     asksDataContext.test(query) ||
     /\b(cambi\w*|diferencia|compar\w*|tendencia|subi\w*|baj\w*|donde (estaba|estuvo)|en que modulo|ubicacion)\b/.test(
@@ -235,13 +311,26 @@ export function answerMissionQuestion(
         };
   }
   const reply = explainMission(query, data);
+  if (!reply) return;
   const discussedMetric = reply.target?.startsWith('metric-')
     ? captureMetricContext(reply.target, data)
     : undefined;
   return { ...reply, discussedMetric };
 }
 
-function explainMission(query: string, data: MissionData): AssistantReply {
+export function answerMissionQuestion(
+  ...args: Parameters<typeof tryAnswerMissionQuestion>
+): NonNullable<ReturnType<typeof tryAnswerMissionQuestion>> {
+  return (
+    tryAnswerMissionQuestion(...args) ?? {
+      text:
+        emotionalAcknowledgement(detectTextEmotion(args[0])) ??
+        'Podemos mirar lo que te interese. Por ejemplo, dime qué lectura quieres entender o elige una en Historial y la revisamos juntos.',
+    }
+  );
+}
+
+function explainMission(query: string, data: MissionData): AssistantReply | undefined {
   if (/\b(comparar|comparo|comparamos|comparacion)\b/.test(query))
     return { text: actionTips.compare.text, target: 'compare' };
   if (/\brevisar (el )?chequeo\b/.test(query))
@@ -264,11 +353,11 @@ function explainMission(query: string, data: MissionData): AssistantReply {
           metric.value === '—'
             ? `Sin lectura vigente. ${metric.lastReading}`
             : `${metric.value} ${metric.unit}`;
-        return `${metric.label} · ${value}. ${metric.quality}. ${metricMeaning[metric.id]}`;
+        return `${metric.label}: ${value}. ${metricMeaning[metric.id]}`;
       })
       .join('\n');
     return {
-      text: `${data.selected.name} · Instantánea simulada del ${data.date} a las ${data.time}.\n${text}\nPuedes consultar la serie para ver las horas y la actividad registrada. La demo ofrece contexto educativo.`,
+      text: `Veamos qué marcó la simulación para ${data.selected.name} el ${spokenDate.format(new Date(data.capturedAt))}, a las ${data.time}.\n${text}\nAbre Historial y podemos comparar esa toma con otra del mismo día.`,
       target: readings.length === 1 ? `metric-${readings[0].id}` : 'history',
     };
   }
@@ -284,18 +373,27 @@ function explainMission(query: string, data: MissionData): AssistantReply {
   if (asksEnvironment) {
     const zone = data.selectedZone;
     return {
-      text: `${zone.name} · Instantánea simulada del ${data.date} a las ${data.time}. ${zone.readings.map(({ label, value, unit }) => `${label}: ${value} ${unit}`).join(' · ')}. En Tripulación, cambia al visor del hábitat para elegir otro módulo.`,
+      text: `Así estaba «${zone.name}» en la simulación a las ${data.time}: ${zone.readings.map(({ label, value, unit }) => `${label.toLowerCase()} de ${value} ${unit}`).join(', ')}. Abre el visor del hábitat en Tripulación y elige otro módulo para ver qué cambia.`,
       target: 'crew',
     };
   }
-  if (/\b(resultados?|datos|resumen|mediciones)\b/.test(query)) {
+  if (/\b(resultados?|datos|mediciones|lecturas|signos|valores)\b/.test(query)) {
+    const readings = new Intl.ListFormat('es', { type: 'conjunction' }).format(
+      data.selected.metrics.map(({ id, label, value, unit }) => {
+        if (value === '—') return `${label.toLowerCase()} sin lectura`;
+        if (id === 'heartRate') return `un pulso de ${value} latidos por minuto`;
+        if (id === 'respiration') return `${value} respiraciones por minuto`;
+        if (id === 'temperature')
+          return `una temperatura de ${value.replace('.', ',')} grados Celsius`;
+        if (id === 'oxygen') return `un ${value} por ciento de saturación de oxígeno`;
+        return `${label.toLowerCase()} de ${value} ${unit}`;
+      }),
+    );
     return {
-      text: `${data.selected.name} · ${data.selected.activity} en ${data.selected.location}. Instantánea simulada · ${data.date}, ${data.time}.\n${data.selected.metrics.map((metric) => `${metric.shortLabel}: ${metric.value === '—' ? metric.quality : `${metric.value} ${metric.unit}`}`).join(' · ')}.\nPregúntame por una señal para explicar qué mide, o por tu chequeo para consultar lo que registraste.`,
+      text: `Te cuento cómo estaba ${data.selected.name}${data.selected.role === 'Comandante' ? ', nuestra comandante,' : ''} el ${spokenDate.format(new Date(data.capturedAt))} en la simulación. A las ${data.time}, registró ${readings}. Es una foto de cómo estaba su cuerpo en ese momento. ¿Vemos en Historial si el pulso cambió entre tomas?`,
       target: 'crew',
     };
   }
+  if (/\bresumen\b/.test(query)) return introduceCrew(data, false);
   if (control) return { text: control.text, target: control.id };
-  return {
-    text: 'Puedo explicar qué mide un indicador, comparar sus valores y mostrar la actividad y el ambiente registrados a la misma hora. Prueba «¿Qué significa mi SpO₂?» o «¿Cómo se relaciona la lectura con el entorno?».',
-  };
 }

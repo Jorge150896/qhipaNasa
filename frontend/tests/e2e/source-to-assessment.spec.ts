@@ -54,7 +54,7 @@ test('de una lectura de respiración al módulo, Tumi y el autorregistro', async
   await reading.getByRole('button', { name: 'Preguntar a Tumi por esta lectura' }).click();
   const chat = page.getByRole('region', { name: 'Tumi' });
   await chat.getByRole('button', { name: '¿Qué significa este dato?' }).click();
-  await expect(chat.getByRole('log')).toContainText('Frecuencia respiratoria de Elena Torres');
+  await expect(chat.getByRole('log')).toContainText(/frecuencia respiratoria de Elena Torres/i);
   await chat.getByRole('button', { name: 'Ocultar chat' }).click();
   await reading.getByRole('button', { name: 'Registrar cómo me siento' }).click();
   await expect(page).toHaveURL(/\/mission\/journal#check-system-/);

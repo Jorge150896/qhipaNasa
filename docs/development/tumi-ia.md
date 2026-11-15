@@ -20,12 +20,19 @@ La cabecera ya no muestra un botón «Tumi» y no se crea otro lanzador fijo al 
 | Escape                             | Cierra la conversación abierta                              |
 | Ojo tachado                        | Oculta el personaje y cierra/cancela la conversación activa |
 | Mostrar Tumi                       | Restaura la mascota                                         |
+| Texto / Audio                     | Elige si Tumi lee sus respuestas en voz alta                |
 | Escuchar saludo / Detener voz      | Inicia o detiene explícitamente el saludo del navegador     |
 | Abrir chat contextual      | Abre el chat contextual de misión                           |
 
 Se retiraron el botón de pausa manual y la X inferior. El cierre permanece únicamente en la cabecera. Los iconos mantienen nombres accesibles, tooltip y objetivos de pulsación de 44 px. El movimiento se suspende automáticamente al conversar, ocultar la mascota o usar la guía contextual.
 
-Desde el panel flotante o el chat contextual, **Guía local** hace que Tumi acompañe el mouse y explique los controles al pasar sobre ellos. **Salir de guía** devuelve al acompañante a su modo autónomo. En pantallas de hasta 600 px, el acompañante queda a media altura en el borde derecho. En táctil, el primer toque muestra la explicación y el segundo activa el control.
+El globo flotante muestra invitaciones ocasionales. Pulsa el lápiz para preguntar, lee la respuesta en el mismo globo y vuelve a escribir en el campo. **Opciones** reúne el audio, la guía y el acceso al chat contextual.
+
+Desde **Opciones** o el chat contextual, **Guía local** hace que Tumi acompañe el mouse y explique los controles al pasar sobre ellos. **Salir de guía** devuelve al acompañante a su modo autónomo. En pantallas de hasta 600 px, el acompañante queda a media altura en el borde derecho. En táctil, el primer toque muestra la explicación y el segundo activa el control.
+
+Tumi empieza en **Texto**. En **Audio**, el navegador lee las nuevas respuestas de ambos chats y mantiene la transcripción visible. Cambiar a Texto o cerrar el chat detiene la reproducción. La app abre con el tema oscuro.
+
+En **Monitoreo diario**, elegir Bien, Regular o Triste reproduce una respuesta breve de Tumi que invita a contar qué influyó en el ánimo. Durante la lectura, Tumi cambia de expresión y las palabras aparecen debajo del saludo. Cuando la voz del navegador no indica el avance exacto, el texto se revela a un ritmo aproximado. El botón de audio permite detener o repetir la respuesta. Si el navegador no puede reproducirla, aparece «Leer respuesta». En Resultado, Tumi resume la actividad, el momento y las respuestas principales después de que se guarda el chequeo. El resumen se genera en el navegador y omite las notas.
 
 ## Movimiento autónomo
 

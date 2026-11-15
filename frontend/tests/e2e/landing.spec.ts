@@ -53,34 +53,24 @@ test('portada móvil y movimiento reducido: estática, accesible y navegable tra
   await expect(page.getByRole('heading', { name: /Distintos mundos/ })).toBeVisible();
 });
 
-test('Tumi ofrece el tema global desde portada y mapa y lo conserva tras recargar', async ({
-  page,
-}) => {
+test('El tema oscuro se conserva en portada, mapa y Tripulación', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => localStorage.setItem('astra.appearance', 'light'));
   await page.goto('/');
   const root = page.locator('html');
-  const theme = page.getByRole('group', { name: 'Apariencia de la app' });
-  const openTumi = () => page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
-  const closeTumi = () => page.getByRole('button', { name: 'Ocultar chat' }).click();
-
-  await expect(root).toHaveCSS('color-scheme', 'light');
-  await openTumi();
-  await theme.getByRole('button', { name: 'Oscuro' }).click();
   await expect(root).toHaveCSS('color-scheme', 'dark');
-  await closeTumi();
+  await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
+  await expect(page.getByRole('group', { name: 'Apariencia de la app' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Texto', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await page.getByRole('button', { name: 'Ocultar chat' }).click();
   await page.getByRole('button', { name: 'Explorar el universo', exact: true }).click();
   await expect(page).toHaveURL(/\/explore$/);
   await page.reload();
   await expect(root).toHaveCSS('color-scheme', 'dark');
-  await openTumi();
-  await expect(theme.getByRole('button', { name: 'Oscuro' })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
-  await theme.getByRole('button', { name: 'Claro' }).click();
-  await expect(root).toHaveCSS('color-scheme', 'light');
-  await closeTumi();
   await page.goto('/mission/crew');
-  await expect(root).toHaveCSS('color-scheme', 'light');
+  await expect(root).toHaveCSS('color-scheme', 'dark');
   await expect(page.getByRole('heading', { name: 'Tripulación', exact: true })).toBeVisible();
 });

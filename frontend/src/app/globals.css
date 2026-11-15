@@ -1085,47 +1085,6 @@ dd {
 .panel-footer .sub {
   font-size: 10px;
 }
-.scenario-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-}
-.scenario-card {
-  text-align: left;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-  padding: 25px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 17px;
-  min-width: 0;
-}
-.scenario-card[aria-pressed='true'] {
-  border-color: var(--selection-border);
-  background: var(--selection-soft);
-  color: var(--selection-text);
-}
-.scenario-card > svg {
-  color: var(--accent);
-}
-.scenario-card p {
-  font-size: 12px;
-  color: var(--muted);
-  flex: 1;
-}
-.scenario-choice {
-  font-size: 11px;
-  color: var(--accent);
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-top: 10px;
-}
-.scenario-choice svg {
-  width: 15px;
-}
 .source-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1301,19 +1260,10 @@ dd {
   .source-list {
     gap: 20px;
   }
-  .scenario-card {
-    padding: 20px;
-  }
 }
 @media (max-width: 1000px) {
   .dashboard-grid {
     grid-template-columns: minmax(0, 1fr) 280px;
-  }
-  .scenario-grid {
-    gap: 12px;
-  }
-  .scenario-card p {
-    font-size: 11px;
   }
 }
 @media (max-width: 800px) {
@@ -1340,18 +1290,6 @@ dd {
   }
   .scene-viewport {
     height: 420px;
-  }
-  .scenario-grid {
-    grid-template-columns: 1fr;
-  }
-  .scenario-card {
-    display: grid;
-    grid-template-columns: 40px 1fr;
-    gap: 10px 15px;
-  }
-  .scenario-card > p,
-  .scenario-choice {
-    grid-column: 2;
   }
   .snapshot-time {
     display: none;
@@ -1545,9 +1483,6 @@ dd {
   }
   .panel-footer .button {
     width: 100%;
-  }
-  .scenario-card {
-    padding: 20px;
   }
   .table-scroll td,
   .table-scroll th {
