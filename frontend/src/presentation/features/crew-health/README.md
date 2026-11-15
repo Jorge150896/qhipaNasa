@@ -1,14 +1,16 @@
-# Salud de la tripulación por sistemas
+# Registros de salud y fichas de Tripulación
 
-Feature integrada de forma aditiva en `/mission/crew` y `/missions/:habitatId/crew`. Reúne el visor, las lecturas y la autoevaluación en Tripulación. La gráfica interactiva del indicador seleccionado se mantiene debajo del visor. Al elegir una región o un sensor, una ficha HTML contextual aparece junto al astronauta en escritorio y debajo del modelo en pantallas estrechas. El pecho, la zona de los ojos y una pierna permiten selección directa en el modelo. La selección se resalta en 3D y los accesos HTML abren la misma ficha si el modelo falla. La tarjeta prioriza la lectura o el último autorregistro, muestra su hora o fecha y ofrece una acción principal. Ver detalles reúne el contexto completo, la procedencia y los accesos secundarios. Al seleccionar una zona, la cámara se aproxima con suavidad sin anular el giro manual. Con movimiento reducido solo se aplica el resaltado. En Visión, Ver detalles ilustra tres actividades para orientar la observación. En Ejercicio, Ver detalles carga un modelo procedural de bicicleta estática o equipo de resistencia cuando la actividad registrada identifica ese equipo. La sesión sigue siendo consultable sin WebGL. Cada sensor abre su propia tendencia en la tarjeta. El punto Resp. abre la frecuencia respiratoria desde el tórax del astronauta. Visión y Ejercicio muestran el último autorregistro de la persona y el área seleccionadas, con accesos al formulario y al historial. La tarjeta y el historial leen el mismo diario local. El selector de telemetría de Tripulación permite cambiar entre Pulso, Temperatura, SpO₂ y Respiración desde la gráfica. Entorno, chequeo diario, observaciones e historial completo siguen disponibles en sus secciones.
+Tripulación conserva Ahora, Historial y Personalización. Se retiraron la pestaña y el panel «Salud por sistemas» y los botones inferiores «Ver corazón», «Ver visión» y «Ver ejercicio». Tampoco se muestra la leyenda del visor ni el pie de página general dentro de Tripulación. Los puntos del astronauta, las lecturas HTML de Pulso, Temperatura, SpO₂ y Respiración y las fichas contextuales siguen disponibles. Monitoreo diario permite añadir observaciones nuevas.
+
+Las fichas corporales de Visión y Ejercicio leen el último autorregistro y ofrecen registro e historial. «Ver mis autorregistros» abre Historial y su línea de tiempo. Los registros siguen consultables aunque el modelo 3D no esté disponible. Eliminar los accesos inferiores no introduce botones equivalentes nuevos.
 
 ## Flujo y propietarios
 
-`CrewScreen` conecta `useCrewViewModel`, que conserva la selección visual del área y pasa un contexto presentable a `CrewHealthScreen`. Los puntos de sistema del astronauta y los controles HTML seleccionan el mismo detalle. Los sensores de pulso, oxígeno y respiración seleccionan Cardiovascular y la temperatura selecciona Inmunidad. El enlace al panel y el retorno al astronauta funcionan sin manipular el visor.
+`CrewScreen` conecta `useCrewViewModel`, el visor y las fichas. `CrewHealthScreen` compone dependencias e invoca `useCrewHealthViewModel` para entregar `recordPreview`, `timelineRecords` y su estado de carga; ya no construye ni monta `CrewHealthView`. El provider de misión y `useMission` no reciben estado nuevo.
 
-`CrewHealthScreen -> useCrewHealthViewModel -> CrewHealthView`, con `types.ts`, mapper y formulario privado. DI compone `LoadCrewHealth`, `RecordCrewHealth` y `ReviewCrewHealth` con el adapter local. El provider y `useMission` existentes no reciben el estado de esta feature.
+Los modelos y casos de uso de salud se conservan para los diarios existentes y sus consumidores. No se eliminan ni migran registros al retirar la pantalla. La selección de persona filtra registros y fichas. El hook descarta cargas tras desmontar y conserva el error de lectura sin reemplazar el contenido incompatible.
 
-La selección de área permanece mientras vive la Screen. Cada área presenta una pregunta de autoevaluación. El formulario muestra un resumen editable antes de guardar; el borrador se reinicia al cambiar persona o sistema. El siguiente paso se actualiza a partir del último registro y de la disponibilidad de las lecturas del área. El hook carga el registro y descarta cargas al desmontar. Las escrituras capturan persona/área al comenzar; los mensajes se muestran únicamente en su scope. Seleccionar otra persona filtra datos, observaciones y análisis, sin cambiar de lugar a nadie.
+Las entradas directas anteriores `#crew-health` y `#crew-health-review` muestran Ahora; `#crew-health-history` muestra Historial. La URL conserva el hábitat. El portal HTML independiente del visor y los formularios de Monitoreo diario permanecen.
 
 ## Persistencia
 
@@ -52,7 +54,7 @@ El formulario de Visión ofrece tres actividades ilustradas y una opción para d
 
 «Sincronizar con el visor» abre el hábitat y vincula la muestra seleccionada de la gráfica con el módulo registrado para esa hora. Las muestras sin ubicación se muestran sin marcador de ocupación ni lecturas ambientales. Elegir un módulo manualmente o cambiar de indicador devuelve el control al explorador habitual.
 
-Tripulación ofrece tres accesos en la misma página: Ahora (explorador y lecturas), Historial (serie, contexto y comparación) y Autoevaluación (autorregistro por área). Los indicadores de apoyo de Autoevaluación se consultan bajo demanda. La ficha de una lectura abre Tumi con la persona, el indicador y la instantánea simulada correspondiente.
+Tripulación ofrece Ahora (explorador y lecturas), Historial (serie, contexto y comparación) y Personalización. La autoevaluación se realiza desde Monitoreo diario. La ficha de una lectura abre Tumi con la persona, el indicador y la instantánea simulada correspondiente.
 
 En el visor del hábitat, la silueta naranja identifica el módulo donde se registró al tripulante y la marca lila identifica el módulo que se está explorando. Ambos símbolos pueden coincidir y se repiten en los controles HTML. Si una muestra histórica carece de ubicación, el visor no muestra una posición para esa hora.
 

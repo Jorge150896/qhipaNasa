@@ -1,5 +1,7 @@
 # Salud por sistemas basada en recursos HHC
 
+Estado de la interfaz: la pestaña y el panel «Salud por sistemas» fueron retirados de Tripulación. Los criterios y componentes de siete sistemas descritos aquí se conservan como referencia; no equivalen a una pantalla actualmente accesible. La interfaz activa utiliza las fichas del astronauta, Historial y Monitoreo diario. Los datos y las claves de almacenamiento anteriores se mantienen.
+
 ## Implementado
 
 La vista de tripulación reúne el astronauta 3D y la autoevaluación por sistemas: cardiovascular, ejercicio/aparato locomotor, visión, equilibrio/coordinación, nutrición, inmunidad y EVA. Los puntos del astronauta permiten entrar en visión, ejercicio y cardiovascular; la navegación HTML siempre ofrece las siete áreas.

@@ -1,7 +1,6 @@
 import type { MissionDashboardScreenProps } from '../../shared/mission/types';
 import type { ReactNode } from 'react';
 import type { IconName } from '@/ui/Icon';
-import type { BodySystemKey } from '../crew-health/types';
 import type {
   MetricData,
   MissionActions,
@@ -10,12 +9,11 @@ import type {
   ZoneData,
 } from '../mission/types';
 
-export type CrewSection = 'now' | 'history' | 'health' | 'avatar';
+export type CrewSection = 'now' | 'history' | 'avatar';
 export interface CrewScreenProps extends MissionDashboardScreenProps {
   actions: MissionDashboardScreenProps['actions'] & Pick<MissionActions, 'selectCrew'>;
 }
 export interface CrewViewProps {
-  onSelectBodyRegion(id: BodySystemKey): void;
   onSelectTimelineSample(at: string): void;
   onSelectTelemetrySensor(id: SensorKey): void;
   telemetryMetric?: MetricData;

@@ -31,8 +31,7 @@
   pointer-events: none;
 }
 .crew-hologram-header,
-.crew-hologram-reading,
-.crew-region-controls {
+.crew-hologram-reading {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -83,14 +82,6 @@
 }
 .crew-hologram p.crew-hologram-detail {
   color: var(--muted);
-}
-.crew-region-controls {
-  flex-wrap: wrap;
-  margin: 10px 0 16px;
-}
-.crew-region-controls .button {
-  min-height: 40px;
-  font-size: 12px;
 }
 .crew-chart-panel {
   margin-top: 16px;
@@ -942,8 +933,7 @@
 }
 
 .crew-page .crew-picker button:not([aria-pressed='true']),
-.crew-page .crew-body-stage .metric-card,
-.crew-page .crew-region-controls .button {
+.crew-page .crew-body-stage .metric-card {
   border-color: var(--line-soft);
   background: var(--glass);
   border-radius: 999px;

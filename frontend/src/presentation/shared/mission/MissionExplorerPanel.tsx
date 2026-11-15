@@ -3,6 +3,7 @@ import { Icon } from '@/ui/Icon';
 import type { MetricData } from '../../features/mission/types';
 
 interface Props {
+  showCaption?: boolean;
   anchorId?: string;
   crewName: string;
   zoneName: string;
@@ -13,6 +14,7 @@ interface Props {
   onModeChange(mode: 'crew' | 'ship'): void;
 }
 export function MissionExplorerPanel({
+  showCaption = true,
   anchorId,
   crewName,
   zoneName,
@@ -56,13 +58,15 @@ export function MissionExplorerPanel({
         </div>
       </div>
       {scene}
-      <div className="scene-caption">
-        <span>
-          <Icon name="orbit" size={14} />
-          Arrastra para girar · Rueda para acercar
-        </span>
-        <span>Modelo visual de referencia</span>
-      </div>
+      {showCaption && (
+        <div className="scene-caption">
+          <span>
+            <Icon name="orbit" size={14} />
+            Arrastra para girar · Rueda para acercar
+          </span>
+          <span>Modelo visual de referencia</span>
+        </div>
+      )}
       {metric && (
         <div className="scene-reading">
           <div>

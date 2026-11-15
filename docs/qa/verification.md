@@ -1,5 +1,17 @@
 # Verificación de la base frontend
 
+## Tripulación simplificada (2026-11-15)
+
+Se retiraron la pestaña y el panel «Salud por sistemas», los botones inferiores «Ver corazón», «Ver visión» y «Ver ejercicio», la leyenda de interacción/referencia del visor y el pie de página general solo en Tripulación. Se mantienen Ahora, Historial, Personalización, puntos 3D, lecturas HTML, fichas, módulos y Monitoreo diario. El portal del visor permanece independiente.
+
+`CrewHealthScreen` conserva la lectura de registros para las fichas y la línea de tiempo, sin construir el panel retirado. Los accesos «Ver mis autorregistros» y el ancla antigua `#crew-health-history` abren Historial; `#crew-health` y `#crew-health-review` abren Ahora. No se modifican claves, esquemas ni contenido de storage.
+
+Build, TypeScript y ESLint aprobados. Las 104 pruebas unitarias pasaron al repetir con dos workers tras un timeout inicial del formulario bajo carga. El primer typecheck encontró tipos generados de Next desactualizados; el build los regeneró y el typecheck posterior pasó. `npm run check` queda detenido en formato global por 287 archivos con diferencias existentes; no se reformateó el proyecto completo.
+
+Se aprobaron nueve casos E2E distintos sobre el build actualizado: siete en puerto 3076 y los dos restantes al repetir en 3077. Se ajustó la espera del GLB a su carga asíncrona y la expectativa del título del pulso, que ahora se selecciona desde su botón HTML en lugar del acceso corporal retirado. Cubren escritorio, móvil, recarga, registros persistidos e incompatibles, enlaces anteriores, modelos y hologramas, fallos de GLB/WebGL y sincronización de módulos. Los escenarios del panel eliminado fueron sustituidos por los de la interfaz actual; las pruebas unitarias de datos permanecen.
+
+Capturas revisadas: `crew-simplified-desktop.png` y `crew-simplified-mobile.png`. No se ejecutó toda la suite E2E del proyecto.
+
 ## Entrega de Tumi en juanluis3 (2026-11-15)
 
 Se consolidaron uso, arquitectura, evolución, recursos, límites de detección emocional, accesibilidad y futura integración en [la guía de Tumi IA](../development/tumi-ia.md), con referencias desde README, documentación frontend y arquitectura. El panel final conserva ojo tachado para ocultar y X únicamente en la cabecera; se retiraron la pausa manual y la X inferior. La pausa al abrir conversación sigue siendo automática.
@@ -146,3 +158,6 @@ Unión natural del tocado: la banda decorada permanece con la frente; solo la co
 Alcance de carga: se verifica la activación fullscreen solo mediante el CTA, mínimo de tres segundos, navegación posterior y espera interna dentro del contenido. Una prueba retiene la respuesta de Historial para verificar menú/cabecera visibles, bounding box dentro de información y selección de otra sección durante la transición. La carga directa y las secciones no disparan fullscreen. Captura `tumi-loading-content.png`.
 
 Validación del alcance final de carga: `npm run check` aprobado (39 pruebas unitarias y build) y 23 pruebas de navegador aprobadas sobre el build actualizado. Se confirmó que una navegación pendiente permite seleccionar otra sección sin ocultar ni bloquear el menú.
+
+Limpieza de los elementos señalados en las capturas: build actualizado aprobado, 104 pruebas unitarias aprobadas y seis pruebas E2E aprobadas (retiro de elementos en escritorio/móvil con recarga, navegación, Tumi y selección corporal desde Personalización, incluido fallo del modelo). TypeScript y ESLint pasaron en la ejecución de check; check completo se detuvo por diferencias de formato preexistentes en 283 archivos. No se reformateó el proyecto completo.
+

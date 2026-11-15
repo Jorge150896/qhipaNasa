@@ -1,4 +1,4 @@
-import { useCallback, useContext, useSyncExternalStore, type ReactNode } from 'react';
+import { useCallback, useContext, type ReactNode } from 'react';
 import { AssistantActionsContext } from '../../mission-assistant/AssistantActionsContext';
 import { navigation } from '../constants';
 import type { MissionSection } from '../types';
@@ -7,15 +7,6 @@ import { SpaceBackground } from '@/presentation/shared/space/SpaceBackground';
 import { MissionNavigationDock } from './MissionNavigationDock';
 import styles from './mission-navigation.module.css';
 
-const compactDockQuery = '(max-width: 900px)';
-function subscribeToCompactDock(onChange: () => void) {
-  const query = window.matchMedia(compactDockQuery);
-  query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
-}
-function isCompactDock() {
-  return window.matchMedia(compactDockQuery).matches;
-}
 export function MissionShell({
   section,
   onNavigate,
@@ -29,7 +20,6 @@ export function MissionShell({
   onNavigate(section: MissionSection): void;
   children: ReactNode;
 }) {
-  const compact = useSyncExternalStore(subscribeToCompactDock, isCompactDock, () => false);
   const setLauncherHost = useContext(AssistantActionsContext)?.setLauncherHost;
   const attachLauncher = useCallback(
     (host: HTMLDivElement | null) => setLauncherHost?.(host),
@@ -68,31 +58,22 @@ export function MissionShell({
             </span>
           </div>
           <div className="topbar-status">
-            <span className="demo-badge">
-              <span className="status-dot" />
-              {section === 'earth'
-                ? 'Archivo histórico'
-                : section === 'explorer'
-                  ? 'Simulación y archivo histórico'
-                  : 'Datos simulados'}
-            </span>
-            <span className="avatar small">MC</span>
-            {compact && setLauncherHost && (
-              <div ref={attachLauncher} className="assistant-launcher-host" />
+            {section !== 'earth' && (
+              <span className="demo-badge">
+                <span className="status-dot" />
+                {section === 'explorer' ? 'Simulación y archivo histórico' : 'Datos simulados'}
+              </span>
             )}
+            <span className="avatar small">MC</span>
+            {setLauncherHost && <div ref={attachLauncher} className="assistant-launcher-host" />}
           </div>
         </header>
         <main id="mission-content">{children}</main>
-        <footer className="app-footer">
-          <span>Qhipa Pacha · Prototipo de monitorización de salud</span>
-          <span>Entorno de demostración</span>
-        </footer>
       </div>
       <MissionNavigationDock
         section={section}
         onOpenExplorer={onOpenExplorer}
         onNavigate={onNavigate}
-        launcherHostRef={!compact && setLauncherHost ? attachLauncher : undefined}
       />
     </div>
   );

@@ -13,7 +13,6 @@ export function CrewView({
   onOpenHabitat,
   avatarPanel,
   environmentReferences,
-  healthPanel,
   timelinePanel,
   onSelectTimelineSample,
   telemetryMetric,
@@ -22,10 +21,8 @@ export function CrewView({
   synchronizedMoment,
   onToggleSynchronization,
   onSelectTelemetrySensor,
-  onSelectBodyRegion,
   nasaHistory,
 }: CrewViewProps & {
-  healthPanel: ReactNode;
   timelinePanel: ReactNode;
   avatarPanel: ReactNode;
   nasaHistory: ReactNode;
@@ -41,7 +38,6 @@ export function CrewView({
         {(
           [
             ['now', 'Ahora'],
-            ['health', 'Salud por sistemas'],
             ['history', 'Historial'],
             ['avatar', 'Personalización'],
           ] as const
@@ -51,7 +47,7 @@ export function CrewView({
             type="button"
             key={id}
             id={id === 'history' ? 'assistant-target-history' : undefined}
-            aria-controls={`crew-${id === 'health' ? 'health-panel' : id === 'avatar' ? 'avatar-panel' : id}`}
+            aria-controls={`crew-${id === 'avatar' ? 'avatar-panel' : id}`}
             aria-pressed={section === id}
             onClick={() => onChangeSection(id)}
           >
@@ -72,6 +68,7 @@ export function CrewView({
           </button>
         )}
         <MissionExplorerPanel
+          showCaption={false}
           anchorId="crew-body"
           crewName={data.selected.name}
           zoneName={data.name}
@@ -81,23 +78,6 @@ export function CrewView({
           onModeChange={onModeChange}
         />
         {environmentReferences}
-        {mode === 'crew' && (
-          <div
-            className="crew-region-controls"
-            role="group"
-            aria-label="Accesos del explorador corporal"
-          >
-            <button className="button secondary" onClick={() => onSelectBodyRegion('cardio')}>
-              Ver corazón
-            </button>
-            <button className="button secondary" onClick={() => onSelectBodyRegion('vision')}>
-              Ver visión
-            </button>
-            <button className="button secondary" onClick={() => onSelectBodyRegion('fitness')}>
-              Ver ejercicio
-            </button>
-          </div>
-        )}
       </section>
       <section
         hidden={section !== 'history'}
@@ -166,15 +146,8 @@ export function CrewView({
           )}
           {!telemetryMetric && (
             <p className="sub">
-              Consulta los autorregistros del área en{' '}
-              <button
-                type="button"
-                className="text-button"
-                onClick={() => onChangeSection('health')}
-              >
-                Salud por sistemas
-              </button>
-              . Elige un sensor para volver a sus lecturas.
+              Consulta los autorregistros en la línea de tiempo. Elige un sensor para volver a sus
+              lecturas.
             </p>
           )}
         </section>
@@ -182,9 +155,6 @@ export function CrewView({
         {telemetryMetric && <MeasurementTracePanel metric={telemetryMetric} />}
         {nasaHistory}
       </section>
-      <div id="crew-health-panel" hidden={section !== 'health'}>
-        {healthPanel}
-      </div>
       <div id="crew-avatar-panel" hidden={section !== 'avatar'}>
         {avatarPanel}
       </div>

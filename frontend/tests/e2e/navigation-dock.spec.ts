@@ -12,7 +12,10 @@ test('escritorio: la barra inferior enlaza misión y agrupa Centros en Tierra ba
     'aria-current',
     'page',
   );
-  await expect(dock.getByRole('button', { name: 'Abrir chat de Tumi' })).toBeVisible();
+  await expect(dock.getByRole('button', { name: 'Abrir chat de Tumi' })).toHaveCount(0);
+  await expect(
+    page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Tumi' }),
+  ).toBeVisible();
   await expect(dock.getByRole('button', { name: 'Más', exact: true })).toBeHidden();
   await expect(dock.getByRole('button', { name: 'Centros en Tierra', exact: true })).toHaveCount(0);
   await dock.getByRole('button', { name: 'Mapa espacial', exact: true }).click();

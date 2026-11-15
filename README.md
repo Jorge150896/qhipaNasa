@@ -41,7 +41,7 @@ Para generar esa misma exportación localmente, ejecuta `GITHUB_PAGES=true npm r
 
 - Carga animada del Tumi con salto, sonrisa, rebote del tocado y spinner independiente. Introducción breve a pantalla completa solo tras «Iniciar mi misión»; dentro de la app, carga limitada al área de información. Vista permanente en `/loading-preview`.
 
-- Salud por sistemas en Tripulación reúne explicaciones y fuentes HHC, indicadores y registros anteriores. Las observaciones nuevas se añaden desde Monitoreo diario con el área correspondiente.
+- Tripulación conserva visor corporal, fichas contextuales, lecturas e historial de registros. Se retiraron la pestaña y el panel «Salud por sistemas» y los tres accesos inferiores «Ver corazón/visión/ejercicio». Las observaciones nuevas se añaden desde Monitoreo diario con el área correspondiente.
 
 - Rotación axial de planetas, órbitas ilustrativas de Luna y estación, perspectiva inicial inclinada y pausa global. Al alejarse aparecen el Sol y los ocho planetas, con seguimiento Tierra–Marte y regreso a la misión. Distancias medias en UA; tamaños y tiempos ilustrativos.
 - Nuevo [mapa espacial 3D](http://127.0.0.1:3000/explore): Tierra, Luna, Marte, estación y nave seleccionables. Desde cada ficha se entra a su tripulación, indicadores y seguimiento.

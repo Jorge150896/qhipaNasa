@@ -116,6 +116,8 @@ No se modifican rutas, contratos, registros, asignaciones de tripulación ni el 
 
 ### Salud por sistemas
 
+Tripulación ya no ofrece la pestaña ni monta el panel «Salud por sistemas». Se mantienen Ahora, Historial y Personalización, los puntos 3D y las lecturas HTML. Se retiraron los tres accesos corporales inferiores, la leyenda del visor y el pie de página solo en Tripulación. Los autorregistros se consultan en Historial y se añaden desde Monitoreo diario. `CrewHealthScreen` conserva la carga de registros para las fichas y la línea de tiempo, sin renderizar `CrewHealthView`. Las entradas antiguas de salud abren Ahora y `#crew-health-history` abre Historial; no se altera storage.
+
 `CrewHealthScreen` se monta en la sección de Tripulación, con tipos de presentación y dependencias propias. `useCrewHealthViewModel` administra carga, escritura, mensajes y reintento; el mapper filtra por persona/sistema y prepara la lectura conjunta. `CrewScreen` orquesta la selección visual y el desplazamiento desde los puntos 3D. El visor conserva su portal independiente. `MetricData.comparison` añade una comparación descriptiva con la primera muestra de su serie; las muestras ausentes no generan comparación actual.
 
 Los datos de salud se guardan en `astra.demo.health.v1:<habitatId>` sin migrar el diario anterior. Fuentes, funcionamiento y límites en `docs/product/hhc-health-workspace.md` y el README de la feature. La integración de datos reales con Java permanece pendiente.
@@ -176,3 +178,7 @@ Historial añade «Ver origen» por muestra, conservando la distribución y el t
 ## Consumir radiación ambiental
 
 El backend Java ya ofrece catálogo y series de NASA RadLab. La web todavía no los consume; crear una feature/adapter ambiental separado del consumidor de signos vitales. Ejemplos, CORS, errores, zonas horarias y límites en [radlab-backend.md](radlab-backend.md). El contrato comparte `docs/contracts/openapi.yaml` y no requiere cambiar paleta o modelos.
+
+### Limpieza visual de cabeceras
+Se retiran la hora/escenario y actividad/ubicación de la cabecera de Tripulación, la insignia «Archivo histórico» de Centros en Tierra y su pie de página. Las lecturas conservan su procedencia y fecha en las fichas e Historial. El selector corporal está en Personalización; Tumi deja la barra inferior y conserva su acceso en cabecera y el personaje flotante.
+

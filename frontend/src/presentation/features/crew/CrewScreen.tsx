@@ -55,11 +55,8 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
     if (sensorId) actions.selectMetric(sensorId);
   }
 
-  function focusSection(
-    id: 'crew-health-history' | 'crew-timeline' | 'crew-history' | 'nasa-history' | 'crew-body',
-  ) {
-    const isHistory = id === 'crew-timeline' || id === 'crew-history' || id === 'nasa-history';
-    setSection(id === 'crew-body' ? 'now' : isHistory ? 'history' : 'health');
+  function focusSection(id: 'crew-timeline' | 'crew-history' | 'nasa-history' | 'crew-body') {
+    setSection(id === 'crew-body' ? 'now' : 'history');
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         const detail = document.getElementById(id);
@@ -96,10 +93,10 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
       focusSection('nasa-history');
     } else if (['#crew-history', '#crew-timeline'].includes(window.location.hash)) {
       focusSection('crew-history');
-    } else if (
-      ['#crew-health', '#crew-health-history', '#crew-health-review'].includes(window.location.hash)
-    ) {
-      setSection('health');
+    } else if (window.location.hash === '#crew-health-history') {
+      focusSection('crew-history');
+    } else if (['#crew-health', '#crew-health-review'].includes(window.location.hash)) {
+      focusSection('crew-body');
     }
   });
   useEffect(() => {
@@ -108,25 +105,8 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
   }, []);
 
   return (
-    <CrewHealthScreen
-      mission={data}
-      habitatId={habitatId}
-      systemId={model.healthSystem}
-      onSelectSystem={(id) => {
-        const sensorId = model.selectHealthSystem(id);
-        if (sensorId) actions.selectMetric(sensorId);
-      }}
-      onNavigate={onNavigate}
-      onSelectMetric={selectTelemetrySensor}
-      onOpenHistory={() => focusSection('crew-history')}
-      onOpenModule={openOccupiedModule}
-      onReportSystem={(id) => onNavigate('journal', `check-system-${id}`)}
-      onOpenTimelineRecord={(id) => {
-        model.openSavedTimelineRecord(id);
-        focusSection('crew-timeline');
-      }}
-    >
-      {({ healthPanel, recordPreview, timelineRecords, timelineStatus }) => (
+    <CrewHealthScreen mission={data} habitatId={habitatId} systemId={model.healthSystem}>
+      {({ recordPreview, timelineRecords, timelineStatus }) => (
         <CrewView
           section={section}
           onChangeSection={setSection}
@@ -144,7 +124,17 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
               </section>
             )
           }
-          avatarPanel={<AvatarScreen crewId={data.selected.id} crewName={data.selected.name} />}
+          avatarPanel={
+            <>
+              <HumanHologramControls
+                display={body.display}
+                appearance={body.appearance}
+                onDisplayChange={body.selectDisplay}
+                onAppearanceChange={body.selectAppearance}
+              />
+              <AvatarScreen crewId={data.selected.id} crewName={data.selected.name} />
+            </>
+          }
           nasaHistory={section === 'history' && <NasaHistoryScreen />}
           telemetryMetric={model.telemetryMetric}
           trendInCard={model.trendInCard}
@@ -152,8 +142,6 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
           synchronizedMoment={model.synchronizedMoment}
           onToggleSynchronization={model.toggleSynchronization}
           onSelectTelemetrySensor={selectTelemetrySensor}
-          onSelectBodyRegion={selectBodyRegion}
-          healthPanel={healthPanel}
           onSelectTimelineSample={model.selectTimelineSample}
           timelinePanel={
             <>
@@ -203,17 +191,6 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                 {model.mode === 'ship' && <CrewModuleLegend />}
                 {model.mode === 'ship' && model.moduleData.origin && (
                   <CrewModuleOriginBanner origin={model.moduleData.origin} />
-                )}
-                {model.mode === 'crew' && (
-                  <details className="crew-body-display">
-                    <summary>Modelo corporal</summary>
-                    <HumanHologramControls
-                      display={body.display}
-                      appearance={body.appearance}
-                      onDisplayChange={body.selectDisplay}
-                      onAppearanceChange={body.selectAppearance}
-                    />
-                  </details>
                 )}
                 <div
                   className={
@@ -270,7 +247,7 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                       onToggleTrend={model.toggleTrend}
                       recordPreview={model.hologram.recordKind ? recordPreview : undefined}
                       onClose={model.closeHologram}
-                      onOpenHistory={() => focusSection('crew-health-history')}
+                      onOpenHistory={() => focusSection('crew-history')}
                       onOpenTelemetryHistory={() => {
                         selectTelemetrySensor(data.metric.id);
                         focusSection('crew-history');

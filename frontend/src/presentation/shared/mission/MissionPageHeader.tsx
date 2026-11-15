@@ -1,5 +1,5 @@
 import type { MissionActions, MissionData, MissionSection } from '../../features/mission/types';
-import { scenarioOptions, sectionTitles } from '../../features/mission/constants';
+import { sectionTitles } from '../../features/mission/constants';
 import { Icon } from '@/ui/Icon';
 export function MissionPageHeader({
   data,
@@ -11,9 +11,7 @@ export function MissionPageHeader({
   onSelectCrew: MissionActions['selectCrew'];
 }) {
   const title = sectionTitles[section];
-  const scenario = scenarioOptions.find((option) => option.id === data.scenario)?.label;
   const showCrewPicker = section === 'crew' || section === 'journal';
-  const showSnapshot = section === 'crew';
   return (
     <>
       <div className={`page-heading${section === 'crew' ? ' crew-page-heading' : ''}`}>
@@ -26,17 +24,6 @@ export function MissionPageHeader({
           <h1>{title.title}</h1>
           {section !== 'crew' && <p className="page-description">{title.description}</p>}
         </div>
-        {showSnapshot && (
-          <div className="snapshot-time">
-            <Icon name="clock" size={15} />
-            <div>
-              {data.time}
-              <span>
-                {data.date} · {scenario}
-              </span>
-            </div>
-          </div>
-        )}
       </div>
       {showCrewPicker && (
         <div className={`crew-toolbar${section === 'crew' ? ' crew-page-toolbar' : ''}`}>
@@ -57,10 +44,12 @@ export function MissionPageHeader({
               </button>
             ))}
           </div>
-          <div className="crew-context">
-            <span className="status-dot" />
-            {data.selected.activity} · {data.selected.location}
-          </div>
+          {section !== 'crew' && (
+            <div className="crew-context">
+              <span className="status-dot" />
+              {data.selected.activity} · {data.selected.location}
+            </div>
+          )}
         </div>
       )}
     </>

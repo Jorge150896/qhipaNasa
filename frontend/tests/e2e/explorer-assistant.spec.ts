@@ -9,7 +9,9 @@ test('Tumi está disponible desde misión y conserva el chat entre pestañas del
   await expect(page).toHaveURL(/\/explore/);
 
   const launcher = page.getByRole('button', { name: 'Abrir chat de Tumi' });
-  await expect(nav.getByRole('button', { name: 'Abrir chat de Tumi' })).toBeVisible();
+  await expect(
+    page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Tumi' }),
+  ).toBeVisible();
   await launcher.click();
   const chat = page.getByRole('region', { name: 'Tumi' });
   await chat.getByRole('button', { name: '¿Cómo uso el mapa espacial?' }).click();
