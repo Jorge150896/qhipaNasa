@@ -1,5 +1,14 @@
 # Verificación de la base frontend
 
+## Publicación del loader giratorio (2026-11-15)
+
+Se incorporaron sobre main todos los cambios pendientes del loader: componente de reproducción, video local, poster, estilos, vista previa, capturas y documentación del recurso. Validación de la integración: build, TypeScript y ESLint aprobados; los tres E2E de loading.spec.ts pasaron en puerto 3083, con escritorio, móvil, pausa/reanudación, movimiento reducido, recarga y carga interna/fullscreen. npm run check se detuvo en formato global por 287 archivos; no ejecutó las etapas siguientes de tests/build. El build se comprobó por separado. No se ejecutó toda la suite E2E ni se repitieron pruebas unitarias para esta entrega visual.
+## Verificación de publicación (2026-11-15)
+
+La copia aislada para publicar en main aprobó build, TypeScript, ESLint y los dos E2E de navegación en puerto 3082 (escritorio, móvil, teclado y recarga). `npm run check` se detuvo en Prettier por diferencias de formato en 304 archivos; no llegó a ejecutar sus etapas posteriores de tests y build. El build se ejecutó por separado y pasó. Se conservaron fuera de esta publicación los cambios pendientes del loader de Tumi.
+
+
+
 ## Orden de la barra inferior (2026-11-15)
 
 La navegación compartida muestra Tripulación → Monitoreo diario → Mapa espacial → Simulación, con ese mismo orden visual y de teclado. Simulación queda disponible directamente en móvil; se retiraron el menú «Más» y su lógica/estilos. Se mantienen destinos, indicador activo, barra fija y safe-area. La guía de Tumi apunta a los controles directos.
