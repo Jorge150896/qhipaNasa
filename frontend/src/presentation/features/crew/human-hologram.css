@@ -100,14 +100,3 @@
   cursor: pointer;
   font-size: 12px;
 }
-
-.crew-body-stage > .human-hologram-shell {
-  grid-column: auto;
-}
-
-@media (min-width: 1000px) {
-  .crew-page .crew-body-stage > .human-hologram-shell {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-  }
-}

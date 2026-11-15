@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { AvatarView } from './components/AvatarView';
 import { useAvatarViewModel } from './useAvatarViewModel';
@@ -17,12 +16,19 @@ const AvatarPreview = dynamic(
   },
 );
 
-export function AvatarScreen({ crewId, crewName }: { crewId: string; crewName: string }) {
-  const [open, setOpen] = useState(false);
+export function AvatarScreen({
+  active,
+  crewId,
+  crewName,
+}: {
+  active: boolean;
+  crewId: string;
+  crewName: string;
+}) {
   const appearance = useAppBackground();
   const model = useAvatarViewModel(crewId, appearance.selectBackground);
   useTumiViewContext(
-    open ? 'Personalización del astronauta' : undefined,
+    active ? 'Personalización del astronauta' : undefined,
     [
       `Equipo visible de ${crewName}: ${
         model.parts
@@ -33,24 +39,22 @@ export function AvatarScreen({ crewId, crewName }: { crewId: string; crewName: s
     ],
     1,
   );
+  if (!active) return null;
+
   return (
-    <details
-      id="crew-avatar"
-      className={styles.workshop}
-      onToggle={(event) => setOpen(event.currentTarget.open)}
-    >
-      <summary>Personalizar astronauta</summary>
-      {open && (
-        <AvatarView
-          crewName={crewName}
-          selection={model.selection}
-          background={appearance.background}
-          onBackgroundChange={appearance.selectBackground}
-          onSelect={model.select}
-          onReset={model.reset}
-          preview={<AvatarPreview selection={model.selection} parts={model.parts} />}
-        />
-      )}
-    </details>
+    <section id="crew-avatar" aria-labelledby="crew-avatar-title" className={styles.workshop}>
+      <h2 id="crew-avatar-title" className={styles.title}>
+        Personalizar astronauta
+      </h2>
+      <AvatarView
+        crewName={crewName}
+        selection={model.selection}
+        background={appearance.background}
+        onBackgroundChange={appearance.selectBackground}
+        onSelect={model.select}
+        onReset={model.reset}
+        preview={<AvatarPreview selection={model.selection} parts={model.parts} />}
+      />
+    </section>
   );
 }

@@ -17,6 +17,8 @@ export function CursorAssistantScreen({
   onChangeMode,
   suspended = false,
   getContext,
+  viewIntroduction,
+  viewPath,
   getLocalReply,
   audio,
 }: {
@@ -25,6 +27,8 @@ export function CursorAssistantScreen({
   onChangeMode(following: boolean): void;
   suspended?: boolean;
   getContext(): TumiScreenContext;
+  viewIntroduction?: string;
+  viewPath: string;
   getLocalReply?(question: string): string | undefined;
   audio: TumiReplyAudio;
 }) {
@@ -47,6 +51,8 @@ export function CursorAssistantScreen({
   return (
     <CursorAssistantView
       data={model.data}
+      viewIntroduction={viewIntroduction}
+      viewPath={viewPath}
       usesOpenAi={tumiUsesOpenAi}
       actor={model.actor}
       onDraft={model.setDraft}

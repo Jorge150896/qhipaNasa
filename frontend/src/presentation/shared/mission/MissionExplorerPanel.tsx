@@ -8,10 +8,8 @@ interface Props {
   crewName: string;
   zoneName: string;
   metric?: MetricData;
-  habitatLabel: string;
   scene: ReactNode;
   mode: 'crew' | 'ship';
-  onModeChange(mode: 'crew' | 'ship'): void;
 }
 export function MissionExplorerPanel({
   showCaption = true,
@@ -19,10 +17,8 @@ export function MissionExplorerPanel({
   crewName,
   zoneName,
   metric,
-  habitatLabel,
   scene,
   mode,
-  onModeChange,
 }: Props) {
   return (
     <section
@@ -37,24 +33,6 @@ export function MissionExplorerPanel({
             {mode === 'crew' ? 'EXPLORADOR CORPORAL' : 'EXPLORADOR DE HÁBITAT'}
           </p>
           <h3>{mode === 'crew' ? crewName : zoneName}</h3>
-        </div>
-        <div className="segmented">
-          <button
-            data-assistant-control="crew-body"
-            aria-pressed={mode === 'crew'}
-            onClick={() => onModeChange('crew')}
-          >
-            <Icon name="users" size={14} />
-            Astronauta
-          </button>
-          <button
-            data-assistant-control="crew-ship"
-            aria-pressed={mode === 'ship'}
-            onClick={() => onModeChange('ship')}
-          >
-            <Icon name="rocket" size={14} />
-            {habitatLabel}
-          </button>
         </div>
       </div>
       {scene}

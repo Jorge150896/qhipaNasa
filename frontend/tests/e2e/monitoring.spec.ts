@@ -9,6 +9,7 @@ for (const route of ['/mission', '/missions/aurora']) {
     await expect(
       page.getByRole('heading', { name: 'Monitoreo diario', exact: true }),
     ).toBeVisible();
+    await page.getByRole('button', { name: 'Llenar a mano' }).click();
     await expect(page.locator('main form')).toHaveCount(1);
     await expect(
       page.getByRole('heading', { name: 'Lecturas del cuerpo y del entorno' }),

@@ -40,6 +40,7 @@ interface Props {
   modules?: HabitatModuleMarkers;
   showModuleCamera?: boolean;
   transparentBackground?: boolean;
+  immersiveBody?: boolean;
   onSelectSensor?(id: SceneSensor): void;
   onSelectZone(id: string): void;
 }
@@ -97,6 +98,13 @@ export default function MissionScene(props: Props) {
     controls.current = instance;
     setCameraReady(Boolean(instance));
   }, []);
+  useEffect(() => {
+    const orbit = controls.current;
+    if (!props.immersiveBody || !cameraReady || !orbit) return;
+    const direction = orbit.object.position.clone().sub(orbit.target);
+    orbit.object.position.copy(orbit.target).add(direction.setLength(fullBodyDistance));
+    orbit.update();
+  }, [cameraReady, fullBodyDistance, props.immersiveBody]);
   const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
   const shuttleExterior =
     props.mode === 'ship' && (!props.habitatKind || props.habitatKind === 'ship') && !props.modules;
@@ -146,7 +154,7 @@ export default function MissionScene(props: Props) {
           <Canvas
             dpr={[1, 1.75]}
             camera={{
-              position: props.mode === 'crew' ? [0, 0.08, 4.3] : overview,
+              position: props.mode === 'crew' ? [0, props.immersiveBody ? 0 : 0.08, 4.3] : overview,
               fov: 32,
             }}
             fallback={<SceneFallback />}
@@ -156,7 +164,7 @@ export default function MissionScene(props: Props) {
               <SpaceBackdrop radius={100} brightness={shuttleExterior ? 0.65 : 1} />
             )}
             {props.mode === 'crew' ? (
-              <AstronautLighting />
+              <AstronautLighting studio={props.immersiveBody} />
             ) : (
               <>
                 <ambientLight intensity={shuttleExterior ? 0.85 : martian ? 0.75 : 1.8} />
@@ -194,6 +202,7 @@ export default function MissionScene(props: Props) {
                   selectedSystem={props.selectedSystem}
                   activeBodyRegion={props.activeBodyRegion}
                   onFrameDistance={props.transparentBackground ? setFullBodyDistance : undefined}
+                  immersiveFit={props.immersiveBody}
                   onSelectSystem={props.onSelectSystem}
                   selected={props.selectedSensor}
                   onSelect={props.onSelectSensor}
@@ -219,6 +228,7 @@ export default function MissionScene(props: Props) {
             <OrbitControls
               ref={attachControls}
               enablePan={false}
+              enableZoom={!props.immersiveBody}
               minDistance={props.transparentBackground ? fullBodyDistance : cutaway ? 3.7 : 2.8}
               maxDistance={
                 props.transparentBackground ? Math.max(7, fullBodyDistance) : cutaway ? 16 : 7

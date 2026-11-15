@@ -1,4 +1,5 @@
 import { Icon, type IconName } from '@/ui/Icon';
+import { useEffect, useRef } from 'react';
 import { navigation } from '../constants';
 import type { MissionSection } from '../types';
 import styles from './mission-navigation.module.css';
@@ -15,6 +16,26 @@ export function MissionNavigationDock({
   onNavigate(section: MissionSection): void;
 }) {
   const mapActive = section === 'explorer' || section === 'earth';
+  const dock = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const element = dock.current;
+    if (!element) return;
+    const root = document.documentElement;
+    const update = () => {
+      root.style.setProperty(
+        '--mission-dock-height',
+        `${element.getBoundingClientRect().height}px`,
+      );
+    };
+    const observer = new ResizeObserver(update);
+    update();
+    observer.observe(element);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty('--mission-dock-height');
+    };
+  }, []);
 
   function sectionButton(item: (typeof navigation)[number]) {
     return (
@@ -33,7 +54,7 @@ export function MissionNavigationDock({
   }
 
   return (
-    <nav className={styles.dock} aria-label="Navegación principal">
+    <nav ref={dock} className={styles.dock} aria-label="Navegación principal">
       <div className={styles.track}>
         {navigation.filter((item) => primarySections.has(item.id)).map(sectionButton)}
         {onOpenExplorer && (

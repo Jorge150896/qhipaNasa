@@ -17,41 +17,18 @@ import { reportedStates, type HealthSystemId, type VisionActivityId } from '@/do
 import { healthSystems, reportedStateLabels } from '../crew-health/constants';
 import { visionActivities } from '../crew-health/visionActivities';
 import { mapDailyCheckAttachment } from './mapDailyCheckAttachment';
-import type { IconName } from '@/ui/Icon';
 import type { CheckFormValues, MissionData } from '../mission/types';
 import type { DailyCheckScreenProps } from './types';
+import {
+  activities,
+  describeHealthReport,
+  exerciseLabel,
+  fieldLabel,
+  fields,
+  moments,
+  regions,
+} from './dailyCheckDetails';
 
-const activities = {
-  cabin: { label: 'Rutina en cabina', icon: 'orbit' },
-  exercise: { label: 'Ejercicio', icon: 'activity' },
-  surface: { label: 'Recorrido de superficie', icon: 'clock' },
-  eva: { label: 'Caminata espacial EVA', icon: 'rocket' },
-} satisfies Record<DailyActivity, { label: string; icon: IconName }>;
-
-const moments = { before: 'Antes', after: 'Después', incident: 'Incidencia durante la actividad' };
-const durationLabels = {
-  before: 'Duración prevista',
-  after: 'Duración realizada',
-  incident: 'Duración transcurrida',
-};
-const regions = {
-  none: 'Sin molestias',
-  head: 'Cabeza',
-  torso: 'Torso',
-  arms: 'Brazos',
-  hands: 'Manos',
-  legs: 'Piernas',
-  feet: 'Pies',
-  other: 'Otra región',
-};
-const fields = {
-  waterMl: { label: 'Agua registrada', unit: 'mL' },
-  restInterruptions: { label: 'Número de interrupciones del descanso', unit: '' },
-  durationMinutes: { label: 'Duración', unit: 'min' },
-  effort: { label: 'Esfuerzo percibido', unit: '/ 10' },
-  distanceKm: { label: 'Distancia', unit: 'km' },
-  handDiscomfort: { label: 'Molestias en manos', unit: '/ 5' },
-};
 const moods = { good: 'Bien', neutral: 'Regular', low: 'Bajo' };
 const tumiExpressions = {
   greeting: ['greeting', 'happy', 'curious'],
@@ -76,44 +53,16 @@ function describeSavedCheck(
 ) {
   const mood = values.mood ? ` y ánimo ${moods[values.mood].toLowerCase()}` : '';
   const exercise = values.exerciseDone === true ? ' También anotaste que hiciste ejercicio.' : '';
-  return `Listo, ${name}. Guardé tu chequeo de ${activities[activity].label.toLowerCase()} ${spokenMoments[moment]}. Registraste ${spokenNumber.format(Number(values.sleep))} horas de sueño${mood}.${exercise} Gracias por tomarte este momento para ti.`;
+  const closing =
+    values.mood === 'low'
+      ? 'Gracias por contarme cómo te sentiste. Podemos ir con calma.'
+      : values.mood === 'good'
+        ? 'Qué gusto acompañarte. Si mañana quieres volver, aquí estaré.'
+        : 'Gracias por tomarte este momento para ti.';
+  return `Listo, ${name}. Guardé tu chequeo de ${activities[activity].label.toLowerCase()} ${spokenMoments[moment]}. Registraste ${spokenNumber.format(Number(values.sleep))} horas de sueño${mood}.${exercise} ${closing}`;
 }
 
 const empty: CheckFormValues = { sleep: '', fatigue: '', note: '' };
-const exerciseLabel = (value?: boolean) =>
-  value === undefined ? 'Sin responder' : value ? 'Sí' : 'No';
-
-function describeHealthReport(report: CheckFormValues['healthReport']) {
-  if (!report) return [];
-  const system = healthSystems.find(({ id }) => report.systemId === id);
-  const visual = visionActivities.find(({ id }) => report.visionActivityId === id);
-  return [
-    {
-      label: system?.shortLabel ?? 'Área de salud',
-      value: reportedStateLabels[report.reportedState],
-    },
-    ...(visual ? [{ label: 'Actividad visual', value: visual.label }] : []),
-  ];
-}
-
-function fieldLabel(field: ActivityField, moment: DailyMoment) {
-  return field === 'durationMinutes' ? durationLabels[moment] : fields[field].label;
-}
-
-function describeContext(context: NonNullable<CheckFormValues['context']>) {
-  return activityFields[context.activity].flatMap((key) => {
-    const value = context.measurements[key];
-    return value === undefined
-      ? []
-      : [
-          {
-            label: fieldLabel(key, context.moment),
-            value: `${value} ${fields[key].unit}`.trim(),
-          },
-        ];
-  });
-}
-
 export function useDailyCheckViewModel(
   data: MissionData,
   onSave: DailyCheckScreenProps['onSave'],
@@ -187,7 +136,10 @@ export function useDailyCheckViewModel(
     step === 3 ? savedReply : values.mood ? tumiWellbeingReplies[values.mood] : greeting;
   const tumiWords = tumiReply.split(/\s+/);
   const speaking = audio.playing && audio.spokenWords !== undefined;
-  const expressions = tumiExpressions[step === 3 ? 'result' : (values.mood ?? 'greeting')];
+  const expressions =
+    tumiExpressions[
+      step === 3 ? (values.mood === 'low' ? 'low' : 'result') : (values.mood ?? 'greeting')
+    ];
   const phase = Math.min(2, Math.floor(((audio.spokenWords ?? 0) * 3) / tumiWords.length));
 
   return {
@@ -214,8 +166,9 @@ export function useDailyCheckViewModel(
       if (audio.playing) audio.stop();
       else audio.play(tumiReply, { transcript: true });
     },
-    selectMood(mood?: CheckFormValues['mood']) {
+    selectMood(mood?: CheckFormValues['mood'], speak = true) {
       setValues((current) => ({ ...current, mood }));
+      if (!speak) return;
       if (mood) audio.play(tumiWellbeingReplies[mood], { transcript: true });
       else audio.stop();
     },
@@ -274,21 +227,6 @@ export function useDailyCheckViewModel(
           { label: 'Nota', value: values.note.trim() || 'Sin informar' },
         ]
       : [],
-    checks: data.checks.map((check) => ({
-      ...check,
-      contextLabel: check.context
-        ? `${activities[check.context.activity].label} · ${moments[check.context.moment]}`
-        : undefined,
-      savedAttachment: mapDailyCheckAttachment(check.attachment),
-      details: [
-        { label: 'Ejercicio realizado', value: exerciseLabel(check.exerciseDone) },
-        ...describeHealthReport(check.healthReport),
-        ...(check.discomfortRegion
-          ? [{ label: 'Región con molestias', value: regions[check.discomfortRegion] }]
-          : []),
-        ...(check.context ? describeContext(check.context) : []),
-      ],
-    })),
     selectActivity(id: DailyActivity) {
       if (activity !== id) setMeasurements({});
       setActivity(id);
@@ -302,13 +240,16 @@ export function useDailyCheckViewModel(
     setMeasurement(key: ActivityField, value: string) {
       setMeasurements((current) => ({ ...current, [key]: value }));
     },
+    reviewGuided() {
+      if (context && values.sleep !== '') setStep(2);
+    },
     back() {
       if (!pending.current) {
         setFailed(false);
         setStep(Math.max(0, step - 1));
       }
     },
-    async advance() {
+    async advance(speakSummary = true) {
       if (!context || pending.current) return;
       if (step < 2) {
         if (step === 1) audio.stop();
@@ -343,7 +284,7 @@ export function useDailyCheckViewModel(
       );
       setSavedReply(summary);
       setStep(3);
-      audio.play(summary, { transcript: true });
+      if (speakSummary) audio.play(summary, { transcript: true });
     },
     edit() {
       audio.stop();

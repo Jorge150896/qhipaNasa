@@ -36,28 +36,58 @@ export function CrewView({
   const { data, habitatLabel, scene, mode, onModeChange } = dashboard;
   return (
     <>
-      <nav className="crew-section-links" aria-label="Secciones de Tripulación">
-        {(
-          [
-            ['now', 'Ahora'],
-            ['history', 'Historial'],
-            ['avatar', 'Personalización'],
-          ] as const
-        ).map(([id, label]) => (
-          <button
-            className="button secondary"
-            type="button"
-            key={id}
-            id={id === 'history' ? 'assistant-target-history' : undefined}
-            data-assistant-control={id === 'history' ? undefined : `crew-${id}`}
-            aria-controls={`crew-${id === 'avatar' ? 'avatar-panel' : id}`}
-            aria-pressed={section === id}
-            onClick={() => onChangeSection(id)}
+      <div className="crew-view-controls">
+        <nav className="crew-section-links" aria-label="Secciones de Tripulación">
+          {(
+            [
+              ['now', 'Ahora'],
+              ['history', 'Historial'],
+              ['avatar', 'Personalización'],
+            ] as const
+          ).map(([id, label]) => (
+            <button
+              className="button secondary"
+              type="button"
+              key={id}
+              id={id === 'history' ? 'assistant-target-history' : undefined}
+              data-assistant-control={id === 'history' ? undefined : `crew-${id}`}
+              aria-controls={`crew-${id === 'avatar' ? 'avatar-panel' : id}`}
+              aria-pressed={section === id}
+              onClick={() => onChangeSection(id)}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
+        {section === 'now' && (
+          <div
+            className="segmented crew-explorer-switch"
+            role="group"
+            aria-label="Vista del explorador"
           >
-            {label}
-          </button>
-        ))}
-      </nav>
+            <button
+              type="button"
+              data-assistant-control="crew-body"
+              aria-controls="crew-body"
+              aria-pressed={mode === 'crew'}
+              onClick={() => onModeChange('crew')}
+            >
+              <Icon name="users" size={14} />
+              Astronauta
+            </button>
+            <button
+              type="button"
+              data-assistant-control="crew-ship"
+              aria-controls="crew-body"
+              aria-pressed={mode === 'ship'}
+              onClick={() => onModeChange('ship')}
+            >
+              <Icon name="rocket" size={14} />
+              {habitatLabel}
+            </button>
+          </div>
+        )}
+      </div>
       <section
         hidden={section !== 'now'}
         id="crew-now"
@@ -79,10 +109,8 @@ export function CrewView({
           anchorId="crew-body"
           crewName={data.selected.name}
           zoneName={data.name}
-          habitatLabel={habitatLabel}
           scene={scene}
           mode={mode}
-          onModeChange={onModeChange}
         />
         {environmentReferences}
       </section>

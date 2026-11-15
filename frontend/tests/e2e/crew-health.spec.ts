@@ -1,5 +1,59 @@
 import { expect, test } from '@playwright/test';
 
+test('muestra las lecturas a la izquierda y abre la primera ficha a la derecha', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/mission/crew');
+  const explorer = page.getByRole('region', { name: 'Explorador tridimensional' });
+  const viewer = explorer.locator('.scene-viewport');
+  const readings = explorer.getByRole('group', { name: 'Lecturas de la instantánea' });
+  const detail = explorer.locator('#crew-reading-panel').getByRole('complementary');
+  const pulse = readings.getByRole('button', { name: 'Pulso', exact: true });
+  await expect(viewer.locator('canvas')).toBeVisible();
+  await expect(detail).toHaveAccessibleName('Frecuencia cardíaca');
+  await expect(pulse).toHaveAttribute('aria-expanded', 'true');
+  expect(await page.evaluate(() => scrollY)).toBe(0);
+  const tabs = page.getByRole('navigation', { name: 'Secciones de Tripulación' });
+  const switcher = page.getByRole('group', { name: 'Vista del explorador' });
+  const tabBox = (await tabs.getByRole('button', { name: 'Ahora' }).boundingBox())!;
+  const switchBox = (await switcher.boundingBox())!;
+  expect(
+    Math.abs(tabBox.y + tabBox.height / 2 - (switchBox.y + switchBox.height / 2)),
+  ).toBeLessThan(2);
+  const viewport = (await viewer.boundingBox())!;
+  const selector = (await readings.boundingBox())!;
+  const initialCard = (await detail.boundingBox())!;
+  expect(selector.x + selector.width).toBeLessThan(viewport.x);
+  expect(initialCard.x).toBeGreaterThan(viewport.x + viewport.width);
+
+  for (const [label, title] of [
+    ['Temperatura', 'Temperatura corporal'],
+    ['SpO₂', 'Saturación periférica'],
+    ['Respiración', 'Frecuencia respiratoria'],
+  ]) {
+    const button = readings.getByRole('button', { name: label, exact: true });
+    await button.click();
+    await expect(button).toHaveAttribute('aria-expanded', 'true');
+    await expect(detail).toHaveAccessibleName(title);
+    await expect(readings.getByRole('button')).toHaveCount(4);
+    expect((await detail.boundingBox())!.x).toBeGreaterThan(viewport.x + viewport.width);
+  }
+  await detail.getByRole('button', { name: 'Cerrar ficha corporal' }).click();
+  await expect(detail).toHaveCount(0);
+  await expect(readings.getByRole('button', { name: 'Respiración', exact: true })).toBeFocused();
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+  await expect(detail).toHaveAccessibleName('Frecuencia cardíaca');
+  const mobileSelector = (await readings.boundingBox())!;
+  const mobileCard = (await detail.boundingBox())!;
+  expect(mobileCard.y).toBeGreaterThanOrEqual(mobileSelector.y + mobileSelector.height);
+  await expect(readings.getByRole('button')).toHaveCount(4);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});
+
 test('Tripulación simplificada conserva lecturas, puntos y registros en el historial', async ({
   page,
 }) => {
@@ -137,7 +191,10 @@ test('nave de Tripulación distingue la ubicación de Elena del módulo explorad
 }) => {
   await page.goto('/mission/crew');
   const explorer = page.getByRole('region', { name: 'Explorador tridimensional' });
-  await explorer.getByRole('button', { name: 'Nave', exact: true }).click();
+  await page
+    .getByRole('group', { name: 'Vista del explorador' })
+    .getByRole('button', { name: 'Nave', exact: true })
+    .click();
   const panel = explorer.getByRole('complementary', { name: 'Contexto del módulo' });
   const rest = explorer.getByRole('button', { name: 'Explorar Hábitat de descanso', exact: true });
   const exercise = explorer.getByRole('button', {
@@ -426,6 +483,7 @@ test('las etiquetas del astronauta son legibles en oscuro, incluso al selecciona
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/mission/crew');
   const vision = page.getByRole('button', { name: 'Explorar visión y sistema neuroocular' });
   const pulse = page.getByRole('button', { name: 'Consultar frecuencia cardíaca' });

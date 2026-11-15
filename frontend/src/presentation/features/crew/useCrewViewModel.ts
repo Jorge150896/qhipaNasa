@@ -41,6 +41,20 @@ const readableUnits: Record<SensorKey, string> = {
   temperature: '°C',
 };
 
+type CrewReadingPreview = {
+  crewId: string;
+  systemId: BodySystemKey;
+  sensorId?: SensorKey;
+  kind: 'initial' | 'sensor' | 'region';
+};
+
+function initialReading(crew: MissionData['selected']): CrewReadingPreview | null {
+  const first = crew.metrics[0];
+  return first
+    ? { crewId: crew.id, systemId: systemBySensor[first.id], sensorId: first.id, kind: 'initial' }
+    : null;
+}
+
 export function useCrewViewModel(habitatId: string, mission: MissionData) {
   const dashboard = useMissionDashboardViewModel(habitatId, 'crew');
   const [healthSystem, selectHealthSystem] = useState<BodySystemKey>(
@@ -54,15 +68,10 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
   function selectTimeline(selection: CrewTimelineSelection) {
     setTimeline({ scope: timelineScope, selection });
   }
-  const [preview, setPreview] = useState<{
-    crewId: string;
-    systemId: BodySystemKey;
-    sensorId?: SensorKey;
-    kind: 'sensor' | 'region';
-  } | null>(null);
+  const [preview, setPreview] = useState(() => initialReading(mission.selected));
 
   if (preview && preview.crewId !== mission.selected.id) {
-    setPreview(null);
+    setPreview(initialReading(mission.selected));
     setOpenTrend(false);
   }
 
@@ -105,7 +114,7 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
 
   const hologram: CrewHologramData | null = system
     ? {
-        title: preview?.kind === 'sensor' ? (metric?.label ?? system.label) : system.label,
+        title: preview?.kind !== 'region' ? (metric?.label ?? system.label) : system.label,
         sensorId: metric?.id,
         icon: metric?.id === 'respiration' ? 'wind' : system.icon,
         entryAction:
@@ -116,7 +125,7 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
               : 'Registrar cómo me siento',
         recordKind: system.id === 'vision' || system.id === 'fitness' ? system.id : undefined,
         explanation:
-          metric && preview?.kind === 'sensor'
+          metric && preview?.kind !== 'region'
             ? metricMeaning[metric.id]
             : metric
               ? system.overview
@@ -296,6 +305,7 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
     },
     selectBodyRegion,
     hologram,
+    focusReadingOnOpen: preview?.kind !== 'initial',
     activeBodyRegion,
     closeHologram() {
       setPreview(null);

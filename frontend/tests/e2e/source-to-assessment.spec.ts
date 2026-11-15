@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { openTumiChat } from './tumi-chat-helpers';
-import { confirmDailyCheck, openDailyAssessment } from './daily-check-helpers';
+import {
+  confirmDailyCheck,
+  openDailyAssessment,
+  openSavedDailyChecks,
+} from './daily-check-helpers';
 
 test('Tumi abre Fuentes fuera del menú y enlaza el estudio desde el mismo hábitat', async ({
   page,
@@ -65,7 +69,7 @@ test('de una lectura de respiración al módulo, Tumi y el autorregistro', async
   await confirmDailyCheck(page);
   await expect(page.getByText('Chequeo guardado', { exact: true })).toBeVisible();
   await page.reload();
-  await expect(page.locator('.check-list')).toContainText(
+  await expect(await openSavedDailyChecks(page)).toContainText(
     'Observación ficticia durante el descanso.',
   );
 });

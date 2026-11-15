@@ -6,6 +6,6 @@ El hook posee pausa manual y repetición del rebote del logo. `useSyncExternalSt
 
 Paleta: naranja `#FB5607` para el CTA, morado `#8338EC`, carbón `#212529` y claro `#E9ECEF`. La portada usa el fondo espacial común y una capa propia para el planeta y su parallax.
 
-Assets locales: texturas compartidas `public/backgrounds/mission-*-4k.webp` y Tumi sobre cohete proporcionado por el usuario, preparado con recorte de fondo mediante IA (`public/brand/tumi-rocket.png`). El logo actual es una composición tipográfica provisional con un icono Lucide. Las ilustraciones son decorativas.
+Assets locales: texturas compartidas `public/backgrounds/mission-*-4k.webp` y la secuencia de 12 fotogramas de Tumi proporcionada por el usuario (`public/brand/tumi-landing-frames.webp`). Dos capas del sprite transparente usan Web Animations para fundir las poses. CSS conserva la flotación y muestra el primer fotograma cuando el sistema pide movimiento reducido. La marca en la cabecera combina el nombre de Qhipa Pacha con el retrato vectorial de Tumi guiñando. Las ilustraciones son decorativas.
 
 «Iniciar mi misión» activa una introducción fullscreen de mínimo 3 s en el ViewModel, solo tras pulsar el CTA. Screen precarga la ruta y navega al terminar; mientras tanto sustituye la portada por el loader, evitando acciones duplicadas. El temporizador se limpia al desmontar. Las entradas por otros enlaces y las secciones internas no activan esa introducción.

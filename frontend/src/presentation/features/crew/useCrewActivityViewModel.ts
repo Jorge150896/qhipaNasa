@@ -4,6 +4,7 @@ import type { LoadMonitoringJournal } from '@/domain/usecases/ManageMonitoringJo
 import type { CrewHealthTimelineRecord } from '../crew-health/types';
 import type { MissionData } from '../mission/types';
 import { metricLabels } from '../mission/constants';
+import { describeDailyCheck } from '../daily-check/dailyCheckDetails';
 
 const date = new Intl.DateTimeFormat('es-PE', {
   dateStyle: 'medium',
@@ -98,6 +99,7 @@ export function useCrewActivityViewModel(load: LoadMonitoringJournal, mission: M
             at: check.recordedAt,
             title: 'Monitoreo diario',
             kind: 'check' as const,
+            check: describeDailyCheck(check),
             detail: [
               `Ánimo: ${check.mood.toLowerCase()}`,
               check.exerciseDone === undefined

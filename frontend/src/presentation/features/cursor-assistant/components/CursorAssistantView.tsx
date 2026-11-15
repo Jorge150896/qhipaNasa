@@ -9,6 +9,8 @@ import { TumiSpeechBubble } from './TumiSpeechBubble';
 
 export function CursorAssistantView({
   data,
+  viewIntroduction,
+  viewPath,
   usesOpenAi,
   actor,
   onDraft,
@@ -29,6 +31,8 @@ export function CursorAssistantView({
   onStopVoice,
 }: {
   data: CursorAssistantData;
+  viewIntroduction?: string;
+  viewPath: string;
   usesOpenAi: boolean;
   actor: RefObject<HTMLDivElement | null>;
   onDraft(value: string): void;
@@ -106,9 +110,12 @@ export function CursorAssistantView({
         >
           <TumiTechPortrait id={id} emotion={data.emotion} />
         </button>
-        {!data.open && !following && !data.paused && !data.speaking && (
-          <TumiSpeechBubble onOpen={onToggle} />
-        )}
+        <TumiSpeechBubble
+          enabled={!data.open && !following && !data.paused && !data.speaking}
+          introduction={viewIntroduction}
+          viewPath={viewPath}
+          onOpen={onToggle}
+        />
       </div>
       <button className="cursor-assistant-restore tumi-safe-launcher" onClick={onToggle}>
         Abrir Tumi

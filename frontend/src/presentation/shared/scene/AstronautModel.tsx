@@ -2,7 +2,7 @@ import { publicAsset } from '@/presentation/shared/publicAsset';
 import { Html, useGLTF } from '@react-three/drei';
 import { useEffect, useMemo, useRef, type RefObject } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Box3, PerspectiveCamera, Sphere, type Group, type PointLight } from 'three';
+import { Box3, PerspectiveCamera, Sphere, Vector3, type Group, type PointLight } from 'three';
 import { useAstronautFinish } from './useAstronautFinish';
 import { bodyZones, type SceneBodyRegion, type SceneSensor } from './astronautBodyZones';
 const hotspots: {
@@ -30,11 +30,13 @@ export function AstronautModel({
   selectedSystem,
   activeBodyRegion,
   onFrameDistance,
+  immersiveFit = false,
   onSelectSystem,
 }: {
   selectedSystem?: string;
   activeBodyRegion?: SceneBodyRegion;
   onFrameDistance?(distance: number): void;
+  immersiveFit?: boolean;
   onSelectSystem?(id: 'cardio' | 'fitness' | 'vision'): void;
   selected: SceneSensor;
   onSelect?(id: SceneSensor): void;
@@ -45,11 +47,17 @@ export function AstronautModel({
   const highlight = activeBodyRegion && bodyZones[activeBodyRegion];
   const camera = useThree((state) => state.camera);
   const aspect = useThree(({ size }) => size.width / Math.max(1, size.height));
-  const radius = useMemo(() => {
-    const bounds = new Box3().setFromObject(model).getBoundingSphere(new Sphere());
-    bounds.center.y -= 1;
-    return bounds.radius + bounds.center.length() + 0.035;
+  const fit = useMemo(() => {
+    const bounds = new Box3().setFromObject(model);
+    const sphere = bounds.getBoundingSphere(new Sphere());
+    sphere.center.y -= 1;
+    return {
+      centerY: bounds.getCenter(new Vector3()).y,
+      size: bounds.getSize(new Vector3()),
+      radius: sphere.radius + sphere.center.length() + 0.035,
+    };
   }, [model]);
+  const baseline = immersiveFit ? -fit.centerY : -1;
   const astronaut = useRef<Group>(null);
   const glint = useRef<PointLight>(null);
   const glintTime = useRef(0);
@@ -63,13 +71,13 @@ export function AstronautModel({
       allowsMotion.current = !preference.matches;
       if (preference.matches && astronaut.current) {
         elapsed.current = 0;
-        astronaut.current.position.y = -1;
+        astronaut.current.position.y = baseline;
       }
     }
     updateMotion();
     preference.addEventListener('change', updateMotion);
     return () => preference.removeEventListener('change', updateMotion);
-  }, [onFrameDistance]);
+  }, [baseline, onFrameDistance]);
 
   useEffect(() => {
     glintTime.current = 0;
@@ -81,14 +89,22 @@ export function AstronautModel({
     // A padded bounding sphere keeps the suit inside both camera axes at every orbit angle.
     const vertical = (camera.fov * Math.PI) / 360;
     const horizontal = Math.atan(Math.tan(vertical) * aspect);
-    onFrameDistance((radius * 1.1) / Math.sin(Math.min(vertical, horizontal)));
-  }, [aspect, camera, onFrameDistance, radius]);
+    if (immersiveFit) {
+      const halfWidth = Math.hypot(fit.size.x, fit.size.z) / 2;
+      const heightDistance = ((fit.size.y / 2 + 0.035) * 1.05) / Math.tan(vertical);
+      const widthDistance = (halfWidth * 1.13) / Math.tan(horizontal);
+      onFrameDistance(Math.max(heightDistance, widthDistance) + fit.size.z / 2);
+    } else {
+      onFrameDistance((fit.radius * 1.1) / Math.sin(Math.min(vertical, horizontal)));
+    }
+  }, [aspect, camera, fit, immersiveFit, onFrameDistance]);
 
   useFrame((_, delta) => {
     if (!onFrameDistance || !astronaut.current) return;
     const step = allowsMotion.current ? Math.min(delta, 0.05) : 0;
     elapsed.current = (elapsed.current + step) % 12;
-    astronaut.current.position.y = -1 + Math.sin((elapsed.current * Math.PI * 2) / 12) * 0.035;
+    astronaut.current.position.y =
+      baseline + Math.sin((elapsed.current * Math.PI * 2) / 12) * 0.035;
     if (glint.current) {
       glintTime.current += step;
       const pulse = Math.sin(Math.PI * Math.min(glintTime.current / 0.75, 1));
@@ -97,7 +113,7 @@ export function AstronautModel({
   });
 
   return (
-    <group ref={astronaut} position={[0, -1, 0]}>
+    <group ref={astronaut} position={[0, baseline, 0]}>
       <primitive object={model} />
       {onSelectSystem &&
         touchableZones.map((zone) => (

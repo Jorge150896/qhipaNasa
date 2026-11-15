@@ -28,6 +28,7 @@ import { AssistantRobot } from './components/AssistantRobot';
 import './mission-assistant.css';
 import { CursorAssistantScreen } from '../cursor-assistant/CursorAssistantScreen';
 import { mapTumiContext } from './mapTumiContext';
+import { tumiViewIntroductions } from './tumiViewIntroductions';
 
 interface Point {
   left: number;
@@ -60,6 +61,22 @@ export function MissionAssistantScreen({
       }
     >(),
   );
+  const viewListeners = useRef(new Set<() => void>());
+  const notificationQueued = useRef(false);
+  const notifyViewChange = useCallback(() => {
+    if (notificationQueued.current) return;
+    notificationQueued.current = true;
+    queueMicrotask(() => {
+      notificationQueued.current = false;
+      viewListeners.current.forEach((notify) => notify());
+    });
+  }, []);
+  const subscribeToViews = useCallback((listener: () => void) => {
+    viewListeners.current.add(listener);
+    return () => {
+      viewListeners.current.delete(listener);
+    };
+  }, []);
   const registerView = useCallback(
     (
       context: TumiScreenContext,
@@ -68,17 +85,30 @@ export function MissionAssistantScreen({
     ) => {
       const id = Symbol();
       views.current.set(id, { path: pathname, context, priority, localAnswer });
+      notifyViewChange();
       return () => {
         views.current.delete(id);
+        notifyViewChange();
       };
     },
-    [pathname],
+    [pathname, notifyViewChange],
   );
   function visibleViews() {
     return [...views.current.values()]
       .filter((entry) => entry.path === pathname)
       .sort((a, b) => a.priority - b.priority);
   }
+  const viewIntroduction = useSyncExternalStore(
+    subscribeToViews,
+    () => {
+      for (const { context } of visibleViews()) {
+        const introduction = tumiViewIntroductions[context.view];
+        if (introduction) return introduction;
+      }
+      if (pathname.endsWith('/sources')) return tumiViewIntroductions['Fuentes y alcance'];
+    },
+    () => undefined,
+  );
   function getContext(reading?: ReturnType<typeof captureMetricContext>) {
     const currentViews = visibleViews();
     const mainView = currentViews[0]?.context.view;
@@ -230,6 +260,8 @@ export function MissionAssistantScreen({
       {children}
       <CursorAssistantScreen
         getContext={getContext}
+        viewIntroduction={viewIntroduction}
+        viewPath={pathname}
         getLocalReply={
           !data
             ? undefined

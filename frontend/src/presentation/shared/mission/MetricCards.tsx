@@ -11,11 +11,13 @@ export function MetricCards({
   metrics,
   selectedId,
   onSelect,
+  disclosureId,
 }: {
   labelsOnly?: boolean;
   metrics: MetricData[];
   selectedId?: SensorKey;
   onSelect(id: SensorKey): void;
+  disclosureId?: string;
 }) {
   return (
     <div
@@ -29,6 +31,8 @@ export function MetricCards({
           id={`assistant-target-metric-${metric.id}`}
           className={labelsOnly ? 'metric-card' : `metric-card ${metric.qualityTone}`}
           aria-pressed={selectedId === metric.id}
+          aria-controls={disclosureId}
+          aria-expanded={disclosureId ? selectedId === metric.id : undefined}
           onClick={() => onSelect(metric.id)}
         >
           <span className="metric-label">

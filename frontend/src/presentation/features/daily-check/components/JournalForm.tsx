@@ -2,8 +2,8 @@ import { useEffect, useRef, type FormEvent } from 'react';
 import { CheckAttachments } from './CheckAttachments';
 import { Frown, Meh, Smile } from 'lucide-react';
 import { Icon } from '@/ui/Icon';
-import { DailyWellbeingMessage, DailyWellbeingWelcome } from './DailyWellbeingWelcome';
-import type { DailyCheckViewModel } from '../types';
+import { DailyWellbeingWelcome } from './DailyWellbeingWelcome';
+import type { DailyCheckGuideViewModel, DailyCheckViewModel } from '../types';
 
 const moodIcons = { good: Smile, neutral: Meh, low: Frown };
 
@@ -14,25 +14,26 @@ export function JournalForm({
   saving,
   updating,
   model,
-  onAskTumi,
+  guide,
 }: {
   personName: string;
   saving: boolean;
   updating: boolean;
   model: DailyCheckViewModel;
-  onAskTumi?(question: string): void;
+  guide: DailyCheckGuideViewModel;
 }) {
   const { step, values } = model;
   const heading = useRef<HTMLHeadingElement>(null);
   const lastStep = useRef(step);
   useEffect(() => {
-    if (lastStep.current !== step) heading.current?.focus();
+    if (lastStep.current !== step || (step === 2 && guide.mode === 'guided'))
+      heading.current?.focus();
     lastStep.current = step;
-  }, [step]);
+  }, [step, guide.mode]);
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!saving) void model.advance();
+    if (!saving) void model.advance(guide.mode !== 'guided' || guide.voice);
   }
 
   const tumi = (
@@ -59,6 +60,15 @@ export function JournalForm({
       onSubmit={submit}
       noValidate={step !== 1}
     >
+      {step === 0 && (
+        <button
+          type="button"
+          className="text-button daily-check-change-mode"
+          onClick={guide.chooseMode}
+        >
+          Cambiar modo de registro
+        </button>
+      )}
       {step < 2 && (
         <>
           {tumi}
@@ -87,7 +97,6 @@ export function JournalForm({
               </button>
             )}
           </fieldset>
-          {onAskTumi && <DailyWellbeingMessage onAsk={onAskTumi} />}
         </>
       )}
       <ol className="daily-check-progress" aria-label="Progreso del chequeo">
@@ -346,7 +355,7 @@ export function JournalForm({
           <div className="daily-check-result">
             <Icon name="checked" size={25} />
             <strong>Chequeo guardado</strong>
-            <button type="button" className="button secondary" onClick={model.edit}>
+            <button type="button" className="button secondary" onClick={guide.edit}>
               Editar chequeo del día
             </button>
           </div>

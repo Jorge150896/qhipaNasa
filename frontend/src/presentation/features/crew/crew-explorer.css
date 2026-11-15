@@ -815,11 +815,18 @@
   margin-bottom: 10px;
 }
 
+.crew-view-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
 .crew-section-links {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 20px;
-  margin-bottom: 8px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -854,30 +861,6 @@
 
 .crew-metric-picker .metric-label {
   color: inherit;
-}
-
-.crew-body-stage {
-  background: linear-gradient(135deg, var(--selection-soft), var(--surface-raised) 75%);
-}
-
-.crew-body-stage .crew-hologram {
-  border-color: var(--line);
-  background: var(--surface-raised);
-  box-shadow: none;
-}
-
-@media (min-width: 1000px) {
-  .crew-scene-stage.crew-body-stage {
-    grid-template-columns: minmax(125px, 16%) minmax(0, 1fr);
-  }
-
-  .crew-scene-stage.crew-body-stage:has(.crew-hologram) {
-    grid-template-columns: minmax(125px, 16%) minmax(0, 1fr) minmax(255px, 32%);
-  }
-
-  .crew-metric-picker {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 .mission-page.crew-page {
@@ -925,36 +908,16 @@
   border-color: transparent;
 }
 
-.crew-page .crew-picker button[aria-pressed='true'],
-.crew-page .crew-body-stage .metric-card[aria-pressed='true'] {
+.crew-page .crew-picker button[aria-pressed='true'] {
   border-color: var(--line);
   background: var(--glass-active);
   box-shadow: var(--glass-glow);
 }
 
-.crew-page .crew-picker button:not([aria-pressed='true']),
-.crew-page .crew-body-stage .metric-card {
+.crew-page .crew-picker button:not([aria-pressed='true']) {
   border-color: var(--line-soft);
   background: var(--glass);
   border-radius: 999px;
-}
-
-.crew-page .crew-body-stage .metric-card,
-.crew-page .crew-history {
-  backdrop-filter: blur(12px);
-}
-
-.crew-page .crew-body-stage .metric-card {
-  min-height: 51px;
-  padding-inline: 16px;
-}
-
-.crew-page .crew-body-stage .metric-card .metric-label {
-  font-size: 13px;
-}
-
-.crew-page .crew-body-stage .metric-card[aria-pressed='true'] svg {
-  color: var(--accent);
 }
 
 .crew-page .scene-panel:has(.crew-body-stage),
@@ -971,20 +934,166 @@
   padding-inline: 0;
 }
 
-.crew-page .scene-panel:has(.crew-body-stage) .segmented {
+.crew-page .crew-explorer-switch {
   border-color: var(--line-soft);
   border-radius: 999px;
   background: var(--glass);
 }
 
-.crew-page .scene-panel:has(.crew-body-stage) .segmented button {
+.crew-page .crew-explorer-switch button {
   border-radius: 999px;
 }
 
-.crew-page .crew-body-stage .scene-viewport {
+.crew-page .crew-scene-stage.crew-body-stage {
+  --visor-surface: #212529;
+  --visor-text: #e9ecef;
+  --visor-orange: #fb5607;
+  --visor-violet: #8338ec;
+  --visor-height: clamp(380px, 72svh, 740px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+.crew-page .crew-body-stage .scene-viewport,
+.crew-page .crew-body-stage .human-hologram-shell .telemetry-viewport {
   min-width: 0;
+  height: var(--visor-height);
   contain: inline-size;
+  border: 0;
   background: transparent;
+}
+
+.crew-page .crew-body-stage .scene-viewport [style*='touch-action'] {
+  touch-action: pan-y !important;
+}
+
+.crew-page .crew-body-stage .crew-metric-picker {
+  position: relative;
+  z-index: 2;
+  width: min(100% - 24px, 770px);
+  margin: -16px auto 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--visor-violet) 50%, transparent);
+  border-radius: 18px;
+  background: #212529db;
+  box-shadow: 0 10px 24px #0c0a123d;
+  backdrop-filter: blur(14px);
+}
+
+.crew-page .crew-body-stage .metric-card {
+  min-width: 0;
+  min-height: 48px;
+  border: 1px solid #8338ec70;
+  border-radius: 12px;
+  background: #8338ec24;
+  color: var(--visor-text);
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.crew-page .crew-body-stage .metric-card:hover {
+  background-color: #8338ec3d;
+}
+
+.crew-page .crew-body-stage .metric-card[aria-pressed='true'] {
+  border-color: var(--visor-orange);
+  background-color: #fb560729;
+}
+
+.crew-page .crew-body-stage .metric-card svg {
+  color: #c6a1ff;
+}
+
+.crew-page .crew-body-stage .metric-card[aria-pressed='true'] svg {
+  color: var(--visor-orange);
+}
+
+.crew-page .crew-body-stage .metric-label {
+  overflow-wrap: anywhere;
+  font-size: clamp(12px, 1.3vw, 14px);
+}
+
+@media (min-width: 900px) {
+  .mission-page.crew-page {
+    display: grid;
+    grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+    align-items: center;
+    column-gap: 20px;
+    row-gap: 8px;
+  }
+
+  .crew-page > :is(.crew-page-heading, .crew-now, .crew-history, #crew-avatar-panel) {
+    grid-column: 1 / -1;
+  }
+
+  .crew-page > :is(.crew-page-heading, .crew-page-toolbar) {
+    margin-bottom: 0;
+  }
+
+  .crew-page .scene-panel:has(.crew-body-stage) .scene-panel-header {
+    padding-top: 8px;
+  }
+
+  .crew-page .crew-scene-stage.crew-body-stage {
+    --visor-height: clamp(340px, calc(100svh - 435px), 700px);
+    grid-template-columns: minmax(206px, 1fr) minmax(0, 1.8fr) minmax(206px, 1fr);
+    column-gap: clamp(16px, 3vw, 48px);
+    align-items: start;
+  }
+
+  .crew-page .crew-scene-stage.crew-body-stage > .scene-viewport {
+    grid-area: 1 / 2;
+    height: var(--visor-height);
+  }
+
+  .crew-page .crew-body-stage .crew-metric-picker {
+    grid-area: 1 / 1;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    width: min(100%, 220px);
+    justify-self: center;
+    margin: clamp(22px, 5svh, 54px) 0 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  .crew-page .crew-body-stage .metric-card {
+    border-radius: 999px;
+    padding-inline: 16px;
+    background: var(--glass);
+  }
+
+  .crew-page .crew-body-stage .metric-card:is(:hover, [aria-pressed='true']) {
+    background: var(--glass-active);
+  }
+
+  .crew-page .crew-body-stage .crew-reading-panel {
+    grid-area: 1 / 3;
+    min-width: 0;
+    width: min(100%, 360px);
+    justify-self: center;
+    margin-top: clamp(22px, 5svh, 54px);
+  }
+
+  .crew-reading-panel .crew-reading-reveal {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .crew-page .crew-scene-stage.crew-body-stage {
+    --visor-height: clamp(370px, 57svh, 530px);
+  }
+
+  .crew-page .crew-body-stage .crew-metric-picker {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .crew-page .crew-body-stage .scene-hotspot {
@@ -1005,49 +1114,65 @@
     0 3px 10px #25143638;
 }
 
-.crew-page .crew-body-stage .crew-hologram,
 .crew-page .crew-history {
   border: 1px solid var(--line-soft);
   border-radius: 24px;
   background: var(--glass);
   box-shadow: 0 15px 50px #130d222e;
+  backdrop-filter: blur(12px);
+}
+
+.crew-reading-reveal {
+  width: min(100% - 24px, 770px);
+  margin: 14px auto 0;
 }
 
 .crew-page .crew-body-stage .crew-hologram {
-  backdrop-filter: blur(16px);
+  --text: var(--visor-text);
+  --accent: var(--visor-orange);
+  margin: 0;
+  border: 1px solid #8338ec80;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #8338ec26, transparent 58%), var(--visor-surface);
+  animation: none;
 }
 
 .crew-page .crew-body-stage .crew-hologram::before {
   display: none;
 }
 
-@media (min-width: 1000px) {
-  .crew-page .crew-scene-stage.crew-body-stage,
-  .crew-page .crew-scene-stage.crew-body-stage:has(.crew-hologram) {
-    grid-template-columns: minmax(270px, 34%) minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    column-gap: clamp(24px, 5vw, 88px);
+.crew-reading-panel .crew-hologram h3 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.crew-reading-panel .crew-hologram-reading {
+  flex-wrap: wrap;
+}
+
+.crew-reading-reveal h3 {
+  scroll-margin-bottom: calc(118px + env(safe-area-inset-bottom));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .crew-reading-reveal {
+    animation: crew-reading-slide 260ms ease-out;
+  }
+}
+
+@keyframes crew-reading-slide {
+  from {
+    max-height: 0;
+    overflow: clip;
+    opacity: 0;
+    transform: translateY(-8px);
   }
 
-  .crew-page .crew-body-stage .crew-metric-picker {
-    grid-column: 1;
-    grid-row: 1;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    padding: 25px 0 0;
-  }
-
-  .crew-page .crew-body-stage > .scene-viewport,
-  .crew-page .crew-body-stage:has(.crew-hologram) > .scene-viewport {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    height: clamp(410px, 66vh, 690px);
-  }
-
-  .crew-page .crew-body-stage .crew-hologram {
-    grid-column: 1;
-    grid-row: 2;
-    align-self: start;
-    margin: 16px 0 0;
+  to {
+    max-height: var(--reading-height);
+    overflow: clip;
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

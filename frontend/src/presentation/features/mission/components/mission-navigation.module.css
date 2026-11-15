@@ -15,6 +15,14 @@
   font-size: 15px;
   padding: 0;
 }
+.brandMark {
+  flex: 0 0 clamp(32px, 4vw, 44px);
+}
+.brandMark svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 .brand small {
   font-size: 7px;
 }

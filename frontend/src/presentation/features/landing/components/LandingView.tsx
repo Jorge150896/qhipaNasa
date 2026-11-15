@@ -1,4 +1,5 @@
-import type { PointerEvent } from 'react';
+import { useId, type PointerEvent } from 'react';
+import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
 import { Icon } from '@/ui/Icon';
 import type { LandingViewProps } from '../types';
 import { SpaceAtmosphere } from './SpaceAtmosphere';
@@ -14,6 +15,7 @@ export function LandingView({
   onOpenExplorer,
   onOpenCrew,
 }: LandingViewProps) {
+  const brandPortraitId = useId();
   function moveAtmosphere(event: PointerEvent<HTMLElement>) {
     if (!motionActive || event.pointerType !== 'mouse') return;
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -50,7 +52,7 @@ export function LandingView({
         >
           <span key={logoRevision} className="qhipa-brand-bounce">
             <span className="qhipa-brand-mark" aria-hidden="true">
-              <Icon name="orbit" size={31} />
+              <TumiTechPortrait id={brandPortraitId} emotion="wink" />
             </span>
             <span className="qhipa-wordmark">
               QHIPA <strong>PACHA</strong>
@@ -90,13 +92,6 @@ export function LandingView({
               <span>Iniciar mi misión</span>
               <Icon name="arrow" size={21} />
             </button>
-            <button
-              className="qhipa-secondary-cta"
-              data-assistant-control="map"
-              onClick={onOpenExplorer}
-            >
-              Explorar el universo <Icon name="orbit" size={16} />
-            </button>
           </div>
           <div className="qhipa-mission-note">
             <span className="qhipa-note-line" />
@@ -107,7 +102,7 @@ export function LandingView({
             </span>
           </div>
         </div>
-        <TumiFlight />
+        <TumiFlight motionActive={motionActive} />
       </section>
       <footer className="qhipa-footer">
         <span>

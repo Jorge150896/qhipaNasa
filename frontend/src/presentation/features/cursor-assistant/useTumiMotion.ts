@@ -208,11 +208,6 @@ export function useTumiMotion(
     };
     const relocate = () => {
       if (isTumiMobile()) {
-        const { w, h } = dimensions();
-        current = target = {
-          x: Math.max(0, innerWidth - w - 8),
-          y: Math.max(0, (innerHeight - h) / 2),
-        };
         cancelAnimationFrame(frame);
         paint();
         return;

@@ -1,6 +1,10 @@
 # Desarrollo del frontend
 
-Monitoreo diario reúne las respuestas, las lecturas corporales y las condiciones del hábitat en un solo formulario. [Las sesiones anteriores](monitoring.md) se consultan en Tripulación → Historial.
+Monitoreo diario reúne las respuestas, las lecturas corporales y las condiciones del hábitat en un solo formulario. Los chequeos guardados y [las sesiones anteriores](monitoring.md) se despliegan en Tripulación → Historial → Actividad guardada. El chat se abre desde el Tumi flotante.
+
+En el chequeo guiado, Tumi reacciona a la respuesta al presentar la siguiente pregunta. Tras guardar, muestra un resumen que se puede volver a escuchar.
+
+En Tripulación → Ahora, el visor corporal ajusta el encuadre al tamaño disponible. Los cuatro indicadores aparecen a la izquierda y la ficha seleccionada a la derecha en escritorio. En pantallas estrechas, los indicadores y la ficha aparecen debajo del visor. La primera lectura se abre al entrar y los botones permiten cambiar de lectura. El visor permite girar el astronauta y la rueda desplaza la página.
 
 ## Acompañante animado Tumi
 
@@ -157,6 +161,8 @@ La introducción mínima de tres segundos pertenece ahora al ViewModel de portad
 
 ### Monitoreo diario por actividad
 
+El chequeo ofrece «Llenar a mano» y «Hacerlo con Tumi». La guía muestra una pregunta a la vez y puede leerla con la voz del navegador. Las respuestas, mediciones opcionales y notas se comparten entre ambos modos durante la sesión. El flujo entra a la misma confirmación y guardado del chequeo manual. El resumen de Tumi aparece cuando termina el guardado.
+
 `DailyCheckScreen` conecta el estado local de los cuatro pasos con la acción de guardado de `useMission`. El caso de uso `RecordDailyCheck` valida los datos generales y los campos permitidos por actividad. El diario mantiene su clave y versión con `context` y `discomfortRegion` opcionales. Los campos vacíos se omiten y los ceros ingresados se conservan. Al recargar, el chequeo del día UTC se puede editar con sus valores guardados. La consola muestra la instantánea sintética del escenario, separada de las respuestas ingresadas.
 
 # Detalle visual de cuerpos y nave
@@ -167,11 +173,11 @@ El selector HTML de destinos aparece antes del Canvas. «Ampliar mapa» desplaza
 
 El mapa permite inspeccionar Tierra, Luna, Marte y nave con controles HTML. El enfoque pausa la simulación y ajusta la distancia a los límites visuales y al aspecto del viewport. `PlanetSurface` comparte textura, nubes, relieve y atmósfera entre el mapa y el globo geográfico; las capas opcionales fallidas no impiden seleccionar lugares. La nave mantiene sus zonas y el portal HTML independiente. Procedencia y límites de las texturas locales en `frontend/public/textures/ATTRIBUTION.md`.
 
-### Modelos holográficos conservados en Fabian
+### Visor corporal y personalización
 
-La integración de origin/main conserva el explorador, fichas, línea de tiempo y formularios de main. Dentro de Tripulación, «Modelo corporal» permite cambiar entre el astronauta con traje existente y el holograma humano local. El astronauta sigue siendo la entrada inicial. El holograma mantiene sus variantes neutra, masculina y femenina, shader, giro, zoom y lecturas sobre el cuerpo; seleccionar una región abre las fichas de salud del flujo actual. Los accesos HTML de main siguen disponibles si falla el modelo o WebGL.
+Tripulación usa el astronauta con traje en el visor corporal de Ahora. La pestaña Personalización muestra el editor abierto con accesorios, herramientas, colores y fondo. Las lecturas HTML siguen disponibles si falla el modelo o WebGL. El portal de etiquetas permanece separado del Canvas.
 
-`useCrewHologramViewModel` administra solo representación y apariencia por hábitat/persona durante la visita. No amplía el ViewModel de salud ni modifica dominio, diario o sensores. Al salir de Tripulación o recargar se reinicia. Los estilos viven en `crew/human-hologram.css`. Los recursos y sus licencias están documentados en `public/models/ATTRIBUTION.md`; el portal de etiquetas permanece separado del Canvas. Las maquetas locales anteriores de Chequeo Diario y Aurora no forman parte de esta integración.
+Los modelos holográficos y sus licencias se conservan en `public/models/`. La atribución está en `public/models/ATTRIBUTION.md`.
 
 ### Procedencia verificable de muestras
 
@@ -182,5 +188,5 @@ Historial añade «Ver origen» por muestra, conservando la distribución y el t
 El backend Java ya ofrece catálogo y series de NASA RadLab. La web todavía no los consume; crear una feature/adapter ambiental separado del consumidor de signos vitales. Ejemplos, CORS, errores, zonas horarias y límites en [radlab-backend.md](radlab-backend.md). El contrato comparte `docs/contracts/openapi.yaml` y no requiere cambiar paleta o modelos.
 
 ### Limpieza visual de cabeceras
-Se retiran la hora/escenario y actividad/ubicación de la cabecera de Tripulación, la insignia «Archivo histórico» de Centros en Tierra y su pie de página. Las lecturas conservan su procedencia y fecha en las fichas e Historial. El selector corporal está en Personalización; Tumi no tiene un botón independiente en la barra ni en la cabecera. El chat sigue accesible desde el personaje flotante y las fichas.
+Se retiran la hora/escenario y actividad/ubicación de la cabecera de Tripulación, la insignia «Archivo histórico» de Centros en Tierra y su pie de página. Las lecturas conservan su procedencia y fecha en las fichas e Historial. Tumi no tiene un botón independiente en la barra ni en la cabecera. El chat sigue accesible desde el personaje flotante y las fichas.
 

@@ -15,6 +15,7 @@ it('confirma los campos de la actividad y conserva el borrador al fallar el guar
     '2026-11-08',
   );
   render(<DailyCheckScreen data={data} saving={false} onSave={save} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Llenar a mano' }));
   fireEvent.click(screen.getByRole('radio', { name: 'Ejercicio' }));
   fireEvent.click(screen.getByRole('radio', { name: 'Antes' }));
   fireEvent.click(screen.getByRole('button', { name: 'Continuar a autoevaluación' }));

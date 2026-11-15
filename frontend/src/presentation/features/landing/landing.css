@@ -106,20 +106,23 @@
   place-items: center;
   width: 50px;
   height: 50px;
-  border: 1px solid #fb560750;
-  background: #fb560712;
-  border-radius: 17px;
-  color: var(--accent);
+  flex-shrink: 0;
   transition: transform 300ms ease;
 }
+.qhipa-brand-mark svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 .qhipa-wordmark {
+  color: var(--brand-wordmark-text);
   font-size: 20px;
   font-weight: 800;
   letter-spacing: 1px;
   line-height: 1.25;
 }
 .qhipa-wordmark strong {
-  color: var(--accent);
+  color: var(--brand-wordmark-accent);
 }
 .qhipa-wordmark small {
   display: block;
@@ -127,7 +130,7 @@
   font-size: 7px;
   font-weight: 400;
   letter-spacing: 2.5px;
-  color: var(--muted);
+  color: var(--brand-wordmark-muted);
 }
 .qhipa-nav {
   display: flex;
@@ -203,8 +206,6 @@
 .qhipa-cta-row {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 24px;
 }
 .qhipa-cta {
   position: relative;
@@ -246,20 +247,6 @@
 .qhipa-cta:active {
   transform: translateY(0) scale(0.98);
 }
-.qhipa-secondary-cta {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  border: 1px solid var(--line-soft);
-  border-radius: 999px;
-  padding: 12px 18px;
-  background: var(--glass);
-  color: var(--muted);
-  font-size: 12px !important;
-}
-.qhipa-secondary-cta:hover {
-  color: var(--accent);
-}
 .qhipa-mission-note {
   display: flex;
   align-items: center;
@@ -288,9 +275,10 @@
 }
 .qhipa-flight-halo {
   position: absolute;
-  inset: 18% 9%;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, #8338ec36, #fb560715 43%, transparent 70%);
+  inset: 8% 4% 3%;
+  background:
+    radial-gradient(ellipse closest-side at 56% 59%, #9e58ec44, #9e58ec16 62%, transparent),
+    radial-gradient(ellipse closest-side at 43% 43%, #ff9e5524, transparent);
 }
 .qhipa-flight-orbit {
   position: absolute;
@@ -310,17 +298,40 @@
   background: #ffd491;
   box-shadow: 0 0 14px #ffb5719c;
 }
+.qhipa-flight-shadow {
+  position: absolute;
+  bottom: 11%;
+  width: 37%;
+  height: 5%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #0b041477, transparent 71%);
+  filter: blur(5px);
+}
 .qhipa-tumi-float {
-  width: 104%;
+  width: min(92%, 480px);
   position: relative;
   z-index: 1;
-  animation: qhipa-tumi-float 6.5s ease-in-out infinite;
+  aspect-ratio: 1;
+  filter: drop-shadow(0 2px 4px #45195b66) drop-shadow(0 10px 21px #ab6af14d);
+  animation: qhipa-tumi-float 5.8s ease-in-out infinite;
+}
+.qhipa-tumi-frames {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
 }
 .qhipa-tumi-image {
+  position: absolute;
+  inset: 0 auto auto 0;
   display: block;
-  width: 100%;
+  width: 400%;
+  max-width: none;
   height: auto;
-  filter: drop-shadow(0 20px 24px #11071a60);
+  mix-blend-mode: plus-lighter;
+}
+.qhipa-tumi-transition {
+  opacity: 0;
 }
 .qhipa-spark {
   position: absolute;
@@ -478,9 +489,6 @@
   .qhipa-description {
     font-size: 14px;
   }
-  .qhipa-cta-row {
-    gap: 14px;
-  }
   .qhipa-flight-caption {
     bottom: -8%;
   }
@@ -556,10 +564,6 @@
   .qhipa-brand-mark {
     width: 38px;
     height: 38px;
-    border-radius: 12px;
-  }
-  .qhipa-brand-mark svg {
-    width: 25px;
   }
   .qhipa-wordmark {
     font-size: 15px;
@@ -589,12 +593,6 @@
     font-size: 12px !important;
     gap: 16px;
   }
-  .qhipa-secondary-cta {
-    font-size: 10px !important;
-  }
-  .qhipa-cta-row {
-    gap: 17px;
-  }
   .qhipa-flight {
     width: 94%;
     margin-top: 6px;
@@ -609,6 +607,13 @@
   .qhipa-landing *::after {
     animation: none !important;
     transition: none !important;
+  }
+  .qhipa-tumi-image {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .qhipa-tumi-transition {
+    opacity: 0 !important;
   }
   .qhipa-parallax {
     transform: none !important;

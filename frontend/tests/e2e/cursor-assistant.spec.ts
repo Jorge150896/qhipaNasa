@@ -152,6 +152,41 @@ test('portada permite movimiento autónomo moderado y arrastre con permanencia t
 
 test.describe('interacción táctil', () => {
   test.use({ hasTouch: true, isMobile: true });
+  test('Tumi queda arriba del tab bar al desplazarse y al cambiar el ancho', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/mission/journal');
+
+    const dock = page.getByRole('navigation', { name: 'Navegación principal' });
+    const tumi = page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true });
+    await expect(tumi).toBeVisible();
+
+    async function expectPosition(width: number) {
+      await expect
+        .poll(async () => {
+          const mascot = await tumi.boundingBox();
+          const nav = await dock.boundingBox();
+          if (!mascot || !nav) return null;
+          return {
+            gapAboveDock: Math.round(nav.y - mascot.y - mascot.height),
+            gapFromRight: Math.round(width - mascot.x - mascot.width),
+          };
+        })
+        .toEqual({ gapAboveDock: 10, gapFromRight: 8 });
+    }
+
+    await expectPosition(390);
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expectPosition(390);
+    await page.setViewportSize({ width: 320, height: 760 });
+    await expectPosition(320);
+
+    await tumi.tap();
+    await expect(
+      page.getByRole('region', { name: 'Asistente Tumi', exact: true }),
+    ).toBeInViewport();
+  });
+
   test('móvil táctil y movimiento reducido conservan chat, controles y ancho', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -240,4 +275,32 @@ test('Tumi comparte la elección de Texto o Audio entre sus chats', async ({ pag
   await contextual.getByRole('button', { name: '¿Qué significa mi SpO₂?' }).click();
   await expect(contextual.getByRole('log').locator('[data-role="assistant"]')).toHaveCount(2);
   await expect(root).not.toHaveAttribute('data-spoken-reply', /.+/);
+});
+
+test('Tumi presenta la vista al navegar y al cambiar de pestaña', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/mission/crew');
+  const intro = page.locator('.cursor-assistant-bubble[data-introduction]');
+  await expect(intro).toContainText('¡Conozcamos a la tripulación!');
+  await expect(intro).toBeInViewport();
+
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
+  await expect(intro).toContainText('recorrer un mes de registros');
+
+  const navigation = page.getByRole('navigation', { name: 'Navegación principal' });
+  await navigation.getByRole('button', { name: 'Monitoreo diario', exact: true }).click();
+  await expect(intro).toContainText('registrar tu ánimo');
+  await intro.getByRole('button', { name: 'Escribir a Tumi' }).click();
+  await expect(page.getByRole('textbox', { name: 'Mensaje para Tumi' })).toBeFocused();
+  await page.keyboard.press('Escape');
+
+  await navigation.getByRole('button', { name: 'Mapa espacial', exact: true }).click();
+  await expect(intro).toContainText('Elige un destino');
+  await page.getByRole('tab', { name: 'Centros en Tierra' }).click();
+  await expect(intro).toContainText('sitios de lanzamiento');
+  await page.reload();
+  await expect(intro).toContainText('sitios de lanzamiento');
 });

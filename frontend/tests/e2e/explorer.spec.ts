@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test';
-import { confirmDailyCheck, openDailyAssessment } from './daily-check-helpers';
+import {
+  confirmDailyCheck,
+  openDailyAssessment,
+  openSavedDailyChecks,
+} from './daily-check-helpers';
 import { PerspectiveCamera } from 'three';
 import { orbitalPosition } from '../../src/presentation/features/space-map/components/orbitalMotion';
 import {
@@ -77,7 +81,7 @@ test('mapa 3D, destinos y navegación preservando diarios y contexto', async ({ 
     ),
   ).toBe('ana');
   await page.reload();
-  await expect(page.locator('.check-list')).toContainText(/6[.,]8 h/);
+  await expect(await openSavedDailyChecks(page)).toContainText(/6[.,]8 h/);
   await nav.getByRole('button', { name: 'Mapa espacial', exact: true }).click();
   await expect(page).toHaveURL(/destination=moon/);
   await expect(page.locator('.fleet-detail')).toContainText('Chequeo registrado');
@@ -88,7 +92,7 @@ test('mapa 3D, destinos y navegación preservando diarios y contexto', async ({ 
   await expect(page).toHaveURL(/\/missions\/aurora\/crew/);
   await expect(page.locator('.crew-picker')).toContainText('Inés Rojas');
   await page.goto('/mission/journal');
-  await expect(page.locator('.check-list')).toContainText(/7[.,]6 h/);
+  await expect(await openSavedDailyChecks(page)).toContainText(/7[.,]6 h/);
   expect(errors).toEqual([]);
 });
 

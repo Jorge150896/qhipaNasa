@@ -136,13 +136,15 @@ test('en pantalla táctil Tumi explica el primer toque y permite usar el control
     await page.getByRole('button', { name: 'Guía local' }).click();
     const floating = page.getByRole('button', { name: 'Abrir asistente Tumi' });
     await expect(floating).toBeVisible();
-    const position = await floating.boundingBox();
-    if (!position) throw new Error('No se encontró a Tumi');
-    expect(Math.abs(position.y + position.height / 2 - 450)).toBeLessThan(4);
-    expect(390 - position.x - position.width).toBeLessThanOrEqual(10);
-    const journal = page
-      .getByRole('navigation', { name: 'Navegación principal' })
-      .getByRole('button', { name: 'Monitoreo diario' });
+    const tabBar = page.getByRole('navigation', { name: 'Navegación principal' });
+    await expect
+      .poll(async () => {
+        const position = await floating.boundingBox();
+        const dock = await tabBar.boundingBox();
+        return position && dock ? Math.round(dock.y - position.y - position.height) : null;
+      })
+      .toBe(10);
+    const journal = tabBar.getByRole('button', { name: 'Monitoreo diario' });
     await journal.tap();
     const tip = page.locator('.assistant-coach-tip');
     await expect(tip).toContainText('Toca de nuevo');

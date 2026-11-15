@@ -1,5 +1,5 @@
 import { useEffect, useId, useState } from 'react';
-import { Flower2, MessageCircle, Pause, Play, Send, Volume2 } from 'lucide-react';
+import { Flower2, Pause, Play, Volume2 } from 'lucide-react';
 import { TumiTechPortrait, type TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
 
 const breathSeconds = 4;
@@ -121,41 +121,6 @@ export function DailyWellbeingWelcome({
         </div>
       </div>
       {!result && <GuidedBreathing />}
-    </div>
-  );
-}
-
-export function DailyWellbeingMessage({ onAsk }: { onAsk(question: string): void }) {
-  const [message, setMessage] = useState('');
-  function send() {
-    if (!message.trim()) return;
-    onAsk(message.trim());
-    setMessage('');
-  }
-  return (
-    <div className="daily-tumi-message">
-      <MessageCircle aria-hidden="true" size={22} />
-      <input
-        type="text"
-        aria-label="Mensaje para Tumi"
-        placeholder="Escribe un mensaje a Tumi…"
-        value={message}
-        maxLength={500}
-        onChange={(event) => setMessage(event.target.value)}
-        onKeyDown={(event) => {
-          if (event.key !== 'Enter' || event.nativeEvent.isComposing) return;
-          event.preventDefault();
-          send();
-        }}
-      />
-      <button
-        type="button"
-        onClick={send}
-        disabled={!message.trim()}
-        aria-label="Enviar mensaje a Tumi"
-      >
-        <Send aria-hidden="true" size={20} />
-      </button>
     </div>
   );
 }

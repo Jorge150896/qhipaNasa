@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { openSavedDailyChecks } from './daily-check-helpers';
 import { openTumiChat } from './tumi-chat-helpers';
 
 test('chequeo por actividad en móvil con reintento, actualización y registros anteriores', async ({
@@ -49,6 +50,7 @@ test('chequeo por actividad en móvil con reintento, actualización y registros 
     };
   });
   await page.goto('/mission/journal');
+  await page.getByRole('button', { name: 'Llenar a mano' }).click();
   const form = page.locator('.daily-check-form');
   await form.getByRole('radio', { name: 'Caminata espacial EVA' }).check();
   await form.getByRole('radio', { name: 'Antes', exact: true }).check();
@@ -104,18 +106,25 @@ test('chequeo por actividad en móvil con reintento, actualización y registros 
   await tumiResult.getByRole('button', { name: 'Escuchar resumen' }).click();
   await expect(voice).toHaveAttribute('data-saved-check-speech', /7,5 horas de sueño/);
   await page.reload();
-  const checks = page.locator('.check-list');
+  await expect(page.getByRole('heading', { name: 'Diario de la tripulación' })).toHaveCount(0);
+  const checks = await openSavedDailyChecks(page);
   await expect(checks).toContainText('Registro anterior');
   await expect(checks).toContainText('0 km');
   await checks.getByText('Ver datos adjuntos del chequeo', { exact: true }).click();
   await expect(checks.getByText('Temperatura de cabina', { exact: true })).toBeVisible();
+  await page
+    .getByRole('navigation', { name: 'Navegación principal' })
+    .getByRole('button', { name: 'Monitoreo diario', exact: true })
+    .click();
+  await page.getByRole('button', { name: 'Llenar a mano' }).click();
   await expect(form.getByRole('radio', { name: 'Recorrido de superficie' })).toBeChecked();
   await form.getByRole('button', { name: 'Continuar a autoevaluación' }).click();
   await form.getByRole('spinbutton', { name: /Distancia/ }).fill('1.5');
   await form.getByRole('button', { name: 'Revisar chequeo' }).click();
   await expect(form).toContainText('actualizará ese registro');
   await form.getByRole('button', { name: 'Guardar chequeo' }).click();
-  await expect(checks).toContainText('1.5 km');
+  await expect(form.getByText('Chequeo guardado', { exact: true })).toBeVisible();
+  await expect(await openSavedDailyChecks(page)).toContainText('1.5 km');
   expect(
     await page.evaluate(() => JSON.parse(localStorage.getItem('astra.demo.journal.v1')!)),
   ).toMatchObject({
@@ -159,6 +168,7 @@ test('Tumi responde al ánimo y Monitoreo diario conserva el borrador al abrir s
     });
   });
   await page.goto('/mission/journal');
+  await page.getByRole('button', { name: 'Llenar a mano' }).click();
   const form = page.locator('#daily-check-form');
   const root = page.locator('html');
   const openTumi = () => openTumiChat(page);
@@ -207,6 +217,7 @@ test('El chequeo ofrece la respuesta para leer si falla la voz del navegador', a
     });
   });
   await page.goto('/mission/journal');
+  await page.getByRole('button', { name: 'Llenar a mano' }).click();
   const form = page.locator('#daily-check-form');
   await form.getByRole('radio', { name: 'Triste', exact: true }).check();
   await expect(form.getByRole('status')).toContainText('No se pudo iniciar la voz');
@@ -215,12 +226,13 @@ test('El chequeo ofrece la respuesta para leer si falla la voz del navegador', a
   await expect(form.getByRole('radio', { name: 'Triste', exact: true })).toBeChecked();
 });
 
-test('Monitoreo diario guía la respiración y envía el mensaje al chat sin avanzar el formulario', async ({
+test('Monitoreo diario guía la respiración y el chat flotante no avanza el formulario', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/mission/journal');
+  await page.getByRole('button', { name: 'Llenar a mano' }).click();
   const pageContent = page.locator('.journal-page');
   await expect(pageContent).toHaveCSS('color-scheme', 'dark');
   const breathing = page.getByRole('region', { name: 'Respiración guiada' });
@@ -229,16 +241,16 @@ test('Monitoreo diario guía la respiración y envía el mensaje al chat sin ava
   await breathing.getByRole('button', { name: 'Detener respiración guiada' }).click();
   await expect(breathing).toContainText('4 s');
 
-  const message = page.getByRole('textbox', { name: 'Mensaje para Tumi' });
-  await message.fill('¿De dónde vienen los datos?');
-  await message.press('Enter');
-  const chat = page.getByRole('region', { name: 'Tumi' });
+  await expect(page.getByRole('textbox', { name: 'Mensaje para Tumi' })).toHaveCount(0);
+  await openTumiChat(page);
+  const chat = page.getByRole('region', { name: 'Tumi', exact: true });
+  await chat.getByRole('textbox').fill('¿De dónde vienen los datos?');
+  await chat.getByRole('button', { name: 'Enviar' }).click();
   await expect(chat.getByRole('button', { name: 'Ver Fuentes y alcance' })).toBeVisible();
   await chat.getByRole('button', { name: 'Ocultar chat' }).click();
   await expect(
     page.getByRole('list', { name: 'Progreso del chequeo' }).getByText('Contexto'),
   ).toHaveAttribute('aria-current', 'step');
-  await expect(message).toBeEmpty();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
@@ -273,8 +285,11 @@ test('Tumi anima sus expresiones y revela las palabras al ritmo del audio', asyn
     });
     document.addEventListener('tumi-test-end', () => speech?.dispatchEvent(new Event('end')));
   });
-  await page.clock.install();
+  const start = new Date('2026-11-15T12:00:00Z');
+  await page.clock.install({ time: start });
   await page.goto('/mission/journal');
+  await page.getByRole('button', { name: 'Llenar a mano' }).click();
+  await page.clock.pauseAt(new Date(start.getTime() + 30_000));
   const form = page.locator('#daily-check-form');
   const portrait = form.locator('.daily-tumi-art');
   const transcript = form.locator('.daily-tumi-transcript');
@@ -302,4 +317,75 @@ test('Tumi anima sus expresiones y revela las palabras al ritmo del audio', asyn
   await expect(revealed).toHaveCount(1);
   await form.getByRole('button', { name: 'Detener audio' }).click();
   await expect(transcript).toHaveCount(0);
+});
+
+test('Tumi guía el chequeo pregunta por pregunta y resume las respuestas guardadas', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'speechSynthesis', {
+      value: {
+        speaking: false,
+        pending: false,
+        getVoices: () => [],
+        speak(utterance: SpeechSynthesisUtterance) {
+          document.documentElement.dataset.guideSpeech = utterance.text;
+          utterance.dispatchEvent(new Event('start'));
+          utterance.dispatchEvent(new Event('end'));
+        },
+        cancel() {},
+      },
+    });
+  });
+  await page.goto('/mission/journal');
+  await expect(page.getByRole('heading', { name: /llenar tu chequeo a mano/ })).toBeVisible();
+  await page.getByRole('button', { name: 'Hacerlo con Tumi' }).click();
+  const guide = page.locator('.daily-guide');
+  const speak = page.locator('html');
+  await expect(speak).toHaveAttribute('data-guide-speech', /cómo te sientes hoy/);
+  await expect(guide.getByRole('heading')).toBeFocused();
+  for (const name of ['Bien', 'Regular', 'Triste']) {
+    await expect(guide.getByRole('button', { name, exact: true }).locator('svg')).toBeVisible();
+  }
+  const choose = (name: string) => guide.getByRole('button', { name, exact: true }).click();
+  await choose('Triste');
+  await expect(guide.getByRole('status')).toContainText('Podemos ir con calma');
+  await expect(guide.locator('.daily-guide-portrait')).toHaveAttribute('data-emotion', 'worried');
+  await expect(speak).toHaveAttribute('data-guide-speech', /Gracias por confiarme/);
+  await choose('Pregunta anterior');
+  await choose('Bien');
+  await expect(guide.getByRole('status')).toContainText('Qué gusto saber');
+  await expect(guide.locator('.daily-guide-portrait')).toHaveAttribute('data-emotion', 'joy');
+  await choose('Rutina en cabina');
+  await choose('Pregunta anterior');
+  await expect(guide.getByRole('button', { name: 'Rutina en cabina' })).toHaveAttribute(
+    'data-selected',
+    'true',
+  );
+  await choose('Ejercicio');
+  await choose('Después');
+  const sleep = guide.getByRole('spinbutton', { name: 'Horas de sueño' });
+  await choose('Continuar');
+  await expect(sleep).toBeFocused();
+  await sleep.fill('7.5');
+  await choose('Continuar');
+  await choose('3 · Moderada');
+  await choose('Sí');
+  await choose('Sin molestias');
+  await choose('Sin indicar');
+  await guide.getByRole('spinbutton', { name: /Duración realizada/ }).fill('30');
+  await choose('Continuar');
+  await choose('Continuar');
+  await guide.getByRole('textbox', { name: 'Nota (opcional)' }).fill('Ejercicio en el hábitat');
+  await choose('Revisar chequeo');
+  const confirmation = page.locator('#daily-check-form > .daily-check-summary');
+  await expect(confirmation).toContainText('30 min');
+  await expect(confirmation).toContainText('Ejercicio en el hábitat');
+  await expect(confirmation).toContainText('Bien');
+  await page.getByRole('button', { name: 'Guardar chequeo', exact: true }).click();
+  await expect(page.locator('.daily-tumi-bubble')).toContainText('7,5 horas de sueño');
+  await expect(page.locator('.daily-tumi-bubble')).toContainText('Qué gusto acompañarte');
+  await expect(speak).toHaveAttribute('data-guide-speech', /Guardé tu chequeo de ejercicio/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });

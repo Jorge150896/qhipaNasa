@@ -484,19 +484,24 @@ html:has([data-navigation-layout='dock']) .cursor-assistant-restore {
 }
 
 @media (max-width: 600px) {
-  .cursor-assistant {
-    inset: 50% max(8px, env(safe-area-inset-right)) auto auto;
-    transform: translateY(-50%);
+  html {
+    --tumi-mobile-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  html:has([data-navigation-layout='dock']) {
+    --tumi-mobile-bottom: calc(
+      10px + var(--mission-dock-height, 88px + env(safe-area-inset-bottom))
+    );
   }
 
   .cursor-assistant-character {
     touch-action: manipulation;
   }
 
-  html .cursor-assistant-restore,
+  .cursor-assistant,
+  .cursor-assistant-restore,
   html:has([data-navigation-layout='dock']) .cursor-assistant-restore {
-    inset: 50% max(8px, env(safe-area-inset-right)) auto auto;
-    transform: translateY(-50%);
+    inset: auto max(8px, env(safe-area-inset-right)) var(--tumi-mobile-bottom) auto;
   }
 }
 
@@ -553,4 +558,47 @@ html:has([data-navigation-layout='dock']) .cursor-assistant-restore {
 .cursor-assistant-panel .tumi-chat-compose input:focus-visible {
   outline-width: 1px;
   outline-offset: -1px;
+}
+
+.cursor-assistant-bubble[data-introduction]::after {
+  content: '';
+  position: absolute;
+  top: calc(50% - 4px);
+  right: -5px;
+  width: 8px;
+  height: 8px;
+  transform: rotate(-45deg);
+  border: solid var(--selection-border);
+  border-width: 0 1px 1px 0;
+  background: inherit;
+  pointer-events: none;
+}
+@media (min-width: 601px) {
+  .cursor-assistant[data-bubble-side='right'] .cursor-assistant-bubble[data-introduction]::after {
+    left: -5px;
+    right: auto;
+    transform: rotate(135deg);
+  }
+  .cursor-assistant[data-obstructed='true']:has(.cursor-assistant-bubble[data-introduction]) {
+    inset: auto 16px 62px auto;
+    transform: none !important;
+  }
+  html:has([data-navigation-layout='dock'])
+    .cursor-assistant[data-obstructed='true']:has(.cursor-assistant-bubble[data-introduction]) {
+    bottom: 162px;
+  }
+  .cursor-assistant[data-obstructed='true'] .cursor-assistant-bubble[data-introduction] {
+    display: flex;
+    top: 100%;
+    right: 0;
+    left: auto;
+    transform: translateY(-100%);
+  }
+  .cursor-assistant[data-obstructed='true'] .cursor-assistant-bubble[data-introduction]::after {
+    top: auto;
+    bottom: -5px;
+    left: auto;
+    right: 24px;
+    transform: rotate(45deg);
+  }
 }

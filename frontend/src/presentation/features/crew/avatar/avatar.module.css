@@ -12,15 +12,13 @@
   scroll-margin-block-start: 5rem;
 }
 
-.workshop > summary {
+.title {
   min-height: 48px;
   align-content: center;
+  margin: 0;
   padding: 0 16px;
-  cursor: pointer;
+  font-size: 1rem;
   font-weight: 650;
-}
-.workshop > summary::marker {
-  color: var(--avatar-orange);
 }
 
 .console {
@@ -162,7 +160,7 @@
   background: #8338ec30;
   font-weight: 700;
 }
-.workshop :is(button, summary):focus-visible {
+.workshop button:focus-visible {
   outline: 2px solid var(--avatar-orange);
   outline-offset: 2px;
 }

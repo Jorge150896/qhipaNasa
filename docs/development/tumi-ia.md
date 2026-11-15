@@ -28,7 +28,7 @@ Se retiraron el botón de pausa manual y la X inferior. El cierre permanece úni
 
 El globo flotante muestra invitaciones ocasionales. Pulsa el lápiz para preguntar, lee la respuesta en el mismo globo y vuelve a escribir en el campo. **Opciones** reúne el audio, la guía y el acceso al chat contextual.
 
-Desde **Opciones** o el chat contextual, **Guía local** hace que Tumi acompañe el mouse y explique los controles al pasar sobre ellos. **Salir de guía** devuelve al acompañante a su modo autónomo. En pantallas de hasta 600 px, el acompañante queda a media altura en el borde derecho. En táctil, el primer toque muestra la explicación y el segundo activa el control.
+Desde **Opciones** o el chat contextual, **Guía local** hace que Tumi acompañe el mouse y explique los controles al pasar sobre ellos. **Salir de guía** devuelve al acompañante a su modo autónomo. En pantallas de hasta 600 px, Tumi queda fijo abajo a la derecha, encima de la barra de navegación cuando está presente. En táctil, el primer toque muestra la explicación y el segundo activa el control.
 
 Tumi empieza en **Texto**. En **Audio**, el navegador lee las nuevas respuestas de ambos chats y mantiene la transcripción visible. Cambiar a Texto o cerrar el chat detiene la reproducción. La app abre con el tema oscuro.
 

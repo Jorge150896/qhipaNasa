@@ -1,7 +1,8 @@
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 import { navigation } from '../constants';
 import type { MissionSection } from '../types';
 import { Icon } from '@/ui/Icon';
+import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
 import { SpaceBackground } from '@/presentation/shared/space/SpaceBackground';
 import { MissionNavigationDock } from './MissionNavigationDock';
 import styles from './mission-navigation.module.css';
@@ -19,6 +20,7 @@ export function MissionShell({
   onNavigate(section: MissionSection): void;
   children: ReactNode;
 }) {
+  const brandPortraitId = useId();
   return (
     <div
       className={`app-shell ${styles.shell}`}
@@ -32,8 +34,8 @@ export function MissionShell({
       <div className="workspace">
         <header className="topbar">
           <div className={`brand ${styles.brand}`}>
-            <span className="brand-symbol">
-              <Icon name="orbit" size={27} />
+            <span className={styles.brandMark} aria-hidden="true">
+              <TumiTechPortrait id={brandPortraitId} emotion="wink" />
             </span>
             <div>
               <div className="brand-name">

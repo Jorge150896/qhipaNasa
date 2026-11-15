@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test';
-import { confirmDailyCheck, openDailyAssessment } from './daily-check-helpers';
+import {
+  confirmDailyCheck,
+  openDailyAssessment,
+  openSavedDailyChecks,
+} from './daily-check-helpers';
 
 test('las rutas retiradas llevan a Tripulación y conservan los registros', async ({ page }) => {
   await page.goto('/mission/overview');
@@ -15,7 +19,7 @@ test('las rutas retiradas llevan a Tripulación y conservan los registros', asyn
   await page.goto('/mission/observations');
   await expect(page).toHaveURL(/\/mission\/crew\/?$/);
   await navigation.getByRole('button', { name: 'Monitoreo diario', exact: true }).click();
-  await expect(page.locator('.check-list').getByText(/7[.,]5 h/)).toBeVisible();
+  await expect((await openSavedDailyChecks(page)).getByText(/7[.,]5 h/)).toBeVisible();
   await page.goto('/missions/selene/observations');
   await expect(page).toHaveURL(/\/missions\/selene\/crew\/?$/);
   await page.reload();
@@ -86,6 +90,10 @@ test('cada sección conserva navegación y entrada directa después de separar f
       .getByRole('button', { name: label, exact: true })
       .click();
     await expect(page).toHaveURL(new RegExp(`/missions/selene/${section}$`));
+    const wordmark = page.locator('.topbar .brand-name');
+    await expect(wordmark).toHaveCSS('color', 'rgb(251, 244, 255)');
+    await expect(wordmark.locator('strong')).toHaveCSS('color', 'rgb(255, 163, 110)');
+    await expect(page.locator('.topbar .brand small')).toHaveCSS('color', 'rgb(225, 207, 238)');
     await expect(page.getByRole('heading', { level: 1, name: heading, exact: true })).toBeVisible();
     await page.reload();
     await expect(page.getByRole('heading', { level: 1, name: heading, exact: true })).toBeVisible();
