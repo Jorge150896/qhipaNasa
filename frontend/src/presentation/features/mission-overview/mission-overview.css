@@ -71,7 +71,18 @@
 }
 
 .overview-page .mission-personal-card {
-  min-height: 138px;
+  min-height: 0;
+  padding: 13px 16px;
+  gap: 4px;
+}
+
+.overview-page .mission-personal-card strong {
+  font-size: 14px;
+}
+.overview-page .mission-personal-card .button {
+  min-height: 34px;
+  padding: 7px 10px;
+  font-size: 11px;
 }
 
 .mission-overview-explorer {
@@ -128,5 +139,63 @@
 
   .mission-overview-explorer .scene-viewport {
     height: clamp(390px, 42vw, 530px);
+  }
+}
+
+.overview-page .crew-toolbar {
+  margin-bottom: 0;
+  gap: 12px;
+}
+.overview-page .crew-picker {
+  gap: 4px;
+}
+.overview-page .crew-picker button {
+  border-radius: 2px;
+  background: transparent;
+  padding: 6px 10px;
+  border-color: transparent;
+  font-size: 10px;
+  min-height: 36px;
+}
+.overview-page .crew-picker button[aria-pressed='true'] {
+  border-color: var(--line);
+  background: #9b6ac515;
+}
+.overview-page .crew-picker small {
+  font-size: 8px;
+}
+.overview-page .crew-picker .avatar {
+  width: 24px;
+  height: 24px;
+  font-size: 9px;
+}
+.overview-page .overview-snapshot-time {
+  font-size: 9px;
+}
+.lab-details {
+  border-top: 1px solid var(--line-soft);
+  padding-top: 14px;
+}
+.lab-details > summary {
+  color: var(--muted);
+  font-size: 10px;
+  cursor: pointer;
+  margin-bottom: 18px;
+}
+.lab-details > summary span {
+  float: right;
+  color: var(--accent);
+  font-size: 9px;
+}
+.lab-details .mission-personal-summary {
+  margin-bottom: 20px;
+}
+@media (max-width: 600px) {
+  .overview-page .crew-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .overview-page .crew-picker {
+    flex-wrap: wrap;
   }
 }

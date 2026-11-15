@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import './globals.css';
+import { MissionAssistantProvider } from '@/presentation/features/mission-assistant/MissionAssistantProvider';
 export const metadata: Metadata = {
   title: 'Qhipa Pacha · Mission Intelligence',
   description:
@@ -9,7 +10,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        <MissionAssistantProvider>{children}</MissionAssistantProvider>
+      </body>
     </html>
   );
 }

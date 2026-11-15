@@ -1,5 +1,11 @@
 # Verificación de la base frontend
 
+## Consola y Tumi · estado al 15 de noviembre de 2026
+
+El check final de Fabian3 aprobó TypeScript, ESLint, formato, 92 pruebas unitarias y build. Tras el ajuste de ayuda discreta, los 11 recorridos de `mission-assistant.spec.ts` aprobaron en producción, incluyendo navegación, móvil, recarga, teclado y táctil. La suite general previa tuvo 58 de 61 aprobados; los tres casos con aserciones antiguas se corrigieron y aprobaron dentro de una repetición de 21 recorridos. No se volvió a ejecutar la suite general completa después del último ajuste. Comandos, cobertura y límites en [la entrega de consola y Tumi](../development/mission-console-delivery.md).
+
+Los registros siguientes corresponden a verificaciones de entregas anteriores y no describen los conteos actuales.
+
 Cierre documental y reutilización 3D (2026-11-14): se extrajo `StationModel` a componentes compartidos sin cambiar su geometría. Se añadieron guías de entrega y reutilización con contratos, ejemplo, recursos, licencias y límites. TypeScript, ESLint, 53 pruebas unitarias y build aprobados; cuatro recorridos de `visual-models.spec.ts` aprobados sobre producción (puerto 3054). El check global se detiene en Prettier por 176 archivos con formato preexistente. No se ejecutó toda la suite de navegador. Se verificó main sin commits pendientes mediante SSH por 443 con la identidad de host GitHub ya confiada.
 
 Cards individuales junto a todos los puntos (2026-11-14): `LaunchPointCard` reemplaza la agrupación visual en el globo. Cada punto frontal mantiene nombre y acceso al detalle, con línea de conexión y oclusión posterior. La ficha ampliada reserva espacio para un único video. TypeScript, ESLint, 53 pruebas unitarias y build pasan; seis E2E de `launch-sites.spec.ts` pasan sobre producción (puerto 3052), incluidos ocho lugares en móvil, recarga, selección por card, textura fallida y alternativa sin WebGL. Se corrigió la prueba de centrado para medir el punto geográfico, dado que ahora la card está desplazada a su costado. El check global se detiene por formato preexistente en 176 archivos. No se ejecutó la suite completa.

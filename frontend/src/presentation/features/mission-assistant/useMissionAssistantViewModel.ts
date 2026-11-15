@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { MissionData } from '../mission/types';
-import { answerMissionQuestion } from './explainMission';
+import { answerMissionQuestion, getControlTip } from './explainMission';
 import type { AssistantMessage, AssistantMetricContext, AssistantReply } from './types';
 
 type Dictation = (callbacks: {
@@ -9,7 +9,11 @@ type Dictation = (callbacks: {
   onEnd(): void;
 }) => (() => void) | undefined;
 
-export function useMissionAssistantViewModel(data: MissionData | null, dictate: Dictation) {
+export function useMissionAssistantViewModel(
+  data: MissionData | null,
+  dictate: Dictation,
+  section?: string,
+) {
   const [open, setOpen] = useState(false);
   const [context, setContext] = useState<AssistantMetricContext>();
   const [draft, setDraft] = useState('');
@@ -66,6 +70,19 @@ export function useMissionAssistantViewModel(data: MissionData | null, dictate: 
       const trimmed = question.trim().slice(0, 500);
       if (!trimmed) return;
       stop();
+      if (
+        /qu[eé] (puedo hacer|hay|hago) (aqu[ií]|en est[ae] (vista|apartado|secci[oó]n))/i.test(
+          trimmed,
+        )
+      ) {
+        const tip = section && getControlTip(section, data);
+        if (tip) {
+          answer(trimmed, { text: `${tip.label}: ${tip.text}`, target: section });
+          setDraft('');
+          setVoiceStatus('');
+          return;
+        }
+      }
       const previous = previousReading.current;
       const { discussedMetric, ...reply } = answerMissionQuestion(
         trimmed,

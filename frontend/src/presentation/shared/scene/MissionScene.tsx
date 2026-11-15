@@ -37,6 +37,7 @@ interface Props {
   modules?: HabitatModuleMarkers;
   showModuleCamera?: boolean;
   transparentBackground?: boolean;
+  animateAstronaut?: boolean;
   onSelectSensor(id: SceneSensor): void;
   onSelectZone(id: string): void;
 }
@@ -186,6 +187,7 @@ export default function MissionScene(props: Props) {
               {props.mode === 'crew' ? (
                 <AstronautModel
                   portal={{ current: overlay }}
+                  animate={props.animateAstronaut}
                   selectedSystem={props.selectedSystem}
                   activeBodyRegion={props.activeBodyRegion}
                   onFrameDistance={props.transparentBackground ? setFullBodyDistance : undefined}

@@ -3,11 +3,14 @@ import {
   type MissionDashboardProps,
 } from '../../../shared/mission/MissionDashboardView';
 import type { SensorKey } from '../../mission/types';
-import type { MissionPersonalSummary as Summary } from '../types';
+import type { AstronautOverviewData, MissionPersonalSummary as Summary } from '../types';
 import { MissionPersonalSummary } from './MissionPersonalSummary';
+import { AstronautOverviewView } from './AstronautOverviewView';
 export function MissionOverviewView({
   dashboard,
   summary,
+  overviewData,
+  onOpenSources,
   onStartMonitoring,
   onOpenModule,
   onOpenRecord,
@@ -15,6 +18,8 @@ export function MissionOverviewView({
 }: {
   dashboard: MissionDashboardProps;
   summary: Summary;
+  overviewData: AstronautOverviewData;
+  onOpenSources(): void;
   onStartMonitoring(): void;
   onOpenModule(): void;
   onOpenRecord(): void;
@@ -22,26 +27,29 @@ export function MissionOverviewView({
 }) {
   return (
     <>
-      <section className="panel" aria-label="Iniciar monitoreo">
-        <div className="panel-heading">
-          <div>
-            <h3>De la señal a una sesión de medición</h3>
-            <p className="sub">
-              Prepara el equipo, recibe lecturas y revisa su calidad antes de guardar.
-            </p>
-          </div>
-          <button className="button primary" onClick={onStartMonitoring}>
-            Iniciar monitoreo
-          </button>
-        </div>
-      </section>
-      <MissionPersonalSummary
-        data={summary}
-        onOpenModule={onOpenModule}
-        onOpenRecord={onOpenRecord}
-        onReviewSignal={onReviewSignal}
+      <AstronautOverviewView
+        data={overviewData}
+        metric={dashboard.data.metric}
+        scene={dashboard.scene}
+        mode={dashboard.mode}
+        habitatLabel={dashboard.habitatLabel}
+        onModeChange={dashboard.onModeChange}
+        onSelectMetric={dashboard.actions.selectMetric}
+        onStartMonitoring={onStartMonitoring}
+        onSources={onOpenSources}
       />
-      <MissionDashboardView {...dashboard} layout="overview" />
+      <details className="lab-details">
+        <summary>
+          Registros, tendencias y seguimiento <span>Ampliar panel</span>
+        </summary>
+        <MissionPersonalSummary
+          data={summary}
+          onOpenModule={onOpenModule}
+          onOpenRecord={onOpenRecord}
+          onReviewSignal={onReviewSignal}
+        />
+        <MissionDashboardView {...dashboard} layout="overview" overviewPanel={<></>} />
+      </details>
     </>
   );
 }

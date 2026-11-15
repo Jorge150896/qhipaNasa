@@ -28,8 +28,10 @@ export function AstronautModel({
   selectedSystem,
   activeBodyRegion,
   onFrameDistance,
+  animate = true,
   onSelectSystem,
 }: {
+  animate?: boolean;
   selectedSystem?: string;
   activeBodyRegion?: SceneBodyRegion;
   onFrameDistance?(distance: number): void;
@@ -58,7 +60,7 @@ export function AstronautModel({
     if (!onFrameDistance) return;
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     function updateMotion() {
-      allowsMotion.current = !preference.matches;
+      allowsMotion.current = animate && !preference.matches;
       if (preference.matches && astronaut.current) {
         elapsed.current = 0;
         astronaut.current.position.y = -1;
@@ -67,7 +69,7 @@ export function AstronautModel({
     updateMotion();
     preference.addEventListener('change', updateMotion);
     return () => preference.removeEventListener('change', updateMotion);
-  }, [onFrameDistance]);
+  }, [onFrameDistance, animate]);
 
   useEffect(() => {
     glintTime.current = 0;

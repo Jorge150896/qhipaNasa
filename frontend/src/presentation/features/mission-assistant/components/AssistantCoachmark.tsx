@@ -5,7 +5,11 @@ const targetPrefix = 'assistant-target-';
 const targetSelector = '[id^="assistant-target-"], [data-assistant-control]';
 
 function findControl(element: EventTarget | null) {
-  return element instanceof Element ? element.closest<HTMLElement>(targetSelector) : null;
+  if (!(element instanceof Element)) return null;
+  if (element.closest('.mission-assistant, .assistant-launcher-host, .assistant-coach-tip'))
+    return null;
+  const control = element.closest<HTMLElement>(targetSelector);
+  return control?.tagName === 'MAIN' ? null : control;
 }
 
 type Tip = { label: string; text: string; canAsk?: boolean };
@@ -21,8 +25,8 @@ export function AssistantCoachmark({
 }) {
   const robot = useRef<HTMLDivElement>(null);
   const tooltip = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState<{ id: string; touch: boolean }>();
-  const activeTip = active && describe(active.id);
+  const [active, setActive] = useState<{ id: string; touch: boolean; tip: Tip }>();
+  const activeTip = active?.tip;
   const describeControl = useEffectEvent(describe);
   const askAbout = useEffectEvent(onAsk);
 
@@ -33,6 +37,21 @@ export function AssistantCoachmark({
     let frame = 0;
     let keyboardNavigation = false;
     let dismissTimer: number | undefined;
+    let hoverTimer: number | undefined;
+    let candidate: HTMLElement | null = null;
+    let anchor = { x: 0, y: 0 };
+    let lastShownAt = -Infinity;
+
+    function cancelHover() {
+      window.clearTimeout(hoverTimer);
+      candidate = null;
+    }
+
+    function describeTarget(control: HTMLElement) {
+      const id = control.dataset.assistantControl ?? control.id.slice(targetPrefix.length);
+      const tip = id && describeControl(id);
+      return tip ? { id, tip } : undefined;
+    }
 
     function placeRobot(x: number, y: number) {
       if (!robot.current || motion.matches) return;
@@ -63,10 +82,11 @@ export function AssistantCoachmark({
       if (target === control) return;
       if (target) delete target.dataset.assistantCoach;
       target = control;
-      const id = target?.dataset.assistantControl ?? target?.id.slice(targetPrefix.length);
-      if (target && id && describeControl(id)) {
+      const description = target && describeTarget(target);
+      if (target && description) {
         target.dataset.assistantCoach = 'true';
-        setActive({ id, touch });
+        setActive({ ...description, touch });
+        lastShownAt = performance.now();
         cancelAnimationFrame(frame);
         frame = requestAnimationFrame(placeTooltip);
       } else {
@@ -80,27 +100,47 @@ export function AssistantCoachmark({
       window.clearTimeout(dismissTimer);
       if (event.target instanceof Node && tooltip.current?.contains(event.target)) return;
       const control = findControl(event.target);
-      if (control) select(control);
-      else if (target) dismissTimer = window.setTimeout(() => select(null), 280);
+      if (!control || !describeTarget(control)) {
+        cancelHover();
+        if (target) dismissTimer = window.setTimeout(() => select(null), 280);
+        return;
+      }
+      if (control === target) return;
+      const moved = Math.hypot(event.clientX - anchor.x, event.clientY - anchor.y) > 8;
+      if (candidate === control && !moved) return;
+      cancelHover();
+      select(null);
+      candidate = control;
+      anchor = { x: event.clientX, y: event.clientY };
+      hoverTimer = window.setTimeout(
+        () => {
+          cancelHover();
+          if (control.isConnected) select(control);
+        },
+        Math.max(900, 1800 - (performance.now() - lastShownAt)),
+      );
     }
 
     function focus(event: FocusEvent) {
+      cancelHover();
       const control = findControl(event.target);
       if (robot.current) delete robot.current.dataset.visible;
       if (event.target instanceof Node && tooltip.current?.contains(event.target)) return;
       select(control && (keyboardNavigation || control.matches(':focus-visible')) ? control : null);
     }
 
-    function pointerDown() {
+    function pointerDown(event: PointerEvent) {
       keyboardNavigation = false;
+      cancelHover();
+      if (event.target instanceof Node && tooltip.current?.contains(event.target)) return;
+      if (event.pointerType !== 'touch') select(null);
     }
 
     function tap(event: MouseEvent) {
       if (!(event instanceof PointerEvent) || event.pointerType !== 'touch') return;
       if (event.target instanceof Node && tooltip.current?.contains(event.target)) return;
       const control = findControl(event.target);
-      const id = control?.dataset.assistantControl ?? control?.id.slice(targetPrefix.length);
-      if (!control || !id || !describeControl(id) || control === touchControl) {
+      if (!control || !describeTarget(control) || control === touchControl) {
         touchControl = null;
         select(null);
         return;
@@ -116,8 +156,15 @@ export function AssistantCoachmark({
     }
 
     function leave() {
+      cancelHover();
       hideRobot();
       if (!touchControl) select(null);
+    }
+
+    function scroll() {
+      cancelHover();
+      touchControl = null;
+      select(null);
     }
 
     function key(event: KeyboardEvent) {
@@ -137,12 +184,14 @@ export function AssistantCoachmark({
     document.addEventListener('click', tap, true);
     document.addEventListener('keydown', key);
     document.documentElement.addEventListener('pointerleave', leave);
-    window.addEventListener('scroll', placeTooltip, { capture: true, passive: true });
+    window.addEventListener('scroll', scroll, { capture: true, passive: true });
+    window.addEventListener('blur', leave);
     window.addEventListener('resize', placeTooltip);
     motion.addEventListener('change', hideRobot);
     return () => {
       cancelAnimationFrame(frame);
       window.clearTimeout(dismissTimer);
+      cancelHover();
       if (target) delete target.dataset.assistantCoach;
       document.removeEventListener('pointermove', move);
       document.removeEventListener('pointerdown', pointerDown, true);
@@ -150,7 +199,8 @@ export function AssistantCoachmark({
       document.removeEventListener('click', tap, true);
       document.removeEventListener('keydown', key);
       document.documentElement.removeEventListener('pointerleave', leave);
-      window.removeEventListener('scroll', placeTooltip, true);
+      window.removeEventListener('scroll', scroll, true);
+      window.removeEventListener('blur', leave);
       window.removeEventListener('resize', placeTooltip);
       motion.removeEventListener('change', hideRobot);
     };

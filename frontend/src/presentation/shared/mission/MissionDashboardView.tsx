@@ -13,6 +13,7 @@ export interface MissionDashboardProps {
   habitatLabel: string;
   scene: ReactNode;
   layout?: 'overview';
+  overviewPanel?: ReactNode;
   mode: 'crew' | 'ship';
   onModeChange(mode: 'crew' | 'ship'): void;
   onOpenHistory(): void;
@@ -24,6 +25,7 @@ export function MissionDashboardView({
   habitatLabel,
   scene,
   layout,
+  overviewPanel,
   mode,
   onModeChange,
   onOpenHistory,
@@ -50,14 +52,14 @@ export function MissionDashboardView({
 
   return (
     <>
-      {layout === 'overview' ? (
-        <div className="mission-overview-explorer">
-          {metrics}
-          {explorer}
-        </div>
-      ) : (
-        metrics
-      )}
+      {layout === 'overview'
+        ? (overviewPanel ?? (
+            <div className="mission-overview-explorer">
+              {metrics}
+              {explorer}
+            </div>
+          ))
+        : metrics}
       <div className="dashboard-grid">
         <div className="main-column">
           {layout !== 'overview' && explorer}

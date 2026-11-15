@@ -53,6 +53,8 @@ export function MissionAssistantView({
         className="assistant-launcher"
         onClick={onOpen}
         aria-label="Abrir chat de Tumi"
+        aria-expanded={open}
+        aria-controls="mission-assistant-chat"
       >
         <AssistantRobot /> <span>Tumi</span>
       </button>
@@ -116,8 +118,9 @@ export function MissionAssistantView({
           )}
           <div className="assistant-log" role="log" aria-label="Conversación con Tumi" ref={log}>
             <p className="assistant-bubble">
-              Soy Tumi. Puedo explicar qué mide una lectura, qué cambió y qué se registró en el
-              entorno a la misma hora.
+              Soy Tumi. Puedo ayudarte a recorrer cada apartado, explicar sus controles y consultar
+              lecturas con su contexto. Activa Guía con el puntero para recibir ayuda mientras
+              navegas.
             </p>
             {messages.map(({ id, role, reply }) => (
               <div className="assistant-message" key={id} data-role={role}>
@@ -136,6 +139,7 @@ export function MissionAssistantView({
           </div>
           <div className="assistant-suggestions">
             {[
+              '¿Qué puedo hacer aquí?',
               ...(context
                 ? ['¿Qué significa este dato?', '¿Qué cambió?']
                 : ['¿Qué significa mi SpO₂?', '¿Dónde hago mi chequeo?']),
@@ -179,11 +183,8 @@ export function MissionAssistantView({
             </p>
           )}
         </section>
-      ) : launcherHost ? (
-        createPortal(dock, launcherHost)
-      ) : (
-        dock
-      )}
+      ) : null}
+      {launcherHost ? createPortal(dock, launcherHost) : !open ? dock : null}
     </div>
   );
 }

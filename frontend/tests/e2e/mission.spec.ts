@@ -8,7 +8,7 @@ test('modelo local, sensores, nave, escenarios y diario persistido', async ({ pa
     (response) => response.url().endsWith('/models/astronaut.glb') && response.ok(),
   );
   await page.goto('/mission/overview');
-  await expect(page.getByRole('heading', { name: 'Tu resumen de misión' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Qhipa Pacha Lab' })).toBeVisible();
   await page.getByRole('button', { name: 'Consultar frecuencia cardíaca', exact: true }).waitFor();
   await modelRequest;
   await page.screenshot({ path: '../docs/qa/dashboard-desktop.png', fullPage: true });
@@ -34,6 +34,7 @@ test('modelo local, sensores, nave, escenarios y diario persistido', async ({ pa
   await page.getByRole('button', { name: 'Elena Torres Comandante' }).click();
   await page.getByRole('button', { name: /SpO₂.*Sin señal reciente/ }).click();
   await expect(page.locator('.scene-reading strong')).toContainText('—');
+  await page.locator('.lab-details > summary').click();
   const summary = page.getByRole('region', { name: 'Tu resumen de misión' });
   await summary.getByRole('button', { name: 'Revisar SpO₂' }).click();
   await expect(page).toHaveURL(/\/mission\/history$/);
@@ -66,6 +67,7 @@ test('móvil: sensores seleccionables y sin desbordamiento horizontal', async ({
   }));
   expect(sizes.scroll).toBeLessThanOrEqual(sizes.width);
   await page.screenshot({ path: '../docs/qa/dashboard-mobile.png', fullPage: true });
+  await page.locator('.lab-details > summary').click();
   const summary = page.getByRole('region', { name: 'Tu resumen de misión' });
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
   await expect(summary.getByRole('heading', { name: 'Datos por revisar' })).toHaveCount(0);
@@ -77,6 +79,7 @@ test('móvil: sensores seleccionables y sin desbordamiento horizontal', async ({
   await expect(explorer).toBeFocused();
   await expect(explorer.getByRole('heading', { name: 'Módulo de ejercicio' })).toBeVisible();
   await nav.getByRole('button', { name: 'Centro de misión' }).click();
+  await page.locator('.lab-details > summary').click();
   await summary.getByRole('button', { name: 'Nuevo autorregistro' }).click();
   await expect(page).toHaveURL(/\/mission\/crew#crew-health-entry$/);
   const entry = page.getByRole('region', { name: 'Autorregistro de salud' });
@@ -86,6 +89,7 @@ test('móvil: sensores seleccionables y sin desbordamiento horizontal', async ({
   await entry.getByRole('button', { name: 'Guardar autorregistro' }).click();
   await expect(entry.getByRole('status')).toContainText('Autorregistro de demostración guardado');
   await nav.getByRole('button', { name: 'Centro de misión' }).click();
+  await page.locator('.lab-details > summary').click();
   await expect(summary).toContainText('Respuesta inmunitaria');
   await expect(summary).toContainText('Sin cambios reportados');
   await page.getByRole('button', { name: 'Elena Torres Comandante' }).click();
@@ -144,7 +148,7 @@ test('cada sección conserva navegación y entrada directa después de separar f
     ['Observaciones', 'observations', 'De la señal al seguimiento.'],
     ['Simulación', 'simulation', 'Explora lo que cambia.'],
     ['Fuentes y alcance', 'sources', 'Datos con contexto.'],
-    ['Centro de misión', 'overview', 'Tu resumen de misión'],
+    ['Centro de misión', 'overview', 'Qhipa Pacha Lab'],
   ];
   for (const [label, section, heading] of sections) {
     await page

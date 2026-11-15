@@ -79,6 +79,8 @@ El explorador incorpora `launch-sites`, una feature independiente de catálogo h
 
 La guía operativa y los ciclos de vida de estado se documentan en `docs/development/frontend.md`. Los siguientes incrementos están en `docs/development/roadmap.md`. `MissionWorkspaceProvider` conserva el estado del flujo entre rutas y compone los casos de uso; el layout y las páginas Next permanecen delgadas.
 
+`MissionAssistantProvider` es la isla cliente compartida de Tumi en el layout raíz de servidor. Conserva chat y modo de guía entre misión, hábitats, Mapa y Tierra; `MissionWorkspaceProvider` publica y limpia su instantánea vigente. El shell registra el apartado activo y el host del acceso en el dock. La guía usa conocimiento local, etiquetas de controles y contexto explícito, sin aprendizaje automático ni nuevos servicios. La conversación se limpia al recargar; la portada no muestra el asistente.
+
 ## Reglas compartidas para nuevas contribuciones
 
 El contrato está en `AGENTS.md` y `frontend/AGENTS.md`; el onboarding está en `CONTRIBUTING.md`. Las skills portables de `.agents/skills/` acompañan al código y conocen la estructura de la otra capa. Para nuevas vistas usar Screen -> useNombreViewModel -> View. El hook `useMission.ts` mantiene el nombre actual como ViewModel de misión; no es un contenedor obligatorio para todas las features. Consultar `docs/development/screens-and-flows.md`.

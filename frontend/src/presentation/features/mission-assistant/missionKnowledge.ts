@@ -1,5 +1,15 @@
 export const guideControls = [
   {
+    id: 'earth',
+    label: 'Tierra',
+    text: 'Recorre los lugares de la Tierra, sus funciones y fuentes. El globo tiene una lista equivalente; los videos históricos externos requieren conexión.',
+  },
+  {
+    id: 'monitoring',
+    label: 'Monitoreo asistido',
+    text: 'Prepara equipo y contexto, captura una sesión, revisa su calidad y confirma el guardado local. La demo y el modo API tienen orígenes separados; guardar una sesión no actualiza la telemetría del dashboard.',
+  },
+  {
     id: 'overview',
     label: 'Centro de misión',
     text: 'Ve la actividad del tripulante, sus registros y las señales que requieren revisión.',
@@ -71,6 +81,16 @@ export const actionTips = {
 
 export const missionTopics = [
   {
+    question: /\b(monitoreo|capturar|captura|sesion de medicion)\b/,
+    text: 'En Monitoreo asistido puedes preparar equipo y contexto, capturar, repetir, revisar la calidad y guardar una sesión en este navegador. Revisa el origen indicado: la demo sintética y la API configurable son modos separados.',
+    target: 'monitoring',
+  },
+  {
+    question: /\b(tierra|despegues|lanzamientos|videos historicos)\b/,
+    text: 'En Tierra puedes recorrer lugares y centros espaciales, consultar sus funciones, fuentes y videos históricos. El globo tiene una lista HTML equivalente. Los videos externos necesitan conexión.',
+    target: 'earth',
+  },
+  {
     question:
       /\b(qhipa pacha|astra)\b.*\b(que es|sirve|hace)\b|\b(que es|sirve|hace)\b.*\b(qhipa pacha|astra)\b/,
     text: 'Qhipa Pacha es una demo para explorar la salud de una tripulación ficticia junto con su actividad y el ambiente del hábitat. Puedes recorrer destinos, consultar telemetría simulada y hacer una autoevaluación.',
@@ -103,4 +123,14 @@ export const missionTopics = [
     text: 'En Tripulación, elige una muestra en la gráfica y usa Sincronizar con el visor. En la línea de tiempo también puedes pulsar Ubicar módulo en el visor cuando ese momento tiene ubicación registrada.',
     target: 'crew',
   },
+  ...guideControls.map((control) => ({
+    question: new RegExp(
+      `\\b${control.label
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')}\\b`,
+    ),
+    text: control.text,
+    target: control.id,
+  })),
 ] as const;

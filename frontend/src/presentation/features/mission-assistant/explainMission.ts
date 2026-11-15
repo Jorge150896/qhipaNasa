@@ -225,7 +225,8 @@ export function answerMissionQuestion(
   if (topic) return topic;
   if (!data) {
     return {
-      text: 'La misión todavía está cargando. Vuelve a preguntar cuando aparezcan las lecturas.',
+      text: 'No hay una instantánea de misión disponible en esta vista. Abre Tripulación de un hábitat para consultar sus lecturas. Mientras tanto puedo explicar los apartados y sus controles.',
+      target: 'crew',
     };
   }
   const reply = explainMission(query, data);

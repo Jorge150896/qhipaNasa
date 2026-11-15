@@ -1,5 +1,65 @@
 import { expect, test } from '@playwright/test';
 
+test('la guía de Tumi acompaña todas las secciones, el mapa y Tierra', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.goto('/mission/overview');
+  await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
+  await page.getByRole('button', { name: 'Guía con el puntero' }).click();
+  const nav = page.getByRole('navigation', { name: 'Navegación principal' });
+  for (const [id, label] of [
+    ['crew', 'Tripulación'],
+    ['habitat', 'Entorno'],
+    ['history', 'Historial'],
+    ['journal', 'Chequeo diario'],
+    ['observations', 'Observaciones'],
+    ['simulation', 'Simulación'],
+    ['sources', 'Fuentes'],
+    ['monitoring', 'Monitoreo'],
+  ]) {
+    const control = nav.locator(`#assistant-target-${id}`);
+    await control.hover();
+    await expect(page.locator('.assistant-coach-tip')).toContainText(label);
+    await control.click();
+    await expect(page).toHaveURL(new RegExp(`/mission/${id}$`));
+    await expect(page.getByRole('button', { name: 'Salir de guía' })).toBeVisible();
+  }
+  await nav.locator('#assistant-target-map').click();
+  await expect(page).toHaveURL(/\/explore/);
+  await expect(page.getByRole('button', { name: 'Salir de guía' })).toBeVisible();
+  await page.getByRole('button', { name: 'Actualizar registros' }).hover();
+  await expect(page.locator('.assistant-coach-tip')).toBeHidden();
+  const earth = nav.getByRole('button', { name: 'Tierra', exact: true });
+  await earth.hover();
+  await expect(page.locator('.assistant-coach-tip')).toContainText('videos históricos');
+  await earth.click();
+  await expect(page).toHaveURL(/tab=earth/);
+  await expect(page.getByRole('button', { name: 'Salir de guía' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'Salir de guía' })).toHaveCount(0);
+});
+
+test('Tumi está disponible al entrar directamente al explorador en móvil y recargar', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/explore?destination=earth&tab=earth');
+  const launcher = page.getByRole('button', { name: 'Abrir chat de Tumi' });
+  await launcher.click();
+  const chat = page.getByRole('region', { name: 'Tumi' });
+  await chat.getByRole('button', { name: '¿Qué puedo hacer aquí?' }).click();
+  await expect(chat.getByRole('log')).toContainText('Tierra:');
+  await chat.getByRole('textbox').fill('¿Qué hay en Tierra?');
+  await chat.getByRole('button', { name: 'Enviar' }).click();
+  await expect(chat.getByRole('log')).toContainText('videos históricos');
+  await chat.getByRole('textbox').fill('¿Qué significa el pulso?');
+  await chat.getByRole('button', { name: 'Enviar' }).click();
+  await expect(chat.getByRole('log')).toContainText('No hay una instantánea de misión');
+  await page.reload();
+  await launcher.click();
+  await expect(chat.getByRole('log').locator('[data-role="assistant"]')).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});
+
 test('Tumi explica la lectura seleccionada y conserva el chat entre secciones', async ({
   page,
 }) => {
@@ -163,14 +223,16 @@ test('Tumi abre la tarjeta en modo táctil y respeta una lectura ausente', async
   }
 });
 
-test('la ficha de respiración abre Tumi con su lectura y el acceso móvil está en la cabecera', async ({
+test('la ficha de respiración abre Tumi con su lectura y el acceso móvil está en la barra inferior', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/mission/crew');
   const launcher = page.getByRole('button', { name: 'Abrir chat de Tumi' });
   await expect(
-    page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Tumi' }),
+    page
+      .getByRole('navigation', { name: 'Navegación principal' })
+      .getByRole('button', { name: 'Abrir chat de Tumi' }),
   ).toBeVisible();
   await page
     .getByRole('group', { name: 'Lecturas de la instantánea' })

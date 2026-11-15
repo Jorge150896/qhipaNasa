@@ -5,6 +5,7 @@ import { healthSystems, reportedStateLabels } from '../crew-health/constants';
 import type { MissionData } from '../mission/types';
 import { useMissionDashboardViewModel } from '../../shared/mission/useMissionDashboardViewModel';
 import type { MissionPersonalSummary } from './types';
+import { mapAstronautOverview } from './mapAstronautOverview';
 
 const recordTime = new Intl.DateTimeFormat('es-PE', {
   dateStyle: 'medium',
@@ -74,5 +75,5 @@ export function useMissionOverviewViewModel(
       .map(({ id, shortLabel, quality }) => ({ id, label: shortLabel, quality })),
   };
 
-  return { ...dashboard, summary };
+  return { ...dashboard, summary, astronautOverview: mapAstronautOverview(mission) };
 }

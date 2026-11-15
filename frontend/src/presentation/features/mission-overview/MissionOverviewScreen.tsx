@@ -17,6 +17,8 @@ export function MissionOverviewScreen({
   return (
     <MissionOverviewView
       summary={model.summary}
+      overviewData={model.astronautOverview}
+      onOpenSources={() => onNavigate('sources')}
       onStartMonitoring={() => onNavigate('monitoring')}
       onOpenModule={() => onNavigate('crew', 'crew-module')}
       onOpenRecord={() => onNavigate('crew', 'crew-health-entry')}
@@ -34,6 +36,8 @@ export function MissionOverviewScreen({
         onOpenDailyCheck: () => onNavigate('journal'),
         scene: (
           <MissionSceneSlot
+            transparentBackground
+            animateAstronaut={false}
             habitatKind={model.habitatKind}
             mode={model.mode}
             selectedSensor={data.metric.id}

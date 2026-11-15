@@ -28,9 +28,7 @@ test('portada: Tumi, parallax, pausa y CTA hacia la misión', async ({ page }) =
   await page.getByRole('button', { name: 'Iniciar mi misión', exact: true }).focus();
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/mission\/overview$/);
-  await expect(
-    page.getByRole('heading', { name: 'Tu resumen de misión', exact: true }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Qhipa Pacha Lab', exact: true })).toBeVisible();
   expect(errors).toEqual([]);
 });
 

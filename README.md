@@ -42,7 +42,7 @@ Desde la raíz, los scripts delegan al workspace `frontend`. Para cambiar el pue
 - Cuatro hábitats de demo y 12 personas ficticias distintas. Tierra comparte el contexto de Aurora, sin duplicar personas; Odyssey permanece en tránsito. La misión original y sus ocho secciones se conservan.
 - Diarios separados por hábitat; la clave original de Odyssey permanece intacta. Selección de destino en URL y alternativa HTML sin WebGL.
 
-- Centro de misión original con sus tres tripulantes ficticios, más perfiles por hábitat.
+- Centro de misión con astronauta central, cobertura de muestras, seguimiento y contexto ambiental; perfiles ficticios por hábitat. Las secciones comparten el estilo de consola y una barra inferior adaptable a móvil. [Entrega y validaciones](docs/development/mission-console-delivery.md).
 - Astronauta 3D con rotación, zoom y sensores seleccionables; modelo GLB local con detalles morados y naranjas. Fallback si no hay WebGL o falla el asset.
 - Odyssey 01 en corte 3D interactivo dentro de Tripulación, con cinco módulos, ubicación del tripulante y lecturas ambientales simuladas. La distribución de la nave es ilustrativa.
 - Frecuencia cardíaca, temperatura, SpO₂ y respiración; historial, unidades, hora UTC, procedencia y calidad de datos visibles.
@@ -50,7 +50,7 @@ Desde la raíz, los scripts delegan al workspace `frontend`. Para cambiar el pue
 - Escenarios de rutina, cambio de sueño y pérdida de señal. Las muestras ausentes no se reemplazan por valores antiguos ni se interpolan.
 - Chequeo diario de demostración con sueño, ánimo y fatiga; seguimiento de observaciones.
 - Persistencia local de chequeos y revisiones entre recargas, con validación de esquema y manejo de errores de almacenamiento.
-- Tumi, guía local que explica lecturas y comparaciones simuladas en el contexto de la actividad y el entorno, y señala controles. [Guía de conocimiento](frontend/src/presentation/features/mission-assistant/README.md).
+- Tumi, guía local disponible entre secciones, hábitats, Mapa y Tierra. Explica el apartado abierto y las lecturas simuladas; la ayuda por puntero espera una pausa y se limita a controles con explicación específica. Conversación en memoria hasta recargar. [Guía de conocimiento y uso](frontend/src/presentation/features/mission-assistant/README.md).
 - Navegación por nueve secciones, rutas directas, estados de carga/error/vacío, responsive y controles accesibles.
 
 No existe un modo offline completo ni sincronización: el almacenamiento local conserva registros, pero una visita nueva necesita cargar la app. No introducir datos de salud reales en esta demo.

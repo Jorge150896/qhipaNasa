@@ -33,7 +33,8 @@ export function MissionAssistantScreen({
   children: ReactNode;
 }) {
   const pathname = usePathname();
-  const model = useMissionAssistantViewModel(data, startLocalDictation);
+  const [section, setSection] = useState('overview');
+  const model = useMissionAssistantViewModel(data, startLocalDictation, section);
   const [following, setFollowing] = useState(false);
   const describe = useCallback((id: string) => getControlTip(id, data), [data]);
   const exitCoach = useCallback(() => setFollowing(false), []);
@@ -124,9 +125,9 @@ export function MissionAssistantScreen({
   }
 
   return (
-    <AssistantActionsContext value={{ askAboutReading, setLauncherHost }}>
+    <AssistantActionsContext value={{ askAboutReading, setLauncherHost, setSection }}>
       {children}
-      {!(targetId && point && !model.open) && (
+      {launcherHost && !(targetId && point && !model.open) && (
         <MissionAssistantView
           model={model}
           launcherHost={launcherHost}
@@ -140,9 +141,9 @@ export function MissionAssistantScreen({
           }}
         />
       )}
-      {following && !model.open && !targetId && (
+      {launcherHost && following && !model.open && !targetId && (
         <AssistantCoachmark
-          key={pathname}
+          key={`${pathname}:${section}:${data?.selected.id}:${data?.scenario}`}
           describe={describe}
           onExit={exitCoach}
           onAsk={(id) => {

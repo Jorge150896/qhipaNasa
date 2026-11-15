@@ -1,0 +1,520 @@
+/* The console is one continuous instrument surface, with the suit at its centre. */
+.console {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  background: radial-gradient(ellipse at 50% 68%, #8653c429, transparent 48%);
+}
+.header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 72px;
+  padding: 10px 0 22px;
+  text-align: center;
+}
+.header h1 {
+  margin: 7px 0 0;
+  font-size: 23px;
+  font-weight: 450;
+  letter-spacing: 1px;
+}
+.header :global(.eyebrow) {
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--quiet);
+}
+.source {
+  position: absolute;
+  right: 0;
+  top: 15px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 9px;
+}
+.source svg {
+  color: var(--accent);
+}
+.layout {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.8fr) minmax(0, 2.8fr) minmax(190px, 0.95fr);
+  gap: clamp(20px, 3.5vw, 64px);
+  padding: 0 10px;
+}
+.followup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  min-width: 0;
+  padding: 20px 0 40px;
+}
+.followup > :global(.eyebrow) {
+  font-size: 8px;
+  letter-spacing: 1.4px;
+}
+.checkpoint {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.checkpoint > span {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: var(--accent);
+  background: #a989d424;
+}
+.checkpoint small {
+  display: block;
+  font-size: 8px;
+  color: var(--quiet);
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+.checkpoint strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 450;
+  overflow-wrap: anywhere;
+}
+.checkpoint p {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 5px 0 0;
+}
+.followup > button {
+  font-size: 10px;
+  min-height: 40px;
+  margin-top: 12px;
+  border-radius: 3px;
+}
+.micro {
+  font-size: 8px;
+  color: var(--quiet);
+  line-height: 1.6;
+}
+.body {
+  min-width: 0;
+}
+.dials {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+.dial {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 9px 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #a183ca09, #7b46ad0c);
+  min-width: 0;
+  text-align: center;
+}
+.dial[aria-pressed='true'] {
+  border-color: #c7a1ed40;
+  background: linear-gradient(180deg, #aa80d814, #8b4db817);
+}
+.dial:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.dialFace {
+  position: relative;
+  width: 100%;
+  max-width: 116px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+.dialFace svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(135deg);
+}
+.track,
+.arc {
+  fill: none;
+  stroke-width: 1.8;
+}
+.track {
+  stroke: #bdb1d233;
+  stroke-dasharray: 0.7 2.2;
+}
+.arc {
+  stroke: var(--accent);
+}
+.dial:nth-child(2n) .arc {
+  stroke: #b68ae9;
+}
+.dialValue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.45;
+  padding: 6px;
+}
+.dialValue small {
+  font-size: 8px;
+  color: var(--muted);
+}
+.dialValue strong {
+  font-size: clamp(20px, 2vw, 30px);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5px;
+}
+.dialValue > span {
+  font-size: 10px;
+  color: var(--muted);
+}
+.quality {
+  font-size: 8px;
+  color: var(--muted);
+}
+.dialCaption {
+  font-size: 8px;
+  color: var(--quiet);
+  text-align: center;
+  margin: 9px 0 0;
+}
+.stage {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+}
+.stageTop {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 0 0;
+}
+.stageTop > span {
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+.stageTop :global(.segmented) {
+  border-radius: 2px;
+  background: transparent;
+  border-color: var(--line-soft);
+}
+.stageTop button {
+  font-size: 8px;
+  padding: 5px 9px;
+}
+.stage :global(.scene-viewport) {
+  height: clamp(310px, 43vh, 450px);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+.orbit {
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+  width: 90%;
+  height: 90px;
+  left: 5%;
+  bottom: 78px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #c3afd640, #76569713 50%, transparent 72%);
+  filter: blur(12px);
+}
+.modelCaption {
+  margin: 0;
+  text-align: center;
+  font-size: 8px;
+  color: var(--quiet);
+}
+.readout {
+  padding: 12px 0 0 !important;
+  border: 0;
+  background: transparent;
+}
+.readout strong {
+  font-size: 21px !important;
+}
+.readout > div:last-child {
+  font-size: 9px;
+}
+.context {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  min-width: 0;
+  padding-bottom: 30px;
+}
+.radiation {
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+.radiationTitle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent);
+  margin-bottom: 9px;
+}
+.radiationTitle span {
+  font-size: 8px;
+  letter-spacing: 0.6px;
+  color: var(--accent);
+}
+.radiationTitle svg {
+  width: 17px;
+}
+.radiation h3 {
+  font-size: 13px;
+  font-weight: 450;
+}
+.pending {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 8px 0;
+  border-bottom: 2px solid #9e7bc745;
+  padding-bottom: 8px;
+}
+.pending strong {
+  font-size: 29px;
+  font-weight: 400;
+}
+.pending span {
+  font-size: 10px;
+  color: var(--muted);
+}
+.radiation > p {
+  font-size: 9px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.radiation dl {
+  display: grid;
+  gap: 9px;
+  margin: 15px 0;
+}
+.radiation dt {
+  font-size: 8px;
+  color: var(--quiet);
+  margin-bottom: 3px;
+}
+.radiation dd {
+  margin: 0;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+.radiation .limit {
+  color: var(--accent);
+  font-size: 8px;
+}
+.limit svg {
+  width: 11px;
+  vertical-align: middle;
+  margin-right: 3px;
+}
+.radiation button {
+  font-size: 9px;
+  margin-top: 9px;
+}
+.connections > :global(.eyebrow) {
+  font-size: 8px;
+}
+.connections h3 {
+  margin: 6px 0 10px;
+  font-size: 11px;
+  font-weight: 450;
+}
+.connections > div {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 2px solid #9877bc40;
+  font-size: 10px;
+}
+.connections > div::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  background: var(--accent);
+}
+.connections > div > span {
+  color: var(--muted);
+}
+.connections strong {
+  font-weight: 450;
+  font-variant-numeric: tabular-nums;
+}
+.connections small {
+  color: var(--quiet);
+  font-size: 9px;
+}
+.risks {
+  border-top: 1px solid var(--line-soft);
+  margin-top: 15px;
+  padding: 14px 0;
+}
+.risks > summary {
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--muted);
+}
+.risks > summary span {
+  float: right;
+  color: var(--accent);
+  font-size: 9px;
+}
+.riskPicker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.riskPicker button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 10px;
+  min-height: 36px;
+  border: 1px solid var(--line-soft);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+}
+.riskPicker button[aria-pressed='true'] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.riskDescription {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0 0;
+  color: var(--muted);
+}
+.riskDescription > svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.riskDescription h3 {
+  font-size: 13px;
+  color: var(--text);
+}
+.riskDescription p {
+  font-size: 11px;
+  line-height: 1.8;
+  margin: 6px 0;
+}
+.riskDescription small {
+  font-size: 9px;
+  color: var(--accent);
+}
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: 145px minmax(0, 1fr) 170px;
+    gap: 20px;
+    padding: 0;
+  }
+  .source {
+    position: static;
+    margin-top: 10px;
+  }
+  .header {
+    flex-direction: column;
+    padding-bottom: 20px;
+  }
+  .dial .micro {
+    font-size: 7px;
+  }
+  .dialValue strong {
+    font-size: 22px;
+  }
+  .quality {
+    font-size: 7px;
+  }
+}
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .body {
+    grid-row: 1;
+  }
+  .header {
+    min-height: 80px;
+  }
+  .header h1 {
+    font-size: 21px;
+  }
+  .followup {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 15px 0;
+  }
+  .followup > :global(.eyebrow),
+  .followup > button,
+  .followup > .micro {
+    grid-column: 1/-1;
+  }
+  .context {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    padding: 15px 0;
+  }
+  .stage :global(.scene-viewport) {
+    height: 350px;
+  }
+  .dial {
+    padding: 6px 2px;
+  }
+  .dialValue small {
+    font-size: 7px;
+  }
+  .dialValue strong {
+    font-size: 21px;
+  }
+  .dialValue > span {
+    font-size: 8px;
+  }
+  .quality {
+    font-size: 7px;
+  }
+  .dial .micro {
+    display: none;
+  }
+}
+@media (max-width: 380px) {
+  .context {
+    grid-template-columns: 1fr;
+  }
+  .dialValue strong {
+    font-size: 18px;
+  }
+  .quality {
+    font-size: 6px;
+  }
+}

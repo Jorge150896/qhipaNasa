@@ -1,5 +1,9 @@
 # Desarrollo del frontend
 
+La entrega acumulada de consola, navegación inferior y Tumi se documenta en [mission-console-delivery.md](mission-console-delivery.md), con responsabilidades, tiempos de ayuda, límites y resultados de validación.
+
+En Fabian3 el centro de misión incorpora un resumen con astronauta central, cobertura de muestras en indicadores circulares y contexto destacado de radiación. El panel distingue fuentes disponibles de datos consultados; no consume nuevas APIs. Diseño, comparación de riesgos y límites en [radiation-focus-fabian3.md](../product/radiation-focus-fabian3.md).
+
 Monitoreo asistido tiene un flujo independiente de preparación/captura/revisión/guardado, adapters de demo/API y registro local por hábitat. La API es configurable y su contrato sigue provisional; ver [uso, arquitectura y límites](monitoring.md). No comparte las capturas con el snapshot sintético del dashboard.
 
 ## Decisiones implementadas
@@ -134,6 +138,8 @@ La ruta raíz monta `landing/LandingScreen.tsx`, con `useLandingViewModel` y `co
 
 ### Tema del dashboard
 
+El shell de misión, explorador y Tierra comparte el tratamiento de consola de Centro de Misión: fondo morado atenuado, cabecera compacta, divisores ligeros y paneles discretos. Cada sección conserva su distribución y controles; el chat de Tumi conserva su estilo propio. Su provider vive en el layout raíz para mantener conversación y modo de guía entre rutas y hábitats; cada workspace publica y limpia únicamente su instantánea vigente. Ver el README de `mission-assistant` para el ciclo de vida y la cobertura de la guía.
+
 La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md). El dashboard combina un fondo espacial animado con superficies moradas y acentos naranja. El centro del fondo se atenúa para facilitar la lectura y se usa una composición estática con movimiento reducido. Las variables comunes viven en `globals.css`; salud por sistemas y mapa conservan sus estilos locales con la misma familia visual.
 
 ### Cielo compartido de las escenas 3D
@@ -145,7 +151,6 @@ La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md
 `presentation/shared/loading/TumiLoader` representa carga de misión y mapa dentro del contenido; su variante fullscreen se reserva para iniciar misión desde la portada y la vista de revisión. `TumiHead` revela la referencia PNG original en capas SVG: cabeza, tocado, expresión y sombra tienen animaciones coordinadas, con spinner independiente y movimiento reducido. La imagen original se conserva sin redibujar; el loader es una capa de viewport completo y sin bordes. `/loading-preview` permite revisar el bucle sin depender de una carga real.
 
 La introducción mínima de tres segundos pertenece ahora al ViewModel de portada y solo empieza tras «Iniciar mi misión». El provider de misión mantiene únicamente su carga real. Los Screens de misión/mapa usan `useTransition` para representar navegación pendiente dentro del área de información, con el shell interactivo. No hay fallback global a pantalla completa ni bloqueo global del scroll. Detalle en `features/loading-preview/README.md`.
-
 
 ### Chequeo diario por actividad
 

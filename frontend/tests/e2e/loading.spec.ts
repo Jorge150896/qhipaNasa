@@ -107,9 +107,7 @@ test('pantalla completa solo desde Iniciar misión; carga interna conserva menú
   const started = Date.now();
   await page.getByRole('button', { name: 'Iniciar mi misión', exact: true }).click();
   await expect(page.locator('.tumi-loader--fullscreen')).toBeVisible();
-  await expect(
-    page.getByRole('heading', { name: 'Tu resumen de misión', exact: true }),
-  ).toBeVisible({
+  await expect(page.getByRole('heading', { name: 'Qhipa Pacha Lab', exact: true })).toBeVisible({
     timeout: 10_000,
   });
   expect(Date.now() - started).toBeGreaterThanOrEqual(2900);
@@ -131,10 +129,10 @@ test('pantalla completa solo desde Iniciar misión; carga interna conserva menú
     await expect(nav.getByRole('button', { name: 'Tripulación', exact: true })).toBeEnabled();
     await expect(page.locator('.topbar')).toBeVisible();
     const area = (await loader.boundingBox())!;
-    const sidebar = (await page.locator('.sidebar').boundingBox())!;
+    const dock = (await nav.boundingBox())!;
     const topbar = (await page.locator('.topbar').boundingBox())!;
-    expect(area.x).toBeGreaterThanOrEqual(sidebar.x + sidebar.width);
     expect(area.y).toBeGreaterThanOrEqual(topbar.y + topbar.height);
+    expect(area.y + area.height).toBeLessThanOrEqual(dock.y);
     await expect(page.locator('.tumi-loader--fullscreen')).toHaveCount(0);
     await page.screenshot({ path: '../docs/qa/tumi-loading-content.png', animations: 'disabled' });
     // A second intent remains usable while the first route is waiting.
