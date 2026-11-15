@@ -1,5 +1,4 @@
-import { useCallback, useContext, type ReactNode } from 'react';
-import { AssistantActionsContext } from '../../mission-assistant/AssistantActionsContext';
+import type { ReactNode } from 'react';
 import { navigation } from '../constants';
 import type { MissionSection } from '../types';
 import { Icon } from '@/ui/Icon';
@@ -20,11 +19,6 @@ export function MissionShell({
   onNavigate(section: MissionSection): void;
   children: ReactNode;
 }) {
-  const setLauncherHost = useContext(AssistantActionsContext)?.setLauncherHost;
-  const attachLauncher = useCallback(
-    (host: HTMLDivElement | null) => setLauncherHost?.(host),
-    [setLauncherHost],
-  );
   return (
     <div
       className={`app-shell ${styles.shell}`}
@@ -69,7 +63,6 @@ export function MissionShell({
               </span>
             )}
             <span className="avatar small">MC</span>
-            {setLauncherHost && <div ref={attachLauncher} className="assistant-launcher-host" />}
           </div>
         </header>
         <main id="mission-content">{children}</main>

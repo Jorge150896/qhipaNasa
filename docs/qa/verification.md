@@ -1,5 +1,21 @@
 # Verificación de la base frontend
 
+## Verificación de publicación (2026-11-15)
+
+La copia aislada para publicar en main aprobó build, TypeScript, ESLint y los dos E2E de navegación en puerto 3082 (escritorio, móvil, teclado y recarga). `npm run check` se detuvo en Prettier por diferencias de formato en 304 archivos; no llegó a ejecutar sus etapas posteriores de tests y build. El build se ejecutó por separado y pasó. Se conservaron fuera de esta publicación los cambios pendientes del loader de Tumi.
+
+## Orden de la barra inferior (2026-11-15)
+
+La navegación compartida muestra Tripulación → Monitoreo diario → Mapa espacial → Simulación, con ese mismo orden visual y de teclado. Simulación queda disponible directamente en móvil; se retiraron el menú «Más» y su lógica/estilos. Se mantienen destinos, indicador activo, barra fija y safe-area. La guía de Tumi apunta a los controles directos.
+
+Build, TypeScript y ESLint aprobados. Tres E2E distintos aprobados: orden y selección de Mapa en escritorio (puerto 3081, después de esperar la carga del mapa), teclado/recarga y anchos 320/390/768/1024, y acceso contextual a Fuentes (puerto 3080). Capturas revisadas: `navigation-dock-order-desktop.png` y `navigation-dock-order-mobile.png`. El primer intento de escritorio clicó una pestaña antes de terminar la carga del mapa; se agregó la espera por la vista disponible. El chequeo global sigue detenido por formato existente, sin ejecutar toda la suite E2E ni repetir pruebas unitarias para este cambio visual.
+
+## Retirada del botón superior de Tumi (2026-11-15)
+
+Se eliminó el lanzador de Tumi de la cabecera compartida de misión y explorador, junto con el registro/portal que lo alojaba. No se crea un lanzador fijo alternativo en estas pantallas. El chat contextual sigue accesible desde la mascota mediante «Abrir chat contextual» y desde las fichas. Se mantiene «Salir de guía» y el acceso propio que ya existía en la portada.
+
+El cierre devuelve el foco al origen conectado o a la mascota. Se actualizaron los helpers E2E para abrir el chat por el acceso activo. Cuatro casos E2E aprobados sobre el build actualizado en puerto 3079: conversación entre pestañas del mapa y móvil, ausencia del botón con recarga/escritorio/móvil, modo guía con teclado y contexto de respiración. Se verificó devolución de foco a la mascota al cerrar. Build y TypeScript aprobados; el chequeo global sigue detenido en formato existente. No se ejecutó toda la suite E2E.
+
 ## Integración de main conservando la interfaz local (2026-11-15)
 
 Se guardaron los cambios locales de simplificación y navegación en `11f6fb1` antes de integrar `origin/main` (`cd133f1`). La integración conserva los controles retirados, el acceso de Tumi en la cabecera y los nuevos identificadores/contextos de pantalla del remoto. El conflicto en CrewView se resolvió combinando los identificadores del asistente con las tres secciones actuales; se retiraron del contexto las referencias al panel de sistemas ya eliminado.

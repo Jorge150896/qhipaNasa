@@ -1,5 +1,7 @@
 # Tumi, asistente de misión
 
+El acceso independiente de la cabecera fue retirado. El chat contextual sigue disponible desde la mascota flotante («Abrir chat contextual») y desde las fichas de lectura. Cerrar el chat devuelve el foco al control de origen cuando permanece disponible o a la mascota. «Salir de guía» sigue disponible sin añadir otro botón fijo de Tumi.
+
 El asistente vive en el layout de cada hábitat para conservar la conversación al ocultar el chat y navegar entre sus secciones. `/explore` monta su propia instancia para Mapa espacial, Mapa de Marte y Centros en Tierra, con preguntas de navegación y acceso a Tripulación para consultar lecturas. Cada conversación vive en memoria durante su recorrido y se reinicia al recargar o salir de él.
 
 Las respuestas locales usan la persona seleccionada, la calidad y la hora de su instantánea, el módulo consultado y los chequeos guardados. Las preguntas se reconocen por temas, con ejemplos en el chat. El robot señala controles mediante identificadores de UI y deja que la persona decida si los pulsa.

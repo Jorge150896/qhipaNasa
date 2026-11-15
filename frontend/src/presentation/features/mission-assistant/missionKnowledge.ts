@@ -31,10 +31,6 @@ export const actionTips = {
     label: 'Iniciar mi misión',
     text: 'Abre el panel de la tripulación para consultar sus lecturas y actividades.',
   },
-  'more-sections': {
-    label: 'Más',
-    text: 'Muestra las secciones adicionales de la misión.',
-  },
   'explorer-mars': {
     label: 'Mapa de Marte',
     text: 'Acércate a Marte y consulta la Base Ares y su tripulación.',

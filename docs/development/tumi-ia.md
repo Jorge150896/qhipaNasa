@@ -10,6 +10,8 @@ El acompañante está disponible en portada, explorador y misión. En misión of
 
 ## Controles finales
 
+La cabecera ya no muestra un botón «Tumi» y no se crea otro lanzador fijo al retirarlo. El chat contextual se abre desde la mascota flotante mediante «Abrir chat contextual» o desde una ficha de lectura. Se mantiene el control «Salir de guía» mientras ese modo está activo.
+
 | Control                            | Resultado                                                   |
 | ---------------------------------- | ----------------------------------------------------------- |
 | Pulsar o tocar la cabeza           | Abre o cierra la conversación                               |
