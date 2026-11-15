@@ -73,7 +73,7 @@ Las skills se informan mediante este documento común y sus referencias cruzadas
 
 ## Implementación de frontend
 
-Tumi IA añade una feature independiente en `presentation/features/cursor-assistant`, con Screen/ViewModel/View, lógica visual de movimiento y un puerto cancelable `domain/assistant/TumiConversation`. El adapter actual es local y determinista; el detector de señales emocionales también es local y orientativo. No hay integración con IA ni endpoints nuevos. `MissionAssistantScreen` compone una instancia en portada, explorador y misión, conservando el chat contextual y sus datos. Arquitectura, recursos y límites: [guía de Tumi IA](../development/tumi-ia.md).
+Tumi IA usa un puerto cancelable `domain/assistant/TumiConversation`. La demo estática usa el adaptador local. En desarrollo, los dos chats pueden enviar el mensaje y un resumen de la vista al módulo `tumi` de Spring Boot, que llama a OpenAI Responses con una clave del servidor. La UI acepta una reacción del catálogo de Tumi y conserva sus reacciones locales al tono del mensaje. [Guía de Tumi IA](../development/tumi-ia.md)
 
 Los contratos de reutilización de los componentes visuales compartidos están en `docs/development/reusable-3d.md`. `StationModel` reside ahora en `presentation/shared/scene` y no depende de la feature de mapa. `PlanetSurface`, `ShuttleExteriorModel` y `SpaceBackdrop` mantienen el mismo límite visual, sin repositorios ni navegación. El resumen de cambios de Tierra y explorador está en `docs/development/earth-and-explorer-delivery.md`.
 

@@ -23,6 +23,8 @@ El acompañante está disponible en portada, explorador y misión. En misión of
 
 Se retiraron el botón de pausa manual y la X inferior. El cierre permanece únicamente en la cabecera. Los iconos mantienen nombres accesibles, tooltip y objetivos de pulsación de 44 px. El movimiento se suspende automáticamente al conversar, ocultar la mascota o usar la guía contextual.
 
+Desde el panel flotante o el chat contextual, **Guía local** hace que Tumi acompañe el mouse y explique los controles al pasar sobre ellos. **Salir de guía** devuelve al acompañante a su modo autónomo. En pantallas de hasta 600 px, el acompañante queda a media altura en el borde derecho. En táctil, el primer toque muestra la explicación y el segundo activa el control.
+
 ## Movimiento autónomo
 
 - Tamaño actual: 75 px de ancho en escritorio y 64 px en móvil.
@@ -56,7 +58,7 @@ En autonomía, otra temporización cambia el rostro sin reiniciar la ruta: prime
 
 ## Conversación y límites actuales
 
-El panel mantiene hasta 40 mensajes en memoria durante la visita del componente. No persiste el chat, no abre micrófono ni envía textos a un proveedor. La etiqueta «Sin IA conectada» permanece visible.
+El panel mantiene hasta 40 mensajes en memoria durante la visita del componente. En modo local, las respuestas salen de la guía integrada y el panel muestra «Sin IA conectada». Cuando se activa GPT en desarrollo, el panel identifica ese modo y envía el mensaje escrito y el contexto acotado de la vista al backend.
 
 La guía local responde sobre navegación, mapa espacial, lugares de la Tierra, tripulación y monitoreo diario. Los mensajes emocionales reciben reconocimiento orientativo y tranquilo; las preguntas explícitas de navegación conservan prioridad. Las preguntas abiertas fuera del alcance explican que todavía no hay un modelo de IA conectado.
 
@@ -69,7 +71,7 @@ Cerrar, ocultar o desmontar aborta la operación. Un resultado tardío no puede 
 | `CursorAssistantScreen.tsx`               | Composición, capacidades inyectadas y acceso al chat de misión |
 | `useCursorAssistantViewModel.ts`          | Estado, mensajes, cancelación, voz y reacción emocional        |
 | `components/CursorAssistantView.tsx`      | Panel y callbacks accesibles                                   |
-| `components/TumiTechPortrait.tsx`         | Cabeza SVG, expresiones y rasgos del personaje                 |
+| `shared/tumi/TumiTechPortrait.tsx`         | Cabeza SVG, expresiones y rasgos del personaje                 |
 | `useTumiMotion.ts`                        | Geometría del viewport, obstáculos, recorridos y arrastre      |
 | `behavior.ts`                             | Máquina de estados y comprobaciones geométricas portables      |
 | `emotions.ts`                             | Traducción de señales textuales y variedad facial autónoma     |
@@ -80,9 +82,9 @@ Cerrar, ocultar o desmontar aborta la operación. Un resultado tardío no puede 
 | `infrastructure/speech/browserVoice.ts`   | Voz del navegador y cancelación de la locución propia          |
 | `cursor-assistant.css`                    | Movimiento, panel, tamaños y accesibilidad visual              |
 
-`MissionAssistantScreen` monta el acompañante en portada, explorador y misión y lo suspende mientras el chat contextual o la guía están activos. No se añadieron dependencias npm ni endpoints.
+`MissionAssistantScreen` monta el acompañante en portada, explorador y misión y lo suspende mientras el chat contextual o la guía están activos. El modo GPT usa el endpoint local de Spring Boot documentado en OpenAPI.
 
-Para conectar IA real, implementar el puerto `TumiConversation`, inyectarlo por DI y acordar el contrato con Java/Spring Boot. Mantener `AbortSignal`, errores explícitos y el límite de información de la UI. Las claves de proveedores no deben ir en código cliente. La View no conoce HTTP, DTOs ni repositorios.
+Ambos chats pueden usar OpenAI en desarrollo con `HttpTumiConversation`, que conserva `AbortSignal` y llama a Spring Boot en la máquina local. Cada pantalla aporta un resumen acotado mediante `useTumiViewContext`. En Tripulación se adjuntan los indicadores, el módulo o la muestra y su referencia cuando se seleccionan. El explorador aporta el destino o centro abierto. Las fichas históricas identifican su propia procedencia. El backend añade el catálogo del proyecto y solicita una respuesta breve con una reacción validada. La opción para abrir Fuentes y alcance sigue resolviéndose por una acción local. El diario, los borradores y la transcripción previa quedan fuera de las solicitudes. El modo se activa siguiendo el [arranque local](../../backend/README.md#chat-flotante-de-tumi-con-gpt-en-local). La exportación de GitHub Pages conserva la guía local.
 
 Para incorporar una expresión, ampliar `TumiEmotion`, los rasgos de `TumiTechPortrait` y el mapper correspondiente. Para proteger una zona de la página, añadir `data-tumi-avoid`. No reutilizar el detector como evaluación psicológica ni como regla médica.
 
@@ -102,7 +104,7 @@ Para incorporar una expresión, ampliar `TumiEmotion`, los rasgos de `TumiTechPo
 | `public/brand/tumi-cursor-clean.md`              | Procedencia y prompt de limpieza                          |
 | `components/TumiPortrait.tsx`                    | Presentación anterior conservada; no es el retrato activo |
 | `public/brand/tumi-ia-expression-reference.jpeg` | Lámina tecnológica aportada por el usuario                |
-| `components/TumiTechPortrait.tsx`                | Recurso vectorial activo basado en la lámina              |
+| `shared/tumi/TumiTechPortrait.tsx`                | Recurso vectorial activo basado en la lámina              |
 
 La interpretación SVG no es una copia idéntica de píxeles ni un modelo 3D. El video original de 4,15 segundos se utilizó como referencia visual; no forma parte del runtime ni se publica con esta entrega. No se asigna una licencia nueva al material aportado por el usuario.
 

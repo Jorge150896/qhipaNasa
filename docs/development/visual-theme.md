@@ -1,5 +1,7 @@
 # Tema visual de Qhipa Pacha
 
+Monitoreo diario usa una atmósfera violeta propia, con Tumi, controles de ánimo y una respiración opcional de cuatro segundos por fase. El mensaje rápido abre el chat de misión. La respiración respeta la preferencia de movimiento reducido. El resto de las pantallas sigue el tema seleccionado en Tumi.
+
 Los anclajes de marca viven en `frontend/src/app/globals.css`: naranja `#FB5607`, morado `#8338EC`, carbón `#212529` y claro `#E9ECEF`. La portada consume los mismos tokens mediante sus alias `--qhipa-*`.
 
 La portada, las secciones de misión, Mapa espacial, Tierra y la carga a pantalla completa usan `SpaceBackground`. El fondo carbón combina nebulosa morada y dos planos de estrellas. Son tres texturas WebP locales de 3840 × 2160 con movimiento CSS lento, centro atenuado y versión estática para movimiento reducido. Cada capa vuelve al mismo fotograma al cerrar su ciclo. Las secciones con menú comparten cabecera, navegación y pie transparentes. La carga dentro de una sección deja ver el fondo de esa pantalla.

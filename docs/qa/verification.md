@@ -1,5 +1,11 @@
 # Verificación de la base frontend
 
+## Integración de main conservando la interfaz local (2026-11-15)
+
+Se guardaron los cambios locales de simplificación y navegación en `11f6fb1` antes de integrar `origin/main` (`cd133f1`). La integración conserva los controles retirados, el acceso de Tumi en la cabecera y los nuevos identificadores/contextos de pantalla del remoto. El conflicto en CrewView se resolvió combinando los identificadores del asistente con las tres secciones actuales; se retiraron del contexto las referencias al panel de sistemas ya eliminado.
+
+Build, TypeScript, ESLint y 105 pruebas unitarias frontend aprobados. Cinco E2E aprobados en puerto 3078: elementos retirados en escritorio/móvil/recarga, contexto de la ficha respiratoria, comparación de muestras y navegación inferior en escritorio/móvil. La integración no hizo llamadas reales a OpenAI ni volvió a ejecutar los tests Java del commit remoto. `npm run check` se detiene en formato global; los dos archivos resueltos se formatearon por separado.
+
 ## Tripulación simplificada (2026-11-15)
 
 Se retiraron la pestaña y el panel «Salud por sistemas», los botones inferiores «Ver corazón», «Ver visión» y «Ver ejercicio», la leyenda de interacción/referencia del visor y el pie de página general solo en Tripulación. Se mantienen Ahora, Historial, Personalización, puntos 3D, lecturas HTML, fichas, módulos y Monitoreo diario. El portal del visor permanece independiente.

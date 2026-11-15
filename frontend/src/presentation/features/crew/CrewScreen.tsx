@@ -22,12 +22,21 @@ import { CrewHologram } from './components/CrewHologram';
 import { MetricCards } from '../../shared/mission/MetricCards';
 import { MissionSceneSlot } from '../../shared/mission/MissionSceneSlot';
 import { AssistantActionsContext } from '../mission-assistant/AssistantActionsContext';
+import { captureMetricContext } from '../mission-assistant/explainMission';
+import { describeTumiReading, describeTumiZone } from '../mission-assistant/mapTumiContext';
+import { useTumiViewContext } from '../mission-assistant/useTumiViewContext';
 import { AvatarScreen } from './avatar/AvatarScreen';
 import { CabinHistoryScreen } from '../habitat/CabinHistoryScreen';
 import { NasaHistoryScreen } from '../history/NasaHistoryScreen';
 import { RadLabReference } from '../habitat/components/RadLabReference';
 import '../habitat/habitat.css';
 import './crew-explorer.css';
+
+const crewViewNames: Record<CrewSection, string> = {
+  now: 'Ahora',
+  history: 'Historial',
+  avatar: 'Personalización',
+};
 
 export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenProps) {
   const [section, setSection] = useState<CrewSection>('now');
@@ -39,6 +48,41 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
 
   const hologramSensorId = model.hologram?.sensorId;
   const telemetryId = model.telemetryMetric?.id;
+
+  const selectedSample = model.comparison?.second?.at ?? model.sampleAt;
+  const activeReadingId =
+    section === 'history'
+      ? telemetryId
+      : section === 'now' && model.mode === 'crew'
+        ? hologramSensorId
+        : undefined;
+  const activeReading =
+    activeReadingId &&
+    captureMetricContext(
+      `metric-${activeReadingId}`,
+      data,
+      section === 'history' && selectedSample
+        ? { at: selectedSample, compareFrom: model.comparison?.first?.at }
+        : undefined,
+    );
+  const openModule = model.moduleData;
+  useTumiViewContext(`Tripulación · ${crewViewNames[section]}`, [
+    ...(activeReading ? [describeTumiReading(activeReading)] : []),
+    ...(section === 'history' && model.telemetryMetric
+      ? [
+          `Serie visible de ${model.telemetryMetric.label} (sintética): ${model.telemetryMetric.history.map(({ at, value }) => `${at}: ${value}`).join('; ')}. Los puntos sin muestra no se interpolan.`,
+        ]
+      : []),
+    ...(section === 'now' && model.mode === 'ship'
+      ? [
+          openModule.synchronizedMoment
+            ? `Visor sincronizado con ${openModule.synchronizedMoment.at}. ${openModule.synchronizedMoment.zone?.name ?? 'Sin módulo registrado a esa hora'}.`
+            : openModule.origin
+              ? 'El visor está abierto desde un registro histórico. No usar datos ambientales de la instantánea para ese registro.'
+              : `Módulo abierto en el visor: ${describeTumiZone(openModule.selected)}. Ambiente sintético de la instantánea, no necesariamente la ubicación del tripulante.`,
+        ]
+      : []),
+  ]);
 
   function selectModule(id: string) {
     model.stopSynchronization();

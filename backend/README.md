@@ -10,6 +10,12 @@ cd backend
 
 Windows: `mvnw.cmd`. Requiere `JAVA_HOME` configurado y red para la primera descarga de Maven/dependencias. El servidor escucha en `127.0.0.1:8080`; no hay que instalar Maven globalmente.
 
+### Chat flotante de Tumi con GPT en local
+
+Abre `backend/.env.tumi.local` o créalo con permisos privados. Deja una línea `OPENAI_API_KEY=` y escribe tu clave después del igual. Git ignora este archivo. Inicia Spring Boot desde `backend/` con `./mvnw spring-boot:run`. En otra terminal, desde la raíz, ejecuta `NEXT_PUBLIC_TUMI_LOCAL=true npm run dev -- --port 3000`. Abre el Tumi flotante en `http://127.0.0.1:3000`. Para que Spring cargue una clave nueva, reinicia el backend.
+
+El endpoint local `POST /api/v1/tumi/replies` recibe hasta 600 caracteres de mensaje y un resumen acotado de la pantalla. Usa GPT-5.4 mini por defecto. El chat flotante y el contextual usan la integración cuando se activa el modo local con GPT. El contexto puede incluir lecturas simuladas y puntos seleccionados de archivos públicos. El diario, sus borradores y el historial de mensajes quedan fuera de esta llamada. La demo de GitHub Pages usa la guía local. El endpoint de GPT está pensado para desarrollo local y requeriría autenticación y límites de uso antes de publicarlo.
+
 Consultar [uso y contrato para frontend](../docs/development/radlab-backend.md) y [OpenAPI compartido](../docs/contracts/openapi.yaml).
 
 ```sh

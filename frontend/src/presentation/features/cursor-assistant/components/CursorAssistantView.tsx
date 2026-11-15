@@ -1,11 +1,13 @@
+import { TumiModeOptions } from '@/presentation/shared/tumi/TumiModeOptions';
 import { AppearanceOptions } from '@/ui/AppearanceOptions';
-import { TumiTechPortrait } from './TumiTechPortrait';
+import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
 import { EyeOff, X } from 'lucide-react';
 import { useEffect, useId, useRef, type RefObject } from 'react';
 import type { CursorAssistantData, TumiEmotion } from '../types';
 
 export function CursorAssistantView({
   data,
+  usesOpenAi,
   actor,
   onDraft,
   onSend,
@@ -14,10 +16,13 @@ export function CursorAssistantView({
   onHide,
   onShow,
   onOpenChat,
+  following,
+  onChangeMode,
   onGreet,
   onStopVoice,
 }: {
   data: CursorAssistantData;
+  usesOpenAi: boolean;
   actor: RefObject<HTMLDivElement | null>;
   onDraft(value: string): void;
   onSend(): void;
@@ -26,6 +31,8 @@ export function CursorAssistantView({
   onHide(): void;
   onShow(): void;
   onOpenChat?(): void;
+  following: boolean;
+  onChangeMode(following: boolean): void;
   onGreet(): void;
   onStopVoice(): void;
 }) {
@@ -91,7 +98,7 @@ export function CursorAssistantView({
         <section id={id} ref={panel} className="cursor-assistant-panel" aria-label="Asistente Tumi">
           <div className="tumi-chat-heading">
             <strong>Tumi</strong>
-            <span>Guía local</span>
+            <span>{usesOpenAi ? 'Chat con GPT' : 'Guía local'}</span>
             <button
               className="tumi-icon-button"
               aria-label="Cerrar conversación"
@@ -102,7 +109,12 @@ export function CursorAssistantView({
             </button>
           </div>
           <AppearanceOptions />
-          <p className="tumi-chat-disclaimer">Sin IA conectada · Respuestas locales sobre la web</p>
+          <TumiModeOptions following={following} onChangeMode={onChangeMode} />
+          <p className="tumi-chat-disclaimer">
+            {usesOpenAi
+              ? 'OpenAI recibe tu mensaje y el contexto de demostración de esta pantalla.'
+              : 'Sin IA conectada · Respuestas locales sobre la web'}
+          </p>
           <div
             className="tumi-chat-messages"
             role="log"

@@ -65,14 +65,14 @@ test('Tumi permite revisar la transcripción local antes de enviarla', async ({ 
   await expect(followUp).toContainText('A las 14:32 UTC: Hábitat de descanso');
 });
 
-test('Tumi cambia entre fijo y guía con ayuda por puntero y teclado', async ({ page }) => {
+test('Tumi cambia entre autónomo y guía con ayuda por puntero y teclado', async ({ page }) => {
   await page.goto('/mission/crew');
   await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
-  await expect(page.getByRole('button', { name: 'Fijo', exact: true })).toHaveAttribute(
+  await expect(page.getByRole('button', { name: 'Autónomo', exact: true })).toHaveAttribute(
     'aria-pressed',
     'true',
   );
-  await page.getByRole('button', { name: 'Guía con el puntero' }).click();
+  await page.getByRole('button', { name: 'Guía local' }).click();
   const exit = page.getByRole('button', { name: 'Salir de guía' });
   await expect(exit).toBeVisible();
   const pulse = page.locator('#assistant-target-metric-heartRate');
@@ -106,7 +106,13 @@ test('en pantalla táctil Tumi explica el primer toque y permite usar el control
   try {
     await page.goto('/mission/crew');
     await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
-    await page.getByRole('button', { name: 'Guía con el puntero' }).click();
+    await page.getByRole('button', { name: 'Guía local' }).click();
+    const floating = page.getByRole('button', { name: 'Abrir asistente Tumi' });
+    await expect(floating).toBeVisible();
+    const position = await floating.boundingBox();
+    if (!position) throw new Error('No se encontró a Tumi');
+    expect(Math.abs(position.y + position.height / 2 - 450)).toBeLessThan(4);
+    expect(390 - position.x - position.width).toBeLessThanOrEqual(10);
     const journal = page
       .getByRole('navigation', { name: 'Navegación principal' })
       .getByRole('button', { name: 'Monitoreo diario' });
@@ -127,7 +133,7 @@ test('Tumi abre una lectura desde la guía y explica el cambio con sus horas', a
   await page.goto('/mission/crew');
   await page.getByRole('button', { name: /Mateo Silva/ }).click();
   await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
-  await page.getByRole('button', { name: 'Guía con el puntero' }).click();
+  await page.getByRole('button', { name: 'Guía local' }).click();
   await page.locator('#assistant-target-metric-heartRate').hover();
   await page.getByRole('button', { name: 'Preguntar por este dato' }).click();
   const chat = page.getByRole('region', { name: 'Tumi' });
@@ -149,7 +155,7 @@ test('Tumi abre la tarjeta en modo táctil y respeta una lectura ausente', async
   try {
     await page.goto('/missions/selene/crew');
     await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
-    await page.getByRole('button', { name: 'Guía con el puntero' }).click();
+    await page.getByRole('button', { name: 'Guía local' }).click();
     await page.locator('#assistant-target-metric-oxygen').tap();
     await page.getByRole('button', { name: 'Preguntar por este dato' }).tap();
     const chat = page.getByRole('region', { name: 'Tumi' });

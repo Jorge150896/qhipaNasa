@@ -36,7 +36,7 @@ describe('Tumi autónomo', () => {
     }
   });
   it('descarta respuestas de un proveedor después de cerrar', async () => {
-    let resolveReply!: (value: string) => void;
+    let resolveReply!: (value: { text: string }) => void;
     const { result } = renderHook(() =>
       useCursorAssistantViewModel({
         reply: () =>
@@ -54,7 +54,7 @@ describe('Tumi autónomo', () => {
     expect(result.current.data.busy).toBe(true);
     act(() => result.current.close());
     await act(async () => {
-      resolveReply('Respuesta obsoleta');
+      resolveReply({ text: 'Respuesta obsoleta' });
       await pending;
     });
     expect(

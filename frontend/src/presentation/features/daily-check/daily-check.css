@@ -180,110 +180,298 @@
   color: var(--accent);
 }
 
-.daily-wellbeing {
-  --wellbeing-bg: var(--bg);
-  --wellbeing-card: var(--surface);
-  --wellbeing-field: var(--field);
-  --wellbeing-hero: var(--welcome-gradient);
-  --wellbeing-bubble: var(--surface);
-  --wellbeing-mood-good: var(--selection-soft);
-  --wellbeing-mood-neutral: var(--surface-raised);
-  --wellbeing-mood-low: var(--warm-surface);
+.app-shell[data-mission-section='journal'],
+.journal-page {
+  --bg: #190a2b;
+  --space-light: #190a2b;
+  --dock-bg: #27113f;
+  --dock-hover: #593089;
+  --selection: #b66cff;
+  --text: #fbf5ff;
+  --muted: #dbcaf2;
+  --quiet: #c4a9e8;
+  --surface: #271347;
+  --surface-raised: #361959;
+  --field: #211039;
+  --line: #9363ce69;
+  --line-soft: #b37ce534;
+  --selection-soft: #522385;
+  --selection-border: #d294ff;
+  --selection-text: #fff5ff;
+  --accent: #e1b7ff;
+  --accent-hover: #f0d5ff;
+  color-scheme: dark;
   color: var(--text);
-  background: var(--wellbeing-bg);
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  padding: clamp(9px, 2.2vw, 26px);
+}
+
+.journal-page {
+  position: relative;
+  isolation: isolate;
+  border-radius: 28px;
+  background:
+    radial-gradient(ellipse at 75% 5%, #6026a94d, transparent 38%),
+    radial-gradient(ellipse at 5% 25%, #49207f59, transparent 33%),
+    linear-gradient(155deg, #1d0b38, #170927 51%, #1f0d38);
+}
+
+.journal-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    ellipse 530px 310px at 75% 6%,
+    transparent 96%,
+    #a64dff38 98%,
+    transparent 100%
+  );
+}
+
+.journal-page .page-heading h1 {
+  font-weight: 700;
+  letter-spacing: -0.045em;
+}
+
+.journal-page .crew-picker button {
+  border-radius: 100px;
+}
+
+.daily-wellbeing {
+  --wellbeing-field: var(--field);
+  color: var(--text);
 }
 
 .daily-wellbeing .daily-check-layout {
-  grid-template-columns: minmax(0, 1.36fr) minmax(0, 1fr);
-  gap: 16px;
+  grid-template-columns: minmax(0, 3fr) minmax(230px, 1.13fr);
+  gap: clamp(14px, 2vw, 26px);
   align-items: start;
 }
 
 .daily-wellbeing .panel {
-  border: 1px solid var(--line);
-  border-radius: 19px;
-  background: var(--wellbeing-card);
-  box-shadow: none;
+  border: 1px solid var(--line-soft);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #30154d, #231238);
+  box-shadow: 0 15px 42px #10051e4d;
+}
+
+.daily-welcome {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1.62fr) minmax(155px, 1fr);
+  gap: clamp(12px, 2vw, 23px);
 }
 
 .daily-tumi {
-  position: relative;
-  isolation: isolate;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(84px, 30%);
+  grid-template-columns: minmax(60px, 42%) minmax(0, 1fr);
   align-items: center;
-  gap: 6px;
-  padding: clamp(14px, 2.2vw, 25px);
-  overflow: hidden;
-  border-radius: 16px;
-  background: var(--wellbeing-hero);
+  gap: clamp(8px, 1.6vw, 25px);
+  min-width: 0;
 }
 
-.daily-tumi::before {
-  position: absolute;
-  z-index: -1;
-  top: -36%;
-  inset-inline-end: -14%;
-  width: 57%;
-  aspect-ratio: 1;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  box-shadow: 0 0 0 13px color-mix(in srgb, var(--line) 28%, transparent);
+.daily-tumi-art {
+  position: relative;
+  min-width: 0;
+  filter: drop-shadow(0 8px 24px #a641fa57);
+}
+
+.daily-tumi-art::after {
   content: '';
+  display: block;
+  width: 66%;
+  height: 10px;
+  margin: 0 auto;
+  border-radius: 100%;
+  background: #9744f9;
+  box-shadow: 0 0 18px #b35cff;
+  opacity: 0.56;
+}
+
+.daily-tumi-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.daily-tumi-bubble {
+  position: relative;
+  padding: clamp(13px, 2vw, 25px);
+  border: 1px solid var(--selection-border);
+  border-radius: 25px 25px 25px 6px;
+  background: linear-gradient(155deg, #622895, #361753 70%);
+  box-shadow:
+    inset 0 0 16px #ce70ff36,
+    0 0 22px #a53cff38;
 }
 
 .daily-tumi-name {
   color: var(--accent);
   font-weight: 700;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .daily-tumi h3 {
-  font-size: clamp(23px, 3.4vw, 36px);
-  font-weight: 730;
-  line-height: 1.14;
-  letter-spacing: -0.035em;
+  font-size: clamp(22px, 2.9vw, 38px);
+  font-weight: 750;
+  line-height: 1.1;
+  letter-spacing: -0.045em;
   overflow-wrap: anywhere;
 }
 
 .daily-tumi-reply {
-  width: fit-content;
-  margin-top: 10px;
-  padding: 9px 12px;
-  border-radius: 13px 13px 13px 4px;
-  background: var(--wellbeing-bubble);
+  margin-top: 9px;
   color: var(--text);
+  font-size: clamp(13px, 1.3vw, 17px);
+  line-height: 1.45;
+}
+
+.daily-breathing {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
+}
+
+.daily-breathing h3,
+.daily-breathing-controls {
+  border: 1px solid var(--line);
+  border-radius: 19px;
+  background: linear-gradient(130deg, #532786, #30164f 68%);
+}
+
+.daily-breathing h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
   font-size: 14px;
+  font-weight: 650;
+  line-height: 1.25;
 }
 
-.daily-tumi-art {
-  width: min(100%, 150px);
-  margin-inline: auto;
+.daily-breathing h3 svg {
+  color: var(--accent);
+}
+
+.daily-breathing-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.6vw, 22px);
+  min-height: 123px;
+  padding: 12px;
+}
+
+.daily-breathing-controls button {
+  width: clamp(46px, 5vw, 70px);
   aspect-ratio: 1;
+  flex: none;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--selection-border);
+  background: radial-gradient(circle at 40% 25%, #ac63f0, #6324a5 72%);
+  box-shadow:
+    0 0 0 5px #9a49e844,
+    0 0 18px #a84eff87;
 }
 
-.daily-tumi-art .tumi-head {
-  width: 100%;
-  height: 100%;
+.daily-breathing-controls button:hover {
+  background: #8b45d2;
 }
 
-.daily-tumi-art .tumi-mouth-calm {
-  display: none;
+.daily-breathing-controls[data-phase='Inhala'] button {
+  animation: wellbeing-inhale 4s ease-in-out both;
 }
 
-.daily-tumi-art .tumi-mouth-smile {
-  opacity: 1;
+.daily-breathing-controls[data-phase='Exhala'] button {
+  animation: wellbeing-exhale 4s ease-in-out both;
 }
 
-.daily-tumi[data-mood='low'] .tumi-mouth-smile {
-  opacity: 0;
+@keyframes wellbeing-inhale {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.13);
+  }
 }
 
-.daily-tumi[data-mood='low'] .tumi-mouth-calm {
-  display: initial;
+@keyframes wellbeing-exhale {
+  from {
+    transform: scale(1.13);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.daily-breathing-controls strong,
+.daily-breathing-controls span {
+  display: block;
+  line-height: 1.25;
+}
+
+.daily-breathing-controls strong {
+  font-size: clamp(16px, 1.9vw, 25px);
+  letter-spacing: -0.03em;
+}
+
+.daily-breathing-controls span {
+  margin-top: 4px;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.daily-tumi-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 7px 6px 15px;
+  border: 1px solid var(--line);
+  border-radius: 40px;
+  background: linear-gradient(110deg, #392059, #2c174a);
+  color: var(--accent);
+}
+
+.daily-wellbeing .daily-check-form .daily-tumi-message input[type='text'] {
+  min-width: 0;
+  flex: 1;
+  margin: 0;
+  padding: 8px 0;
+  background: transparent;
+  border: 0;
+  color: var(--text);
+}
+
+.daily-tumi-message button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  min-height: 40px;
+  border-radius: 26px;
+  border: 1px solid #ce92ff;
+  background: linear-gradient(135deg, #9e46de, #7423bb);
+  color: white;
+}
+
+.daily-tumi-message button:disabled {
+  cursor: default;
+}
+
+@container (max-width: 520px) {
+  .daily-tumi {
+    grid-template-columns: minmax(53px, 33%) minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daily-breathing-controls[data-phase] button {
+    animation: none;
+  }
 }
 
 .daily-mood legend {
@@ -299,39 +487,41 @@
 }
 
 .daily-mood-options label {
+  position: relative;
   cursor: pointer;
   flex-direction: row;
   align-items: center;
-  flex-wrap: wrap;
   justify-content: center;
-  min-height: 51px;
-  padding: 8px;
-  border: 1px solid transparent;
-  border-radius: 14px;
+  min-height: 54px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  background: linear-gradient(145deg, #412164, #32194f);
   font-weight: 650;
   font-size: 14px;
 }
 
-.daily-mood-options label[data-mood='good'] {
-  background: var(--wellbeing-mood-good);
-}
-
-.daily-mood-options label[data-mood='neutral'] {
-  background: var(--wellbeing-mood-neutral);
-}
-
-.daily-mood-options label[data-mood='low'] {
-  background: var(--wellbeing-mood-low);
+.daily-mood-options label:hover,
+.daily-mood-options label:focus-within,
+.daily-mood-options label[data-selected='true'] {
+  border-color: var(--selection-border);
 }
 
 .daily-mood-options label[data-selected='true'] {
-  border-color: var(--selection-border);
-  box-shadow: inset 0 0 0 1px var(--selection-border);
+  background: linear-gradient(140deg, #9f55df, #6831a7);
+  box-shadow:
+    inset 0 0 10px #e3adff45,
+    0 0 17px #aa51f955;
 }
 
 .daily-mood-options input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   margin: 0;
-  accent-color: var(--accent);
+  opacity: 0;
+  cursor: pointer;
 }
 
 .daily-mood .text-button {
@@ -360,13 +550,14 @@
 }
 
 .daily-wellbeing .button.primary {
-  color: #2f170e;
-  border-radius: 11px;
-  background: #ffad7a;
+  color: white;
+  border-color: #bb79f9;
+  border-radius: 100px;
+  background: #7737b8;
 }
 
 .daily-wellbeing .button.primary:hover:not(:disabled) {
-  background: #ffbe96;
+  background: #8845c5;
 }
 
 .daily-wellbeing .daily-readings .panel-heading {
@@ -394,17 +585,27 @@
     padding: 12px;
   }
 
-  .daily-tumi {
-    grid-template-columns: minmax(0, 1fr) minmax(67px, 27%);
-  }
-
-  .daily-mood-options {
+  .daily-welcome {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .daily-tumi {
+    grid-template-columns: minmax(58px, 35%) minmax(0, 1fr);
+  }
+
+  .daily-breathing-controls {
+    min-height: 82px;
+  }
+
   .daily-mood-options label {
-    justify-content: flex-start;
-    padding-inline: 12px;
+    gap: 5px;
+    padding-inline: 4px;
+    font-size: 12px;
+  }
+
+  .daily-mood-options label > svg {
+    width: 17px;
+    height: 17px;
   }
 
   .daily-wellbeing .button.primary {

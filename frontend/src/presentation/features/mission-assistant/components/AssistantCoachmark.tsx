@@ -1,5 +1,5 @@
-import { useEffect, useEffectEvent, useRef, useState } from 'react';
-import { AssistantRobot } from './AssistantRobot';
+import { useEffect, useEffectEvent, useId, useRef, useState } from 'react';
+import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
 
 const targetPrefix = 'assistant-target-';
 const targetSelector = '[id^="assistant-target-"], [data-assistant-control]';
@@ -20,6 +20,7 @@ export function AssistantCoachmark({
   onAsk(id: string): void;
 }) {
   const robot = useRef<HTMLDivElement>(null);
+  const portraitId = useId();
   const tooltip = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<{ id: string; touch: boolean }>();
   const activeTip = active && describe(active.id);
@@ -36,8 +37,8 @@ export function AssistantCoachmark({
 
     function placeRobot(x: number, y: number) {
       if (!robot.current || motion.matches) return;
-      const left = Math.max(4, Math.min(window.innerWidth - 48, x + 16));
-      const top = Math.max(4, Math.min(window.innerHeight - 42, y + 16));
+      const left = Math.max(4, Math.min(window.innerWidth - 62, x + 16));
+      const top = Math.max(4, Math.min(window.innerHeight - 57, y + 16));
       robot.current.style.transform = `translate3d(${left}px, ${top}px, 0)`;
       robot.current.dataset.visible = 'true';
     }
@@ -159,7 +160,7 @@ export function AssistantCoachmark({
   return (
     <>
       <div ref={robot} className="assistant-follow-robot" aria-hidden="true">
-        <AssistantRobot />
+        <TumiTechPortrait id={portraitId} emotion={activeTip ? 'curious' : 'happy'} />
       </div>
       <div ref={tooltip} className="assistant-coach-tip" role="status" hidden={!activeTip}>
         {activeTip && (

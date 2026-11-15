@@ -142,3 +142,30 @@ test('Tumi responde al ánimo y Monitoreo diario conserva el borrador al cambiar
   expect((await readings.boundingBox())!.y).toBeGreaterThan((await form.boundingBox())!.y);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
+
+test('Monitoreo diario guía la respiración y envía el mensaje al chat sin avanzar el formulario', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/mission/journal');
+  const pageContent = page.locator('.journal-page');
+  await expect(pageContent).toHaveCSS('color-scheme', 'dark');
+  const breathing = page.getByRole('region', { name: 'Respiración guiada' });
+  await breathing.getByRole('button', { name: 'Iniciar respiración guiada' }).click();
+  await expect(breathing.getByText('Exhala', { exact: true })).toBeVisible();
+  await breathing.getByRole('button', { name: 'Detener respiración guiada' }).click();
+  await expect(breathing).toContainText('4 s');
+
+  const message = page.getByRole('textbox', { name: 'Mensaje para Tumi' });
+  await message.fill('¿De dónde vienen los datos?');
+  await message.press('Enter');
+  const chat = page.getByRole('region', { name: 'Tumi' });
+  await expect(chat.getByRole('button', { name: 'Ver Fuentes y alcance' })).toBeVisible();
+  await chat.getByRole('button', { name: 'Ocultar chat' }).click();
+  await expect(
+    page.getByRole('list', { name: 'Progreso del chequeo' }).getByText('Contexto'),
+  ).toHaveAttribute('aria-current', 'step');
+  await expect(message).toBeEmpty();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});

@@ -46,7 +46,12 @@ export function SimulationView({
         <div className="panel-heading">
           <Icon name="sliders" />
           <h3>Resultado del escenario</h3>
-          <button type="button" className="button secondary" onClick={onOpenResult}>
+          <button
+            type="button"
+            className="button secondary"
+            data-assistant-control="scenario-result"
+            onClick={onOpenResult}
+          >
             {hasSignal ? 'Ver historial de SpO₂' : 'Abrir Tripulación'}
           </button>
         </div>

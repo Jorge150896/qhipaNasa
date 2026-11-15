@@ -7,6 +7,7 @@ import { createSpaceExplorerDependencies } from '@/di/createSpaceExplorerDepende
 import { TumiLoader } from '../../shared/loading/TumiLoader';
 import { earthCentersRoute, missionRoute } from '@/presentation/shared/missionRoutes';
 import { MissionShell } from '../mission/components/MissionShell';
+import { useTumiViewContext } from '../mission-assistant/useTumiViewContext';
 import { useSpaceExplorerViewModel } from './useSpaceExplorerViewModel';
 import { SpaceExplorerView } from './components/SpaceExplorerView';
 import './explorer.css';
@@ -52,6 +53,17 @@ export function SpaceExplorerScreen() {
   const [visibleCard, setVisibleCard] = useState<DestinationKey | null>(null);
   const dependencies = useMemo(() => createSpaceExplorerDependencies(), []);
   const model = useSpaceExplorerViewModel(dependencies, destination);
+  const selected = model.selected;
+  useTumiViewContext(
+    showsEarth ? undefined : panel === 'mars' ? 'Mapa de Marte' : 'Mapa espacial',
+    selected
+      ? [
+          `Destino seleccionado: ${selected.name} (${selected.category}). ${selected.subtitle}`,
+          `Hábitats que se pueden abrir: ${selected.habitats.map(({ name, location }) => `${name} (${location})`).join(', ') || 'ninguno para este destino'}.`,
+          `Destinos visibles: ${model.data?.destinations.map(({ name }) => name).join(', ') ?? ''}.`,
+        ]
+      : ['Cargando destinos.'],
+  );
   const select = (id: DestinationKey) => {
     setVisibleCard(id);
     if (panel === 'mars' && id === 'mars') return;

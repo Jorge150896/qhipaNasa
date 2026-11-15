@@ -47,6 +47,7 @@ export function CrewView({
             type="button"
             key={id}
             id={id === 'history' ? 'assistant-target-history' : undefined}
+            data-assistant-control={id === 'history' ? undefined : `crew-${id}`}
             aria-controls={`crew-${id === 'avatar' ? 'avatar-panel' : id}`}
             aria-pressed={section === id}
             onClick={() => onChangeSection(id)}
@@ -63,7 +64,11 @@ export function CrewView({
         tabIndex={-1}
       >
         {mode === 'crew' && (
-          <button className="text-button crew-location-link" onClick={onOpenHabitat}>
+          <button
+            className="text-button crew-location-link"
+            data-assistant-control="crew-module"
+            onClick={onOpenHabitat}
+          >
             Ver módulo · {data.selected.location} <Icon name="arrow" size={14} />
           </button>
         )}

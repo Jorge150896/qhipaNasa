@@ -38,7 +38,7 @@ describe('señales emocionales locales', () => {
   });
   it('conserva la reacción al texto después de responder y se reinicia con otro mensaje', async () => {
     const { result } = renderHook(() =>
-      useCursorAssistantViewModel({ reply: async () => 'Respuesta local' }),
+      useCursorAssistantViewModel({ reply: async () => ({ text: 'Respuesta local' }) }),
     );
     act(() => result.current.toggle());
     for (const [text, emotion] of [
@@ -60,7 +60,7 @@ describe('señales emocionales locales', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.2);
     try {
       const { result, unmount } = renderHook(() =>
-        useCursorAssistantViewModel({ reply: async () => '' }),
+        useCursorAssistantViewModel({ reply: async () => ({ text: '' }) }),
       );
       act(() => {
         vi.advanceTimersByTime(12000);

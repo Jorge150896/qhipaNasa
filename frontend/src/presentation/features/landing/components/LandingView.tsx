@@ -59,8 +59,10 @@ export function LandingView({
           </span>
         </button>
         <nav className="qhipa-nav" aria-label="Navegación de portada">
-          <button onClick={onOpenCrew}>Tu bienestar</button>
-          <button onClick={onOpenExplorer}>
+          <button data-assistant-control="crew" onClick={onOpenCrew}>
+            Tu bienestar
+          </button>
+          <button data-assistant-control="map" onClick={onOpenExplorer}>
             El universo <Icon name="arrow" size={14} />
           </button>
         </nav>
@@ -80,11 +82,19 @@ export function LandingView({
             acompaña cada paso de tu misión.
           </p>
           <div className="qhipa-cta-row">
-            <button className="qhipa-cta" onClick={onOpenMission}>
+            <button
+              className="qhipa-cta"
+              data-assistant-control="start-mission"
+              onClick={onOpenMission}
+            >
               <span>Iniciar mi misión</span>
               <Icon name="arrow" size={21} />
             </button>
-            <button className="qhipa-secondary-cta" onClick={onOpenExplorer}>
+            <button
+              className="qhipa-secondary-cta"
+              data-assistant-control="map"
+              onClick={onOpenExplorer}
+            >
               Explorar el universo <Icon name="orbit" size={16} />
             </button>
           </div>

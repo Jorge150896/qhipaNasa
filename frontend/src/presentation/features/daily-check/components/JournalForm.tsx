@@ -2,7 +2,7 @@ import { useEffect, useRef, type FormEvent } from 'react';
 import { CheckAttachments } from './CheckAttachments';
 import { Frown, Meh, Smile } from 'lucide-react';
 import { Icon } from '@/ui/Icon';
-import { TumiHead } from '@/presentation/shared/loading/TumiHead';
+import { DailyWellbeingMessage, DailyWellbeingWelcome } from './DailyWellbeingWelcome';
 import type { DailyCheckViewModel } from '../types';
 
 const moodIcons = { good: Smile, neutral: Meh, low: Frown };
@@ -14,11 +14,13 @@ export function JournalForm({
   saving,
   updating,
   model,
+  onAskTumi,
 }: {
   personName: string;
   saving: boolean;
   updating: boolean;
   model: DailyCheckViewModel;
+  onAskTumi?(question: string): void;
 }) {
   const { step, values } = model;
   const heading = useRef<HTMLHeadingElement>(null);
@@ -43,18 +45,11 @@ export function JournalForm({
     >
       {step < 2 && (
         <>
-          <div className="daily-tumi" data-mood={values.mood}>
-            <div>
-              <p className="daily-tumi-name">Tumi</p>
-              <h3>Hola, {personName.split(' ')[0]}.</h3>
-              <p className="daily-tumi-reply" role="status">
-                {model.tumiReply}
-              </p>
-            </div>
-            <div className="daily-tumi-art">
-              <TumiHead />
-            </div>
-          </div>
+          <DailyWellbeingWelcome
+            personName={personName}
+            mood={values.mood}
+            reply={model.tumiReply}
+          />
           <fieldset className="daily-mood">
             <legend>¿Cómo describirías tu ánimo?</legend>
             <div className="daily-mood-options">
@@ -84,6 +79,7 @@ export function JournalForm({
               </button>
             )}
           </fieldset>
+          {onAskTumi && <DailyWellbeingMessage onAsk={onAskTumi} />}
         </>
       )}
       <ol className="daily-check-progress" aria-label="Progreso del chequeo">
@@ -369,6 +365,7 @@ export function JournalForm({
                   ? 'assistant-target-save-check'
                   : undefined
             }
+            data-assistant-control={step === 0 ? 'check-context' : undefined}
             type="submit"
           >
             {saving

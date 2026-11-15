@@ -26,7 +26,11 @@ export function MissionShell({
     [setLauncherHost],
   );
   return (
-    <div className={`app-shell ${styles.shell}`} data-navigation-layout="dock">
+    <div
+      className={`app-shell ${styles.shell}`}
+      data-navigation-layout="dock"
+      data-mission-section={section}
+    >
       <SpaceBackground />
       <a className="skip-link" href="#mission-content">
         Ir al contenido

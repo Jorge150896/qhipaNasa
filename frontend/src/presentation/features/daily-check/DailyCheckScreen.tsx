@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useEffectEvent } from 'react';
+import { useContext, useEffect, useEffectEvent } from 'react';
+import { AssistantActionsContext } from '../mission-assistant/AssistantActionsContext';
+import { useTumiViewContext } from '../mission-assistant/useTumiViewContext';
 import type { DailyCheckScreenProps } from './types';
 import { DailyCheckView } from './components/DailyCheckView';
 import { useDailyCheckViewModel } from './useDailyCheckViewModel';
@@ -16,6 +18,11 @@ export function DailyCheckScreen(props: DailyCheckScreenProps) {
 
 function DailyCheckSession({ data, saving, onSave }: DailyCheckScreenProps) {
   const model = useDailyCheckViewModel(data, onSave);
+  const askTumi = useContext(AssistantActionsContext)?.askQuestion;
+  useTumiViewContext('Monitoreo diario', [
+    `Paso actual: ${['Contexto', 'Autoevaluación', 'Confirmación', 'Resultado'][model.step]}.`,
+    'Las respuestas y notas del formulario se guardan localmente y no forman parte de este contexto.',
+  ]);
   const openEntry = useEffectEvent(() => {
     const id = window.location.hash.slice(1);
     if (id.startsWith('check-system-')) {
@@ -33,5 +40,5 @@ function DailyCheckSession({ data, saving, onSave }: DailyCheckScreenProps) {
   useEffect(() => {
     openEntry();
   }, []);
-  return <DailyCheckView data={data} saving={saving} model={model} />;
+  return <DailyCheckView data={data} saving={saving} model={model} onAskTumi={askTumi} />;
 }

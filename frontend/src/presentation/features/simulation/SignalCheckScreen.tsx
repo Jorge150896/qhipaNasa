@@ -4,6 +4,7 @@ import type { MetricData } from '../mission/types';
 import { MissionSceneSlot } from '../../shared/mission/MissionSceneSlot';
 import { useSignalCheckViewModel } from './useSignalCheckViewModel';
 import { SignalCheckPanel } from './components/SignalCheckPanel';
+import { useTumiViewContext } from '../mission-assistant/useTumiViewContext';
 import './signal-check.css';
 
 export function SignalCheckScreen({
@@ -23,6 +24,12 @@ export function SignalCheckScreen({
     metric,
   );
   const [showSensor, setShowSensor] = useState(false);
+  useTumiViewContext('Simulación · Pérdida de señal', [
+    `Caso sintético de ${metric.label}: ${model.missingCount} lecturas recientes ausentes.`,
+    model.state.kind === 'available'
+      ? `El botón Repetir medición simulada obtuvo ${model.state.value} a las ${model.state.time}. Es una captura nueva, separada del historial.`
+      : 'La captura simulada de repetición todavía no tiene una nueva lectura disponible.',
+  ]);
 
   return (
     <SignalCheckPanel

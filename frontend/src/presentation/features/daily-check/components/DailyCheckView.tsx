@@ -9,10 +9,12 @@ export function DailyCheckView({
   data,
   saving,
   model,
+  onAskTumi,
 }: {
   data: MissionData;
   saving: boolean;
   model: DailyCheckViewModel;
+  onAskTumi?(question: string): void;
 }) {
   return (
     <div className="journal-layout daily-check-layout">
@@ -22,6 +24,7 @@ export function DailyCheckView({
           saving={saving}
           updating={data.todayCheck}
           model={model}
+          onAskTumi={onAskTumi}
         />
       </Panel>
       <div className="daily-check-sidebar">
