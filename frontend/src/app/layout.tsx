@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import './globals.css';
+import { CursorAssistantHost } from '@/presentation/features/cursor-assistant/CursorAssistantScreen';
 export const metadata: Metadata = {
   title: 'Qhipa Pacha · Mission Intelligence',
   description:
@@ -9,7 +10,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        {children}
+        <CursorAssistantHost />
+      </body>
     </html>
   );
 }

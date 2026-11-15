@@ -73,6 +73,8 @@ Las skills se informan mediante este documento común y sus referencias cruzadas
 
 ## Implementación de frontend
 
+Tumi IA añade una feature independiente en `presentation/features/cursor-assistant`, con Screen/ViewModel/View, lógica visual de movimiento y un puerto cancelable `domain/assistant/TumiConversation`. El adapter actual es local y determinista; el detector de señales emocionales también es local y orientativo. No hay integración con IA ni endpoints nuevos. El layout raíz y MissionAssistantScreen componen una sola instancia por página, conservando el chat contextual y sus datos. Arquitectura, recursos y límites: [guía de Tumi IA](../development/tumi-ia.md).
+
 Los contratos de reutilización de los componentes visuales compartidos están en `docs/development/reusable-3d.md`. `StationModel` reside ahora en `presentation/shared/scene` y no depende de la feature de mapa. `PlanetSurface`, `ShuttleExteriorModel` y `SpaceBackdrop` mantienen el mismo límite visual, sin repositorios ni navegación. El resumen de cambios de Tierra y explorador está en `docs/development/earth-and-explorer-delivery.md`.
 
 El explorador incorpora `launch-sites`, una feature independiente de catálogo histórico de sitios y videos. Screen/ViewModel/View y `LoadLaunchSites -> LaunchSitesRepository -> LocalLaunchSitesRepository`, compuestos en DI. No añade endpoints ni estado al flujo de misión. La URL conserva pestaña y sitio; el globo y el reproductor se cargan bajo demanda. `presentation/shared/scene/PlanetSurface` comparte texturas planetarias locales entre ambos visores, con liberación y fallback. Documentación en `frontend/src/presentation/features/launch-sites/README.md`.

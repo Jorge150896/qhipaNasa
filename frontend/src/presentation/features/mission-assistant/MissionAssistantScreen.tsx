@@ -19,6 +19,7 @@ import { captureMetricContext, getControlTip } from './explainMission';
 import { AssistantCoachmark } from './components/AssistantCoachmark';
 import { AssistantRobot } from './components/AssistantRobot';
 import './mission-assistant.css';
+import { CursorAssistantScreen } from '../cursor-assistant/CursorAssistantScreen';
 
 interface Point {
   left: number;
@@ -126,6 +127,10 @@ export function MissionAssistantScreen({
   return (
     <AssistantActionsContext value={{ askAboutReading, setLauncherHost }}>
       {children}
+      <CursorAssistantScreen
+        onOpenChat={open}
+        suspended={model.open || following || Boolean(targetId)}
+      />
       {!(targetId && point && !model.open) && (
         <MissionAssistantView
           model={model}

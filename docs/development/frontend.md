@@ -1,5 +1,11 @@
 # Desarrollo del frontend
 
+## Acompañante animado Tumi
+
+La [guía completa de Tumi IA](tumi-ia.md) reúne uso, arquitectura, evolución, recursos y reutilización. Los controles finales ofrecen ojo tachado para ocultar y X únicamente en la cabecera; se retiraron la pausa manual y la X inferior. La suspensión del movimiento durante la conversación sigue siendo automática.
+
+`cursor-assistant` presenta Tumi IA como cabeza tecnológica vectorial basada en la nueva referencia del usuario, con expresiones, máquina de estados, recorridos autónomos moderados, prevención geométrica de obstáculos y arrastre. El panel cercano permite conversar con una guía local identificada como «Sin IA conectada». El puerto cancelable `TumiConversation` queda preparado para otro adapter mediante DI; no existe integración con un modelo de IA. El host cubre páginas generales y `MissionAssistantScreen` compone la instancia de misión con acceso a su chat contextual. Se conservan pausa, ocultación, teclado y movimiento reducido. El loader anterior y los modelos 3D no cambian. Alcance y límites en `frontend/src/presentation/features/cursor-assistant/README.md`.
+
 Monitoreo asistido tiene un flujo independiente de preparación/captura/revisión/guardado, adapters de demo/API y registro local por hábitat. La API es configurable y su contrato sigue provisional; ver [uso, arquitectura y límites](monitoring.md). No comparte las capturas con el snapshot sintético del dashboard.
 
 ## Decisiones implementadas

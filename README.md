@@ -33,6 +33,8 @@ Para generar esa misma exportación localmente, ejecuta `GITHUB_PAGES=true npm r
 
 ## Funciona en esta versión
 
+- **Tumi IA flotante**: cabeza tecnológica con movimiento autónomo moderado, arrastre, expresiones y reacciones locales a mensajes alegres, tristes o enojados. Conversación junto al personaje, ojo tachado para ocultar y X superior para cerrar; sin pausa manual. Incluye acceso al chat contextual de misión. La guía funciona con respuestas locales y todavía no tiene un modelo de IA conectado. [Guía completa, evolución y reutilización](docs/development/tumi-ia.md).
+
 - Opción «Ver todo de la Tierra» al seleccionar Tierra, disponible en su tarjeta, marcador 3D y pestaña «Todo de la Tierra». Abre `/explore?destination=earth&tab=earth`, con el directorio de ocho lugares, sus funciones, los tres videos históricos y el globo interactivo. Elegir un lugar o video abre su tarjeta y conserva la selección en la URL.
 
 - Pestaña «Despegues de la Tierra» en `/explore?destination=earth&tab=launches`: Kennedy, Vandenberg y Kourou, más las sedes NASA Headquarters, Johnson, Goddard, Marshall y JPL. Cada lugar abre una tarjeta con nombre completo, ciudad, función, fuentes y un video histórico de despegue relacionado, indicando dónde ocurrió realmente. Símbolos distintos y cards individuales junto a los puntos visibles; lista equivalente sin 3D. La URL conserva el sitio; los videos externos requieren conexión. Texturas locales de Solar System Scope / INOVE (CC BY 4.0). Aurora sigue siendo una estación ficticia.
