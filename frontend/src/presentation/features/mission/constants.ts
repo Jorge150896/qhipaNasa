@@ -1,43 +1,17 @@
 import type { MissionSection, ScenarioKey, SensorKey } from './types';
 export const navigation: { id: MissionSection; label: string; icon: string }[] = [
-  { id: 'overview', label: 'Mi estado', icon: 'orbit' },
-  { id: 'monitoring', label: 'Monitoreo', icon: 'chart' },
   { id: 'crew', label: 'Tripulación', icon: 'users' },
-  { id: 'habitat', label: 'Entorno de la nave', icon: 'rocket' },
-  { id: 'history', label: 'Historial', icon: 'chart' },
-  { id: 'journal', label: 'Chequeo diario', icon: 'clipboard' },
-  { id: 'observations', label: 'Observaciones', icon: 'bell' },
+  { id: 'journal', label: 'Monitoreo diario', icon: 'clipboard' },
   { id: 'simulation', label: 'Simulación', icon: 'sliders' },
-  { id: 'sources', label: 'Fuentes y alcance', icon: 'book' },
 ];
 export const sectionTitles: Record<MissionSection, { title: string; description: string }> = {
-  monitoring: {
-    title: 'Medir con contexto.',
-    description: 'Sesiones asistidas, calidad de señal y procedencia de cada lectura.',
-  },
-  overview: {
-    title: 'Cada señal cuenta.',
-    description: 'Una mirada conjunta al cuerpo, al entorno y a la misión.',
-  },
   crew: {
     title: 'Tripulación',
     description: 'Explora los indicadores de cada tripulante en su contexto.',
   },
-  habitat: {
-    title: 'Entorno del hábitat',
-    description: 'Relaciona la ubicación de la tripulación con su ambiente.',
-  },
-  history: {
-    title: 'Más allá de una lectura.',
-    description: 'Consulta tendencias y distingue mediciones ausentes.',
-  },
   journal: {
-    title: '¿Cómo va tu día a bordo?',
-    description: 'Un registro breve complementa lo que los sensores no capturan.',
-  },
-  observations: {
-    title: 'De la señal al seguimiento.',
-    description: 'Evidencia, contexto y revisión de cada observación.',
+    title: 'Monitoreo diario',
+    description: 'Registra cómo te sientes y revisa las lecturas de tu cuerpo y del entorno.',
   },
   simulation: {
     title: 'Explora lo que cambia.',

@@ -1,6 +1,6 @@
 'use client';
 import { useContext, useEffect, useEffectEvent, useMemo, useState } from 'react';
-import { createMonitoringDependencies } from '@/di/createMonitoringDependencies.client';
+import { createMonitoringHistory } from '@/di/createMonitoringHistory.client';
 import { CrewActivity } from './components/CrewActivity';
 import { useCrewActivityViewModel } from './useCrewActivityViewModel';
 import { useCrewHologramViewModel } from './useCrewHologramViewModel';
@@ -23,13 +23,17 @@ import { MetricCards } from '../../shared/mission/MetricCards';
 import { MissionSceneSlot } from '../../shared/mission/MissionSceneSlot';
 import { AssistantActionsContext } from '../mission-assistant/AssistantActionsContext';
 import { AvatarScreen } from './avatar/AvatarScreen';
+import { CabinHistoryScreen } from '../habitat/CabinHistoryScreen';
+import { NasaHistoryScreen } from '../history/NasaHistoryScreen';
+import { RadLabReference } from '../habitat/components/RadLabReference';
+import '../habitat/habitat.css';
 import './crew-explorer.css';
 
 export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenProps) {
   const [section, setSection] = useState<CrewSection>('now');
   const assistant = useContext(AssistantActionsContext);
-  const monitoring = useMemo(() => createMonitoringDependencies(habitatId), [habitatId]);
-  const activity = useCrewActivityViewModel(monitoring.load, data);
+  const loadMonitoringHistory = useMemo(() => createMonitoringHistory(habitatId), [habitatId]);
+  const activity = useCrewActivityViewModel(loadMonitoringHistory, data);
   const model = useCrewViewModel(habitatId, data);
   const body = useCrewHologramViewModel(habitatId, data.selected.id);
 
@@ -52,9 +56,10 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
   }
 
   function focusSection(
-    id: 'crew-health-history' | 'crew-health-entry' | 'crew-timeline' | 'crew-body',
+    id: 'crew-health-history' | 'crew-timeline' | 'crew-history' | 'nasa-history' | 'crew-body',
   ) {
-    setSection(id === 'crew-body' ? 'now' : id === 'crew-timeline' ? 'history' : 'health');
+    const isHistory = id === 'crew-timeline' || id === 'crew-history' || id === 'nasa-history';
+    setSection(id === 'crew-body' ? 'now' : isHistory ? 'history' : 'health');
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         const detail = document.getElementById(id);
@@ -69,6 +74,11 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
     );
   }
 
+  function selectTelemetrySensor(id: SensorKey) {
+    model.selectTelemetrySensor(id);
+    actions.selectMetric(id);
+  }
+
   function openOccupiedModule() {
     actions.selectZone(data.selected.zoneId);
     model.onModeChange('ship');
@@ -79,11 +89,13 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
     if (window.location.hash === '#crew-module') {
       openOccupiedModule();
     } else if (window.location.hash === '#crew-health-entry') {
-      focusSection('crew-health-entry');
+      onNavigate('journal', `check-system-${model.healthSystem}`);
     } else if (window.location.hash === '#crew-avatar') {
       setSection('avatar');
+    } else if (window.location.hash === '#nasa-history') {
+      focusSection('nasa-history');
     } else if (['#crew-history', '#crew-timeline'].includes(window.location.hash)) {
-      setSection('history');
+      focusSection('crew-history');
     } else if (
       ['#crew-health', '#crew-health-history', '#crew-health-review'].includes(window.location.hash)
     ) {
@@ -105,7 +117,10 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
         if (sensorId) actions.selectMetric(sensorId);
       }}
       onNavigate={onNavigate}
-      onSelectMetric={actions.selectMetric}
+      onSelectMetric={selectTelemetrySensor}
+      onOpenHistory={() => focusSection('crew-history')}
+      onOpenModule={openOccupiedModule}
+      onReportSystem={(id) => onNavigate('journal', `check-system-${id}`)}
       onOpenTimelineRecord={(id) => {
         model.openSavedTimelineRecord(id);
         focusSection('crew-timeline');
@@ -115,21 +130,28 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
         <CrewView
           section={section}
           onChangeSection={setSection}
-          onOpenHabitat={() => {
-            actions.selectZone(data.selected.zoneId);
-            onNavigate('habitat', 'occupied-module');
-          }}
+          onOpenHabitat={openOccupiedModule}
+          environmentReferences={
+            section === 'now' &&
+            model.mode === 'ship' && (
+              <section
+                className="crew-environment-references"
+                aria-labelledby="crew-environment-references"
+              >
+                <h2 id="crew-environment-references">Archivo histórico de la ISS</h2>
+                <CabinHistoryScreen />
+                <RadLabReference />
+              </section>
+            )
+          }
           avatarPanel={<AvatarScreen crewId={data.selected.id} crewName={data.selected.name} />}
-          onOpenHistory={() => onNavigate('history')}
+          nasaHistory={section === 'history' && <NasaHistoryScreen />}
           telemetryMetric={model.telemetryMetric}
           trendInCard={model.trendInCard}
           sampleAt={model.sampleAt}
           synchronizedMoment={model.synchronizedMoment}
           onToggleSynchronization={model.toggleSynchronization}
-          onSelectTelemetrySensor={(id) => {
-            model.selectTelemetrySensor(id);
-            actions.selectMetric(id);
-          }}
+          onSelectTelemetrySensor={selectTelemetrySensor}
           onSelectBodyRegion={selectBodyRegion}
           healthPanel={healthPanel}
           onSelectTimelineSample={model.selectTimelineSample}
@@ -141,8 +163,6 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                 onOpen={(entry) => {
                   if (entry.kind === 'check')
                     onNavigate('journal', `check-${encodeURIComponent(entry.id)}`);
-                  else if (entry.kind === 'monitoring')
-                    onNavigate('monitoring', `session-${encodeURIComponent(entry.id)}`);
                   else {
                     model.openSavedTimelineRecord(entry.id);
                     focusSection('crew-timeline');
@@ -251,12 +271,14 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                       recordPreview={model.hologram.recordKind ? recordPreview : undefined}
                       onClose={model.closeHologram}
                       onOpenHistory={() => focusSection('crew-health-history')}
-                      onOpenTelemetryHistory={() => onNavigate('history')}
-                      onOpenModule={() => {
-                        actions.selectZone(data.selected.zoneId);
-                        onNavigate('habitat', 'occupied-module');
+                      onOpenTelemetryHistory={() => {
+                        selectTelemetrySensor(data.metric.id);
+                        focusSection('crew-history');
                       }}
-                      onOpenEntry={() => focusSection('crew-health-entry')}
+                      onOpenModule={openOccupiedModule}
+                      onOpenEntry={() =>
+                        onNavigate('journal', `check-system-${model.healthSystem}`)
+                      }
                       sampleAt={model.sampleAt}
                       onSelectTimelineSample={model.selectTimelineSample}
                       onOpenTimeline={() => focusSection('crew-timeline')}
@@ -266,6 +288,11 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                     <CrewModulePanel
                       data={model.moduleData}
                       onSelectModule={selectModule}
+                      onOpenOccupant={(id) => {
+                        actions.selectCrew(id);
+                        model.onModeChange('crew');
+                        focusSection('crew-body');
+                      }}
                       onOpenTimeline={() => focusSection('crew-timeline')}
                     />
                   )}

@@ -1,6 +1,7 @@
 'use client';
 import { useMemo, type ReactNode } from 'react';
 import { createCrewHealthDependencies } from '@/di/createCrewHealthDependencies.client';
+import type { CrewEntryAnchor } from '../../shared/missionRoutes';
 import type { MissionData, MissionSection, SensorKey } from '../mission/types';
 import type { BodySystemKey, CrewHealthRecordPreview, CrewHealthTimelineRecord } from './types';
 import { useCrewHealthViewModel } from './useCrewHealthViewModel';
@@ -13,6 +14,9 @@ export function CrewHealthScreen({
   onSelectSystem,
   onNavigate,
   onSelectMetric,
+  onOpenModule,
+  onReportSystem,
+  onOpenHistory,
   onOpenTimelineRecord,
   children,
 }: {
@@ -20,8 +24,11 @@ export function CrewHealthScreen({
   habitatId: string;
   systemId: BodySystemKey;
   onSelectSystem(id: BodySystemKey): void;
-  onNavigate(section: MissionSection): void;
+  onNavigate(section: MissionSection, anchor?: CrewEntryAnchor): void;
   onSelectMetric(id: SensorKey): void;
+  onOpenModule(): void;
+  onReportSystem(id: BodySystemKey): void;
+  onOpenHistory(): void;
   onOpenTimelineRecord(id: string): void;
   children(content: {
     healthPanel: ReactNode;
@@ -37,15 +44,17 @@ export function CrewHealthScreen({
     <CrewHealthView
       {...model}
       onSelectSystem={onSelectSystem}
-      onSave={model.save}
+      onReportSystem={() => onReportSystem(systemId)}
       onReview={model.review}
       onRetry={model.retry}
-      onOpenHistory={() => onNavigate('history')}
+      onOpenHistory={onOpenHistory}
       onOpenJournal={() => onNavigate('journal')}
-      onOpenObservations={() => onNavigate('observations')}
-      onOpenHabitat={() => onNavigate('habitat')}
+      onOpenHabitat={onOpenModule}
       onSelectMetric={onSelectMetric}
-      onOpenTimelineRecord={onOpenTimelineRecord}
+      onOpenRecord={(id, fromDailyCheck) => {
+        if (fromDailyCheck) onNavigate('journal', `check-${encodeURIComponent(id)}`);
+        else onOpenTimelineRecord(id);
+      }}
     />
   );
   return children({

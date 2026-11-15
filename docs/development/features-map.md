@@ -7,36 +7,30 @@ Todas las carpetas de esta tabla están en `frontend/src/presentation/features/`
 | Menú | Carpeta | Screen → View | URL de Odyssey |
 | --- | --- | --- | --- |
 | Mapa espacial | `space-map/` | `SpaceExplorerScreen` → `SpaceExplorerView` | `/explore` |
-| Resumen de misión | `mission-overview/` | `MissionOverviewScreen` → `MissionOverviewView` | `/mission/overview` |
-| Monitoreo | `monitoring/` | `MonitoringScreen` → `MonitoringView` | `/mission/monitoring` |
 | Tripulación | `crew/` | `CrewScreen` → `CrewView` | `/mission/crew` |
-| Entorno de la nave | `habitat/` | `HabitatScreen` → `HabitatView` | `/mission/habitat` |
-| Historial | `history/` | `HistoryScreen` → `HistoryView` | `/mission/history` |
-| Chequeo diario | `daily-check/` | `DailyCheckScreen` → `DailyCheckView` | `/mission/journal` |
-| Observaciones | `observations/` | `ObservationsScreen` → `ObservationsView` | `/mission/observations` |
+| Monitoreo diario | `daily-check/` | `DailyCheckScreen` → `DailyCheckView` | `/mission/journal` |
 | Simulación | `simulation/` | `SimulationScreen` → `SimulationView` | `/mission/simulation` |
-| Fuentes y alcance | `sources/` | `SourcesScreen` → `SourcesView` | `/mission/sources` |
+| Fuentes y alcance | `sources/` | `SourcesScreen` → `SourcesView` | `/mission/sources`, accesible desde Tumi |
 
-Otros hábitats conservan `/missions/[habitatId]/[section]` con las mismas secciones. No se cambian URLs al organizar carpetas.
+Otros hábitats conservan `/missions/[habitatId]/[section]` con las mismas secciones. Las rutas anteriores de Entorno e Historial abren la vista correspondiente dentro de Tripulación. `MissionShell` comparte la barra inferior de `MissionNavigationDock` entre misión y explorador. El botón «Más» indica cuando la sección activa está dentro del menú móvil.
 
 ## Propiedad del estado y operaciones
 
-- `monitoring/useMonitoringViewModel.ts`: sesión asistida independiente, consultas periódicas, cancelación y registro local por hábitat; ver [monitoring.md](monitoring.md). API configurable con contrato provisional, sin proveedor conectado.
 
 - `mission/MissionScreen.tsx`: shell, navegación, mensajes y estados de carga/error. `MissionFeatureScreen.tsx` elige el Screen de cada sección.
 - `mission/MissionWorkspaceProvider.tsx` y `mission/useMission.ts`: modelo del flujo existente. Mantienen persona, indicador, zona, escenario, datos, guardado y revisión entre secciones. Salir del hábitat desmonta el provider; los registros persistidos conservan sus claves.
 - `space-map/useSpaceExplorerViewModel.ts`: datos, destinos y actualización de registros del mapa.
 - `crew/useCrewViewModel.ts`: sistema corporal y modo de visor privados de Tripulación. `crew-health` conserva sus propios casos de uso y `useCrewHealthViewModel` para autorregistros/revisiones por área.
-- `presentation/shared/mission/useMissionDashboardViewModel.ts`: modo de visor y etiquetas de hábitat, reutilizado por Tripulación y Entorno. Se reinicia al salir de la sección.
-- Historial, Chequeo, Observaciones y Simulación consumen datos y callbacks del modelo de misión existente. No duplican los casos de uso ni crean ViewModels vacíos. Los formularios conservan sus borradores visuales locales. Fuentes es estática.
+- `presentation/shared/mission/useMissionDashboardViewModel.ts`: modo de visor y etiquetas de hábitat, usado por Tripulación. Se reinicia al salir de la sección.
+- Historial, Monitoreo diario y Simulación consumen datos y callbacks del modelo de misión existente. No duplican los casos de uso ni crean ViewModels vacíos. Los formularios conservan sus borradores visuales locales. Fuentes es estática.
 
 Las nuevas funcionalidades autónomas con estado/operaciones usan `NombreScreen.tsx`, `useNombreViewModel.ts`, `types.ts` y `components/NombreView.tsx`. Screen conecta y navega; ViewModel recibe casos de uso inyectados; View representa datos y emite callbacks. Seguir [screens-and-flows.md](screens-and-flows.md).
 
 ## Recorridos de misión
 
-- Resumen de misión prioriza los pendientes de la persona seleccionada y enlaza a la observación o al registro correspondiente. «Ubicar mi módulo» abre Entorno con la zona de la persona seleccionada. Entorno mantiene un selector HTML sincronizado con el visor y una ficha de condiciones y ocupación. También incluye una serie archivada de NASA RadLab.
-- Tripulación muestra Ahora, Autoevaluación, Historial y Personalización como vistas seleccionables. Historial de Tripulación reúne el contexto de una muestra y los registros locales de esa persona. Las sesiones API conservan su identidad externa. Los registros mantienen sus repositorios y rutas de detalle.
-- Observaciones abre el indicador o el chequeo correspondiente. Simulación muestra el escenario seleccionado y enlaza a su resultado. Tierra se abre desde Mapa espacial.
+- Resumen de misión prioriza los pendientes de la persona seleccionada y enlaza a la observación o al registro correspondiente. «Ubicar mi módulo» abre el visor de Tripulación con la zona de la persona seleccionada. El visor mantiene un selector HTML sincronizado con el visor y una ficha de condiciones y ocupación. También incluye una serie archivada de NASA RadLab.
+- Tripulación muestra Ahora, Salud por sistemas, Historial y Personalización como vistas seleccionables. Historial de Tripulación reúne la tendencia, el contexto y origen de cada muestra, la actividad guardada y la referencia de Inspiration4. Las sesiones API conservan su identidad externa. Los registros mantienen sus repositorios y rutas de detalle.
+- Tripulación es la entrada de misión. Las antiguas rutas `overview` y `observations` redirigen a Tripulación del mismo hábitat. Simulación muestra el escenario seleccionado y permite repetir la captura de SpO₂ al activar Pérdida de señal. Tierra se abre desde Mapa espacial.
 
 ## Dónde trabajar
 
@@ -46,7 +40,6 @@ Las nuevas funcionalidades autónomas con estado/operaciones usan `NombreScreen.
 | Chequeo de sueño, ánimo y fatiga | `daily-check/components/JournalForm.tsx` y `DailyCheckView.tsx`; operación existente en `mission/useMission.ts` |
 | Explicación corporal animada | `crew-health/components/HealthSystemIllustration.tsx`; contenido en `crew-health/constants.ts` |
 | Tabla del historial | `history/components/HistoryView.tsx` |
-| Revisión de observaciones | `observations/components/ObservationList.tsx` |
 | Gráfica y tarjetas compartidas | `presentation/shared/mission/TrendChart.tsx` y `MetricCards.tsx` |
 | Astronauta, nave, estaciones y portales 3D | `presentation/shared/scene/`; carga diferida en `presentation/shared/mission/MissionSceneSlot.tsx` |
 | Datos/contratos de misión usados por varias vistas | `mission/types.ts`, `mapMissionPresentation.ts`; coordinar consumidores |
@@ -63,6 +56,8 @@ Los modelos, dominio, adapters, DI y claves de persistencia no se reorganizan po
 
 ## Sitios de lanzamiento
 
-La pestaña `/explore?destination=earth&tab=launches` pertenece a `presentation/features/launch-sites`: `LaunchSitesScreen`, `useLaunchSitesViewModel`, `types.ts` y `components/LaunchSitesView`. `space-map` conecta la navegación sin asumir el estado privado de la feature. La selección `site` vive en URL. El catálogo se compone en `di/createLaunchSitesDependencies.client.ts`. No modifica registros ni contratos de misión.
+Centros en Tierra usa `/explore?destination=earth&tab=earth`. Se abre en el explorador desde la pestaña del mismo nombre o desde la ficha y el marcador de Tierra. `space-map` coordina la navegación y conserva `site`, incluso desde enlaces antiguos con `tab=launches`.
 
-`tab=earth` ofrece «Todo de la Tierra», una vista general de los mismos sitios, sedes y videos mediante `components/EarthOverview`. Se accede desde la tercera pestaña o desde la tarjeta/marcador de Tierra; no tiene un catálogo, estado de misión o capa de negocio adicionales. Conserva el parámetro `site` y reutiliza la ficha y el reproductor del flujo.
+`launch-sites` prepara el catálogo en `LaunchSitesScreen` y `useLaunchSitesViewModel`. `LaunchSitesView` comparte el globo y la ficha con `EarthOverview`, que muestra el directorio por función y los videos. La composición permanece en `di/createLaunchSitesDependencies.client.ts`.
+
+Monitoreo diario concentra la entrada de bienestar y observaciones por área. Conserva una entrada por persona y día UTC. El contexto bruto de la instantánea se congela al abrir el formulario y se guarda con cada chequeo. Al editar una entrada con datos adjuntos, se conserva su fuente original. Salud por sistemas consulta las observaciones del chequeo y mantiene disponible el historial de autorregistros anteriores.

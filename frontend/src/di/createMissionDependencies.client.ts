@@ -13,6 +13,7 @@ import { systemClock } from '@/infrastructure/SystemClock';
 export function createMissionDependencies(habitatId: HabitatId = 'odyssey') {
   const journal = new LocalCrewJournalRepository(new BrowserStorage(), journalKey(habitatId));
   return {
+    habitatId,
     initialScenario: getSimulatedHabitat(habitatId).initialScenario,
     loadMission: new LoadMission(new SimulatedHabitatMissionRepository(habitatId)),
     loadJournal: new LoadCrewJournal(journal),

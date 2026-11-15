@@ -23,7 +23,7 @@ test('Tumi explica la lectura seleccionada y conserva el chat entre secciones', 
   await chat.getByRole('button', { name: '¿Dónde hago mi chequeo?' }).click();
   await chat.getByRole('button', { name: 'Señalar en el panel' }).last().click();
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
-  await nav.getByRole('button', { name: 'Chequeo diario' }).click();
+  await nav.getByRole('button', { name: 'Monitoreo diario' }).click();
   await expect(page).toHaveURL(/\/mission\/journal$/);
   await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
   await expect(log).toContainText('98 %');
@@ -50,7 +50,7 @@ test('Tumi permite revisar la transcripción local antes de enviarla', async ({ 
       },
     });
   });
-  await page.goto('/mission/overview');
+  await page.goto('/mission/crew');
   await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
   const chat = page.getByRole('region', { name: 'Tumi' });
   await chat.getByRole('button', { name: 'Dictar' }).click();
@@ -109,7 +109,7 @@ test('en pantalla táctil Tumi explica el primer toque y permite usar el control
     await page.getByRole('button', { name: 'Guía con el puntero' }).click();
     const journal = page
       .getByRole('navigation', { name: 'Navegación principal' })
-      .getByRole('button', { name: 'Chequeo diario' });
+      .getByRole('button', { name: 'Monitoreo diario' });
     await journal.tap();
     const tip = page.locator('.assistant-coach-tip');
     await expect(tip).toContainText('Toca de nuevo');
@@ -247,15 +247,15 @@ test('Tumi vincula la lectura con su entorno y explica dónde guardar un autorre
 
   await chat.getByRole('textbox').fill('¿Dónde guardo mi autorregistro?');
   await chat.getByRole('button', { name: 'Enviar' }).click();
-  await expect(answer).toContainText('Tripulación → Autoevaluación');
-  await expect(answer).toContainText('Se guarda en este navegador');
+  await expect(answer).toContainText('Abre Monitoreo diario');
+  await expect(answer).toContainText('El registro queda en este navegador');
 
   await chat.getByRole('button', { name: 'Ocultar chat' }).click();
   await page
-    .getByRole('navigation', { name: 'Navegación principal' })
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
     .getByRole('button', { name: 'Historial', exact: true })
     .click();
-  await expect(page).toHaveURL(/\/mission\/history$/);
+  await expect(page.getByRole('region', { name: 'Historial y contexto' })).toBeVisible();
   await launcher.click();
   await relationship.click();
   await expect(answer).toContainText('Entorno simulado a esa hora');

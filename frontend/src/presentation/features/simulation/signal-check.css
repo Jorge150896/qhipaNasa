@@ -1,0 +1,76 @@
+.signal-check-actions,
+.signal-check-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+}
+
+.signal-check {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  grid-template-areas: 'action chart' 'sensor chart';
+  grid-template-rows: auto 1fr;
+  align-items: start;
+  gap: 1.25rem;
+  border-color: var(--selection-border);
+  background: linear-gradient(135deg, var(--accent-soft), transparent 48%), var(--surface);
+}
+
+.signal-check-content {
+  grid-area: action;
+}
+
+.signal-check-visuals {
+  grid-area: chart;
+}
+
+.signal-check h2,
+.signal-check-heading p {
+  margin: 0;
+}
+
+.signal-check h2 {
+  font-size: clamp(1.2rem, 2.1vw, 1.65rem);
+}
+
+.signal-check-heading .assistant-robot {
+  flex-shrink: 0;
+}
+
+.signal-check-result {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 0.85rem;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+}
+
+.signal-check-result span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.signal-check-scene {
+  grid-area: sensor;
+}
+
+.signal-check-scene summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+
+.signal-check-scene .scene-viewport {
+  height: 19rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 760px) {
+  .signal-check {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'action' 'chart' 'sensor';
+    grid-template-rows: auto;
+  }
+}

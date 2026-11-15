@@ -1,13 +1,18 @@
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@/ui/Icon';
+import { AppearanceOptions } from '@/ui/AppearanceOptions';
+import { TumiHead } from '@/presentation/shared/loading/TumiHead';
 import type { useMissionAssistantViewModel } from '../useMissionAssistantViewModel';
 import { AssistantRobot } from './AssistantRobot';
 
 export function MissionAssistantView({
   model,
+  explorer,
+  landing,
   launcherHost,
   onGuide,
+  onOpenSources,
   onOpen,
   onClose,
   following,
@@ -15,7 +20,10 @@ export function MissionAssistantView({
 }: {
   launcherHost: HTMLDivElement | null;
   model: ReturnType<typeof useMissionAssistantViewModel>;
+  explorer: boolean;
+  landing: boolean;
   onGuide(target: string, explanation: string): void;
+  onOpenSources(): void;
   onOpen(): void;
   onClose(): void;
   following: boolean;
@@ -24,11 +32,12 @@ export function MissionAssistantView({
   const log = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const launcher = useRef<HTMLButtonElement>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
   const restoreFocus = useRef(false);
   const { open, messages } = model;
   const { context } = model;
   useEffect(() => {
-    if (open) input.current?.focus({ preventScroll: true });
+    if (open) (input.current ?? closeButton.current)?.focus({ preventScroll: true });
     else if (restoreFocus.current) launcher.current?.focus({ preventScroll: true });
   }, [open]);
   useEffect(() => {
@@ -79,28 +88,32 @@ export function MissionAssistantView({
             <button
               type="button"
               className="assistant-icon-button"
+              ref={closeButton}
               aria-label="Ocultar chat"
               onClick={close}
             >
               <Icon name="close" />
             </button>
           </header>
-          <div className="assistant-mode" role="group" aria-label="Modo de Tumi">
-            <span>Modo</span>
-            <button type="button" aria-pressed={!following} onClick={() => onChangeMode(false)}>
-              Fijo
-            </button>
-            <button
-              type="button"
-              aria-pressed={following}
-              onClick={() => {
-                restoreFocus.current = true;
-                onChangeMode(true);
-              }}
-            >
-              Guía con el puntero
-            </button>
-          </div>
+          <AppearanceOptions />
+          {!landing && (
+            <div className="assistant-mode" role="group" aria-label="Modo de Tumi">
+              <span>Modo</span>
+              <button type="button" aria-pressed={!following} onClick={() => onChangeMode(false)}>
+                Fijo
+              </button>
+              <button
+                type="button"
+                aria-pressed={following}
+                onClick={() => {
+                  restoreFocus.current = true;
+                  onChangeMode(true);
+                }}
+              >
+                Guía con el puntero
+              </button>
+            </div>
+          )}
           {context && (
             <div className="assistant-context" aria-label="Dato en conversación">
               <div>
@@ -115,13 +128,26 @@ export function MissionAssistantView({
             </div>
           )}
           <div className="assistant-log" role="log" aria-label="Conversación con Tumi" ref={log}>
-            <p className="assistant-bubble">
-              Soy Tumi. Puedo explicar qué mide una lectura, qué cambió y qué se registró en el
-              entorno a la misma hora.
-            </p>
+            <div className="assistant-welcome">
+              <div className="assistant-welcome-art" aria-hidden="true">
+                <TumiHead />
+              </div>
+              <p className="assistant-bubble">
+                {landing
+                  ? '¡Hola! Soy Tumi. Desde aquí puedes elegir cómo quieres ver Qhipa Pacha.'
+                  : explorer
+                    ? 'Soy Tumi. Puedo guiarte por el mapa y mostrarte dónde consultar las lecturas de una tripulación.'
+                    : 'Soy Tumi. Puedo explicar qué mide una lectura, qué cambió y qué se registró en el entorno a la misma hora.'}
+              </p>
+            </div>
             {messages.map(({ id, role, reply }) => (
               <div className="assistant-message" key={id} data-role={role}>
                 <p className="assistant-bubble">{reply.text}</p>
+                {reply.destination === 'sources' && (
+                  <button className="text-button" type="button" onClick={onOpenSources}>
+                    Ver Fuentes y alcance <Icon name="arrow" size={14} />
+                  </button>
+                )}
                 {reply.target && (
                   <button
                     className="text-button"
@@ -134,45 +160,52 @@ export function MissionAssistantView({
               </div>
             ))}
           </div>
-          <div className="assistant-suggestions">
-            {[
-              ...(context
-                ? ['¿Qué significa este dato?', '¿Qué cambió?']
-                : ['¿Qué significa mi SpO₂?', '¿Dónde hago mi chequeo?']),
-              '¿Cómo se relaciona la lectura con el entorno?',
-            ].map((question) => (
-              <button key={question} type="button" onClick={() => model.ask(question)}>
-                {question}
-              </button>
-            ))}
-          </div>
-          <form
-            className="assistant-form"
-            onSubmit={(event) => {
-              event.preventDefault();
-              model.ask();
-            }}
-          >
-            <input
-              ref={input}
-              aria-label="Pregunta para Tumi"
-              placeholder="Escribe tu pregunta…"
-              value={model.draft}
-              maxLength={500}
-              onChange={(event) => model.setDraft(event.target.value)}
-            />
-            <button
-              className="button secondary"
-              type="button"
-              aria-pressed={model.listening}
-              onClick={model.toggleDictation}
+          {!landing && (
+            <div className="assistant-suggestions">
+              {(explorer
+                ? ['¿Cómo uso el mapa espacial?', '¿Dónde están los centros en Tierra?']
+                : [
+                    ...(context
+                      ? ['¿Qué significa este dato?', '¿Qué cambió?']
+                      : ['¿Qué significa mi SpO₂?', '¿Dónde hago mi chequeo?']),
+                    '¿Cómo se relaciona la lectura con el entorno?',
+                  ]
+              ).map((question) => (
+                <button key={question} type="button" onClick={() => model.ask(question)}>
+                  {question}
+                </button>
+              ))}
+            </div>
+          )}
+          {!landing && (
+            <form
+              className="assistant-form"
+              onSubmit={(event) => {
+                event.preventDefault();
+                model.ask();
+              }}
             >
-              {model.listening ? 'Detener' : 'Dictar'}
-            </button>
-            <button className="button primary" type="submit" disabled={!model.draft.trim()}>
-              Enviar
-            </button>
-          </form>
+              <input
+                ref={input}
+                aria-label="Pregunta para Tumi"
+                placeholder="Escribe tu pregunta…"
+                value={model.draft}
+                maxLength={500}
+                onChange={(event) => model.setDraft(event.target.value)}
+              />
+              <button
+                className="button secondary"
+                type="button"
+                aria-pressed={model.listening}
+                onClick={model.toggleDictation}
+              >
+                {model.listening ? 'Detener' : 'Dictar'}
+              </button>
+              <button className="button primary" type="submit" disabled={!model.draft.trim()}>
+                Enviar
+              </button>
+            </form>
+          )}
           {(model.voiceStatus || model.listening) && (
             <p className="assistant-voice-status" role="status">
               {model.voiceStatus || 'Escuchando…'}

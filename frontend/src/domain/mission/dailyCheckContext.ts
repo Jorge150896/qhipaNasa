@@ -1,3 +1,10 @@
+import type { HealthEntryInput } from '../health/models';
+
+export type DailyCheckHealthReport = Pick<
+  HealthEntryInput,
+  'systemId' | 'reportedState' | 'visionActivityId'
+>;
+
 export const dailyActivities = ['cabin', 'exercise', 'surface', 'eva'] as const;
 export const dailyMoments = ['before', 'after', 'incident'] as const;
 export const discomfortRegions = [

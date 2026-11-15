@@ -29,7 +29,6 @@ export interface LaunchSiteData {
 }
 
 export interface LaunchSitesViewProps {
-  overview?: boolean;
   sites: LaunchSiteData[];
   selected: LaunchSiteData | null;
   invalidSelection: boolean;

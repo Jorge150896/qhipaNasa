@@ -1,6 +1,6 @@
 # Portada Qhipa Pacha
 
-Entrada `/` → `LandingScreen` → `useLandingViewModel` → `LandingView`. CTA a `/mission/overview`, navegación secundaria a `/explore` y `/mission/crew`. No modifica providers, escenarios o registros de la aplicación existente.
+Entrada `/` → `LandingScreen` → `useLandingViewModel` → `LandingView`. CTA a `/mission/crew` y navegación secundaria a `/explore`. No modifica providers, escenarios o registros de la aplicación existente.
 
 El hook posee pausa manual y repetición del rebote del logo. `useSyncExternalStore` escucha movimiento reducido y visibilidad de pestaña, con limpieza de listeners. La View mantiene únicamente desplazamientos visuales en propiedades CSS según el puntero, sin re-render continuo. En táctil no hay parallax de puntero. Las capas tienen profundidades distintas; el drift, flotación, destellos y reflejo del CTA usan transform/opacity de CSS. La pausa afecta también pseudo-elementos; movimiento reducido detiene animaciones y transiciones.
 

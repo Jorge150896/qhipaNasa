@@ -9,9 +9,8 @@ export function ExplorerTabs({
 }) {
   const tabs = [
     { id: 'network', label: 'Mapa espacial' },
-    { id: 'launches', label: 'Despegues de la Tierra' },
     { id: 'mars', label: 'Mapa de Marte' },
-    { id: 'earth', label: 'Todo de la Tierra' },
+    { id: 'earth', label: 'Centros en Tierra' },
   ] as const;
   return (
     <div className="explorer-tabs" role="tablist" aria-label="Vistas del explorador">

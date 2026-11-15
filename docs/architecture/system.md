@@ -11,7 +11,7 @@ Confirmado por el usuario:
 - Ambos: Clean Architecture y SOLID, organización por funcionalidades y composición explícita.
 - Referencia estructural: scotia, adaptada de React Native a web y backend; no reutilizar datos ni reglas bancarias.
 
-Alcance trabajado: salud de la tripulación con contexto ambiental de la nave. Frontend implementado en `frontend/`: Next.js 16.4.5, React 19.3.1, TypeScript, Three.js y React Three Fiber. Incluye nueve secciones por hábitat, modelos 3D locales, escenarios sintéticos, historial, chequeo diario y revisión de observaciones con persistencia en navegador. El explorador `/explore` añade cinco objetos y cuatro hábitats sintéticos con 12 tripulantes únicos. La misión original y su diario se conservan.
+Alcance trabajado: salud de la tripulación con contexto ambiental de la nave. Frontend implementado en `frontend/`: Next.js 16.4.5, React 19.3.1, TypeScript, Three.js y React Three Fiber. Incluye vistas por hábitat, modelos 3D locales, escenarios sintéticos, historial y monitoreo diario con persistencia en navegador. El explorador `/explore` añade cinco objetos y cuatro hábitats sintéticos con 12 tripulantes únicos. La misión original y su diario se conservan.
 
 Backend ambiental implementado en `backend/`: Java 21/Spring Boot 3.5.16, con consultas RadLab y archivo de respuestas públicas en disco. Operaciones GET `/api/v1/radiation/instruments` y `/api/v1/radiation/readings`; consulta real y caché verificadas con TLS estándar. El frontend todavía no consume estas operaciones. Pendientes: persistencia clínica, autenticación, despliegue, endpoints personales, tiempo real e IA. El copiloto usa un análisis determinista de escenario y no un modelo de IA.
 
@@ -46,7 +46,7 @@ Un Server Component puede consumir la API Java mediante una composición server-
 
 ## Contratos compartidos
 
-Monitoreo asistido añade una novena sección, con consumidor HTTP configurable separado de la demo y del estado de misión. `docs/contracts/openapi.yaml` distingue las operaciones ambientales Java implementadas de la propuesta personal pendiente de proveedor. No hay autenticación ni servidor de salud personal implementado. Ver [sesiones y ciclo de vida](../development/monitoring.md).
+Monitoreo diario es el único formulario de salud de la tripulación. Las sesiones asistidas anteriores se leen desde Tripulación → Historial. [El contrato personal](../contracts/openapi.yaml) sigue pendiente de proveedor.
 
 Cuando una feature necesite integración, crear o actualizar `docs/contracts/openapi.yaml` como contrato HTTP único y añadir ejemplos sintéticos coherentes. La versión actual contiene operaciones ambientales implementadas y una operación raíz personal todavía provisional; no asumir que un proveedor implementa esta última. Usar una versión OpenAPI compatible con las herramientas seleccionadas. Si se genera desde Java, documentar origen y actualización; evitar mantener dos contratos divergentes.
 
@@ -89,7 +89,7 @@ El explorador incluye navegación visual por niveles de zoom y un marco de segui
 
 La feature `crew-health` añade Screen/ViewModel/View propios, casos de uso portables y adapter de registro local por hábitat. Consume contexto presentable de misión y mantiene sus registros y revisiones separados del diario previo. Las fuentes HHC son educativas; no hay reglas clínicas ni endpoints de salud implementados. Detalle: `frontend/src/presentation/features/crew-health/README.md`.
 
-Las secciones del menú tienen features de presentación independientes: `space-map`, `mission-overview`, `crew`, `habitat`, `history`, `daily-check`, `observations`, `simulation` y `sources`. `mission` coordina el flujo existente, sin una View monolítica. `crew-health` es una subfuncionalidad integrada en `crew`. Componentes de misión usados entre features viven en `presentation/shared/mission`; `useMission` conserva su nombre y ownership. Ver `docs/development/features-map.md`.
+Las secciones del menú tienen features de presentación independientes: `space-map`, `mission-overview`, `crew`, `daily-check`, `observations`, `simulation` y `sources`. `mission` coordina el flujo existente, sin una View monolítica. `crew-health` y el historial, incluida la referencia de Inspiration4, se integran en `crew`. Componentes de misión usados entre features viven en `presentation/shared/mission`; `useMission` conserva su nombre y ownership. Ver `docs/development/features-map.md`.
 
 La portada `/` es la feature `landing`, independiente del flujo de misión. Screen traduce navegación; `useLandingViewModel` posee estado visual de movimiento/pausa/logo; View representa el hero y las capas decorativas. Las rutas de misión y sus providers permanecen intactos. Las ilustraciones se sirven localmente desde `public/backgrounds/` y `public/brand/`.
 

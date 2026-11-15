@@ -173,6 +173,7 @@ export function answerMissionQuestion(
   data: MissionData | null,
   context?: AssistantMetricContext,
   previousMetric?: AssistantMetricContext,
+  explorer = false,
 ): AssistantReply & { discussedMetric?: AssistantMetricContext } {
   const query = normalize(question);
   if (/\b(diagnostic\w*|tratamiento|medicamento|medicar|me duele|que enfermedad)\b/.test(query)) {
@@ -224,9 +225,14 @@ export function answerMissionQuestion(
   }
   if (topic) return topic;
   if (!data) {
-    return {
-      text: 'La misión todavía está cargando. Vuelve a preguntar cuando aparezcan las lecturas.',
-    };
+    return explorer
+      ? {
+          text: 'Para consultar una lectura, abre Tripulación y selecciona a la persona y el indicador que quieres entender.',
+          target: 'crew',
+        }
+      : {
+          text: 'La misión todavía está cargando. Vuelve a preguntar cuando aparezcan las lecturas.',
+        };
   }
   const reply = explainMission(query, data);
   const discussedMetric = reply.target?.startsWith('metric-')
@@ -270,16 +276,16 @@ function explainMission(query: string, data: MissionData): AssistantReply {
     const last = data.checks.find(({ id }) => id.startsWith(`${data.selected.id}:`));
     return {
       text: last
-        ? `Último chequeo local de ${data.selected.name} · ${last.date}. Sueño registrado: ${last.sleep}. Fatiga percibida: ${last.fatigue}. Ánimo: ${last.mood}. Son respuestas del chequeo. Abre el diario para ver el contexto de la actividad.`
-        : `${data.selected.name} todavía no tiene chequeos locales. Puedes registrar descanso, fatiga y ánimo en Chequeo diario.`,
+        ? `Último chequeo local de ${data.selected.name} · ${last.date}. Sueño registrado: ${last.sleep}. Fatiga percibida: ${last.fatigue}. Ánimo: ${last.mood}. Ejercicio: ${last.exerciseDone === undefined ? 'Sin responder' : last.exerciseDone ? 'Sí' : 'No'}. Son respuestas del chequeo. Abre el diario para ver el contexto de la actividad.`
+        : `${data.selected.name} todavía no tiene chequeos locales. Puedes registrar descanso, fatiga y ánimo en Monitoreo diario.`,
       target: 'journal',
     };
   }
   if (asksEnvironment) {
     const zone = data.selectedZone;
     return {
-      text: `${zone.name} · Instantánea simulada del ${data.date} a las ${data.time}. ${zone.readings.map(({ label, value, unit }) => `${label}: ${value} ${unit}`).join(' · ')}. En Entorno puedes elegir otro módulo.`,
-      target: 'habitat',
+      text: `${zone.name} · Instantánea simulada del ${data.date} a las ${data.time}. ${zone.readings.map(({ label, value, unit }) => `${label}: ${value} ${unit}`).join(' · ')}. En Tripulación, cambia al visor del hábitat para elegir otro módulo.`,
+      target: 'crew',
     };
   }
   if (/\b(resultados?|datos|resumen|mediciones)\b/.test(query)) {

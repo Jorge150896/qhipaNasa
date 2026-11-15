@@ -1,10 +1,5 @@
 export const guideControls = [
   {
-    id: 'overview',
-    label: 'Mi estado',
-    text: 'Ve la actividad del tripulante, sus registros y las señales que requieren revisión.',
-  },
-  {
     id: 'map',
     label: 'Mapa espacial',
     text: 'Explora la nave, la estación y otros destinos de la misión.',
@@ -15,34 +10,19 @@ export const guideControls = [
     text: 'Cambia el escenario de demostración para explorar distintos datos.',
   },
   {
-    id: 'sources',
-    label: 'Fuentes y alcance',
-    text: 'Consulta de dónde vienen los datos y qué puedes interpretar con ellos.',
-  },
-  {
     id: 'crew',
     label: 'Tripulación',
-    text: 'Elige un tripulante y explora sus indicadores, autorregistros y modelo corporal.',
+    text: 'Elige un tripulante y explora sus indicadores y autorregistros. Cambia de Astronauta a Nave, Estación o Base para consultar los módulos.',
   },
   {
     id: 'history',
     label: 'Historial',
-    text: 'Consulta cómo cambió una señal y en qué horas faltaron muestras.',
+    text: 'Abre Tripulación → Historial para ver cómo cambió una señal y consultar su procedencia.',
   },
   {
     id: 'journal',
-    label: 'Chequeo diario',
+    label: 'Monitoreo diario',
     text: 'Registra cómo te sientes. Puedes revisar tus respuestas antes de guardar.',
-  },
-  {
-    id: 'habitat',
-    label: 'Entorno',
-    text: 'Elige un módulo en el modelo 3D o en la lista para ver las condiciones y la tripulación presente.',
-  },
-  {
-    id: 'observations',
-    label: 'Observaciones',
-    text: 'Abre la evidencia de cada observación del escenario y consulta su estado de revisión.',
   },
 ] as const;
 
@@ -72,25 +52,34 @@ export const actionTips = {
 export const missionTopics = [
   {
     question:
+      /\b(fuentes?|alcance|nasa|procedencia|datos reales|simulados?|datos sinteticos|origen de (los )?datos|de donde (vienen|salen) (los |estos )?datos)\b/,
+    text: 'En Fuentes y alcance puedes ver qué datos vienen de estudios históricos, cuáles son simulados y cuáles ingresó la tripulación. También encontrarás las referencias y los límites de lo que puedes interpretar.',
+    destination: 'sources',
+  },
+  {
+    question: /\b(centros en tierra|sitios de lanzamiento)\b/,
+    text: 'En Mapa espacial, abre la pestaña Centros en Tierra. Selecciona un lugar para ver su ficha y, cuando esté disponible, un video histórico de lanzamiento.',
+  },
+  {
+    question: /\b(mapa espacial|mapa de marte)\b/,
+    text: 'En Mapa espacial, selecciona un destino en el visor 3D o en la lista. Desde la ficha de un destino habitado puedes abrir su tripulación y consultar sus lecturas. Para acercarte a Marte, usa la pestaña Mapa de Marte.',
+    target: 'map',
+  },
+  {
+    question:
       /\b(qhipa pacha|astra)\b.*\b(que es|sirve|hace)\b|\b(que es|sirve|hace)\b.*\b(qhipa pacha|astra)\b/,
     text: 'Qhipa Pacha es una demo para explorar la salud de una tripulación ficticia junto con su actividad y el ambiente del hábitat. Puedes recorrer destinos, consultar telemetría simulada y hacer una autoevaluación.',
   },
   {
     question:
-      /\b(nasa|procedencia|datos reales|simulados?|datos sinteticos|origen de (los )?datos)\b/,
-    text: 'La telemetría y el ambiente de la misión vienen de escenarios sintéticos. Historial incluye Inspiration4 y Entorno ofrece un archivo de radiación de ISS Columbus, ambos con procedencia de NASA OSDR. Los autorregistros son respuestas guardadas en este navegador.',
-    target: 'sources',
-  },
-  {
-    question:
       /\b(guardar|guardo|registro|registrar|hacer|hago|encuentro|abro|donde)\b.*\b(autoevaluacion|autorregistros?)\b|\b(autoevaluacion|autorregistros?)\b.*\b(guardar|guardo|donde)\b/,
-    text: 'Abre Tripulación → Autoevaluación, elige un área y completa el formulario. Revisa tus respuestas y confirma el guardado. Luego puedes abrir el registro desde su historial. Se guarda en este navegador.',
-    target: 'crew',
+    text: 'Abre Monitoreo diario. Puedes añadir una observación por área de salud dentro del mismo formulario y revisar los datos adjuntos antes de guardar. El registro queda en este navegador.',
+    target: 'journal',
   },
   {
     question:
       /\b(guard\w*|persist\w*)\b.*\b(chequeo|mis respuestas)\b|\b(chequeo|mis respuestas)\b.*\b(guard\w*|persist\w*)\b/,
-    text: 'En Chequeo diario, completa los pasos, selecciona Revisar chequeo y confirma con Guardar chequeo. El registro queda en este navegador. Si ya existe uno para el mismo tripulante y día UTC, se actualiza.',
+    text: 'En Monitoreo diario, completa los pasos, selecciona Revisar chequeo y confirma con Guardar chequeo. El registro queda en este navegador. Si ya existe uno para el mismo tripulante y día UTC, se actualiza.',
     target: 'journal',
   },
   {
@@ -100,8 +89,8 @@ export const missionTopics = [
   },
   {
     question: /\b(radiacion|radlab|columbus)\b/,
-    text: 'En Entorno, abre Radiación histórica en la ISS. La gráfica muestra una hora del instrumento DosTel1 en Columbus y puedes consultar las lecturas y su fuente.',
-    target: 'habitat',
+    text: 'Abre Tripulación, cambia al visor del hábitat y despliega Radiación histórica en la ISS. La gráfica muestra una hora del instrumento DosTel1 en Columbus y puedes consultar las lecturas y su fuente.',
+    target: 'crew',
   },
   {
     question: /\b(sincroniz\w*|ubicar modulo|abrir (el )?modulo|abr[eo] (el )?modulo)\b/,

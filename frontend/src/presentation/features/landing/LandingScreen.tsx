@@ -10,14 +10,14 @@ export function LandingScreen() {
   const router = useRouter();
   const model = useLandingViewModel();
   useEffect(() => {
-    if (model.launchReady) router.push('/mission/overview');
+    if (model.launchReady) router.push('/mission/crew');
   }, [model.launchReady, router]);
   if (model.launching) return <TumiLoader variant="fullscreen" />;
   return (
     <LandingView
       {...model}
       onOpenMission={() => {
-        router.prefetch('/mission/overview');
+        router.prefetch('/mission/crew');
         model.onBeginMission();
       }}
       onOpenExplorer={() => router.push('/explore')}

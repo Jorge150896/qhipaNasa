@@ -107,7 +107,7 @@ test('pantalla completa solo desde Iniciar misión; carga interna conserva menú
   const started = Date.now();
   await page.getByRole('button', { name: 'Iniciar mi misión', exact: true }).click();
   await expect(page.locator('.tumi-loader--fullscreen')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Mi estado', exact: true })).toBeVisible({
+  await expect(page.getByRole('heading', { name: 'Tripulación', exact: true })).toBeVisible({
     timeout: 10_000,
   });
   expect(Date.now() - started).toBeGreaterThanOrEqual(550);
@@ -116,22 +116,22 @@ test('pantalla completa solo desde Iniciar misión; carga interna conserva menú
   const gate = new Promise<void>((resolve) => {
     release = resolve;
   });
-  await page.route(/\/mission\/history\?/, async (route) => {
+  await page.route(/\/mission\/journal\?/, async (route) => {
     await gate;
     await route.continue();
   });
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
   try {
-    await nav.getByRole('button', { name: 'Historial', exact: true }).click();
+    await nav.getByRole('button', { name: 'Monitoreo diario', exact: true }).click();
     const loader = page.locator('.tumi-loader--content');
     await expect(loader).toBeVisible();
     await expect(nav).toBeVisible();
     await expect(nav.getByRole('button', { name: 'Tripulación', exact: true })).toBeEnabled();
     await expect(page.locator('.topbar')).toBeVisible();
     const area = (await loader.boundingBox())!;
-    const sidebar = (await page.locator('.sidebar').boundingBox())!;
+    const dock = (await nav.boundingBox())!;
     const topbar = (await page.locator('.topbar').boundingBox())!;
-    expect(area.x).toBeGreaterThanOrEqual(sidebar.x + sidebar.width);
+    expect(area.y + area.height).toBeLessThanOrEqual(dock.y);
     expect(area.y).toBeGreaterThanOrEqual(topbar.y + topbar.height);
     await expect(page.locator('.tumi-loader--fullscreen')).toHaveCount(0);
     await page.screenshot({ path: '../docs/qa/tumi-loading-content.png', animations: 'disabled' });
@@ -145,7 +145,7 @@ test('pantalla completa solo desde Iniciar misión; carga interna conserva menú
   await expect(page.locator('.tumi-loader')).toHaveCount(0);
   await page.goto('/mission/history');
   await expect(
-    page.getByRole('heading', { name: 'Más allá de una lectura.', exact: true }),
+    page.getByRole('heading', { name: 'Historial y contexto', exact: true }),
   ).toBeVisible();
   await expect(page.locator('.tumi-loader--fullscreen')).toHaveCount(0);
 });

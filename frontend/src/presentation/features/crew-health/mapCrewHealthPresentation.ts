@@ -1,4 +1,4 @@
-import type { HealthJournal } from '@/domain/health/models';
+import type { HealthEntry, HealthJournal } from '@/domain/health/models';
 import { healthSystems, metricMeaning, reportedStateLabels } from './constants';
 import type { BodySystemKey, CrewHealthContext, CrewHealthData } from './types';
 import { findVisionActivity } from './visionActivities';
@@ -73,10 +73,35 @@ export function mapCrewHealthPresentation(
   const { mission, habitatId } = context,
     crew = mission.selected;
   const system = healthSystems.find((item) => item.id === systemId) ?? healthSystems[0];
-  const all =
-    journal?.entries
-      .filter((entry) => entry.crewId === crew.id)
-      .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt)) ?? [];
+  const previousEntries = journal?.entries.filter((entry) => entry.crewId === crew.id) ?? [];
+  const dailyEntries = mission.checks
+    .filter((check) => check.crewId === crew.id)
+    .flatMap(({ healthReport, context, ...check }) =>
+      healthReport
+        ? [
+            {
+              ...healthReport,
+              id: check.id,
+              crewId: check.crewId,
+              recordedAt: check.recordedAt,
+              note: check.note,
+              activity:
+                context?.activity === 'exercise' && check.exerciseDone === true ? 'Ejercicio' : '',
+              minutes:
+                context?.activity === 'exercise' &&
+                context.moment === 'after' &&
+                check.exerciseDone === true
+                  ? (context.measurements.durationMinutes ?? null)
+                  : null,
+              fromDailyCheck: true,
+            },
+          ]
+        : [],
+    );
+  const all: (HealthEntry & { fromDailyCheck?: boolean })[] = [
+    ...previousEntries,
+    ...dailyEntries,
+  ].sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
   const entries = all.filter((entry) => entry.systemId === system.id),
     last = entries[0];
   const latest = healthSystems.map((item) => all.find((entry) => entry.systemId === item.id));
@@ -95,7 +120,7 @@ export function mapCrewHealthPresentation(
   const pending = mission.observations.filter((item) => item.crewId === crew.id && !item.reviewed);
   return {
     recordZones: mission.zones.map(({ id, name }) => ({ id, name })),
-    timelineRecords: all.map((entry) => ({
+    timelineRecords: previousEntries.map((entry) => ({
       id: entry.id,
       at: entry.recordedAt,
       date: date(entry.recordedAt),
@@ -131,6 +156,7 @@ export function mapCrewHealthPresentation(
     reviewDate: review ? date(review.recordedAt) : '',
     history: entries.map((entry) => ({
       id: entry.id,
+      fromDailyCheck: entry.fromDailyCheck,
       date: date(entry.recordedAt),
       dayLabel: shortDay.format(new Date(entry.recordedAt)),
       minutes: entry.minutes,

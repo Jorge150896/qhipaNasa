@@ -1,3 +1,5 @@
+import { createDailyCheckAttachment } from '@/domain/mission/dailyCheckAttachment';
+import type { HabitatId } from '@/domain/explorer/models';
 import { mapMeasurementTrace } from './mapMeasurementTrace';
 import type { CrewJournal, MissionSnapshot, Reading } from '@/domain/mission/models';
 import { metricLabels } from './constants';
@@ -94,6 +96,7 @@ export function mapMissionPresentation(
   metricId: SensorKey,
   zoneId: string,
   today: string,
+  habitatId: HabitatId = 'odyssey',
 ): MissionData {
   const crew = snapshot.crew.map((person) => ({
     id: person.id,
@@ -137,11 +140,16 @@ export function mapMissionPresentation(
     crew: crew.find((person) => person.id === item.crewId)?.name ?? item.crewId,
     date: `${date(item.recordedAt)} · ${time(item.recordedAt)} UTC`,
     sleep: `${number(item.sleepHours)} h`,
-    fatigue: `${item.fatigue} / 5`,
-    mood: { good: 'Bien', neutral: 'Regular', low: 'Bajo' }[item.mood],
+    fatigue: item.fatigue === undefined ? 'Sin responder' : `${item.fatigue} / 5`,
+    mood: item.mood
+      ? { good: 'Bien', neutral: 'Regular', low: 'Bajo' }[item.mood]
+      : 'Sin responder',
     note: item.note,
     context: item.context,
     discomfortRegion: item.discomfortRegion,
+    attachment: item.attachment,
+    exerciseDone: item.exerciseDone,
+    healthReport: item.healthReport,
   }));
   const todayCheck = journal.checks.find(
     (item) => item.crewId === selected.id && item.recordedAt.slice(0, 10) === today,
@@ -162,14 +170,18 @@ export function mapMissionPresentation(
     pendingCount: String(observations.filter((item) => !item.reviewed).length),
     checks,
     todayCheck: Boolean(todayCheck),
+    checkAttachment: createDailyCheckAttachment(snapshot, selected.id, habitatId),
     dailyCheckDraft: todayCheck
       ? {
           sleep: String(todayCheck.sleepHours),
-          fatigue: String(todayCheck.fatigue),
+          fatigue: todayCheck.fatigue === undefined ? '' : String(todayCheck.fatigue),
           mood: todayCheck.mood,
           note: todayCheck.note,
           context: todayCheck.context,
           discomfortRegion: todayCheck.discomfortRegion,
+          exerciseDone: todayCheck.exerciseDone,
+          healthReport: todayCheck.healthReport,
+          attachment: todayCheck.attachment,
         }
       : undefined,
     analysis: {
@@ -184,7 +196,7 @@ export function mapMissionPresentation(
           ? 'Revisar el registro de sueño y contrastarlo con una serie ambiental completa, verificando calidad y sincronización.'
           : snapshot.scenario === 'sensor-gap'
             ? 'Comprobar la conexión del sensor y obtener una nueva muestra antes de interpretar la oxigenación.'
-            : 'Completar el chequeo diario y consultar el historial antes de interpretar una medición aislada.',
+            : 'Completar el monitoreo diario y consultar el historial antes de interpretar una medición aislada.',
       evidence: observations.flatMap((item) => item.evidence).length
         ? observations.flatMap((item) => item.evidence)
         : [

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 export type DestinationKey = 'earth' | 'moon' | 'mars' | 'station' | 'ship';
-export type ExplorerPanel = 'network' | 'launches' | 'earth' | 'mars';
+export type ExplorerPanel = 'network' | 'earth' | 'mars';
 export interface HabitatData {
   id: string;
   name: string;
@@ -45,6 +45,5 @@ export interface ExplorerViewProps {
   onSelect(id: DestinationKey): void;
   onOpenCrew(habitatId: string): void;
   onRefresh(): void;
-  onOpenLaunchSites(): void;
-  onOpenEarthOverview(): void;
+  onOpenEarthCenters(): void;
 }

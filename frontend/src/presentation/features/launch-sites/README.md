@@ -1,22 +1,22 @@
-# Sitios de lanzamiento
+# Centros en Tierra
 
 Cada punto visible tiene una card compacta individual (`LaunchPointCard`) con nombre, categoría, línea de conexión y acceso al detalle. Las cards viven en el portal HTML independiente y se ocultan por oclusión en el hemisferio posterior. El catálogo de ocho lugares conserva sus coordenadas; ya no se agrupan los puntos cercanos. Al seleccionar un lugar se monta un único reproductor en la tarjeta ampliada dentro del visor, con espacio reservado en escritorio y posición inferior hasta 1100 px. Cerrar el detalle conserva las cards compactas.
 
-En ambas pestañas de Tierra, seleccionar un marcador o lugar entrega el foco a la tarjeta y la desplaza a la vista, también en móvil y al recuperar una selección por URL. Se respeta movimiento reducido. Las etiquetas individuales del globo muestran el nombre completo.
+En Centros en Tierra, seleccionar un marcador o lugar entrega el foco a la tarjeta y la desplaza a la vista, también en móvil y al recuperar una selección por URL. Se respeta movimiento reducido. Las etiquetas individuales del globo muestran el nombre completo.
 
-El video de despegue aparece inmediatamente después del nombre del lugar seleccionado, antes de los datos de la instalación. La lista, los grupos del globo y las tarjetas de la vista general indican la misión disponible. El reproductor muestra fecha y origen real del despegue; las sedes sin plataforma conservan el video de una misión relacionada y explican esa relación. Solo se monta un reproductor a la vez.
+La ficha muestra primero el nombre y la función del lugar, y después el video de la misión relacionada. La lista, los grupos del globo y las tarjetas de la vista general indican la misión disponible. El reproductor muestra fecha y origen real del despegue; las sedes sin plataforma conservan el video de una misión relacionada y explican esa relación. Solo se monta un reproductor a la vez.
 
 ## Vista general de la Tierra
 
-Se llega a Tierra desde «Mapa espacial». La pestaña «Todo de la Tierra» abre el globo, la ficha seleccionada, el directorio y los videos históricos. La URL conserva la pestaña y el lugar.
+**Centros en Tierra** se abre desde la pestaña del explorador o la ficha de Tierra. Reúne el globo, el directorio por función y los videos.
 
-La opción «Ver todo de la Tierra» se ofrece en el detalle de Tierra y su tarjeta 3D. La tercera pestaña «Todo de la Tierra» abre `/explore?destination=earth&tab=earth`; `site=<id>` conserva la ficha seleccionada. `EarthOverview` es una View presentacional dentro del mismo flujo y usa el mismo catálogo/caso de uso/ViewModel: tres sitios de lanzamiento, cinco sedes NASA y tres videos históricos únicos. Sus botones emiten intención de selección al Screen, que actualiza la URL. No carga un reproductor por tarjeta: el único iframe continúa en la ficha elegida. Las URLs anteriores `tab=launches` se conservan.
+`/explore?destination=earth&tab=earth` abre Centros en Tierra. `site=<id>` conserva la ficha seleccionada. El directorio usa el mismo catálogo que los marcadores y la ficha. Los enlaces anteriores con `tab=launches` pasan a la ruta unificada y conservan el sitio.
 
-En modo general, seleccionar un lugar o video lleva visualmente a la ficha y le entrega el foco, respetando movimiento reducido. La navegación sigue en Screen; el desplazamiento/foco es comportamiento visual local de View. Cerrar la selección mantiene la vista general. El selector de pestañas admite las tres opciones con flechas, Home y End. No se crea un provider, repositorio ni ViewModel duplicado.
+Seleccionar un lugar o video lleva visualmente a la ficha y le entrega el foco, respetando movimiento reducido. La navegación sigue en Screen; el desplazamiento/foco es comportamiento visual local de View. Cerrar la selección mantiene la vista general. El selector de pestañas admite las tres opciones con flechas, Home y End. No se crea un provider, repositorio ni ViewModel duplicado.
 
 ## Globo de despegues y sedes NASA
 
-Entrada: `/explore?destination=earth&tab=launches`; `&site=kennedy`, `vandenberg` o `kourou` abre una ficha. El explorador ofrece pestañas accesibles y un acceso desde Tierra. URL inexistente: mensaje visible y catálogo utilizable. Volver al mapa preserva el destino Tierra.
+Entrada: `/explore?destination=earth&tab=earth`; `&site=kennedy`, `vandenberg` o `kourou` abre una ficha. El explorador ofrece pestañas accesibles y un acceso desde Tierra. URL inexistente: mensaje visible y catálogo utilizable. Volver al mapa preserva el destino Tierra.
 
 También admite `site=nasa-hq`, `johnson`, `goddard`, `marshall` y `jpl`. Son cinco sedes seleccionadas, no un directorio exhaustivo de NASA. Kennedy conserva su identidad de sitio de lanzamiento dentro del centro NASA; Vandenberg y Kourou no se presentan como sedes de NASA. Se preservan los identificadores y enlaces anteriores.
 

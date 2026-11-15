@@ -10,7 +10,6 @@ export function LaunchSitesView({
   globe,
   onSelect,
   onCloseVideo,
-  overview = false,
 }: LaunchSitesViewProps) {
   const detail = useRef<HTMLElement>(null);
   const previousSelection = useRef<string | undefined>(undefined);
@@ -50,8 +49,6 @@ export function LaunchSitesView({
           <p className="eyebrow">{selected.category}</p>
           <h2 id="launch-place-name">{selected.fullName}</h2>
           <p>{selected.region}</p>
-          <LaunchVideo key={selected.id} site={selected} />
-          <hr />
           <h3>Sobre este lugar</h3>
           <p>{selected.summary}</p>
           <p className="launch-role">
@@ -80,6 +77,7 @@ export function LaunchSitesView({
             {selected.coordinates} · Fuente de ubicación ↗
           </a>
           <hr />
+          <LaunchVideo key={selected.id} site={selected} />
           <p className="eyebrow">RELACIÓN CON LA MISIÓN</p>
           <p>{selected.description}</p>
           <div className="launch-video-context">
@@ -95,8 +93,8 @@ export function LaunchSitesView({
       ) : (
         <div className="launch-empty">
           <span aria-hidden="true">↗</span>
-          <h2>Elige un punto de partida</h2>
-          <p>Selecciona un lugar para ver su historia y el video relacionado.</p>
+          <h2>Elige un centro o sitio de lanzamiento</h2>
+          <p>Consulta qué función cumple el lugar y la misión asociada.</p>
         </div>
       )}
     </aside>
@@ -104,8 +102,8 @@ export function LaunchSitesView({
   return (
     <section className="launch-page" aria-labelledby="launch-title">
       <header className="launch-heading">
-        <h1 id="launch-title">{overview ? 'Todo de la Tierra' : 'Todo viaje empieza aquí.'}</h1>
-        <p>Archivo histórico de sitios de lanzamiento y sedes de NASA.</p>
+        <h1 id="launch-title">Centros en Tierra</h1>
+        <p>Explora dónde se controlan, apoyan y lanzan las misiones espaciales.</p>
       </header>
       <div className="launch-layout">
         <div className="launch-map">
@@ -113,7 +111,7 @@ export function LaunchSitesView({
             className={`launch-viewer ${selected || invalidSelection ? 'has-selection' : ''}`}
             aria-label="Visor de la Tierra"
           >
-            <div className="launch-globe" aria-label="Globo de sitios de lanzamiento">
+            <div className="launch-globe" aria-label="Globo de centros en Tierra">
               {globe}
             </div>
             {placeCard}
@@ -132,36 +130,10 @@ export function LaunchSitesView({
               <i className="launch-legend-center" aria-hidden="true">
                 ◆
               </i>{' '}
-              Sede o laboratorio NASA
+              Centro de operaciones o apoyo
             </span>
           </div>
-          {overview ? (
-            <EarthOverview sites={sites} onSelect={onSelect} />
-          ) : (
-            <div className="launch-sites" aria-label="Sitios de lanzamiento y sedes NASA">
-              {sites.map((site) => (
-                <button
-                  key={site.id}
-                  aria-pressed={site.id === selected?.id}
-                  onClick={() => onSelect(site.id)}
-                  aria-controls="launch-place-card"
-                >
-                  <span
-                    className={`launch-number ${site.kind === 'launch-site' ? '' : 'launch-center-symbol'}`}
-                    aria-hidden="true"
-                  >
-                    {site.symbol}
-                  </span>
-                  <span>
-                    <strong>{site.fullName}</strong>
-                    <small>{site.category}</small>
-                    <small>{site.region}</small>
-                  </span>
-                  <span aria-hidden="true">↗</span>
-                </button>
-              ))}
-            </div>
-          )}
+          <EarthOverview sites={sites} selectedId={selected?.id} onSelect={onSelect} />
           <p className="launch-caption">
             Coordenadas aproximadas en grados. Globo geográfico ilustrativo; no representa
             condiciones actuales. Selección de sedes, no es un directorio completo de NASA.

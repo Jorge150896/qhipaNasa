@@ -81,7 +81,7 @@ En `frontend/src/presentation/features/mission/`:
 - `useMission.ts` es el ViewModel existente del flujo. Conserva ese nombre para evitar un refactor ajeno a una feature nueva.
 - `MissionWorkspaceProvider.tsx` compone dependencias y conserva estado entre rutas de misión.
 - `mapMissionPresentation.ts` prepara `MissionData`.
-- Las features `mission-overview`, `crew`, `habitat`, `history`, `daily-check`, `observations`, `simulation` y `sources` poseen sus Screens y Views. El dashboard compartido vive en `presentation/shared/mission/`.
+- Las features `crew`, `history`, `daily-check`, `simulation` y `sources` poseen sus Screens y Views. El dashboard compartido vive en `presentation/shared/mission/`.
 - `frontend/src/di/createMissionDependencies.client.ts` conecta casos de uso con repositorios de simulación y diario local.
 
 El caso real no exige que una nueva feature amplíe `useMission` ni que copie todas sus dependencias. Extraer una feature independiente cuando tenga estado y responsabilidades propios; compartir únicamente lo que tenga consumidores reales.

@@ -18,7 +18,7 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
     .getByRole('button', { name: 'Tripulación', exact: true })
     .click();
   const health = page.getByRole('region', { name: 'Salud por sistemas', exact: true });
-  await page.getByRole('button', { name: 'Autoevaluación', exact: true }).click();
+  await page.getByRole('button', { name: 'Salud por sistemas', exact: true }).click();
   await expect(
     health.getByRole('navigation', { name: 'Sistemas corporales' }).getByRole('button'),
   ).toHaveCount(7);
@@ -99,35 +99,31 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
     .getByRole('button', { name: 'Ahora', exact: true })
     .click();
   await hologram.getByRole('button', { name: 'Registrar ejercicio' }).click();
-  await expect(health.getByRole('region', { name: 'Autorregistro de salud' })).toBeFocused();
-  await expect(
-    health.getByRole('button', { name: 'Ejercicio y aparato locomotor', exact: true }),
-  ).toHaveAttribute('aria-pressed', 'true');
-  await health.getByLabel('Estado reportado', { exact: true }).selectOption('no-change');
-  await health.getByLabel('Actividad registrada', { exact: true }).fill('Bicicleta ficticia');
-  await health.getByLabel('Duración registrada (min)', { exact: true }).fill('20');
-  await health
-    .getByLabel('Módulo al que corresponde el registro (opcional)')
-    .selectOption('exercise');
-  await health
-    .getByLabel('Observación y contexto', { exact: true })
-    .fill('Registro de ejercicio de Elena');
-  await health.getByRole('button', { name: 'Revisar respuestas', exact: true }).click();
-  await expect(health.getByRole('heading', { name: 'Confirma tu autorregistro' })).toBeFocused();
-  await expect(health.locator('.health-confirmation')).toContainText('Bicicleta ficticia · 20 min');
-  await expect(health.locator('.health-confirmation')).toContainText('Módulo de ejercicio');
-  expect(
-    await page.evaluate(() => localStorage.getItem('astra.demo.health.v1:odyssey')),
-  ).toBeNull();
-  await health.getByRole('button', { name: 'Editar respuestas', exact: true }).click();
-  await expect(health.getByLabel('Duración registrada (min)')).toHaveValue('20');
-  await health.getByRole('button', { name: 'Revisar respuestas', exact: true }).click();
-  await health.getByRole('button', { name: 'Guardar autorregistro', exact: true }).click();
-  await expect(health.getByRole('status')).toContainText('Autorregistro de demostración guardado');
-  await page
-    .getByRole('navigation', { name: 'Secciones de Tripulación' })
-    .getByRole('button', { name: 'Ahora', exact: true })
-    .click();
+  await expect(page).toHaveURL(/\/mission\/journal#check-system-fitness$/);
+  await page.evaluate(() =>
+    localStorage.setItem(
+      'astra.demo.health.v1:odyssey',
+      JSON.stringify({
+        version: 1,
+        reviews: [],
+        entries: [
+          {
+            id: 'exercise-previous',
+            crewId: 'elena',
+            systemId: 'fitness',
+            reportedState: 'no-change',
+            note: 'Registro de ejercicio de Elena',
+            activity: 'Bicicleta ficticia',
+            minutes: 20,
+            zoneId: 'exercise',
+            recordedAt: '2026-11-08T14:32:00Z',
+          },
+        ],
+      }),
+    ),
+  );
+  await page.goto('/mission/crew');
+  await page.getByRole('button', { name: 'Ver ejercicio', exact: true }).click();
   await expect(hologram).toContainText('Bicicleta ficticia · 20 min registrados');
   const details = hologram.locator('details.crew-hologram-more');
   if (!((await details.getAttribute('open')) === '')) await details.locator('summary').click();
@@ -135,7 +131,7 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
   await expect(hologram.locator('.crew-equipment-scene canvas')).toBeVisible();
   await page
     .getByRole('navigation', { name: 'Secciones de Tripulación' })
-    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .getByRole('button', { name: 'Salud por sistemas', exact: true })
     .click();
   await health.getByRole('button', { name: 'Marcar revisión realizada', exact: true }).click();
   await expect(health.locator('.health-followup')).toContainText('Revisado hoy en UTC');
@@ -143,7 +139,7 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
   await page.reload();
   await page
     .getByRole('navigation', { name: 'Secciones de Tripulación' })
-    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .getByRole('button', { name: 'Salud por sistemas', exact: true })
     .click();
   await health.getByRole('button', { name: 'Ejercicio y aparato locomotor', exact: true }).click();
   await expect(health.locator('.health-history')).toContainText('20 min registrados');
@@ -172,7 +168,7 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
     .click();
   await expect(page.locator('.crew-hologram')).toHaveCount(0);
   await expect(health.locator('.health-history li')).toHaveCount(0);
-  await page.getByRole('button', { name: 'Autoevaluación', exact: true }).click();
+  await page.getByRole('button', { name: 'Salud por sistemas', exact: true }).click();
   await expect(health).toContainText('No hay autorregistros para Mateo Silva');
   await page.getByRole('button', { name: 'Ahora', exact: true }).click();
   await page
@@ -180,46 +176,26 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
     .click();
   await page
     .getByRole('navigation', { name: 'Secciones de Tripulación' })
-    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .getByRole('button', { name: 'Salud por sistemas', exact: true })
     .click();
   await expect(health).toContainText('Sin evaluación ocular');
-  const visualActivity = health.getByRole('radio', { name: 'Leer de cerca', exact: true });
-  await visualActivity.focus();
-  await visualActivity.press('Space');
-  await expect(visualActivity).toBeChecked();
-  await expect(
-    health.getByLabel('Observación visual', { exact: true }),
-  ).toHaveAccessibleDescription('¿Cambió la nitidez al leer de cerca?');
-  await health.getByLabel('Estado reportado', { exact: true }).selectOption('change');
-  await health
-    .getByLabel('Observación visual', { exact: true })
-    .fill('Cambio visual ficticio de Mateo para revisión');
-  await health.getByRole('button', { name: 'Revisar respuestas', exact: true }).click();
-  await expect(health.locator('.health-confirmation')).toContainText('Leer de cerca');
-  await health.getByRole('button', { name: 'Editar respuestas', exact: true }).click();
-  await expect(visualActivity).toBeChecked();
-  await health.getByRole('button', { name: 'Revisar respuestas', exact: true }).click();
-  await health.getByRole('button', { name: 'Guardar autorregistro', exact: true }).click();
+  await health.getByRole('button', { name: 'Abrir monitoreo diario', exact: true }).first().click();
+  await expect(page).toHaveURL(/\/mission\/journal#check-system-vision$/);
+  await openDailyAssessment(page);
+  await page.getByRole('spinbutton', { name: 'Horas de sueño' }).fill('7');
+  await page.getByLabel('Estado reportado').selectOption('change');
+  await page.getByLabel(/En qué actividad visual/).selectOption('near');
+  await page.getByLabel('Nota (opcional)').fill('Cambio visual ficticio de Mateo para revisión');
+  await confirmDailyCheck(page);
+  await expect(page.getByText('Chequeo guardado', { exact: true })).toBeVisible();
+  await page
+    .getByRole('navigation', { name: 'Navegación principal' })
+    .getByRole('button', { name: 'Tripulación', exact: true })
+    .click();
+  await page.getByRole('button', { name: 'Salud por sistemas', exact: true }).click();
+  await health.getByRole('button', { name: 'Visión y sistema neuroocular', exact: true }).click();
+  await expect(health.locator('.health-history')).toContainText('Leer de cerca');
   await expect(health.locator('.health-history')).toContainText('Cambio visual ficticio de Mateo');
-  await health.getByRole('button', { name: 'Ver mi registro', exact: true }).click();
-  await expect(timeline).toBeFocused();
-  await expect(timeline.getByRole('button', { name: /Visión · Leer de cerca/ })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
-  await expect(moment).toContainText('Leer de cerca');
-  await expect(moment).toContainText('Cambio visual ficticio de Mateo');
-  const visionCard = page.getByRole('complementary', { name: 'Visión y sistema neuroocular' });
-  await page
-    .getByRole('navigation', { name: 'Secciones de Tripulación' })
-    .getByRole('button', { name: 'Ahora', exact: true })
-    .click();
-  await expect(visionCard).toContainText('Cambio visual ficticio de Mateo');
-  await expect(visionCard.getByRole('button', { name: 'Registrar observación' })).toBeVisible();
-  await page
-    .getByRole('navigation', { name: 'Secciones de Tripulación' })
-    .getByRole('button', { name: 'Autoevaluación', exact: true })
-    .click();
   await expect(health.locator('.health-next-step')).toContainText('Compartir el cambio reportado');
   await expect(health.getByRole('link', { name: 'Ir al seguimiento' })).toHaveAttribute(
     'href',
@@ -238,9 +214,9 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
   await health.getByText('Consultar indicadores del sistema', { exact: true }).click();
   await expect(health.getByText('Referencia de esta serie').first()).toBeVisible();
   await health.getByRole('button', { name: 'Ver serie de pulso', exact: true }).click();
-  await expect(page).toHaveURL(/mission\/history/);
+  await expect(page).toHaveURL(/mission\/crew$/);
   await expect(
-    page.getByRole('heading', { name: 'Más allá de una lectura.', exact: true }),
+    page.getByRole('heading', { name: 'Historial y contexto', exact: true }),
   ).toBeVisible();
   const nasa = page.getByRole('region', { name: 'Historial real de Inspiration4' });
   await nasa.getByRole('button', { name: /^R\+1,/ }).click();
@@ -261,7 +237,15 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
     'href',
     /osdr\.nasa\.gov.*CMP_TRANSFORMED\.csv$/,
   );
-  expect(await page.evaluate(() => localStorage.getItem('astra.demo.journal.v1'))).toBe(oldJournal);
+  const checks = await page.evaluate(
+    () => JSON.parse(localStorage.getItem('astra.demo.journal.v1')!).checks,
+  );
+  expect(checks.find((check: { crewId: string }) => check.crewId === 'elena')).toEqual(
+    JSON.parse(oldJournal!).checks[0],
+  );
+  expect(checks.find((check: { crewId: string }) => check.crewId === 'mateo')).toMatchObject({
+    healthReport: { systemId: 'vision', visionActivityId: 'near' },
+  });
   expect(errors).toEqual([]);
 });
 
@@ -330,41 +314,29 @@ test('móvil y sin modelo 3D: controles de salud y autorregistro disponibles', a
   await hologram.getByRole('button', { name: 'Cerrar ficha corporal' }).click();
   await expect(hologram).toHaveCount(0);
 
-  await page.getByRole('button', { name: 'Autoevaluación', exact: true }).click();
+  await page.getByRole('button', { name: 'Salud por sistemas', exact: true }).click();
   await expect(health).toContainText('Sin autoevaluación registrada');
   await page
     .getByRole('navigation', { name: 'Secciones de Tripulación' })
-    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .getByRole('button', { name: 'Salud por sistemas', exact: true })
     .click();
-  await expect(health.getByRole('link', { name: 'Abrir autorregistro' })).toBeVisible();
-  const visionField = health.getByRole('group', { name: /Qué estabas haciendo/ });
-  await expect(visionField.getByRole('radio', { name: 'Sin indicar' })).toBeChecked();
-  await visionField.getByText('Mirar a distancia', { exact: true }).click();
-  await expect(visionField.getByRole('radio', { name: 'Mirar a distancia' })).toBeChecked();
-  await visionField.getByRole('radio', { name: 'Sin indicar' }).check();
-
-  await health.getByRole('button', { name: 'Revisar respuestas', exact: true }).click();
-  await health.getByRole('button', { name: 'Guardar autorregistro', exact: true }).click();
-  await expect(health.getByRole('status')).toContainText('guardado');
-  await expect(health.locator('.health-history')).toContainText('No evaluado');
-  await health.getByRole('button', { name: 'Ver mi registro', exact: true }).click();
-  await expect(page.getByRole('region', { name: 'Detalle del momento' })).toContainText(
-    'No evaluado',
-  );
-  await page.screenshot({ path: '../docs/qa/crew-health-mobile.png', fullPage: true });
-  const dimensions = await page.evaluate(() => ({
-    width: innerWidth,
-    scroll: document.documentElement.scrollWidth,
-  }));
-  expect(dimensions.scroll).toBeLessThanOrEqual(dimensions.width);
+  await expect(health.locator('.health-entry-form')).toHaveCount(0);
+  await health.getByRole('button', { name: 'Abrir monitoreo diario', exact: true }).first().click();
+  await expect(page).toHaveURL(/\/missions\/selene\/journal#check-system-vision$/);
+  await openDailyAssessment(page);
+  await page.getByRole('spinbutton', { name: 'Horas de sueño' }).fill('7');
+  await page.getByLabel('Estado reportado').selectOption('not-assessed');
+  await confirmDailyCheck(page);
+  await expect(page.getByText('Chequeo guardado', { exact: true })).toBeVisible();
   const journal = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem('astra.demo.health.v1:selene')!),
+    JSON.parse(localStorage.getItem('astra.demo.journal.v1:selene')!),
   );
-  expect(journal.entries[0].crewId).toBe('ana');
-  expect(journal.entries[0].visionActivityId).toBeUndefined();
-  expect(
-    await page.evaluate(() => localStorage.getItem('astra.demo.health.v1:odyssey')),
-  ).toBeNull();
+  expect(journal.checks[0]).toMatchObject({
+    crewId: 'ana',
+    healthReport: { systemId: 'vision', reportedState: 'not-assessed' },
+    attachment: { gravity: 'lunar' },
+  });
+  expect(await page.evaluate(() => localStorage.getItem('astra.demo.health.v1:selene'))).toBeNull();
   await page.goto('/missions/selene/history');
   await page.getByRole('link', { name: 'Ver referencias científicas de NASA' }).click();
   await expect(page).toHaveURL(/#nasa-history$/);
@@ -377,9 +349,7 @@ test('móvil y sin modelo 3D: controles de salud y autorregistro disponibles', a
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
-test('error del registro de salud no borra datos ni bloquea los sensores; fallo de escritura visible', async ({
-  page,
-}) => {
+test('error del registro anterior no borra datos ni bloquea los sensores', async ({ page }) => {
   await page.addInitScript(() =>
     localStorage.setItem('astra.demo.health.v1:odyssey', 'incompatible'),
   );
@@ -387,12 +357,10 @@ test('error del registro de salud no borra datos ni bloquea los sensores; fallo 
   const health = page.getByRole('region', { name: 'Salud por sistemas', exact: true });
   await page
     .getByRole('navigation', { name: 'Secciones de Tripulación' })
-    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .getByRole('button', { name: 'Salud por sistemas', exact: true })
     .click();
   await expect(health.getByRole('alert')).toContainText('No se pudo leer');
-  await expect(
-    health.getByRole('button', { name: 'Revisar respuestas', exact: true }),
-  ).toBeDisabled();
+  await expect(health.locator('.health-entry-form')).toHaveCount(0);
   await page.getByRole('button', { name: 'Ahora', exact: true }).click();
   await page
     .getByRole('group', { name: 'Lecturas de la instantánea' })
@@ -405,35 +373,6 @@ test('error del registro de salud no borra datos ni bloquea los sensores; fallo 
   expect(await page.evaluate(() => localStorage.getItem('astra.demo.health.v1:odyssey'))).toBe(
     'incompatible',
   );
-  await page.evaluate(() => localStorage.removeItem('astra.demo.health.v1:odyssey'));
-  // A fresh context omits the corrupt-data setup and denies writes only to the new feature.
-  const failurePage = await page.context().newPage();
-  await failurePage.addInitScript(() => {
-    const read = Storage.prototype.getItem,
-      write = Storage.prototype.setItem;
-    Object.defineProperty(Storage.prototype, 'getItem', {
-      value: function (this: Storage, key: string) {
-        return key === 'astra.demo.health.v1:odyssey' ? null : read.call(this, key);
-      },
-    });
-    Object.defineProperty(Storage.prototype, 'setItem', {
-      value: function (this: Storage, key: string, value: string) {
-        if (key === 'astra.demo.health.v1:odyssey')
-          throw new DOMException('Denied', 'QuotaExceededError');
-        return write.call(this, key, value);
-      },
-    });
-  });
-  await failurePage.goto('/mission/crew#crew-health');
-  const failureHealth = failurePage.getByRole('region', {
-    name: 'Salud por sistemas',
-    exact: true,
-  });
-  await failureHealth.getByRole('button', { name: 'Revisar respuestas', exact: true }).click();
-  await failureHealth.getByRole('button', { name: 'Guardar autorregistro', exact: true }).click();
-  await expect(failureHealth.getByRole('alert')).toContainText('No se pudo guardar');
-  await expect(failureHealth.locator('.health-history li')).toHaveCount(0);
-  await failurePage.close();
 });
 
 test('explicación visual por sistema: pasos, pausa y movimiento reducido', async ({ page }) => {
@@ -441,7 +380,7 @@ test('explicación visual por sistema: pasos, pausa y movimiento reducido', asyn
   const health = page.getByRole('region', { name: 'Salud por sistemas', exact: true });
   await page
     .getByRole('navigation', { name: 'Secciones de Tripulación' })
-    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .getByRole('button', { name: 'Salud por sistemas', exact: true })
     .click();
   const visual = health.locator('.health-visual');
   const explanation = health.getByText('Cómo interpretarlo y fuente científica', { exact: true });
@@ -674,6 +613,7 @@ test('móvil sin WebGL permite consultar módulos y duración de las sesiones', 
   await expect(sessions).toContainText('Sesión con pesas.');
   await expect(exercise.locator('figcaption')).toContainText('Equipo de resistencia');
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
+  await nav.getByRole('button', { name: 'Más', exact: true }).click();
   await nav.getByRole('button', { name: 'Simulación', exact: true }).click();
   await page.getByRole('button', { name: /Pérdida de señal/ }).click();
   await nav.getByRole('button', { name: 'Tripulación', exact: true }).click();
@@ -770,4 +710,26 @@ test('la gráfica sincroniza el módulo conocido y oculta la ubicación sin cont
     .click();
 
   await expect(panel.getByRole('heading', { name: 'Laboratorio' })).toBeVisible();
+});
+
+test('las etiquetas del astronauta son legibles en claro, incluso al seleccionar un punto', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/mission/crew');
+  const vision = page.getByRole('button', { name: 'Explorar visión y sistema neuroocular' });
+  const pulse = page.getByRole('button', { name: 'Consultar frecuencia cardíaca' });
+  await expect(vision).toBeVisible();
+  await expect(vision).toHaveCSS('color', 'rgb(49, 33, 62)');
+  await expect(vision).toHaveCSS('background-color', 'rgb(243, 234, 250)');
+
+  await vision.click();
+  await expect(vision).toHaveAttribute('aria-pressed', 'true');
+  await expect(vision).toHaveCSS('color', 'rgb(153, 62, 25)');
+  await expect(vision).toHaveCSS('background-color', 'rgb(255, 240, 230)');
+  await expect(pulse).toHaveCSS('color', 'rgb(49, 33, 62)');
+
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await expect(pulse).toBeVisible();
+  await expect(pulse).toHaveCSS('color', 'rgb(49, 33, 62)');
 });

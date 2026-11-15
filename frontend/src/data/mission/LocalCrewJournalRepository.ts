@@ -9,6 +9,42 @@ import {
   validDailyCheckContext,
 } from '@/domain/mission/dailyCheckContext';
 
+import { healthSystemIds, reportedStates, visionActivityIds } from '@/domain/health/models';
+import {
+  checkDataQualities,
+  checkMetricIds,
+  gravityContexts,
+  validDailyCheckAttachment,
+} from '@/domain/mission/dailyCheckAttachment';
+
+const attachmentSchema = z
+  .object({
+    snapshotId: z.string().min(1),
+    capturedAt: z.iso.datetime(),
+    source: z.literal('synthetic'),
+    habitat: z.string().min(1),
+    gravity: z.enum(gravityContexts),
+    zone: z
+      .object({
+        id: z.string().min(1),
+        name: z.string().min(1),
+        temperature: z.number(),
+        co2: z.number(),
+        humidity: z.number(),
+      })
+      .optional(),
+    readings: z.array(
+      z.object({
+        id: z.enum(checkMetricIds),
+        at: z.iso.datetime().optional(),
+        value: z.number().nullable(),
+        unit: z.string().min(1),
+        quality: z.enum(checkDataQualities),
+      }),
+    ),
+  })
+  .refine(validDailyCheckAttachment);
+
 const checkContextSchema = z
   .object({
     activity: z.enum(dailyActivities),
@@ -33,9 +69,19 @@ const journalSchema = z.object({
         crewId: z.string().min(1),
         recordedAt: z.iso.datetime(),
         sleepHours: z.number().min(0).max(24),
-        fatigue: z.number().int().min(1).max(5),
-        mood: z.enum(['good', 'neutral', 'low']),
+        fatigue: z.number().int().min(1).max(5).optional(),
+        mood: z.enum(['good', 'neutral', 'low']).optional(),
         note: z.string().max(400),
+        exerciseDone: z.boolean().optional(),
+        attachment: attachmentSchema.optional(),
+        healthReport: z
+          .object({
+            systemId: z.enum(healthSystemIds),
+            reportedState: z.enum(reportedStates),
+            visionActivityId: z.enum(visionActivityIds).optional(),
+          })
+          .refine((report) => !report.visionActivityId || report.systemId === 'vision')
+          .optional(),
         context: checkContextSchema.optional(),
         discomfortRegion: z.enum(discomfortRegions).optional(),
       }),

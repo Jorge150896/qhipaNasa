@@ -296,7 +296,7 @@
   right: 0;
   width: 250px;
   padding: 0.65rem;
-  background: #261334;
+  background: var(--field);
   border: 1px solid var(--line);
   border-radius: 12px;
   box-shadow: 0 12px 40px #0008;
@@ -346,9 +346,8 @@
 .launch-legend-pad {
   color: var(--accent);
 }
-.launch-legend-center,
-.launch-number.launch-center-symbol {
-  color: #a3dcec;
+.launch-legend-center {
+  color: light-dark(#275b68, #a3dcec);
 }
 .launch-video-context {
   margin-top: 1rem;
@@ -378,49 +377,6 @@
   line-height: 1.7;
   color: var(--muted);
 }
-.launch-sites {
-  display: grid;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  max-height: 420px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-.launch-sites button {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  width: 100%;
-  text-align: left;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  color: var(--text);
-  padding: 0.9rem;
-  background: var(--surface-raised);
-  cursor: pointer;
-}
-.launch-sites button[aria-pressed='true'] {
-  border-color: var(--accent);
-  background: var(--selection-bg, #62329b);
-}
-.launch-sites button > span:last-child {
-  margin-left: auto;
-  color: var(--accent);
-}
-.launch-number {
-  color: var(--accent);
-  font-family: monospace;
-  font-size: 1.1rem;
-}
-.launch-sites strong,
-.launch-sites small {
-  display: block;
-}
-.launch-sites small {
-  margin-top: 0.25rem;
-  color: var(--muted);
-  font-size: 0.75rem;
-}
 .launch-detail {
   padding: 1.5rem;
   scroll-margin-top: 90px;
@@ -441,14 +397,17 @@
   text-align: left;
   border: 1px solid var(--line);
   border-radius: 8px 8px 0 0;
-  background: var(--selection-bg, #62329b);
+  background: var(--selection-soft);
   color: var(--text);
   font-size: 10px;
   cursor: pointer;
 }
-.earth-overview {
+.earth-overview,
+.earth-directory {
   display: grid;
   gap: 1.8rem;
+}
+.earth-overview {
   margin-bottom: 2rem;
 }
 .earth-overview h2 {
@@ -475,6 +434,7 @@
   color: var(--text);
   cursor: pointer;
 }
+.earth-place-card[aria-pressed='true'],
 .earth-place-card:hover,
 .earth-video-card:hover {
   border-color: var(--accent);

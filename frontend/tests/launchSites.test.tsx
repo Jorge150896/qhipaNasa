@@ -192,7 +192,7 @@ describe('Sitios de lanzamiento', () => {
     );
     expect(onSelect).toHaveBeenLastCalledWith('vandenberg');
   });
-  it('cada estación o sede tiene un video identificable con el origen real del despegue', async () => {
+  it('la ficha explica primero la función del centro y muestra el origen real del video', async () => {
     const dependencies = { loadSites: new LoadLaunchSites(new LocalLaunchSitesRepository()) };
     const { result } = renderHook(() => useLaunchSitesViewModel(dependencies));
     await waitFor(() => expect(result.current.status).toBe('ready'));
@@ -231,7 +231,7 @@ describe('Sitios de lanzamiento', () => {
       const video = container.querySelector('.launch-video')!;
       const description = screen.getByRole('heading', { name: 'Sobre este lugar' });
       expect(
-        video.compareDocumentPosition(description) & Node.DOCUMENT_POSITION_FOLLOWING,
+        description.compareDocumentPosition(video) & Node.DOCUMENT_POSITION_FOLLOWING,
       ).not.toBe(0);
     }
   });

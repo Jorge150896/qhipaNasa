@@ -113,7 +113,8 @@ test('móvil, movimiento reducido y capa opcional fallida conservan los controle
 test('nave renovada conserva hotspots, zonas HTML y desmontaje del portal', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('/mission/habitat');
+  await page.goto('/mission/crew');
+  await page.getByRole('button', { name: 'Nave', exact: true }).click();
   await page.getByRole('button', { name: 'Explorar Módulo de ejercicio', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Módulo de ejercicio' })).toBeVisible();
   await expect(page.locator('.scene-hotspot')).toHaveCount(5);
@@ -122,7 +123,7 @@ test('nave renovada conserva hotspots, zonas HTML y desmontaje del portal', asyn
   await expect(page.getByRole('heading', { name: 'Laboratorio' })).toBeVisible();
   await page
     .getByRole('navigation', { name: 'Navegación principal' })
-    .getByRole('button', { name: 'Historial', exact: true })
+    .getByRole('button', { name: 'Monitoreo diario', exact: true })
     .click();
   await expect(page.locator('.scene-hotspot')).toHaveCount(0);
   expect(errors).toEqual([]);
@@ -134,6 +135,7 @@ test('Base Ares conserva selección y encuadre del hábitat en escritorio y móv
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/missions/ares/habitat');
+  await expect(page).toHaveURL(/\/missions\/ares\/crew\/?#crew-module$/);
   let viewport = page.locator('.scene-viewport');
   await expect(viewport.locator('canvas')).toBeVisible();
   const lab = viewport.getByRole('button', { name: 'Explorar Laboratorio', exact: true });

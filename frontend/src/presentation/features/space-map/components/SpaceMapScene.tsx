@@ -107,13 +107,13 @@ function MapObjects({
   portal,
   visibleCard,
   onDismissCard,
-  onOpenEarthOverview,
+  onOpenEarthCenters,
   level,
 }: {
   level: SolarViewLevel;
   visibleCard: DestinationKey | null;
   onDismissCard(): void;
-  onOpenEarthOverview(): void;
+  onOpenEarthCenters(): void;
   destinations: DestinationData[];
   selected: DestinationKey;
   onSelect(id: DestinationKey): void;
@@ -224,8 +224,8 @@ function MapObjects({
               >
                 <div className="fleet-map-callout">
                   {destination.id === 'earth' && (
-                    <button className="fleet-earth-overview" onClick={onOpenEarthOverview}>
-                      Ver todo de la Tierra ↗
+                    <button className="fleet-earth-overview" onClick={onOpenEarthCenters}>
+                      Ver centros en Tierra ↗
                     </button>
                   )}
                   <button
@@ -263,7 +263,7 @@ export default function SpaceMapScene(props: {
   initialFocus?: DestinationKey;
   visibleCard: DestinationKey | null;
   onDismissCard(): void;
-  onOpenEarthOverview(): void;
+  onOpenEarthCenters(): void;
   onSelect(id: DestinationKey): void;
 }) {
   const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);

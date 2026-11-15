@@ -1,6 +1,6 @@
 .workshop {
-  --avatar-dark: #212529;
-  --avatar-light: #e9ecef;
+  --avatar-dark: var(--surface);
+  --avatar-light: var(--text);
   --avatar-purple: #8338ec;
   --avatar-orange: #fb5607;
   margin-top: 16px;

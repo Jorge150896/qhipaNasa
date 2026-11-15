@@ -8,7 +8,7 @@
   min-height: min(560px, calc(100svh - 160px));
   width: 100%;
   padding: 48px 24px;
-  color: #e9ecef;
+  color: var(--text);
   border: 0;
   border-radius: 0;
 }
@@ -22,14 +22,14 @@
   z-index: 1;
 }
 .tumi-loader-brand {
-  color: #e9ecef;
+  color: var(--text);
   font-size: 13px;
   font-weight: 750;
   letter-spacing: 2px;
   margin: 0 0 24px;
 }
 .tumi-loader-brand strong {
-  color: #ffac7b;
+  color: var(--accent);
   font-weight: inherit;
 }
 .tumi-loader-stage {
@@ -49,7 +49,7 @@
   position: absolute;
   inset: 5%;
   border-radius: 50%;
-  border: 1px solid #e9ecef0d;
+  border: 1px solid var(--line);
 }
 .tumi-loader-halo::after {
   inset: 14%;
@@ -90,7 +90,7 @@
 .tumi-loader-spinner {
   width: 30px;
   height: 30px;
-  border: 2px solid #e9ecef24;
+  border: 2px solid var(--line);
   border-top-color: #fb5607;
   border-right-color: #ffb183;
   border-radius: 50%;
@@ -107,12 +107,12 @@
 .tumi-loader-message p {
   max-width: 320px;
   margin: 0 auto;
-  color: #d5c2e9;
+  color: var(--muted);
   font-size: 12px;
   line-height: 1.85;
 }
 .tumi-loader-caption {
-  color: #b99dce;
+  color: var(--muted);
   font-size: 8px;
   letter-spacing: 2.5px;
   margin-top: 40px;
@@ -254,13 +254,13 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 16px;
-  color: #d3c4e4;
+  color: var(--muted);
   font-size: 11px;
 }
 .loading-preview-controls button {
-  background: #3f2459;
-  border: 1px solid #9b6ac4;
-  color: #e9ecef;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  color: var(--text);
   padding: 9px 15px;
   border-radius: 8px;
   cursor: pointer;
@@ -348,7 +348,7 @@
   inset: 0;
   z-index: 1000;
   min-height: 100svh;
-  background: var(--brand-charcoal);
+  background: var(--bg);
 }
 .tumi-loader--content {
   width: 100%;

@@ -30,14 +30,38 @@ it('confirma los campos de la actividad y conserva el borrador al fallar el guar
   expect(screen.queryByText('Chequeo guardado')).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Reintentar guardado' }));
   await waitFor(() =>
-    expect(save).toHaveBeenLastCalledWith({
-      sleep: '7.5',
-      fatigue: '2',
-      mood: 'neutral',
-      note: '',
-      context: { activity: 'exercise', moment: 'before', measurements: { effort: 0 } },
-      discomfortRegion: undefined,
-    }),
+    expect(save).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        sleep: '7.5',
+        fatigue: '',
+        attachment: expect.objectContaining({ source: 'synthetic', readings: expect.any(Array) }),
+        note: '',
+        context: { activity: 'exercise', moment: 'before', measurements: { effort: 0 } },
+        discomfortRegion: undefined,
+      }),
+    ),
   );
   expect(await screen.findByText('Chequeo guardado')).toBeInTheDocument();
+});
+
+it('conserva la hora de la instantánea y marca una lectura ausente sin copiar la anterior', async () => {
+  const snapshot = await new SimulatedMissionRepository().load('sensor-gap');
+  const data = mapMissionPresentation(
+    snapshot,
+    { checks: [], reviewedObservationIds: [] },
+    'elena',
+    'oxygen',
+    'exercise',
+    '2026-11-15',
+  );
+
+  expect(data.checkAttachment).toMatchObject({
+    capturedAt: snapshot.capturedAt,
+    source: 'synthetic',
+    zone: { id: 'habitat' },
+    readings: expect.arrayContaining([
+      { id: 'oxygen', at: snapshot.capturedAt, value: null, unit: '%', quality: 'missing' },
+      { id: 'heartRate', at: snapshot.capturedAt, value: 72, unit: 'lpm', quality: 'available' },
+    ]),
+  });
 });

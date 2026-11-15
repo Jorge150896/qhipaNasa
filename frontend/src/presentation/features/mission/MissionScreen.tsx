@@ -23,7 +23,7 @@ export function MissionScreen({
     const route = missionRoute(habitatId, next);
     startNavigation(() =>
       router.push(anchor ? `${route}#${anchor}` : route, {
-        scroll: !anchor || next === 'observations',
+        scroll: !anchor,
       }),
     );
   }
@@ -31,7 +31,6 @@ export function MissionScreen({
     <MissionShell
       section={section}
       onNavigate={navigate}
-      pendingCount={data?.pendingCount}
       missionName={data?.name}
       onOpenExplorer={() =>
         startNavigation(() =>

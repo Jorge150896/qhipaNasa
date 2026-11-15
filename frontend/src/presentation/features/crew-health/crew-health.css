@@ -8,10 +8,10 @@
   justify-content: space-between;
   gap: 18px;
   padding: 22px 24px;
-  border: 1px solid #4e2e6a;
+  border: 1px solid var(--line);
   border-radius: 14px 14px 0 0;
   background: linear-gradient(115deg, var(--selection-soft), var(--surface));
-  border-color: #9970bd;
+  border-color: var(--line);
 }
 .health-heading h2 {
   margin: 8px 0;
@@ -35,12 +35,12 @@
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 7px;
   padding: 13px;
-  border: 1px solid #4e2e6a;
+  border: 1px solid var(--line);
   border-top: 0;
   border-radius: 0 0 14px 14px;
   background: var(--surface);
   margin-bottom: 18px;
-  border-color: #9970bd;
+  border-color: var(--line);
 }
 .health-system-picker button {
   display: flex;
@@ -48,10 +48,10 @@
   justify-content: center;
   gap: 7px;
   padding: 13px 7px;
-  border: 1px solid #4a2c66;
+  border: 1px solid var(--line);
   border-radius: 8px;
-  background: #351f48;
-  color: #b0a9b9;
+  background: var(--field);
+  color: var(--muted);
   font-size: 11px;
   cursor: pointer;
 }
@@ -82,7 +82,7 @@
 .health-workspace p {
   font-size: 12px;
   line-height: 1.75;
-  color: #bab4c3;
+  color: var(--muted);
 }
 .health-workspace h3 {
   line-height: 1.45;
@@ -90,7 +90,7 @@
 .health-workspace h4 {
   font-size: 12px;
   font-weight: 500;
-  color: #f7e5da;
+  color: var(--accent);
   margin: 20px 0 10px;
 }
 .health-title {
@@ -169,8 +169,8 @@
   gap: 12px;
 }
 .health-metrics article {
-  border: 1px solid #492b63;
-  background: #2c1a3c;
+  border: 1px solid var(--line);
+  background: var(--field);
   border-radius: 10px;
   padding: 16px;
 }
@@ -182,7 +182,7 @@
   margin-bottom: 10px;
 }
 .health-metrics article > div > span {
-  color: #cdc8d5;
+  color: var(--muted);
   font-size: 12px;
 }
 .health-metrics strong {
@@ -192,20 +192,20 @@
 .health-metrics strong small {
   font-size: 10px;
   margin-left: 6px;
-  color: #a7a0b1;
+  color: var(--muted);
 }
 .health-workspace dl {
   margin: 15px 0;
 }
 .health-workspace dt {
   font-size: 10px;
-  color: #a7a1b0;
+  color: var(--muted);
   margin-bottom: 5px;
 }
 .health-workspace dd {
   font-size: 11px;
   line-height: 1.7;
-  color: #f0cbb6;
+  color: var(--accent);
   margin: 0;
   overflow-wrap: anywhere;
 }
@@ -223,9 +223,9 @@
 }
 .health-limits {
   margin: 18px 0;
-  border: 1px solid #543173;
+  border: 1px solid var(--line);
   border-radius: 9px;
-  background: #321d44;
+  background: var(--field);
   padding: 0 15px 14px;
 }
 .health-limits p {
@@ -235,17 +235,17 @@
 .health-limits small,
 .health-empty small {
   font-size: 10px;
-  color: #a7a1b0;
+  color: var(--muted);
   line-height: 1.7;
 }
 .health-empty {
   padding: 20px;
-  background: #2b193a;
-  border: 1px dashed #59347a;
+  background: var(--field);
+  border: 1px dashed var(--line);
   border-radius: 9px;
 }
 .health-empty > svg {
-  color: #de9063;
+  color: var(--accent);
 }
 .health-empty p {
   margin: 10px 0 5px;
@@ -257,7 +257,7 @@
 }
 .health-context > div {
   padding: 12px 0;
-  border-bottom: 1px solid #46295f;
+  border-bottom: 1px solid var(--line);
 }
 .health-context dt {
   font-size: 10px;
@@ -267,7 +267,7 @@
 }
 .health-followup > small {
   display: block;
-  color: #dc8858;
+  color: var(--accent);
   font-size: 10px;
   line-height: 1.7;
 }
@@ -281,22 +281,22 @@
 }
 .health-analysis {
   background: linear-gradient(150deg, var(--selection-soft), var(--surface));
-  border-color: #9970bd;
+  border-color: var(--line);
 }
 .health-analysis details {
   padding-top: 12px;
-  border-top: 1px solid #4f2e6c;
+  border-top: 1px solid var(--line);
 }
 .health-analysis summary {
   cursor: pointer;
-  color: #edc4ac;
+  color: var(--accent);
   font-size: 11px;
 }
 .health-workspace ul {
   padding-left: 18px;
   font-size: 11px;
   line-height: 1.8;
-  color: #e7b090;
+  color: var(--accent);
 }
 .health-workspace li {
   margin-bottom: 8px;
@@ -313,18 +313,18 @@
   flex-direction: column;
   gap: 8px;
   font-size: 11px;
-  color: #cbc4d4;
+  color: var(--muted);
   margin-bottom: 16px;
 }
 .health-entry-form input,
 .health-entry-form select,
 .health-entry-form textarea {
   width: 100%;
-  border: 1px solid #563276;
+  border: 1px solid var(--line);
   border-radius: 7px;
   padding: 11px 12px;
-  background: #2c1a3c;
-  color: #f5dfd2;
+  background: var(--field);
+  color: var(--accent);
   font: inherit;
   line-height: 1.6;
 }
@@ -346,7 +346,7 @@
 }
 .health-history li {
   padding: 16px 0;
-  border-bottom: 1px solid #492b63;
+  border-bottom: 1px solid var(--line);
 }
 .health-history li > div {
   display: flex;
@@ -354,12 +354,12 @@
   justify-content: space-between;
 }
 .health-history strong {
-  color: #f4dbcc;
+  color: var(--accent);
   font-size: 11px;
   font-weight: 500;
 }
 .health-history time {
-  color: #a7a0b1;
+  color: var(--muted);
   font-size: 10px;
 }
 .health-history p {
@@ -368,42 +368,42 @@
   font-size: 12px;
 }
 .health-history small {
-  color: #a7a1af;
+  color: var(--muted);
   font-size: 10px;
 }
 .health-notice {
   padding: 14px 17px;
   border-radius: 8px;
-  background: #38214c;
-  border: 1px solid #5b357d;
-  color: #efcbb6 !important;
+  background: var(--field);
+  border: 1px solid var(--line);
+  color: var(--accent) !important;
   font-size: 12px;
 }
 .health-error {
-  background: #322619;
+  background: var(--warm-surface);
   border-color: #80643f;
-  color: #edc999 !important;
+  color: var(--amber) !important;
 }
 .health-error p {
   color: inherit;
 }
 .health-muted {
-  color: #a7a1b0 !important;
+  color: var(--muted) !important;
 }
 .health-entry-link {
   display: flex;
   gap: 12px;
   align-items: center;
   padding: 13px 16px;
-  background: #36204a;
-  border: 1px solid #543172;
+  background: var(--field);
+  border: 1px solid var(--line);
   border-radius: 10px;
   margin-bottom: 18px;
-  color: #e8b292;
+  color: var(--accent);
   font-size: 12px;
 }
 .health-entry-link a {
-  color: #f0ccb7;
+  color: var(--accent);
   margin-left: auto;
   text-decoration: none;
   display: flex;
@@ -428,7 +428,7 @@
   .health-system-picker {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     background: var(--surface);
-    border-color: #9970bd;
+    border-color: var(--line);
   }
 }
 @media (max-width: 850px) {
@@ -441,7 +441,7 @@
   .health-heading {
     padding: 18px;
     background: linear-gradient(115deg, var(--selection-soft), var(--surface));
-    border-color: #9970bd;
+    border-color: var(--line);
   }
 }
 @media (max-width: 600px) {
@@ -450,7 +450,7 @@
     align-items: start;
     gap: 14px;
     background: linear-gradient(115deg, var(--selection-soft), var(--surface));
-    border-color: #9970bd;
+    border-color: var(--line);
   }
   .health-heading h2 {
     font-size: 25px;
@@ -460,7 +460,7 @@
     gap: 6px;
     padding: 10px;
     background: var(--surface);
-    border-color: #9970bd;
+    border-color: var(--line);
   }
   .health-system-picker button {
     flex-direction: column;
@@ -511,10 +511,15 @@
 .health-visual {
   margin-top: 20px;
   padding: 16px;
-  border: 1px solid #553274;
+  border: 1px solid var(--line);
   border-radius: 12px;
-  background: radial-gradient(ellipse at 50% 38%, #6e3b98 0, #3b2250 50%, #321c49 100%);
-  border-color: #9970bd;
+  background: radial-gradient(
+    ellipse at 50% 38%,
+    var(--selection-soft) 0,
+    var(--field) 50%,
+    var(--field) 100%
+  );
+  border-color: var(--line);
 }
 .health-visual-toolbar {
   display: flex;
@@ -525,7 +530,7 @@
 .health-visual-toolbar > span {
   font-size: 9px;
   letter-spacing: 1px;
-  color: #e3a27d;
+  color: var(--accent);
 }
 .health-visual > svg {
   width: 100%;
@@ -550,7 +555,7 @@
   stroke-linejoin: round;
 }
 .health-eye {
-  fill: #36204a;
+  fill: var(--field);
   stroke: #e5a783;
   stroke-width: 2;
 }
@@ -626,11 +631,11 @@
   gap: 7px;
 }
 .health-visual-steps button {
-  border: 1px solid #573376;
+  border: 1px solid var(--line);
   border-radius: 7px;
   padding: 11px 7px;
-  color: #e8b394;
-  background: #331e46;
+  color: var(--accent);
+  background: var(--field);
   font: inherit;
   font-size: 11px;
   cursor: pointer;
@@ -638,7 +643,7 @@
 .health-visual-steps button span {
   display: block;
   margin-bottom: 5px;
-  color: #db8858;
+  color: var(--accent);
   font-size: 9px;
 }
 .health-visual-steps button[aria-pressed='true'] {
@@ -649,18 +654,18 @@
 .health-workspace p.health-visual-caption {
   min-height: 44px;
   margin: 14px 0 8px;
-  color: #f4d9ca;
+  color: var(--accent);
 }
 .health-visual > small {
   display: block;
   font-size: 10px;
   line-height: 1.7;
-  color: #a79fb1;
+  color: var(--muted);
 }
 .health-limits summary {
   cursor: pointer;
   font-size: 11px;
-  color: #eec7b0;
+  color: var(--accent);
   margin-top: 12px;
 }
 .health-visual.is-paused *,
@@ -707,8 +712,13 @@
 @media (max-width: 600px) {
   .health-visual {
     padding: 12px;
-    background: radial-gradient(ellipse at 50% 38%, #6e3b98 0, #3b2250 50%, #321c49 100%);
-    border-color: #9970bd;
+    background: radial-gradient(
+      ellipse at 50% 38%,
+      var(--selection-soft) 0,
+      var(--field) 50%,
+      var(--field) 100%
+    );
+    border-color: var(--line);
   }
   .health-visual > svg {
     height: 250px;
@@ -762,7 +772,7 @@
   padding: 6px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #1d122e;
+  background: var(--surface);
 }
 
 .crew-vision-guide strong,
@@ -784,8 +794,8 @@
   height: 48px;
   border-radius: 5px;
   overflow: hidden;
-  background: radial-gradient(ellipse at center, #6e3da9, #2a1a45);
-  color: #ffe0c9;
+  background: radial-gradient(ellipse at center, var(--selection-soft), var(--surface));
+  color: var(--accent);
 }
 
 .crew-vision-near span {
@@ -823,7 +833,7 @@
   align-self: end;
   width: 100%;
   height: 24px;
-  background: linear-gradient(160deg, #c297ff, #7347b0);
+  background: linear-gradient(160deg, #c297ff, var(--selection-soft));
   clip-path: polygon(0 90%, 29% 28%, 47% 68%, 72% 10%, 100% 90%, 100% 100%, 0 100%);
 }
 
@@ -875,7 +885,7 @@
   padding: 6px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #28183e;
+  background: var(--field);
 }
 
 .health-vision-tile strong {

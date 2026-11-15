@@ -9,8 +9,7 @@ export function SpaceExplorerView({
   onSelect,
   onOpenCrew,
   onRefresh,
-  onOpenLaunchSites,
-  onOpenEarthOverview,
+  onOpenEarthCenters,
 }: ExplorerViewProps) {
   const [expandedMap, setExpandedMap] = useState(false);
   return (
@@ -104,11 +103,8 @@ export function SpaceExplorerView({
           {selected.id === 'mars' && <MarsWeatherReference />}
           {selected.id === 'earth' && (
             <div className="earth-destination-options">
-              <button className="button primary" onClick={onOpenEarthOverview}>
-                Ver todo de la Tierra
-              </button>
-              <button className="button primary" onClick={onOpenLaunchSites}>
-                Explorar puntos de despegue ↗
+              <button className="button primary" onClick={onOpenEarthCenters}>
+                Ver centros en Tierra
               </button>
             </div>
           )}

@@ -43,10 +43,12 @@ export function CrewModuleLegend() {
 export function CrewModulePanel({
   data,
   onSelectModule,
+  onOpenOccupant,
   onOpenTimeline,
 }: {
   data: CrewModuleData;
   onSelectModule(id: string): void;
+  onOpenOccupant(id: string): void;
   onOpenTimeline(): void;
 }) {
   return (
@@ -132,8 +134,25 @@ export function CrewModulePanel({
               ))}
             </dl>
             <p className="crew-module-occupants">
-              <Icon name="users" size={14} /> <strong>Ocupantes</strong> {data.selected.occupants}
+              <Icon name="users" size={14} /> <strong>Ocupantes</strong>{' '}
+              {!data.occupants.length && data.selected.occupants}
             </p>
+            {data.occupants.length > 0 && (
+              <ul className="crew-module-occupant-list">
+                {data.occupants.map((person) => (
+                  <li key={person.id}>
+                    <button
+                      type="button"
+                      className="text-button"
+                      onClick={() => onOpenOccupant(person.id)}
+                    >
+                      {person.name} <Icon name="arrow" size={14} />
+                    </button>
+                    <span>{person.activity}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </>
         )}
         <button className="text-button" type="button" onClick={onOpenTimeline}>

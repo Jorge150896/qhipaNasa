@@ -171,6 +171,9 @@ export function useCrewViewModel(habitatId: string, mission: MissionData) {
             shortName: moduleShortNames[zone.id] ?? zone.name,
           })),
     selected: displayedZone ?? mission.selectedZone,
+    occupants: synchronizedMoment
+      ? []
+      : mission.crew.filter((person) => person.zoneId === displayedZone?.id),
     origin:
       !synchronizedMoment && moduleOrigin?.scope === timelineScope ? moduleOrigin.data : undefined,
   };

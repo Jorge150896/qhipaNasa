@@ -1,5 +1,10 @@
 import type { HealthMeasurement } from '../measurements/HealthMeasurement';
-import type { DailyCheckContext, DiscomfortRegion } from './dailyCheckContext';
+import type { DailyCheckAttachment } from './dailyCheckAttachment';
+import type {
+  DailyCheckContext,
+  DailyCheckHealthReport,
+  DiscomfortRegion,
+} from './dailyCheckContext';
 
 export type ScenarioId = 'baseline' | 'sleep-change' | 'sensor-gap';
 export type MetricId = 'heartRate' | 'temperature' | 'oxygen' | 'respiration';
@@ -56,12 +61,15 @@ export interface MissionSnapshot {
   observations: readonly Observation[];
 }
 export interface DailyCheckInput {
+  attachment?: DailyCheckAttachment;
+  exerciseDone?: boolean;
+  healthReport?: DailyCheckHealthReport;
   context?: DailyCheckContext;
   discomfortRegion?: DiscomfortRegion;
   crewId: string;
   sleepHours: number;
-  fatigue: number;
-  mood: Mood;
+  fatigue?: number;
+  mood?: Mood;
   note: string;
 }
 export interface DailyCheck extends DailyCheckInput {

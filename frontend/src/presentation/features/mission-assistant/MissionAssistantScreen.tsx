@@ -8,8 +8,9 @@ import {
   type CSSProperties,
   type ReactNode,
 } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { startLocalDictation } from '@/infrastructure/speech/localDictation';
+import { missionRoute } from '@/presentation/shared/missionRoutes';
 import { AssistantActionsContext } from './AssistantActionsContext';
 import type { MissionData, SensorKey } from '../mission/types';
 import type { AssistantSelection } from './types';
@@ -27,13 +28,20 @@ interface Point {
 
 export function MissionAssistantScreen({
   data,
+  explorer = false,
+  landing = false,
+  habitatId = 'odyssey',
   children,
 }: {
   data: MissionData | null;
+  explorer?: boolean;
+  landing?: boolean;
+  habitatId?: string;
   children: ReactNode;
 }) {
   const pathname = usePathname();
-  const model = useMissionAssistantViewModel(data, startLocalDictation);
+  const router = useRouter();
+  const model = useMissionAssistantViewModel(data, startLocalDictation, explorer);
   const [following, setFollowing] = useState(false);
   const describe = useCallback((id: string) => getControlTip(id, data), [data]);
   const exitCoach = useCallback(() => setFollowing(false), []);
@@ -92,20 +100,26 @@ export function MissionAssistantScreen({
 
   function guideTo(id: string, explanation: string) {
     const fallback =
-      id.startsWith('metric-') || id === 'compare'
+      id.startsWith('metric-') || id === 'compare' || id === 'history'
         ? 'crew'
         : id === 'review-check'
           ? 'journal'
           : id;
-    const selected = document.getElementById(`assistant-target-${id}`) ? id : fallback;
+    const target = document.getElementById(`assistant-target-${id}`);
+    if (target?.closest('#mission-dock-secondary') && target.getClientRects().length === 0) {
+      document.getElementById('mission-dock-more')?.click();
+    }
+    const selected = target ? id : fallback;
     setGuide({
       id: selected,
       path: pathname,
       explanation:
         selected !== id
           ? id === 'review-check'
-            ? 'Abre Chequeo diario y completa la autoevaluación para encontrar Revisar chequeo.'
-            : 'Abre Tripulación para encontrar este control.'
+            ? 'Abre Monitoreo diario y completa la autoevaluación para encontrar Revisar chequeo.'
+            : id === 'history'
+              ? 'Abre Tripulación y elige Historial.'
+              : 'Abre Tripulación para encontrar este control.'
           : explanation,
     });
     model.hide();
@@ -114,6 +128,11 @@ export function MissionAssistantScreen({
   function open() {
     setGuide(undefined);
     model.show();
+  }
+
+  function openSources() {
+    model.hide();
+    router.push(missionRoute(habitatId, 'sources'));
   }
 
   function askAboutReading(id: SensorKey, selection?: AssistantSelection) {
@@ -129,8 +148,11 @@ export function MissionAssistantScreen({
       {!(targetId && point && !model.open) && (
         <MissionAssistantView
           model={model}
+          explorer={explorer}
+          landing={landing}
           launcherHost={launcherHost}
           onGuide={guideTo}
+          onOpenSources={openSources}
           onOpen={open}
           onClose={model.hide}
           following={following}

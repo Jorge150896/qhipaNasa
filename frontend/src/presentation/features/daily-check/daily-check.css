@@ -38,7 +38,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #322047;
+  background: var(--wellbeing-field);
 }
 
 .daily-check-progress li[aria-current='step'] {
@@ -48,7 +48,7 @@
 }
 
 .daily-check-progress li[data-complete] span {
-  color: #ffc19b;
+  color: var(--accent);
 }
 
 .daily-check-form h4 {
@@ -114,7 +114,7 @@
   padding: 9px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #2a1839;
+  background: var(--wellbeing-field);
   overflow-wrap: anywhere;
 }
 
@@ -160,5 +160,255 @@
 
   .daily-check-form .form-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.daily-check-attachments {
+  min-width: 0;
+  display: grid;
+  gap: 0.55rem;
+  margin-block: 0.7rem;
+}
+
+.daily-check-attachments h5 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.daily-check-sidebar summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+
+.daily-wellbeing {
+  --wellbeing-bg: var(--bg);
+  --wellbeing-card: var(--surface);
+  --wellbeing-field: var(--field);
+  --wellbeing-hero: var(--welcome-gradient);
+  --wellbeing-bubble: var(--surface);
+  --wellbeing-mood-good: var(--selection-soft);
+  --wellbeing-mood-neutral: var(--surface-raised);
+  --wellbeing-mood-low: var(--warm-surface);
+  color: var(--text);
+  background: var(--wellbeing-bg);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: clamp(9px, 2.2vw, 26px);
+}
+
+.daily-wellbeing .daily-check-layout {
+  grid-template-columns: minmax(0, 1.36fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.daily-wellbeing .panel {
+  border: 1px solid var(--line);
+  border-radius: 19px;
+  background: var(--wellbeing-card);
+  box-shadow: none;
+}
+
+.daily-tumi {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(84px, 30%);
+  align-items: center;
+  gap: 6px;
+  padding: clamp(14px, 2.2vw, 25px);
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--wellbeing-hero);
+}
+
+.daily-tumi::before {
+  position: absolute;
+  z-index: -1;
+  top: -36%;
+  inset-inline-end: -14%;
+  width: 57%;
+  aspect-ratio: 1;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  box-shadow: 0 0 0 13px color-mix(in srgb, var(--line) 28%, transparent);
+  content: '';
+}
+
+.daily-tumi-name {
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.daily-tumi h3 {
+  font-size: clamp(23px, 3.4vw, 36px);
+  font-weight: 730;
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+.daily-tumi-reply {
+  width: fit-content;
+  margin-top: 10px;
+  padding: 9px 12px;
+  border-radius: 13px 13px 13px 4px;
+  background: var(--wellbeing-bubble);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.daily-tumi-art {
+  width: min(100%, 150px);
+  margin-inline: auto;
+  aspect-ratio: 1;
+}
+
+.daily-tumi-art .tumi-head {
+  width: 100%;
+  height: 100%;
+}
+
+.daily-tumi-art .tumi-mouth-calm {
+  display: none;
+}
+
+.daily-tumi-art .tumi-mouth-smile {
+  opacity: 1;
+}
+
+.daily-tumi[data-mood='low'] .tumi-mouth-smile {
+  opacity: 0;
+}
+
+.daily-tumi[data-mood='low'] .tumi-mouth-calm {
+  display: initial;
+}
+
+.daily-mood legend {
+  font-weight: 650;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.daily-mood-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.daily-mood-options label {
+  cursor: pointer;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-height: 51px;
+  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  font-weight: 650;
+  font-size: 14px;
+}
+
+.daily-mood-options label[data-mood='good'] {
+  background: var(--wellbeing-mood-good);
+}
+
+.daily-mood-options label[data-mood='neutral'] {
+  background: var(--wellbeing-mood-neutral);
+}
+
+.daily-mood-options label[data-mood='low'] {
+  background: var(--wellbeing-mood-low);
+}
+
+.daily-mood-options label[data-selected='true'] {
+  border-color: var(--selection-border);
+  box-shadow: inset 0 0 0 1px var(--selection-border);
+}
+
+.daily-mood-options input {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.daily-mood .text-button {
+  margin-top: 8px;
+  min-height: 36px;
+}
+
+.daily-wellbeing .daily-check-form :is(input:not([type='radio']), select, textarea) {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--wellbeing-field);
+  font-size: 16px;
+}
+
+.daily-wellbeing .daily-check-form input::placeholder,
+.daily-wellbeing .daily-check-form textarea::placeholder {
+  color: var(--quiet);
+}
+
+.daily-wellbeing .button.secondary,
+.daily-wellbeing .check-list .badge,
+.daily-wellbeing .tiny-badge {
+  background: var(--wellbeing-field);
+  color: var(--text);
+  border-color: var(--line);
+}
+
+.daily-wellbeing .button.primary {
+  color: #2f170e;
+  border-radius: 11px;
+  background: #ffad7a;
+}
+
+.daily-wellbeing .button.primary:hover:not(:disabled) {
+  background: #ffbe96;
+}
+
+.daily-wellbeing .daily-readings .panel-heading {
+  margin-bottom: 4px;
+}
+
+.daily-wellbeing .daily-readings .panel-heading h3 {
+  font-size: 19px;
+}
+
+.daily-wellbeing .daily-readings .daily-check-sensors dd:first-of-type {
+  font-size: 19px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 800px) {
+  .daily-wellbeing .daily-check-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 550px) {
+  .daily-wellbeing .panel {
+    padding: 12px;
+  }
+
+  .daily-tumi {
+    grid-template-columns: minmax(0, 1fr) minmax(67px, 27%);
+  }
+
+  .daily-mood-options {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .daily-mood-options label {
+    justify-content: flex-start;
+    padding-inline: 12px;
+  }
+
+  .daily-wellbeing .button.primary {
+    width: 100%;
+    justify-content: center;
   }
 }

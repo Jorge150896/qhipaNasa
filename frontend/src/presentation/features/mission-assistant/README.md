@@ -1,6 +1,6 @@
 # Tumi, asistente de misión
 
-El asistente vive en el layout de cada hábitat para conservar la conversación al ocultar el chat y navegar entre sus secciones. La conversación vive en memoria y se reinicia al recargar o al salir del hábitat.
+El asistente vive en el layout de cada hábitat para conservar la conversación al ocultar el chat y navegar entre sus secciones. `/explore` monta su propia instancia para Mapa espacial, Mapa de Marte y Centros en Tierra, con preguntas de navegación y acceso a Tripulación para consultar lecturas. Cada conversación vive en memoria durante su recorrido y se reinicia al recargar o salir de él.
 
 Las respuestas locales usan la persona seleccionada, la calidad y la hora de su instantánea, el módulo consultado y los chequeos guardados. Las preguntas se reconocen por temas, con ejemplos en el chat. El robot señala controles mediante identificadores de UI y deja que la persona decida si los pulsa.
 
@@ -13,6 +13,8 @@ Las tarjetas de telemetría ofrecen «Preguntar por este dato» desde la guía. 
 ## Guía de conocimiento
 
 `missionKnowledge.ts` contiene el catálogo de controles y las preguntas sobre el proyecto. Al cambiar un control o un flujo, revisar las entradas que lo describen.
+
+Al preguntar por las fuentes, la procedencia o el alcance de los datos, Tumi ofrece «Ver Fuentes y alcance». La acción abre la pantalla del hábitat actual. Desde la portada y el mapa abre la de Odyssey.
 
 La guía se ejecuta en el navegador con reglas locales. Tumi contesta preguntas formuladas de distintas maneras dentro de los temas previstos. Puede retomar la última señal explicada mientras sigan seleccionados el mismo tripulante y escenario. El contexto fijado explícitamente desde un control conserva su persona, valor y hora de origen hasta quitarlo o reemplazarlo.
 

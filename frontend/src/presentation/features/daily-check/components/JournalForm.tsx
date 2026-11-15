@@ -1,6 +1,11 @@
 import { useEffect, useRef, type FormEvent } from 'react';
+import { CheckAttachments } from './CheckAttachments';
+import { Frown, Meh, Smile } from 'lucide-react';
 import { Icon } from '@/ui/Icon';
+import { TumiHead } from '@/presentation/shared/loading/TumiHead';
 import type { DailyCheckViewModel } from '../types';
+
+const moodIcons = { good: Smile, neutral: Meh, low: Frown };
 
 const steps = ['Contexto', 'Autoevaluación', 'Confirmación', 'Resultado'];
 
@@ -29,16 +34,58 @@ export function JournalForm({
   }
 
   return (
-    <form className="journal-form daily-check-form" onSubmit={submit} noValidate={step !== 1}>
-      <div className="form-intro">
-        <span className="icon-chip">
-          <Icon name="clipboard" />
-        </span>
-        <div>
-          <h3>Chequeo de {personName}</h3>
-          <p>Datos ficticios · Guardado en este navegador</p>
-        </div>
-      </div>
+    <form
+      id="daily-check-form"
+      tabIndex={-1}
+      className="journal-form daily-check-form"
+      onSubmit={submit}
+      noValidate={step !== 1}
+    >
+      {step < 2 && (
+        <>
+          <div className="daily-tumi" data-mood={values.mood}>
+            <div>
+              <p className="daily-tumi-name">Tumi</p>
+              <h3>Hola, {personName.split(' ')[0]}.</h3>
+              <p className="daily-tumi-reply" role="status">
+                {model.tumiReply}
+              </p>
+            </div>
+            <div className="daily-tumi-art">
+              <TumiHead />
+            </div>
+          </div>
+          <fieldset className="daily-mood">
+            <legend>¿Cómo describirías tu ánimo?</legend>
+            <div className="daily-mood-options">
+              {(['good', 'neutral', 'low'] as const).map((mood) => {
+                const MoodIcon = moodIcons[mood];
+                return (
+                  <label key={mood} data-mood={mood} data-selected={values.mood === mood}>
+                    <input
+                      type="radio"
+                      name="mood"
+                      checked={values.mood === mood}
+                      onChange={() => model.setValues({ ...values, mood })}
+                    />
+                    <MoodIcon aria-hidden="true" size={23} />
+                    {mood === 'low' ? 'Triste' : model.moods[mood]}
+                  </label>
+                );
+              })}
+            </div>
+            {values.mood && (
+              <button
+                type="button"
+                className="text-button"
+                onClick={() => model.setValues({ ...values, mood: undefined })}
+              >
+                Quitar respuesta de ánimo
+              </button>
+            )}
+          </fieldset>
+        </>
+      )}
       <ol className="daily-check-progress" aria-label="Progreso del chequeo">
         {steps.map((name, index) => (
           <li
@@ -118,6 +165,7 @@ export function JournalForm({
                   value={values.fatigue}
                   onChange={(event) => model.setValues({ ...values, fatigue: event.target.value })}
                 >
+                  <option value="">Sin responder</option>
                   <option value="1">1 · Muy poca</option>
                   <option value="2">2 · Poca</option>
                   <option value="3">3 · Moderada</option>
@@ -128,17 +176,21 @@ export function JournalForm({
             </div>
           </fieldset>
           <fieldset>
-            <legend>¿Cómo describirías tu ánimo?</legend>
+            <legend>¿Hiciste ejercicio hoy?</legend>
             <div className="mood-options">
-              {(['good', 'neutral', 'low'] as const).map((mood) => (
-                <label key={mood} className={values.mood === mood ? 'selected' : ''}>
+              {[
+                { label: 'Sí', value: true },
+                { label: 'No', value: false },
+                { label: 'Sin responder', value: undefined },
+              ].map(({ label, value }) => (
+                <label key={label}>
                   <input
                     type="radio"
-                    name="mood"
-                    checked={values.mood === mood}
-                    onChange={() => model.setValues({ ...values, mood })}
+                    name="exercise-done"
+                    checked={values.exerciseDone === value}
+                    onChange={() => model.setValues({ ...values, exerciseDone: value })}
                   />
-                  {model.moods[mood]}
+                  {label}
                 </label>
               ))}
             </div>
@@ -160,6 +212,64 @@ export function JournalForm({
               ))}
             </select>
           </label>
+          <label>
+            Área de salud que quieres comentar (opcional)
+            <select
+              value={model.healthArea}
+              onChange={(event) =>
+                model.selectHealthArea(
+                  model.healthAreas.find(({ id }) => id === event.target.value)?.id ?? '',
+                )
+              }
+            >
+              <option value="">Sin indicar</option>
+              {model.healthAreas.map(({ id, label }) => (
+                <option key={id} value={id}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </label>
+          {model.healthArea && (
+            <label>
+              Estado reportado
+              <select
+                value={model.healthReport?.reportedState ?? ''}
+                onChange={(event) =>
+                  model.selectHealthState(
+                    model.reportedStates.find((id) => id === event.target.value) ?? '',
+                  )
+                }
+              >
+                <option value="">Sin responder</option>
+                {model.reportedStates.map((id) => (
+                  <option key={id} value={id}>
+                    {model.reportedStateLabels[id]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          {model.healthArea === 'vision' && model.healthReport?.reportedState === 'change' && (
+            <label>
+              ¿En qué actividad visual notaste el cambio? (opcional)
+              <select
+                value={model.healthReport.visionActivityId ?? ''}
+                onChange={(event) =>
+                  model.selectVisionActivity(
+                    model.visionActivities.find(({ id }) => id === event.target.value)?.id,
+                  )
+                }
+              >
+                <option value="">Sin indicar</option>
+                {model.visionActivities.map(({ id, label }) => (
+                  <option key={id} value={id}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <fieldset>
             <legend>Datos de la actividad (opcionales)</legend>
             <div className="form-grid">
@@ -202,6 +312,7 @@ export function JournalForm({
               Ya existe un chequeo para este día UTC. Guardar actualizará ese registro.
             </p>
           )}
+          <h5>Tus respuestas</h5>
           <dl className="daily-check-summary">
             {model.review.map(({ label, value }) => (
               <div key={label}>
@@ -210,6 +321,14 @@ export function JournalForm({
               </div>
             ))}
           </dl>
+          <section aria-label="Datos adjuntos">
+            <h5>Datos adjuntos</h5>
+            {model.attachment ? (
+              <CheckAttachments data={model.attachment} />
+            ) : (
+              <p>Sin datos adjuntos disponibles.</p>
+            )}
+          </section>
           {model.failed && (
             <p className="daily-check-notice" role="alert">
               El borrador sigue disponible. Revisa los datos o vuelve a intentar el guardado.

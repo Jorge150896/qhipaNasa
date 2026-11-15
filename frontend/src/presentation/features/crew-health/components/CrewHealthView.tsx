@@ -1,8 +1,7 @@
 import { Icon } from '@/ui/Icon';
 import { Panel } from '@/ui/Panel';
 import type { SensorKey } from '../../mission/types';
-import type { BodySystemKey, CrewHealthData, CrewHealthMessage, HealthFormValues } from '../types';
-import { HealthEntryForm } from './HealthEntryForm';
+import type { BodySystemKey, CrewHealthData, CrewHealthMessage } from '../types';
 import { HealthSystemIllustration } from './HealthSystemIllustration';
 interface Props {
   data: CrewHealthData;
@@ -11,15 +10,14 @@ interface Props {
   saving: boolean;
   message: CrewHealthMessage | null;
   onSelectSystem(id: BodySystemKey): void;
-  onSave(values: HealthFormValues): Promise<boolean>;
+  onReportSystem(): void;
   onReview(): Promise<void>;
   onRetry(): void;
   onOpenHistory(): void;
   onOpenJournal(): void;
-  onOpenObservations(): void;
   onOpenHabitat(): void;
   onSelectMetric(id: SensorKey): void;
-  onOpenTimelineRecord(id: string): void;
+  onOpenRecord(id: string, fromDailyCheck?: boolean): void;
 }
 export function CrewHealthView({
   data,
@@ -28,15 +26,14 @@ export function CrewHealthView({
   saving,
   message,
   onSelectSystem,
-  onSave,
+  onReportSystem,
   onReview,
   onRetry,
   onOpenHistory,
   onOpenJournal,
-  onOpenObservations,
   onOpenHabitat,
   onSelectMetric,
-  onOpenTimelineRecord,
+  onOpenRecord,
 }: Props) {
   const disabled = loading || error || saving;
   return (
@@ -49,7 +46,7 @@ export function CrewHealthView({
       <div className="health-heading">
         <div>
           <p className="eyebrow">SALUD DE LA TRIPULACIÓN</p>
-          <h2>Autoevaluación de {data.name}</h2>
+          <h2>Salud por sistemas · {data.name}</h2>
           <p>{data.personContext}</p>
         </div>
         <div className="health-heading-actions">
@@ -92,18 +89,31 @@ export function CrewHealthView({
       <section className="panel health-next-step" id="crew-health-next" tabIndex={-1}>
         <div>
           <p className="eyebrow">SIGUIENTE PASO · {data.system.shortLabel}</p>
-          <h3>{loading ? 'Consultando autorregistros…' : data.nextStep.title}</h3>
-          {!loading && <p>{data.nextStep.detail}</p>}
+          <h3>
+            {loading
+              ? 'Consultando autorregistros…'
+              : data.nextStep.target === 'entry'
+                ? 'Informar en el monitoreo diario'
+                : data.nextStep.title}
+          </h3>
           {!loading && (
-            <a className="text-button" href={`#crew-health-${data.nextStep.target}`}>
+            <p>
               {data.nextStep.target === 'entry'
-                ? 'Abrir autorregistro'
-                : data.nextStep.target === 'readings'
-                  ? 'Ver indicadores'
-                  : 'Ir al seguimiento'}
-              <Icon name="arrow" size={13} />
-            </a>
+                ? 'Añade lo que notaste en esta área a tu chequeo del día.'
+                : data.nextStep.detail}
+            </p>
           )}
+          {!loading &&
+            (data.nextStep.target === 'entry' ? (
+              <button type="button" className="text-button" onClick={onReportSystem}>
+                Abrir monitoreo diario <Icon name="arrow" size={13} />
+              </button>
+            ) : (
+              <a className="text-button" href={`#crew-health-${data.nextStep.target}`}>
+                {data.nextStep.target === 'readings' ? 'Ver indicadores' : 'Ir al seguimiento'}
+                <Icon name="arrow" size={13} />
+              </a>
+            ))}
         </div>
         <div className="health-next-state">
           <span>Último autorregistro</span>
@@ -113,31 +123,6 @@ export function CrewHealthView({
       </section>
       <div className="health-layout">
         <div className="health-main-column">
-          <section
-            className="panel"
-            id="crew-health-entry"
-            tabIndex={-1}
-            aria-label="Autorregistro de salud"
-          >
-            <HealthEntryForm
-              key={`${data.scope}:${data.system.id}`}
-              system={data.system}
-              name={data.name}
-              disabled={disabled}
-              zones={data.recordZones}
-              onSave={onSave}
-              savedEntryId={message?.entryId}
-              onOpenTimelineRecord={onOpenTimelineRecord}
-            />
-            {message?.operation === 'entry' && (
-              <p
-                className={`health-notice ${message.error ? 'health-error' : ''}`}
-                role={message.error ? 'alert' : 'status'}
-              >
-                {message.text}
-              </p>
-            )}
-          </section>
           <section className="panel health-system-detail" id="crew-health-readings" tabIndex={-1}>
             <div className="health-title">
               <span className="icon-chip">
@@ -269,7 +254,17 @@ export function CrewHealthView({
                     )}
                     {entry.visionActivity && <p>{entry.visionActivity}</p>}
                     {entry.note && <p>{entry.note}</p>}
-                    <small>Autorregistro de demostración</small>
+                    <small>
+                      {entry.fromDailyCheck ? 'Monitoreo diario' : 'Autorregistro anterior'}
+                    </small>
+                    <button
+                      type="button"
+                      className="text-button"
+                      onClick={() => onOpenRecord(entry.id, entry.fromDailyCheck)}
+                    >
+                      {entry.fromDailyCheck ? 'Ver chequeo' : 'Ver en la línea de tiempo'}{' '}
+                      <Icon name="arrow" size={13} />
+                    </button>
                   </li>
                 ))}
               </ol>
@@ -297,7 +292,7 @@ export function CrewHealthView({
             </dl>
             <div className="health-form-actions">
               <button className="text-button" onClick={onOpenJournal}>
-                Abrir chequeo diario
+                Abrir monitoreo diario
                 <Icon name="arrow" size={13} />
               </button>
               <button className="text-button" onClick={onOpenHabitat}>
@@ -383,10 +378,6 @@ export function CrewHealthView({
                 Sin observaciones pendientes del escenario para esta persona.
               </p>
             )}
-            <button className="text-button" onClick={onOpenObservations}>
-              Ver observaciones de la misión
-              <Icon name="arrow" size={13} />
-            </button>
           </Panel>
         </div>
       </div>

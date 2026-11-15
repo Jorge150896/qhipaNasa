@@ -16,7 +16,9 @@ export function MissionWorkspaceProvider({
   const workspace = useMission(dependencies);
   return (
     <MissionContext value={workspace}>
-      <MissionAssistantScreen data={workspace.data}>{children}</MissionAssistantScreen>
+      <MissionAssistantScreen data={workspace.data} habitatId={habitatId}>
+        {children}
+      </MissionAssistantScreen>
     </MissionContext>
   );
 }

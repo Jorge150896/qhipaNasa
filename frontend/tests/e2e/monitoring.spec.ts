@@ -1,58 +1,77 @@
 import { expect, test } from '@playwright/test';
 
-test('sesión asistida: contexto, repetición, revisión, guardado y recarga móvil', async ({
+for (const route of ['/mission', '/missions/aurora']) {
+  test(`el acceso anterior ${route} abre el único formulario de monitoreo diario`, async ({
+    page,
+  }) => {
+    await page.goto(`${route}/monitoring/`);
+    await expect(page).toHaveURL(new RegExp(`${route}/journal/?$`));
+    await expect(
+      page.getByRole('heading', { name: 'Monitoreo diario', exact: true }),
+    ).toBeVisible();
+    await expect(page.locator('main form')).toHaveCount(1);
+    await expect(
+      page.getByRole('heading', { name: 'Lecturas del cuerpo y del entorno' }),
+    ).toBeVisible();
+    await expect(page.getByText('Frecuencia cardíaca', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Preparar captura' })).toHaveCount(0);
+  });
+}
+
+test('las sesiones anteriores conservan sus lecturas y contexto en Tripulación', async ({
   page,
 }) => {
-  await page.goto('/missions/aurora/monitoring');
-  await page.getByLabel('Origen de las lecturas').selectOption('demo');
-  await page.getByRole('button', { name: 'Caminata espacial', exact: false }).click();
-  await page.getByLabel('Equipo o sensores utilizados').fill('Traje de prueba 01');
-  await page.getByLabel('Fase de actividad').selectOption('after');
-  const checkboxes = page
-    .getByRole('region', { name: 'Preparación de captura' })
-    .getByRole('checkbox');
-  for (let i = 0; i < 3; i++) await checkboxes.nth(i).check();
-  await page.getByRole('button', { name: 'Preparar captura', exact: true }).click();
-  await page.getByRole('button', { name: 'Capturar lecturas', exact: true }).click();
-  const console = page.getByRole('region', { name: 'Consola de captura' });
-  await expect(console).toContainText('1/20 capturas');
-  await expect(console).toContainText('Sintético');
-  await page.getByRole('button', { name: 'Repetir medición', exact: true }).click();
-  await expect(console).toContainText('2/20 capturas');
-  await page.screenshot({ path: '../docs/qa/monitoring-desktop.png', fullPage: true });
-  await page.getByRole('button', { name: 'Revisar sesión', exact: true }).click();
-  await page
-    .getByLabel('Nota de la sesión')
-    .fill('Verificar colocación del sensor en próxima captura.');
-  await page.getByRole('button', { name: 'Guardar sesión local', exact: true }).click();
-  await expect(page.getByRole('status').filter({ hasText: 'Sesión guardada' })).toBeVisible();
-  await page.setViewportSize({ width: 390, height: 1000 });
-  await page.reload();
-  const history = page.getByRole('region', { name: 'Sesiones registradas' });
-  await history.getByText(/Caminata espacial · 2 capturas/).click();
-  await expect(history).toContainText('Verificar colocación del sensor');
-  await expect(history).toContainText('Frecuencia cardíaca');
-  await expect(history).toContainText('Traje de prueba 01');
-  await expect(history).toContainText('observada');
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.screenshot({ path: '../docs/qa/monitoring-mobile.png', fullPage: true });
-  await page
-    .getByRole('navigation', { name: 'Navegación principal' })
-    .getByRole('button', { name: 'Tripulación', exact: true })
-    .click();
-  await page
-    .getByRole('navigation', { name: 'Secciones de Tripulación' })
-    .getByRole('button', { name: 'Historial', exact: true })
-    .click();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    const at = '2026-11-08T14:32:00Z';
+    localStorage.setItem(
+      'astra.monitoring.v1:odyssey',
+      JSON.stringify({
+        version: 1,
+        sessions: [
+          {
+            id: 'demo-session',
+            subjectId: 'elena',
+            subjectLabel: 'Elena Torres',
+            mode: 'demo',
+            context: {
+              activity: 'eva',
+              phase: 'after',
+              location: 'Cabina',
+              equipment: 'Traje de prueba 01',
+            },
+            attempts: [
+              {
+                id: 'capture-1',
+                receivedAt: at,
+                measurements: [
+                  {
+                    id: 'reading-1',
+                    indicator: 'heartRate',
+                    value: 72,
+                    unit: 'lpm',
+                    time: { kind: 'instant', at },
+                    subject: { kind: 'individual', id: 'elena' },
+                    source: { kind: 'synthetic', id: 'Demo asistida' },
+                    method: 'simulated',
+                    quality: 'available',
+                  },
+                ],
+              },
+            ],
+            note: 'Verificar colocación del sensor.',
+            savedAt: at,
+          },
+        ],
+      }),
+    );
+  });
+  await page.goto('/mission/crew/#crew-history');
   const activity = page.getByRole('region', { name: 'Actividad guardada' });
-  await expect(activity).toContainText('2 capturas');
-  await activity.getByRole('button', { name: 'Sesión de monitoreo' }).click();
-  await expect(page).toHaveURL(/monitoring#session-/);
-  await expect(page.locator('details[id^="session-"][open]')).toContainText('Traje de prueba 01');
-});
-test('la demo identifica la API sin configurar antes de iniciar', async ({ page }) => {
-  await page.goto('/mission/monitoring');
-  await expect(page.getByRole('option', { name: 'API · sin configurar' })).toBeDisabled();
-  await expect(page.getByLabel('Origen de las lecturas')).toHaveValue('demo');
-  await expect(page.getByRole('button', { name: 'Capturar lectura', exact: true })).toHaveCount(0);
+  await activity.getByText(/Sesión de monitoreo · Sintético/).click();
+  await expect(activity).toContainText('Traje de prueba 01');
+  await expect(activity).toContainText('Verificar colocación del sensor');
+  await expect(activity).toContainText('Frecuencia cardíaca: 72 lpm');
+  await expect(activity).toContainText('muestra reading-1');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });

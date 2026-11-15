@@ -15,7 +15,7 @@ export default defineConfig({
   },
   webServer: {
     command: `npm run start -- --port ${port}`,
-    url: `http://127.0.0.1:${port}/mission/overview`,
+    url: `http://127.0.0.1:${port}/mission/crew`,
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
   },

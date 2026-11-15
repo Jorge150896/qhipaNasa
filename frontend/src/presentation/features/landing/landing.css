@@ -2,8 +2,8 @@
   --qhipa-orange: var(--brand-orange);
   --qhipa-purple: var(--brand-purple);
   --qhipa-dark: var(--brand-charcoal);
-  --qhipa-light: var(--brand-light);
-  --qhipa-yellow: #ffe6a7;
+  --qhipa-light: var(--text);
+  --qhipa-yellow: var(--accent);
   --qhipa-pointer-x: 0px;
   --qhipa-pointer-y: 0px;
   position: relative;
@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   overflow: clip;
-  background: var(--qhipa-dark);
+  background: var(--bg);
   color: var(--qhipa-light);
 }
 .qhipa-landing button {
@@ -30,7 +30,7 @@
   left: 20px;
   z-index: 10;
   color: var(--qhipa-dark);
-  background: var(--qhipa-yellow);
+  background: var(--primary-fill);
   padding: 12px;
 }
 .qhipa-skip:focus {
@@ -109,7 +109,7 @@
   border: 1px solid #fb560750;
   background: #fb560712;
   border-radius: 17px;
-  color: #ff965b;
+  color: var(--accent);
   transition: transform 300ms ease;
 }
 .qhipa-wordmark {
@@ -119,7 +119,7 @@
   line-height: 1.25;
 }
 .qhipa-wordmark strong {
-  color: #ff9f6b;
+  color: var(--accent);
 }
 .qhipa-wordmark small {
   display: block;
@@ -127,7 +127,7 @@
   font-size: 7px;
   font-weight: 400;
   letter-spacing: 2.5px;
-  color: #c9b8dd;
+  color: var(--muted);
 }
 .qhipa-nav {
   display: flex;
@@ -140,7 +140,7 @@
   gap: 10px;
   padding: 10px 0;
   border: 0;
-  color: #e9ecefba;
+  color: var(--muted);
   background: transparent;
   font-size: 12px;
   transition: color 200ms ease;
@@ -167,7 +167,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #d3b2f5;
+  color: var(--purple-ink);
   font-size: 9px;
   letter-spacing: 2px;
   line-height: 1.6;
@@ -191,10 +191,10 @@
 }
 .qhipa-hero h1 em {
   font-style: normal;
-  color: #ff985e;
+  color: var(--accent);
 }
 .qhipa-description {
-  color: #d0bedf;
+  color: var(--muted);
   font-size: 15px;
   line-height: 1.9;
   max-width: 425px;
@@ -217,7 +217,7 @@
   padding: 18px 24px;
   border: 1px solid var(--qhipa-orange);
   border-radius: 999px;
-  background: var(--qhipa-orange);
+  background: var(--primary-fill);
   color: var(--qhipa-dark);
   box-shadow:
     0 5px 22px #fb56071c,
@@ -254,24 +254,24 @@
   border-radius: 999px;
   padding: 12px 18px;
   background: var(--glass);
-  color: #e9ecefc9;
+  color: var(--muted);
   font-size: 12px !important;
 }
 .qhipa-secondary-cta:hover {
-  color: #ffca9b;
+  color: var(--accent);
 }
 .qhipa-mission-note {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-top: 44px;
-  color: #b5a1ca;
+  color: var(--muted);
   font-size: 10px;
   line-height: 1.9;
 }
 .qhipa-mission-note strong {
   font-weight: 400;
-  color: #dfcfea;
+  color: var(--muted);
 }
 .qhipa-note-line {
   width: 26px;
@@ -324,7 +324,7 @@
 }
 .qhipa-spark {
   position: absolute;
-  color: #ffe6a7;
+  color: var(--accent);
   text-shadow: 0 0 18px #fb5607a1;
   font-size: 25px;
   animation: qhipa-sparkle 5.5s ease-in-out infinite;
@@ -353,7 +353,7 @@
   position: absolute;
   bottom: -2%;
   font-size: 9px;
-  color: #c8b0d6;
+  color: var(--muted);
   letter-spacing: 0.5px;
 }
 .qhipa-flight-caption span {
@@ -371,13 +371,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  color: #b6a2c6;
+  color: var(--muted);
   font-size: 8px;
   letter-spacing: 1px;
 }
 .qhipa-footer-divider {
   margin: 0 10px;
-  color: #fb5607;
+  color: var(--accent);
 }
 .qhipa-footer > div {
   display: flex;
@@ -387,13 +387,13 @@
 .qhipa-demo-label {
   font-size: 9px;
   letter-spacing: 0;
-  color: #b7a7c8;
+  color: var(--muted);
 }
 .qhipa-motion-toggle {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #e9ecefbd;
+  color: var(--muted);
   font-size: 10px !important;
   background: transparent;
   border: 1px solid #ceb0e430;

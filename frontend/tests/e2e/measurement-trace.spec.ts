@@ -25,6 +25,10 @@ test('procedencia consultable por muestra, persona, ausencia y recarga en móvil
   await page.getByRole('button', { name: /Pérdida de señal/ }).click();
   await page
     .getByRole('navigation', { name: 'Navegación principal' })
+    .getByRole('button', { name: 'Tripulación', exact: true })
+    .click();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
     .getByRole('button', { name: 'Historial', exact: true })
     .click();
   await page.getByRole('button', { name: 'Elena Torres Comandante', exact: true }).click();
@@ -36,6 +40,10 @@ test('procedencia consultable por muestra, persona, ausencia y recarga en móvil
   await page.setViewportSize({ width: 390, height: 1000 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.reload();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await panel.getByText('Ver origen', { exact: true }).first().click();
   await expect(row).toContainText('Simulación determinista');
 });

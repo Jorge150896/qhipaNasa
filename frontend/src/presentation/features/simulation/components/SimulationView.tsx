@@ -6,8 +6,10 @@ export function SimulationView({
   selected,
   onSelect,
   onOpenResult,
+  hasSignal,
 }: {
   selected: ScenarioKey;
+  hasSignal: boolean;
   onOpenResult(): void;
   onSelect(id: ScenarioKey): void;
 }) {
@@ -45,14 +47,10 @@ export function SimulationView({
           <Icon name="sliders" />
           <h3>Resultado del escenario</h3>
           <button type="button" className="button secondary" onClick={onOpenResult}>
-            {selected === 'sensor-gap'
-              ? 'Ver historial de SpO₂'
-              : selected === 'sleep-change'
-                ? 'Ver observaciones'
-                : 'Abrir Mi estado'}
+            {hasSignal ? 'Ver historial de SpO₂' : 'Abrir Tripulación'}
           </button>
         </div>
-        <p className="sub">Cambiar de escenario conserva tus chequeos y revisiones locales.</p>
+        <p className="sub">Cambiar de escenario conserva tus registros locales.</p>
       </Panel>
     </>
   );

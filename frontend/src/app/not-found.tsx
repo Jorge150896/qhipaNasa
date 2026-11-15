@@ -5,7 +5,7 @@ export default function NotFound() {
       <span className="eyebrow">ASTRA / 404</span>
       <h1>Fuera de la ruta de misión.</h1>
       <p>Esta sección no existe.</p>
-      <Link className="button primary" href="/mission/overview">
+      <Link className="button primary" href="/mission/crew">
         Volver al centro de misión
       </Link>
     </main>

@@ -1,11 +1,11 @@
 'use client';
 import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useMemo, useState, useTransition } from 'react';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import { destinationIds } from '@/domain/explorer/models';
 import { createSpaceExplorerDependencies } from '@/di/createSpaceExplorerDependencies.client';
 import { TumiLoader } from '../../shared/loading/TumiLoader';
-import { missionRoute } from '@/presentation/shared/missionRoutes';
+import { earthCentersRoute, missionRoute } from '@/presentation/shared/missionRoutes';
 import { MissionShell } from '../mission/components/MissionShell';
 import { useSpaceExplorerViewModel } from './useSpaceExplorerViewModel';
 import { SpaceExplorerView } from './components/SpaceExplorerView';
@@ -30,8 +30,9 @@ const SpaceMapScene = dynamic(() => import('./components/SpaceMapScene'), {
 export function SpaceExplorerScreen() {
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
-  const panel = tab === 'earth' || tab === 'launches' || tab === 'mars' ? tab : 'network';
-  const showsEarth = panel === 'earth' || panel === 'launches';
+  const panel =
+    tab === 'earth' || tab === 'launches' ? 'earth' : tab === 'mars' ? 'mars' : 'network';
+  const showsEarth = panel === 'earth';
   const destination = showsEarth
     ? 'earth'
     : panel === 'mars'
@@ -39,6 +40,13 @@ export function SpaceExplorerScreen() {
       : (destinationIds.find((id) => id === searchParams.get('destination')) ?? 'ship');
   const launchSite = searchParams.get('site') ?? undefined;
   const router = useRouter();
+  useEffect(() => {
+    if (tab !== 'launches') return;
+    const canonical = new URLSearchParams(searchParams.toString());
+    canonical.set('destination', 'earth');
+    canonical.set('tab', 'earth');
+    router.replace(`/explore?${canonical}`, { scroll: false });
+  }, [router, searchParams, tab]);
   const [navigationPending, startNavigation] = useTransition();
   const navigateTo = (path: string) => startNavigation(() => router.push(path));
   const [visibleCard, setVisibleCard] = useState<DestinationKey | null>(null);
@@ -49,6 +57,7 @@ export function SpaceExplorerScreen() {
     if (panel === 'mars' && id === 'mars') return;
     router.replace(`/explore?destination=${id}`, { scroll: false });
   };
+  const openEarthCenters = () => router.push(earthCentersRoute, { scroll: false });
   function selectPanel(next: ExplorerPanel) {
     if (next === panel) return;
     setVisibleCard(null);
@@ -57,7 +66,9 @@ export function SpaceExplorerScreen() {
         ? panel === 'mars'
           ? '/explore'
           : `/explore?destination=${destination}`
-        : `/explore?destination=${next === 'mars' ? 'mars' : 'earth'}&tab=${next}`;
+        : next === 'mars'
+          ? '/explore?destination=mars&tab=mars'
+          : earthCentersRoute;
     router.push(path, { scroll: false });
   }
   return (
@@ -71,17 +82,11 @@ export function SpaceExplorerScreen() {
       <div id="explorer-panel" role="tabpanel" aria-labelledby={`explorer-tab-${panel}`}>
         {showsEarth ? (
           <LaunchSitesScreen
-            overview={panel === 'earth'}
             selectedId={launchSite}
             onSelect={(id) =>
-              router.push(
-                `/explore?destination=earth&tab=${panel}&site=${encodeURIComponent(id)}`,
-                { scroll: false },
-              )
+              router.push(`${earthCentersRoute}&site=${encodeURIComponent(id)}`, { scroll: false })
             }
-            onCloseVideo={() =>
-              router.push(`/explore?destination=earth&tab=${panel}`, { scroll: false })
-            }
+            onCloseVideo={() => router.push(earthCentersRoute, { scroll: false })}
           />
         ) : model.loading || navigationPending ? (
           <TumiLoader
@@ -102,12 +107,7 @@ export function SpaceExplorerScreen() {
             onSelect={select}
             onOpenCrew={(id) => navigateTo(missionRoute(id, 'crew'))}
             onRefresh={model.refresh}
-            onOpenLaunchSites={() =>
-              router.push('/explore?destination=earth&tab=launches', { scroll: false })
-            }
-            onOpenEarthOverview={() =>
-              router.push('/explore?destination=earth&tab=earth', { scroll: false })
-            }
+            onOpenEarthCenters={openEarthCenters}
             scene={
               <SpaceMapScene
                 key={panel}
@@ -117,9 +117,7 @@ export function SpaceExplorerScreen() {
                 onSelect={select}
                 visibleCard={visibleCard}
                 onDismissCard={() => setVisibleCard(null)}
-                onOpenEarthOverview={() =>
-                  router.push('/explore?destination=earth&tab=earth', { scroll: false })
-                }
+                onOpenEarthCenters={openEarthCenters}
               />
             }
           />

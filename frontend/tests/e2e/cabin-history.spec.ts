@@ -1,9 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-test('el historial de cabina sincroniza sus señales y el chequeo conserva el tripulante', async ({
-  page,
-}) => {
-  await page.goto('/mission/habitat');
+test('el historial de cabina sincroniza sus señales desde Tripulación', async ({ page }) => {
+  await page.goto('/mission/crew#crew-module');
   const history = page.locator('.cabin-history').filter({ hasText: 'Ver historial de la ISS' });
   await history.getByText('Ver historial de la ISS', { exact: true }).click();
   const slider = history.getByRole('slider');
@@ -16,21 +14,14 @@ test('el historial de cabina sincroniza sus señales y el chequeo conserva el tr
   await history.getByRole('button', { name: 'Pausar' }).click();
   const paused = await slider.inputValue();
   await expect(slider).toHaveValue(paused);
-
-  const simulation = page.getByRole('region', { name: 'Salud en el entorno de misión' });
-  await simulation.getByLabel('Tripulante').selectOption('mateo');
-  await expect(simulation).toContainText('Ejercicio · Módulo de ejercicio');
-  await expect(simulation).toContainText('108 lpm');
-  await simulation.getByRole('button', { name: 'Registrar cómo me siento' }).click();
-  await expect(page).toHaveURL(/\/mission\/journal$/);
-  await expect(page.getByRole('heading', { name: 'Chequeo de Mateo Silva' })).toBeVisible();
 });
 
 test('móvil permite recorrer el historial y abrir la referencia exterior de Marte', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/mission/habitat');
+  await page.goto('/mission/habitat#occupied-module');
+  await expect(page).toHaveURL(/\/mission\/crew\/?#crew-module$/);
   await page.getByText('Ver historial de la ISS', { exact: true }).click();
   const slider = page.getByRole('slider', { name: /Hora del historial/ });
   await slider.press('End');

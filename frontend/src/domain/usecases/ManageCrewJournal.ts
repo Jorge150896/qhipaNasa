@@ -1,6 +1,8 @@
 import { CheckValidationError, type Clock, type DailyCheckInput } from '../mission/models';
 import type { CrewJournalRepository } from '../mission/ports';
 import { discomfortRegions, validDailyCheckContext } from '../mission/dailyCheckContext';
+import { healthSystemIds, reportedStates, visionActivityIds } from '../health/models';
+import { validDailyCheckAttachment } from '../mission/dailyCheckAttachment';
 export class LoadCrewJournal {
   constructor(private readonly repository: CrewJournalRepository) {}
   execute() {
@@ -16,9 +18,12 @@ export class RecordDailyCheck {
     if (!input.crewId.trim()) throw new CheckValidationError('Selecciona un tripulante.');
     if (!Number.isFinite(input.sleepHours) || input.sleepHours < 0 || input.sleepHours > 24)
       throw new CheckValidationError('Las horas de sueño deben estar entre 0 y 24.');
-    if (!Number.isInteger(input.fatigue) || input.fatigue < 1 || input.fatigue > 5)
+    if (
+      input.fatigue !== undefined &&
+      (!Number.isInteger(input.fatigue) || input.fatigue < 1 || input.fatigue > 5)
+    )
       throw new CheckValidationError('Selecciona un nivel de fatiga entre 1 y 5.');
-    if (!['good', 'neutral', 'low'].includes(input.mood))
+    if (input.mood !== undefined && !['good', 'neutral', 'low'].includes(input.mood))
       throw new CheckValidationError('Selecciona un estado de ánimo válido.');
     if (input.note.length > 400)
       throw new CheckValidationError('La nota admite hasta 400 caracteres.');
@@ -28,6 +33,19 @@ export class RecordDailyCheck {
       );
     if (input.discomfortRegion !== undefined && !discomfortRegions.includes(input.discomfortRegion))
       throw new CheckValidationError('Selecciona una región válida o déjala sin informar.');
+    if (input.exerciseDone !== undefined && typeof input.exerciseDone !== 'boolean')
+      throw new CheckValidationError('Revisa la respuesta sobre ejercicio.');
+    const report = input.healthReport;
+    if (
+      report &&
+      (!healthSystemIds.includes(report.systemId) ||
+        !reportedStates.includes(report.reportedState) ||
+        (report.visionActivityId !== undefined &&
+          (report.systemId !== 'vision' || !visionActivityIds.includes(report.visionActivityId))))
+    )
+      throw new CheckValidationError('Revisa la respuesta del área de salud.');
+    if (input.attachment && !validDailyCheckAttachment(input.attachment))
+      throw new CheckValidationError('Revisa los datos adjuntos.');
     const recordedAt = this.clock.now().toISOString();
     return this.repository.saveCheck({
       ...input,

@@ -175,7 +175,7 @@
 }
 
 .sample[aria-pressed='true'] .phase {
-  color: #ffc19b;
+  color: var(--accent);
 }
 
 .sampleDetail {
@@ -189,7 +189,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #ffc19b;
+  color: var(--accent);
   font-size: 12px;
   font-weight: 700;
 }

@@ -1,16 +1,11 @@
-import type { DailyCheckContext, DiscomfortRegion } from '@/domain/mission/dailyCheckContext';
+import type { DailyCheckAttachment } from '@/domain/mission/dailyCheckAttachment';
+import type {
+  DailyCheckContext,
+  DailyCheckHealthReport,
+  DiscomfortRegion,
+} from '@/domain/mission/dailyCheckContext';
 
-export const sections = [
-  'overview',
-  'monitoring',
-  'crew',
-  'habitat',
-  'history',
-  'journal',
-  'observations',
-  'simulation',
-  'sources',
-] as const;
+export const sections = ['crew', 'journal', 'simulation', 'sources'] as const;
 export type MissionSection = (typeof sections)[number];
 export type SensorKey = 'heartRate' | 'temperature' | 'oxygen' | 'respiration';
 export type ScenarioKey = 'baseline' | 'sleep-change' | 'sensor-gap';
@@ -96,17 +91,24 @@ export interface MissionData {
     note: string;
     context?: DailyCheckContext;
     discomfortRegion?: DiscomfortRegion;
+    attachment?: DailyCheckAttachment;
+    exerciseDone?: boolean;
+    healthReport?: DailyCheckHealthReport;
   }[];
   todayCheck: boolean;
+  checkAttachment?: DailyCheckAttachment;
   dailyCheckDraft?: CheckFormValues;
   analysis: { summary: string; recommendation: string; evidence: string[] };
 }
 export interface CheckFormValues {
+  attachment?: DailyCheckAttachment;
+  exerciseDone?: boolean;
+  healthReport?: DailyCheckHealthReport;
   context?: DailyCheckContext;
   discomfortRegion?: DiscomfortRegion;
   sleep: string;
   fatigue: string;
-  mood: 'good' | 'neutral' | 'low';
+  mood?: 'good' | 'neutral' | 'low';
   note: string;
 }
 export interface MissionActions {

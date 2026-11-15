@@ -10,28 +10,20 @@ import {
   type DailyMoment,
   type DiscomfortRegion,
 } from '@/domain/mission/dailyCheckContext';
+import { reportedStates, type HealthSystemId, type VisionActivityId } from '@/domain/health/models';
+import { healthSystems, reportedStateLabels } from '../crew-health/constants';
+import { visionActivities } from '../crew-health/visionActivities';
+import { mapDailyCheckAttachment } from './mapDailyCheckAttachment';
 import type { IconName } from '@/ui/Icon';
-import type { CheckFormValues, MissionData, SensorKey } from '../mission/types';
+import type { CheckFormValues, MissionData } from '../mission/types';
 import type { DailyCheckScreenProps } from './types';
 
 const activities = {
-  cabin: { label: 'Rutina en cabina', icon: 'orbit', sensors: ['temperature', 'respiration'] },
-  exercise: {
-    label: 'Ejercicio',
-    icon: 'activity',
-    sensors: ['heartRate', 'respiration', 'temperature'],
-  },
-  surface: {
-    label: 'Recorrido de superficie',
-    icon: 'clock',
-    sensors: ['heartRate', 'temperature', 'oxygen'],
-  },
-  eva: {
-    label: 'Caminata espacial EVA',
-    icon: 'rocket',
-    sensors: ['heartRate', 'oxygen', 'respiration'],
-  },
-} satisfies Record<DailyActivity, { label: string; icon: IconName; sensors: SensorKey[] }>;
+  cabin: { label: 'Rutina en cabina', icon: 'orbit' },
+  exercise: { label: 'Ejercicio', icon: 'activity' },
+  surface: { label: 'Recorrido de superficie', icon: 'clock' },
+  eva: { label: 'Caminata espacial EVA', icon: 'rocket' },
+} satisfies Record<DailyActivity, { label: string; icon: IconName }>;
 
 const moments = { before: 'Antes', after: 'Después', incident: 'Incidencia durante la actividad' };
 const durationLabels = {
@@ -58,7 +50,27 @@ const fields = {
   handDiscomfort: { label: 'Molestias en manos', unit: '/ 5' },
 };
 const moods = { good: 'Bien', neutral: 'Regular', low: 'Bajo' };
-const empty: CheckFormValues = { sleep: '', fatigue: '2', mood: 'neutral', note: '' };
+const tumiReplies = {
+  good: '¡Qué gusto! ¿Hubo algo que te hizo sonreír hoy?',
+  neutral: 'Gracias por contármelo. Puedes dejar una nota si quieres recordar algo de hoy.',
+  low: 'Gracias por decírmelo. Podemos ir con calma. Si quieres, cuéntame qué fue difícil.',
+};
+const empty: CheckFormValues = { sleep: '', fatigue: '', note: '' };
+const exerciseLabel = (value?: boolean) =>
+  value === undefined ? 'Sin responder' : value ? 'Sí' : 'No';
+
+function describeHealthReport(report: CheckFormValues['healthReport']) {
+  if (!report) return [];
+  const system = healthSystems.find(({ id }) => report.systemId === id);
+  const visual = visionActivities.find(({ id }) => report.visionActivityId === id);
+  return [
+    {
+      label: system?.shortLabel ?? 'Área de salud',
+      value: reportedStateLabels[report.reportedState],
+    },
+    ...(visual ? [{ label: 'Actividad visual', value: visual.label }] : []),
+  ];
+}
 
 function fieldLabel(field: ActivityField, moment: DailyMoment) {
   return field === 'durationMinutes' ? durationLabels[moment] : fields[field].label;
@@ -98,6 +110,10 @@ export function useDailyCheckViewModel(data: MissionData, onSave: DailyCheckScre
   const [region, setRegion] = useState<DiscomfortRegion | ''>(
     data.dailyCheckDraft?.discomfortRegion ?? '',
   );
+  const [healthArea, setHealthArea] = useState<HealthSystemId | ''>(
+    data.dailyCheckDraft?.healthReport?.systemId ?? '',
+  );
+  const [attachment] = useState(data.dailyCheckDraft?.attachment ?? data.checkAttachment);
   const [failed, setFailed] = useState(false);
   const pending = useRef(false);
 
@@ -128,7 +144,8 @@ export function useDailyCheckViewModel(data: MissionData, onSave: DailyCheckScre
         }
       : undefined;
 
-  const sensorIds: readonly SensorKey[] = activity ? activities[activity].sensors : [];
+  const healthReport =
+    values.healthReport?.systemId === healthArea ? values.healthReport : undefined;
 
   return {
     step,
@@ -141,15 +158,56 @@ export function useDailyCheckViewModel(data: MissionData, onSave: DailyCheckScre
     moments: dailyMoments.map((id) => ({ id, label: moments[id] })),
     regions: discomfortRegions.map((id) => ({ id, label: regions[id] })),
     moods,
+    tumiReply: values.mood
+      ? tumiReplies[values.mood]
+      : 'Estoy aquí para escucharte. ¿Cómo te sientes hoy?',
     measurementsForm,
-    telemetry: data.selected.metrics.filter(({ id }) => sensorIds.includes(id)),
+    attachment: mapDailyCheckAttachment(attachment),
+    healthArea,
+    healthAreas: healthSystems.map(({ id, shortLabel }) => ({ id, label: shortLabel })),
+    healthReport,
+    visionActivities,
+    reportedStateLabels,
+    reportedStates,
+    selectHealthArea(id: HealthSystemId | '') {
+      if (id !== healthArea) {
+        setHealthArea(id);
+        setValues((current) => ({ ...current, healthReport: undefined }));
+      }
+    },
+    selectHealthState(state: NonNullable<CheckFormValues['healthReport']>['reportedState'] | '') {
+      setValues((current) => ({
+        ...current,
+        healthReport:
+          state && healthArea
+            ? {
+                systemId: healthArea,
+                reportedState: state,
+                visionActivityId:
+                  state === 'change' ? current.healthReport?.visionActivityId : undefined,
+              }
+            : undefined,
+      }));
+    },
+    selectVisionActivity(id?: VisionActivityId) {
+      setValues((current) =>
+        current.healthReport?.systemId === 'vision'
+          ? {
+              ...current,
+              healthReport: { ...current.healthReport, visionActivityId: id },
+            }
+          : current,
+      );
+    },
     review: context
       ? [
           { label: 'Actividad', value: activities[context.activity].label },
           { label: 'Momento', value: moments[context.moment] },
           { label: 'Sueño', value: `${values.sleep} h` },
-          { label: 'Fatiga', value: `${values.fatigue} / 5` },
-          { label: 'Ánimo', value: moods[values.mood] },
+          { label: 'Fatiga', value: values.fatigue ? `${values.fatigue} / 5` : 'Sin responder' },
+          { label: 'Ánimo', value: values.mood ? moods[values.mood] : 'Sin responder' },
+          { label: '¿Hiciste ejercicio hoy?', value: exerciseLabel(values.exerciseDone) },
+          ...describeHealthReport(healthReport),
           { label: 'Región con molestias', value: region ? regions[region] : 'Sin informar' },
           ...measurementsForm.map(({ label, value, unit }) => ({
             label,
@@ -163,7 +221,10 @@ export function useDailyCheckViewModel(data: MissionData, onSave: DailyCheckScre
       contextLabel: check.context
         ? `${activities[check.context.activity].label} · ${moments[check.context.moment]}`
         : undefined,
+      savedAttachment: mapDailyCheckAttachment(check.attachment),
       details: [
+        { label: 'Ejercicio realizado', value: exerciseLabel(check.exerciseDone) },
+        ...describeHealthReport(check.healthReport),
         ...(check.discomfortRegion
           ? [{ label: 'Región con molestias', value: regions[check.discomfortRegion] }]
           : []),
@@ -199,7 +260,16 @@ export function useDailyCheckViewModel(data: MissionData, onSave: DailyCheckScre
       pending.current = true;
       setFailed(false);
       try {
-        if (await onSave({ ...values, context, discomfortRegion: region || undefined })) setStep(3);
+        if (
+          await onSave({
+            ...values,
+            context,
+            healthReport,
+            attachment,
+            discomfortRegion: region || undefined,
+          })
+        )
+          setStep(3);
         else setFailed(true);
       } catch {
         setFailed(true);

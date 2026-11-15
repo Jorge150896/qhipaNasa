@@ -1,3 +1,4 @@
+import type { HabitatId } from '@/domain/explorer/models';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { CrewJournal, MissionSnapshot } from '@/domain/mission/models';
 import { CheckValidationError } from '@/domain/mission/models';
@@ -10,6 +11,7 @@ import type {
 import { mapMissionPresentation } from './mapMissionPresentation';
 import type { CheckFormValues, MissionActions, ScenarioKey, SensorKey } from './types';
 interface Dependencies {
+  habitatId?: HabitatId;
   initialScenario?: ScenarioKey;
   loadMission: LoadMission;
   loadJournal: LoadCrewJournal;
@@ -60,8 +62,18 @@ export function useMission(dependencies: Dependencies) {
   }, [dependencies, scenario, revision]);
   const data = useMemo(
     () =>
-      snapshot ? mapMissionPresentation(snapshot, journal, crewId, metricId, zoneId, today) : null,
-    [snapshot, journal, crewId, metricId, zoneId, today],
+      snapshot
+        ? mapMissionPresentation(
+            snapshot,
+            journal,
+            crewId,
+            metricId,
+            zoneId,
+            today,
+            dependencies.habitatId,
+          )
+        : null,
+    [snapshot, journal, crewId, metricId, zoneId, today, dependencies.habitatId],
   );
   const actions: MissionActions = {
     selectCrew(id) {
@@ -92,11 +104,14 @@ export function useMission(dependencies: Dependencies) {
         const next = await dependencies.recordCheck.execute({
           crewId: data?.selected.id ?? crewId,
           sleepHours: values.sleep.trim() ? Number(values.sleep) : NaN,
-          fatigue: Number(values.fatigue),
+          fatigue: values.fatigue.trim() ? Number(values.fatigue) : undefined,
           mood: values.mood,
           note: values.note,
           context: values.context,
           discomfortRegion: values.discomfortRegion,
+          exerciseDone: values.exerciseDone,
+          attachment: values.attachment,
+          healthReport: values.healthReport,
         });
         setJournal(next);
         setToday(new Date().toISOString().slice(0, 10));

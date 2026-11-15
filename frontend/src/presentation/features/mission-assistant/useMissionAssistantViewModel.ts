@@ -9,7 +9,11 @@ type Dictation = (callbacks: {
   onEnd(): void;
 }) => (() => void) | undefined;
 
-export function useMissionAssistantViewModel(data: MissionData | null, dictate: Dictation) {
+export function useMissionAssistantViewModel(
+  data: MissionData | null,
+  dictate: Dictation,
+  explorer = false,
+) {
   const [open, setOpen] = useState(false);
   const [context, setContext] = useState<AssistantMetricContext>();
   const [draft, setDraft] = useState('');
@@ -78,6 +82,7 @@ export function useMissionAssistantViewModel(data: MissionData | null, dictate: 
           previous.capturedAt === data.capturedAt
           ? previous
           : undefined,
+        explorer,
       );
       answer(trimmed, reply);
       if (discussedMetric) previousReading.current = discussedMetric;

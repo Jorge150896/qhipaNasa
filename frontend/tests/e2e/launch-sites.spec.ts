@@ -15,7 +15,7 @@ test('cada lugar abre su tarjeta y video con foco visible en móvil', async ({ p
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/explore?destination=earth&tab=launches');
-  const places = page.getByLabel('Sitios de lanzamiento y sedes NASA', { exact: true });
+  const places = page.getByRole('group', { name: 'Directorio de centros en Tierra' });
   const buttons = places.getByRole('button');
   await expect(buttons).toHaveCount(8);
   for (let index = 0; index < 8; index++) {
@@ -50,12 +50,12 @@ test('Tierra, pestaña, marcador, video, URL y regreso sin modificar registros',
   await expect(page.getByRole('status').filter({ hasText: 'guardado' })).toBeVisible();
   const journal = await page.evaluate(() => localStorage.getItem('astra.demo.journal.v1'));
   await page.goto('/explore?destination=earth');
-  await page.getByRole('button', { name: 'Explorar puntos de despegue ↗' }).click();
-  await expect(page.getByRole('tab', { name: 'Despegues de la Tierra' })).toHaveAttribute(
+  await page.getByRole('button', { name: 'Ver centros en Tierra' }).click();
+  await expect(page.getByRole('tab', { name: 'Centros en Tierra' })).toHaveAttribute(
     'aria-selected',
     'true',
   );
-  await expect(page.getByRole('heading', { name: 'Todo viaje empieza aquí.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Centros en Tierra' })).toBeVisible();
   await expect(page.locator('.launch-video iframe')).toHaveCount(0);
   await expect(page.locator('.launch-globe canvas')).toBeVisible();
   await page
@@ -65,7 +65,7 @@ test('Tierra, pestaña, marcador, video, URL y regreso sin modificar registros',
   await expect(page.getByRole('heading', { name: 'Artemis I', exact: true })).toBeVisible();
   await expect(page.locator('.launch-video iframe')).toHaveAttribute('src', /VUiEdqcLg-k/);
   await page
-    .getByLabel('Sitios de lanzamiento y sedes NASA', { exact: true })
+    .getByRole('group', { name: 'Directorio de centros en Tierra' })
     .getByRole('button', { name: /Kourou/ })
     .click();
   await expect(page.locator('.launch-video iframe')).toHaveCount(1);
@@ -131,7 +131,7 @@ test('móvil: selección por lista sin WebGL, recarga, URL inválida y teclado',
   );
   await expect(page.getByText(/El globo 3D no está disponible/)).toBeVisible();
   await page
-    .getByLabel('Sitios de lanzamiento y sedes NASA', { exact: true })
+    .getByRole('group', { name: 'Directorio de centros en Tierra' })
     .getByRole('button', { name: /Vandenberg/ })
     .click();
   await expect(page.getByRole('heading', { name: 'InSight', exact: true })).toBeVisible();
@@ -148,7 +148,7 @@ test('móvil: selección por lista sin WebGL, recarga, URL inválida y teclado',
   });
   await page.screenshot({ path: '../docs/qa/launch-sites-mobile.png', fullPage: true });
   await page
-    .getByLabel('Sitios de lanzamiento y sedes NASA', { exact: true })
+    .getByRole('group', { name: 'Directorio de centros en Tierra' })
     .getByRole('button', { name: /Centro Espacial Johnson/ })
     .click();
   await expect(
@@ -159,8 +159,8 @@ test('móvil: selección por lista sin WebGL, recarga, URL inválida y teclado',
     'title',
     /desde Centro Espacial Kennedy/,
   );
-  await page.getByRole('tab', { name: 'Despegues de la Tierra' }).focus();
-  await page.keyboard.press('ArrowLeft');
+  await page.getByRole('tab', { name: 'Centros en Tierra' }).focus();
+  await page.keyboard.press('Home');
   await expect(page.getByRole('tab', { name: 'Mapa espacial', exact: true })).toHaveAttribute(
     'aria-selected',
     'true',
@@ -173,7 +173,8 @@ test('sedes NASA: nombres completos, agrupación accesible, tarjeta y lugar real
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/explore?destination=earth&tab=launches&site=johnson');
-  const list = page.getByLabel('Sitios de lanzamiento y sedes NASA', { exact: true });
+  await expect(page).toHaveURL(/tab=earth&site=johnson$/);
+  const list = page.getByRole('group', { name: 'Directorio de centros en Tierra' });
   await expect(list.getByRole('button')).toHaveCount(8);
   await expect(
     page.getByRole('article', { name: 'Centro Espacial Johnson (NASA)', exact: true }),
@@ -233,7 +234,7 @@ test('textura fallida conserva ubicación y selección; acercamiento respeta pau
     timeout: 15_000,
   });
   await page
-    .getByLabel('Sitios de lanzamiento y sedes NASA', { exact: true })
+    .getByRole('group', { name: 'Directorio de centros en Tierra' })
     .getByRole('button', { name: /Kennedy/ })
     .click();
   await expect(page.getByRole('heading', { name: 'Artemis I', exact: true })).toBeVisible();
@@ -246,24 +247,27 @@ test('textura fallida conserva ubicación y selección; acercamiento respeta pau
   await expect(page.locator('.fleet-scene canvas')).toBeVisible();
 });
 
-test('opción Todo de la Tierra: directorio completo, videos, acceso desde el mapa y móvil', async ({
+test('opción Centros en Tierra: directorio completo, videos, acceso desde el mapa y móvil', async ({
   page,
 }) => {
   await page.goto('/explore?destination=earth');
   await expect(
-    page.getByRole('button', { name: 'Ver todo de la Tierra', exact: true }),
+    page.getByRole('button', { name: 'Ver centros en Tierra', exact: true }),
   ).toBeVisible();
   await page
     .getByLabel('Seleccionar destino', { exact: true })
     .getByRole('button', { name: /Tierra/ })
     .click();
-  await page.getByRole('button', { name: 'Ver todo de la Tierra ↗', exact: true }).click();
+  await page.getByRole('button', { name: 'Ver centros en Tierra ↗', exact: true }).click();
   await expect(page).toHaveURL(/tab=earth/);
-  await expect(page.getByRole('tab', { name: 'Todo de la Tierra', exact: true })).toHaveAttribute(
+  await expect(page.getByRole('tab', { name: 'Centros en Tierra', exact: true })).toHaveAttribute(
     'aria-selected',
     'true',
   );
-  await expect(page.getByRole('heading', { name: 'Todo de la Tierra', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Centros en Tierra', exact: true })).toBeVisible();
+  await expect(
+    page.getByRole('tab', { name: /Despegues de la Tierra|Todo de la Tierra/ }),
+  ).toHaveCount(0);
   await expect(page.locator('.earth-place-card')).toHaveCount(8);
   await expect(page.locator('.earth-video-card')).toHaveCount(3);
   await expect(page.locator('.launch-video iframe')).toHaveCount(0);
@@ -272,7 +276,7 @@ test('opción Todo de la Tierra: directorio completo, videos, acceso desde el ma
   });
   await page.screenshot({ path: '../docs/qa/earth-overview-desktop.png', fullPage: true });
   await page
-    .getByRole('region', { name: 'Sedes principales de NASA', exact: true })
+    .getByRole('region', { name: 'Centros de operaciones y apoyo', exact: true })
     .getByRole('button', { name: /Centro Espacial Johnson/ })
     .click();
   await expect(page).toHaveURL(/tab=earth&site=johnson/);
@@ -296,21 +300,21 @@ test('opción Todo de la Tierra: directorio completo, videos, acceso desde el ma
   await page.screenshot({ path: '../docs/qa/earth-overview-mobile.png', fullPage: true });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page
-    .getByRole('region', { name: 'Sedes principales de NASA', exact: true })
+    .getByRole('region', { name: 'Centros de operaciones y apoyo', exact: true })
     .getByRole('button', { name: /NASA Headquarters/ })
     .click();
   await expect(
     page.getByRole('article', { name: 'NASA Headquarters · Sede central', exact: true }),
   ).toBeVisible();
   await expect(page.locator('.launch-video iframe')).toHaveAttribute('title', /desde Vandenberg/);
-  await page.getByRole('tab', { name: 'Todo de la Tierra', exact: true }).focus();
+  await page.getByRole('tab', { name: 'Centros en Tierra', exact: true }).focus();
   await page.keyboard.press('Home');
   await expect(page.getByRole('tab', { name: 'Mapa espacial', exact: true })).toHaveAttribute(
     'aria-selected',
     'true',
   );
   await page.keyboard.press('End');
-  await expect(page.getByRole('tab', { name: 'Todo de la Tierra', exact: true })).toHaveAttribute(
+  await expect(page.getByRole('tab', { name: 'Centros en Tierra', exact: true })).toHaveAttribute(
     'aria-selected',
     'true',
   );

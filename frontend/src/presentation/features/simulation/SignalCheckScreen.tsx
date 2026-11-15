@@ -1,24 +1,23 @@
 import { useMemo, useState } from 'react';
-import { createMonitoringDependencies } from '@/di/createMonitoringDependencies.client';
+import { createSignalCheckDependencies } from '@/di/createSignalCheckDependencies.client';
 import type { MetricData } from '../mission/types';
 import { MissionSceneSlot } from '../../shared/mission/MissionSceneSlot';
 import { useSignalCheckViewModel } from './useSignalCheckViewModel';
 import { SignalCheckPanel } from './components/SignalCheckPanel';
+import './signal-check.css';
 
 export function SignalCheckScreen({
-  habitatId,
   personId,
   metric,
   onEvidence,
 }: {
-  habitatId: string;
   personId: string;
   metric: MetricData;
   onEvidence(id: MetricData['id']): void;
 }) {
-  const dependencies = useMemo(() => createMonitoringDependencies(habitatId), [habitatId]);
+  const dependencies = useMemo(() => createSignalCheckDependencies(), []);
   const model = useSignalCheckViewModel(
-    dependencies.capture.demo,
+    dependencies.capture,
     dependencies.nextId,
     personId,
     metric,

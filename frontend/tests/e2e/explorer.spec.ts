@@ -58,14 +58,14 @@ test('mapa 3D, destinos y navegación preservando diarios y contexto', async ({ 
   await expect(page.locator('.crew-picker')).toContainText('Ana Costa');
   await expect(page.locator('.crew-picker')).not.toContainText('Elena');
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
-  await nav.getByRole('button', { name: 'Entorno del hábitat', exact: true }).click();
-  const modules = page.getByRole('group', { name: 'Módulos del hábitat' });
+  await page.getByRole('button', { name: 'Base', exact: true }).click();
+  const modules = page.getByRole('group', { name: 'Módulos disponibles' });
   await modules.getByRole('button', { name: /ejercicio/i }).click();
   await expect(modules.getByRole('button', { name: /ejercicio/i })).toHaveAttribute(
     'aria-pressed',
     'true',
   );
-  await nav.getByRole('button', { name: 'Chequeo diario', exact: true }).click();
+  await nav.getByRole('button', { name: 'Monitoreo diario', exact: true }).click();
   await openDailyAssessment(page);
   await page.getByRole('spinbutton', { name: 'Horas de sueño', exact: true }).fill('6.8');
   await confirmDailyCheck(page);

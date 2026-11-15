@@ -90,7 +90,7 @@ export function SourcesView({ nasaHistoryHref }: { nasaHistoryHref: string }) {
           </article>
           <article>
             <span className="badge">Entrada manual</span>
-            <h3>Chequeo diario y autorregistros</h3>
+            <h3>Monitoreo diario y autorregistros</h3>
             <p>
               El usuario introduce observaciones y datos de demostración, como horas de sueño,
               fatiga o duración del ejercicio. Se guardan en este navegador.

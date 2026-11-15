@@ -3,6 +3,7 @@ import type { MetricData, ScenarioKey, ZoneData } from '../mission/types';
 export interface AssistantReply {
   text: string;
   target?: string;
+  destination?: 'sources';
 }
 
 export interface AssistantMessage {

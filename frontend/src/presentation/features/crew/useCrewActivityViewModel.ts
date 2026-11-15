@@ -3,12 +3,61 @@ import type { MonitoringSession } from '@/domain/monitoring/models';
 import type { LoadMonitoringJournal } from '@/domain/usecases/ManageMonitoringJournal';
 import type { CrewHealthTimelineRecord } from '../crew-health/types';
 import type { MissionData } from '../mission/types';
+import { metricLabels } from '../mission/constants';
 
 const date = new Intl.DateTimeFormat('es-PE', {
   dateStyle: 'medium',
   timeStyle: 'short',
   timeZone: 'UTC',
 });
+const formatAt = (value: string) => `${date.format(new Date(value))} UTC`;
+const activityLabels = {
+  cabin: 'Rutina en cabina',
+  exercise: 'Ejercicio',
+  surface: 'Recorrido de superficie',
+  eva: 'Caminata espacial',
+};
+const phaseLabels = { before: 'Antes', during: 'Durante', after: 'Después' };
+const qualityLabels = { available: 'Disponible', missing: 'Ausente', stale: 'Antigua' };
+
+function mapSession(session: MonitoringSession) {
+  const { context } = session;
+  return {
+    id: session.id,
+    at: session.savedAt,
+    title:
+      session.mode === 'api'
+        ? `Sesión de monitoreo · ${session.subjectLabel}`
+        : 'Sesión de monitoreo',
+    kind: 'monitoring' as const,
+    detail: `${session.mode === 'demo' ? 'Sintético' : 'API'} · ${session.attempts.length} capturas`,
+    context: [
+      session.subjectLabel,
+      activityLabels[context.activity],
+      phaseLabels[context.phase],
+      context.location,
+      context.equipment,
+    ].join(' · '),
+    note: session.note,
+    readings: session.attempts.map((attempt, index) => {
+      const samples = attempt.measurements.map((sample) => {
+        const value = sample.value?.toLocaleString('es-PE', { maximumFractionDigits: 2 }) ?? '—';
+        const observed = sample.time.kind === 'instant' ? formatAt(sample.time.at) : 'sin fecha';
+        const provenance = [
+          qualityLabels[sample.quality],
+          sample.source.id,
+          `muestra ${sample.id}`,
+          `observada ${observed}`,
+        ];
+        const label =
+          Object.entries(metricLabels).find(([id]) => id === sample.indicator)?.[1].label ??
+          sample.indicator;
+        return `${label}: ${value} ${sample.unit} (${provenance.join(' · ')})`;
+      });
+      return `Captura ${index + 1} · recibida ${formatAt(attempt.receivedAt)} · ${samples.join(' · ') || 'Sin muestras'}`;
+    }),
+  };
+}
 
 export function useCrewActivityViewModel(load: LoadMonitoringJournal, mission: MissionData) {
   const [result, setResult] = useState<{
@@ -47,24 +96,25 @@ export function useCrewActivityViewModel(load: LoadMonitoringJournal, mission: M
           .map((check) => ({
             id: check.id,
             at: check.recordedAt,
-            title: 'Chequeo diario',
+            title: 'Monitoreo diario',
             kind: 'check' as const,
-            detail: check.mood,
+            detail: [
+              `Ánimo: ${check.mood.toLowerCase()}`,
+              check.exerciseDone === undefined
+                ? 'Ejercicio sin responder'
+                : check.exerciseDone
+                  ? 'Hizo ejercicio'
+                  : 'Indicó que no hizo ejercicio',
+            ].join(' · '),
           })),
         ...(current?.sessions ?? [])
-          .filter((session) => session.mode === 'demo' && session.subjectId === mission.selected.id)
-          .map((session) => ({
-            id: session.id,
-            at: session.savedAt,
-            title: 'Sesión de monitoreo',
-            kind: 'monitoring' as const,
-            detail: `${session.attempts.length} capturas`,
-          })),
+          .filter((session) => session.mode === 'api' || session.subjectId === mission.selected.id)
+          .map(mapSession),
       ]
         .sort((a, b) => Date.parse(b.at) - Date.parse(a.at))
         .map((entry) => ({
           ...entry,
-          date: `${date.format(new Date(entry.at))} UTC`,
+          date: formatAt(entry.at),
         }));
     },
   };

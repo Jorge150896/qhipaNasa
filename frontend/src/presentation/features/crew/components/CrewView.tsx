@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Icon } from '@/ui/Icon';
 import { SensorTabs } from '../../../shared/mission/SensorTabs';
 import { TrendChart } from '../../../shared/mission/TrendChart';
+import { MeasurementTracePanel } from '../../history/components/MeasurementTracePanel';
 import { MissionExplorerPanel } from '../../../shared/mission/MissionExplorerPanel';
 import type { CrewSection, CrewViewProps } from '../types';
 
@@ -11,6 +12,7 @@ export function CrewView({
   onChangeSection,
   onOpenHabitat,
   avatarPanel,
+  environmentReferences,
   healthPanel,
   timelinePanel,
   onSelectTimelineSample,
@@ -21,11 +23,13 @@ export function CrewView({
   onToggleSynchronization,
   onSelectTelemetrySensor,
   onSelectBodyRegion,
-  onOpenHistory,
+  nasaHistory,
 }: CrewViewProps & {
   healthPanel: ReactNode;
   timelinePanel: ReactNode;
   avatarPanel: ReactNode;
+  nasaHistory: ReactNode;
+  environmentReferences: ReactNode;
   section: CrewSection;
   onChangeSection(section: CrewSection): void;
   onOpenHabitat(): void;
@@ -37,7 +41,7 @@ export function CrewView({
         {(
           [
             ['now', 'Ahora'],
-            ['health', 'Autoevaluación'],
+            ['health', 'Salud por sistemas'],
             ['history', 'Historial'],
             ['avatar', 'Personalización'],
           ] as const
@@ -46,6 +50,7 @@ export function CrewView({
             className="button secondary"
             type="button"
             key={id}
+            id={id === 'history' ? 'assistant-target-history' : undefined}
             aria-controls={`crew-${id === 'health' ? 'health-panel' : id === 'avatar' ? 'avatar-panel' : id}`}
             aria-pressed={section === id}
             onClick={() => onChangeSection(id)}
@@ -61,9 +66,11 @@ export function CrewView({
         aria-label="Estado de la tripulación"
         tabIndex={-1}
       >
-        <button className="text-button crew-location-link" onClick={onOpenHabitat}>
-          Ver módulo · {data.selected.location} <Icon name="arrow" size={14} />
-        </button>
+        {mode === 'crew' && (
+          <button className="text-button crew-location-link" onClick={onOpenHabitat}>
+            Ver módulo · {data.selected.location} <Icon name="arrow" size={14} />
+          </button>
+        )}
         <MissionExplorerPanel
           anchorId="crew-body"
           crewName={data.selected.name}
@@ -73,6 +80,7 @@ export function CrewView({
           mode={mode}
           onModeChange={onModeChange}
         />
+        {environmentReferences}
         {mode === 'crew' && (
           <div
             className="crew-region-controls"
@@ -98,7 +106,13 @@ export function CrewView({
         tabIndex={-1}
         aria-labelledby="crew-history-title"
       >
-        <h2 id="crew-history-title">Historial y contexto</h2>
+        <div className="panel-heading">
+          <h2 id="crew-history-title">Historial y contexto</h2>
+          <a className="text-button" href="#nasa-history">
+            Ver referencias científicas de NASA
+            <Icon name="arrow" size={14} />
+          </a>
+        </div>
         <section className="crew-chart-panel" aria-label="Tendencia de telemetría">
           <div className="panel-heading">
             <div>
@@ -116,10 +130,11 @@ export function CrewView({
                   <Icon name="orbit" size={15} />
                   Sincronizar con el visor
                 </button>
-                <button className="text-button" onClick={onOpenHistory}>
-                  Ver historial
-                  <Icon name="arrow" size={14} />
-                </button>
+                <span
+                  className={`badge ${telemetryMetric.qualityTone === 'attention' ? 'amber' : ''}`}
+                >
+                  {telemetryMetric.quality}
+                </span>
               </div>
             )}
           </div>
@@ -131,10 +146,13 @@ export function CrewView({
           {telemetryMetric && !trendInCard && (
             <TrendChart
               metric={telemetryMetric}
-              animated={false}
+              animated={section === 'history'}
               selectedAt={sampleAt}
               onSelectSample={onSelectTimelineSample}
             />
+          )}
+          {telemetryMetric && (
+            <p className="sub">Los espacios en la gráfica indican muestras ausentes.</p>
           )}
           {synchronizedMoment && (
             <p className="crew-sync-status" role="status">
@@ -154,13 +172,15 @@ export function CrewView({
                 className="text-button"
                 onClick={() => onChangeSection('health')}
               >
-                Autoevaluación
+                Salud por sistemas
               </button>
               . Elige un sensor para volver a sus lecturas.
             </p>
           )}
         </section>
         {timelinePanel}
+        {telemetryMetric && <MeasurementTracePanel metric={telemetryMetric} />}
+        {nasaHistory}
       </section>
       <div id="crew-health-panel" hidden={section !== 'health'}>
         {healthPanel}

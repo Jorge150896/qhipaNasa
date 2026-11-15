@@ -1,10 +1,10 @@
 # Desarrollo del frontend
 
-Monitoreo asistido tiene un flujo independiente de preparación/captura/revisión/guardado, adapters de demo/API y registro local por hábitat. La API es configurable y su contrato sigue provisional; ver [uso, arquitectura y límites](monitoring.md). No comparte las capturas con el snapshot sintético del dashboard.
+Monitoreo diario reúne las respuestas, las lecturas corporales y las condiciones del hábitat en un solo formulario. [Las sesiones anteriores](monitoring.md) se consultan en Tripulación → Historial.
 
 ## Decisiones implementadas
 
-El mapa mantiene el tema Qhipa Pacha y añade la pestaña de despegues de Tierra (`tab=launches`, `site=<id>`). El nuevo catálogo y su estado se aíslan en `launch-sites`, sin modificar `useMission` ni claves del diario. Al cambiar de sitio o salir se desmonta el video; el globo tiene lista HTML equivalente. El botón «Acercar a…» pausa el mapa para inspeccionar el objeto y «Volver a la misión» restaura su encuadre. Fuentes, límites, coordenadas y ciclo de vida en `frontend/src/presentation/features/launch-sites/README.md`.
+La pestaña Centros en Tierra reúne los centros de apoyo y los sitios de lanzamiento (`tab=earth`, `site=<id>`). Los enlaces con `tab=launches` se normalizan conservando el sitio. El nuevo catálogo y su estado se aíslan en `launch-sites`, sin modificar `useMission` ni claves del diario. Al cambiar de sitio o salir se desmonta el video; el globo tiene lista HTML equivalente. El botón «Acercar a…» pausa el mapa para inspeccionar el objeto y «Volver a la misión» restaura su encuadre. Fuentes, límites, coordenadas y ciclo de vida en `frontend/src/presentation/features/launch-sites/README.md`.
 
 Workspace npm en la raíz y aplicación en `frontend/`. Next.js 16.4.5 y React 19.3.1 con TypeScript estricto. CSS propio, Lucide, Three.js, React Three Fiber y Drei. No hay servicios remotos ni variables de entorno necesarias para ejecutar la demo.
 
@@ -28,7 +28,7 @@ La carga sigue `LoadMission -> MissionRepository -> SimulatedMissionRepository`.
 
 - Provider de misión: propietario de snapshot, escenario, persona, zona, indicador, diario y mensajes. Se monta una vez por flujo; salir de `/mission` lo desmonta.
 - Hook: ejecuta casos de uso, cancela/descarta cargas obsoletas al cambiar escenario o desmontar y muestra errores de lectura/escritura.
-- Screen: navegación y modo puramente visual (astronauta/nave). La sección de hábitat inicia con la nave y permite alternar al astronauta.
+- Screen: navegación y modo puramente visual (astronauta/nave). Tripulación alterna entre Astronauta y Nave, Base o Estación. Los accesos a un módulo abren este mismo visor.
 - Formulario: campos locales por persona. Cambiar de persona descarta un borrador sin guardar. Guardar actualiza un registro por persona/día UTC.
 - Diario: clave `astra.demo.journal.v1`, esquema versionado validado con Zod. Se conservan hasta 300 chequeos y 500 revisiones. Writer: adapter local; reader: casos de uso de diario; reset: ninguno automático. Un error o formato incompatible se informa, sin sobrescribirlo.
 - Recarga/URL directa: escenario y selecciones vuelven a sus defaults; chequeos y revisiones se recuperan del navegador. La fecha de mediciones permanece en el escenario; no se disfraza como tiempo real.
@@ -39,7 +39,7 @@ La carga sigue `LoadMission -> MissionRepository -> SimulatedMissionRepository`.
 
 El visor tiene Suspense, Error Boundary y fallback cuando no hay WebGL. Sus hotspots usan un portal DOM independiente del Canvas para conservar un ciclo de desmontaje correcto al navegar o cambiar de modelo; las tarjetas de sensores y el selector de zona siguen funcionando. Las bibliotecas 3D no conocen repositorios ni reglas clínicas. La fuente y licencia del asset están en `frontend/public/models/ATTRIBUTION.md`.
 
-El resumen de Centro de misión combina el contexto de la instantánea con el último autorregistro local de la persona seleccionada. El ViewModel consulta el diario por hábitat al montar la vista, por lo que regresar desde Tripulación vuelve a leer lo guardado. Los accesos a Tripulación usan los fragmentos `#crew-module` y `#crew-health-entry` para abrir el visor del módulo asignado o enfocar el formulario. Una entrada directa usa la selección del contexto de misión. Las señales con calidad de atención abren Historial con el indicador seleccionado.
+El resumen de Centro de misión combina el contexto de la instantánea con el último autorregistro local de la persona seleccionada. El ViewModel consulta el diario por hábitat al montar la vista, por lo que regresar desde Tripulación vuelve a leer lo guardado. Los accesos a Tripulación usan los fragmentos `#crew-module` y `#crew-health-entry` para abrir el visor del módulo asignado o enfocar el formulario. Una entrada directa usa la selección del contexto de misión. Las señales con calidad de atención abren Tripulación en `#crew-history` con el indicador seleccionado. Fuentes abre Inspiration4 en `#nasa-history`. Las rutas anteriores `/history` redirigen al historial de Tripulación del mismo hábitat.
 
 ## Incorporar una funcionalidad
 
@@ -147,7 +147,7 @@ La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md
 La introducción mínima de tres segundos pertenece ahora al ViewModel de portada y solo empieza tras «Iniciar mi misión». El provider de misión mantiene únicamente su carga real. Los Screens de misión/mapa usan `useTransition` para representar navegación pendiente dentro del área de información, con el shell interactivo. No hay fallback global a pantalla completa ni bloqueo global del scroll. Detalle en `features/loading-preview/README.md`.
 
 
-### Chequeo diario por actividad
+### Monitoreo diario por actividad
 
 `DailyCheckScreen` conecta el estado local de los cuatro pasos con la acción de guardado de `useMission`. El caso de uso `RecordDailyCheck` valida los datos generales y los campos permitidos por actividad. El diario mantiene su clave y versión con `context` y `discomfortRegion` opcionales. Los campos vacíos se omiten y los ceros ingresados se conservan. Al recargar, el chequeo del día UTC se puede editar con sus valores guardados. La consola muestra la instantánea sintética del escenario, separada de las respuestas ingresadas.
 

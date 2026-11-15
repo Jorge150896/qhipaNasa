@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 
-test('Mi estado guía a Elena desde una señal ausente hasta una nueva captura simulada', async ({
+test('Simulación guía a Elena desde una señal ausente hasta una nueva captura simulada', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/mission/overview');
-  await page.getByRole('button', { name: 'Probar pérdida de señal', exact: true }).click();
+  await page.goto('/mission/simulation');
+  await page.getByRole('button', { name: /Pérdida de señal/ }).click();
 
   const signal = page.getByRole('region', { name: 'Faltan 3 lecturas de SpO₂' });
   await expect(signal).toContainText('14:26 UTC');
@@ -24,6 +24,6 @@ test('Mi estado guía a Elena desde una señal ausente hasta una nueva captura s
   await expect(signal.getByText('Nueva lectura simulada', { exact: false })).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   await signal.getByRole('button', { name: 'Ver evidencia', exact: true }).click();
-  await expect(page).toHaveURL(/\/mission\/history$/);
+  await expect(page).toHaveURL(/\/mission\/crew#crew-history$/);
   await expect(page.locator('.telemetry-chart .chart-missing')).toHaveCount(3);
 });

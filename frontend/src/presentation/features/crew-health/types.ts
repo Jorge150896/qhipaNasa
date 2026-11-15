@@ -28,6 +28,7 @@ export interface CrewHealthContext {
   habitatId: string;
 }
 interface CrewHealthHistoryEntry {
+  fromDailyCheck?: boolean;
   id: string;
   date: string;
   dayLabel: string;

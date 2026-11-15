@@ -1,6 +1,8 @@
 import type { MissionData } from '../../mission/types';
 import type { DailyCheckViewModel } from '../types';
 import { EmptyState, Panel } from '@/ui/Panel';
+import { Icon } from '@/ui/Icon';
+import { CheckAttachments } from './CheckAttachments';
 import { JournalForm } from './JournalForm';
 
 export function DailyCheckView({
@@ -23,23 +25,14 @@ export function DailyCheckView({
         />
       </Panel>
       <div className="daily-check-sidebar">
-        {model.telemetry.length > 0 && (
-          <Panel label="Consola de mediciones">
+        {model.step < 2 && model.attachment && (
+          <Panel className="daily-readings">
             <div className="panel-heading">
-              <h3>Consola de mediciones</h3>
+              <Icon name="heart" />
+              <h3>Lecturas del cuerpo y del entorno</h3>
             </div>
-            <p className="sub">
-              Instantánea simulada · {data.date} · {data.time}
-            </p>
-            <dl className="daily-check-sensors">
-              {model.telemetry.map((metric) => (
-                <div key={metric.id}>
-                  <dt>{metric.shortLabel}</dt>
-                  <dd>{metric.value === '—' ? 'Sin lectura' : `${metric.value} ${metric.unit}`}</dd>
-                  <small>{metric.quality}</small>
-                </div>
-              ))}
-            </dl>
+            <p className="sub">Estas lecturas se adjuntan al guardar tu registro.</p>
+            <CheckAttachments data={model.attachment} />
           </Panel>
         )}
         <Panel>
@@ -85,6 +78,12 @@ export function DailyCheckView({
                     ))}
                   </dl>
                   {check.note && <p className="check-note">{check.note}</p>}
+                  {check.savedAttachment && (
+                    <details>
+                      <summary>Ver datos adjuntos del chequeo</summary>
+                      <CheckAttachments data={check.savedAttachment} />
+                    </details>
+                  )}
                 </article>
               ))}
             </div>
