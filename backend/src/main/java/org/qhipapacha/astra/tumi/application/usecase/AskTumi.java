@@ -28,4 +28,6 @@ public final class AskTumi {
   public static final class InvalidMessage extends RuntimeException {}
 
   public static final class Unavailable extends RuntimeException {}
+
+  public static final class QuotaExceeded extends RuntimeException {}
 }

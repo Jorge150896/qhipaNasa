@@ -1,9 +1,10 @@
 'use client';
 import { useCallback, useEffect, useEffectEvent, useReducer, useRef, useState } from 'react';
-import type {
-  TumiConversation,
-  TumiMessage,
-  TumiScreenContext,
+import {
+  TumiDailyLimitError,
+  type TumiConversation,
+  type TumiMessage,
+  type TumiScreenContext,
 } from '@/domain/assistant/TumiConversation';
 import { detectTextEmotion } from '@/domain/assistant/detectTextEmotion';
 import { autonomousEmotion, reactionToText } from './emotions';
@@ -148,9 +149,13 @@ export function useCursorAssistantViewModel(
         setEmotion(
           textEmotion === 'neutral' ? (answer.reaction ?? 'neutral') : reactionToText(textEmotion),
         );
-      } catch {
+      } catch (error) {
         if (!controller.signal.aborted) {
-          setError('No pude responder. Puedes volver a enviar tu pregunta.');
+          setError(
+            error instanceof TumiDailyLimitError
+              ? error.message
+              : 'No pude responder. Puedes volver a enviar tu pregunta.',
+          );
           setDraft(text);
           setEmotion('worried');
         }

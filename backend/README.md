@@ -14,7 +14,14 @@ Windows: `mvnw.cmd`. Requiere `JAVA_HOME` configurado y red para la primera desc
 
 Abre `backend/.env.tumi.local` o créalo con permisos privados. Deja una línea `OPENAI_API_KEY=` y escribe tu clave después del igual. Git ignora este archivo. Inicia Spring Boot desde `backend/` con `./mvnw spring-boot:run`. En otra terminal, desde la raíz, ejecuta `NEXT_PUBLIC_TUMI_LOCAL=true npm run dev -- --port 3000`. Abre el Tumi flotante en `http://127.0.0.1:3000`. Para que Spring cargue una clave nueva, reinicia el backend.
 
-El endpoint local `POST /api/v1/tumi/replies` recibe hasta 600 caracteres de mensaje y un resumen acotado de la pantalla. Usa GPT-5.4 mini por defecto. El chat flotante y el contextual usan la integración cuando se activa el modo local con GPT. El contexto puede incluir lecturas simuladas y puntos seleccionados de archivos públicos. El diario, sus borradores y el historial de mensajes quedan fuera de esta llamada. La demo de GitHub Pages usa la guía local. El endpoint de GPT está pensado para desarrollo local y requeriría autenticación y límites de uso antes de publicarlo.
+`POST /api/v1/tumi/replies` recibe hasta 600 caracteres de mensaje y un resumen acotado de la pantalla. Usa GPT-5.4 mini por defecto. El chat flotante y el contextual comparten la integración. El contexto puede incluir lecturas simuladas y puntos seleccionados de archivos públicos. El diario, sus borradores y el historial de mensajes quedan fuera de esta llamada.
+
+### GPT en GitHub Pages
+
+1. Publica el backend Java como servicio HTTPS. En un proveedor con Docker, usa `backend/` como raíz y `Dockerfile` como archivo de imagen. El contenedor escucha en el `PORT` del proveedor o en 8080.
+2. En el entorno privado del **servicio** configura `OPENAI_API_KEY` y `TUMI_PUBLIC_ORIGIN` con el origen de Pages, por ejemplo `https://jorge150896.github.io` sin ruta ni barra final. `TUMI_PUBLIC_DAILY_LIMIT` fija el máximo de solicitudes de GPT por instancia y día UTC, con un valor predeterminado de 100. El contador vive en memoria y se reinicia si se reinicia el servicio. El origen permitido limita a los navegadores y se puede falsificar desde otros clientes. Para un uso público sostenido hace falta control de acceso y una cuota persistente.
+3. En GitHub, abre **Settings → Secrets and variables → Actions → Variables**. Crea la variable de repositorio `TUMI_API_URL` con el origen HTTPS del backend. Ejecuta de nuevo el workflow **GitHub Pages**. Este paso solo publica el URL del servicio.
+4. Abre el chat de la web y comprueba que muestre **Chat con GPT**. Con `TUMI_API_URL` vacío la exportación usa la guía local.
 
 Consultar [uso y contrato para frontend](../docs/development/radlab-backend.md) y [OpenAPI compartido](../docs/contracts/openapi.yaml).
 

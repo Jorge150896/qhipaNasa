@@ -16,7 +16,8 @@ paths:
       operationId: askTumi
       summary: Generar una respuesta de texto para el chat flotante de Tumi
       description: >-
-        Disponible en desarrollo local. Envía el mensaje y el contexto acotado de la vista a OpenAI desde el servidor.
+        Disponible en desarrollo local o desde el origen HTTPS autorizado del sitio público.
+        Envía el mensaje y el contexto acotado de la vista a OpenAI desde el servidor.
         El cliente omite el diario privado, los borradores y la transcripción previa.
       requestBody:
         required: true
@@ -46,6 +47,7 @@ paths:
                   reaction: { enum: [happy, curious, understanding, focused] }
         '400': { description: Mensaje inválido }
         '403': { description: Solicitud fuera de la interfaz local o desde un origen no permitido }
+        '429': { description: Se alcanzó el límite diario de consultas de la demo pública }
         '503': { description: Tumi no está configurado o el proveedor no pudo responder }
   /api/v1/radiation/instruments:
     servers: [{ url: 'http://localhost:8080' }]

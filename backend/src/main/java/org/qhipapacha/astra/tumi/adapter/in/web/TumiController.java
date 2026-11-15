@@ -5,6 +5,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.qhipapacha.astra.tumi.application.usecase.AskTumi;
 import org.qhipapacha.astra.tumi.domain.TumiScreenContext;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,11 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 public class TumiController {
   private final AskTumi ask;
+  private final String publicOrigin;
 
-  public TumiController(AskTumi ask) {
+  public TumiController(AskTumi ask, @Value("${astra.tumi.public-origin}") String publicOrigin) {
     this.ask = ask;
+    this.publicOrigin = publicOrigin.strip();
   }
 
   @PostMapping(
@@ -27,7 +31,11 @@ public class TumiController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   Reply reply(@RequestBody Question question, HttpServletRequest request) {
-    requireLocalRequest(request);
+    if (publicOrigin.isEmpty()) {
+      requireLocalRequest(request);
+    } else if (!publicOrigin.equals(request.getHeader(HttpHeaders.ORIGIN))) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    }
     var context = question.context();
     var reply = ask.execute(question.message(),
         context == null ? null : new TumiScreenContext(context.view(), context.details()));
@@ -55,6 +63,11 @@ public class TumiController {
   @ExceptionHandler(AskTumi.Unavailable.class)
   ResponseEntity<ApiError> unavailable() {
     return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new ApiError("tumi_unavailable"));
+  }
+
+  @ExceptionHandler(AskTumi.QuotaExceeded.class)
+  ResponseEntity<ApiError> quotaExceeded() {
+    return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new ApiError("daily_limit"));
   }
 
   record Question(String message, ScreenContext context) {}
