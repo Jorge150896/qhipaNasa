@@ -1,11 +1,12 @@
 import { expect, test } from '@playwright/test';
+import { openTumiChat } from './tumi-chat-helpers';
 
 test('Tumi explica la lectura seleccionada y conserva el chat entre secciones', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 900 });
   await page.goto('/mission/crew');
-  await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
+  await openTumiChat(page);
   const chat = page.getByRole('region', { name: 'Tumi' });
   const log = chat.getByRole('log');
   await chat.getByRole('button', { name: '¿Qué significa mi SpO₂?' }).click();
@@ -25,7 +26,7 @@ test('Tumi explica la lectura seleccionada y conserva el chat entre secciones', 
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
   await nav.getByRole('button', { name: 'Monitoreo diario' }).click();
   await expect(page).toHaveURL(/\/mission\/journal$/);
-  await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
+  await openTumiChat(page);
   await expect(log).toContainText('98 %');
   await expect(log).toContainText('revisar tus respuestas antes de guardar');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
@@ -51,7 +52,7 @@ test('Tumi permite revisar la transcripción local antes de enviarla', async ({ 
     });
   });
   await page.goto('/mission/crew');
-  await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
+  await openTumiChat(page);
   const chat = page.getByRole('region', { name: 'Tumi' });
   await chat.getByRole('button', { name: 'Dictar' }).click();
   await expect(chat.getByRole('textbox')).toHaveValue('¿Qué significa el pulso?');
@@ -67,7 +68,7 @@ test('Tumi permite revisar la transcripción local antes de enviarla', async ({ 
 
 test('Tumi cambia entre autónomo y guía con ayuda por puntero y teclado', async ({ page }) => {
   await page.goto('/mission/crew');
-  await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
+  await openTumiChat(page);
   await expect(page.getByRole('button', { name: 'Autónomo', exact: true })).toHaveAttribute(
     'aria-pressed',
     'true',
@@ -105,7 +106,7 @@ test('en pantalla táctil Tumi explica el primer toque y permite usar el control
   const page = await browser.newPage({ hasTouch: true, viewport: { width: 390, height: 900 } });
   try {
     await page.goto('/mission/crew');
-    await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
+    await openTumiChat(page);
     await page.getByRole('button', { name: 'Guía local' }).click();
     const floating = page.getByRole('button', { name: 'Abrir asistente Tumi' });
     await expect(floating).toBeVisible();
@@ -132,7 +133,7 @@ test('en pantalla táctil Tumi explica el primer toque y permite usar el control
 test('Tumi abre una lectura desde la guía y explica el cambio con sus horas', async ({ page }) => {
   await page.goto('/mission/crew');
   await page.getByRole('button', { name: /Mateo Silva/ }).click();
-  await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
+  await openTumiChat(page);
   await page.getByRole('button', { name: 'Guía local' }).click();
   await page.locator('#assistant-target-metric-heartRate').hover();
   await page.getByRole('button', { name: 'Preguntar por este dato' }).click();
@@ -154,7 +155,7 @@ test('Tumi abre la tarjeta en modo táctil y respeta una lectura ausente', async
   const page = await browser.newPage({ hasTouch: true, viewport: { width: 390, height: 900 } });
   try {
     await page.goto('/missions/selene/crew');
-    await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
+    await openTumiChat(page);
     await page.getByRole('button', { name: 'Guía local' }).click();
     await page.locator('#assistant-target-metric-oxygen').tap();
     await page.getByRole('button', { name: 'Preguntar por este dato' }).tap();
@@ -169,15 +170,14 @@ test('Tumi abre la tarjeta en modo táctil y respeta una lectura ausente', async
   }
 });
 
-test('la ficha de respiración abre Tumi con su lectura y el acceso móvil está en la cabecera', async ({
+test('la ficha de respiración abre Tumi con su lectura y no hay botón duplicado en la cabecera', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/mission/crew');
-  const launcher = page.getByRole('button', { name: 'Abrir chat de Tumi' });
   await expect(
     page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Tumi' }),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await page
     .getByRole('group', { name: 'Lecturas de la instantánea' })
     .getByRole('button', { name: 'Respiración', exact: true })
@@ -189,7 +189,9 @@ test('la ficha de respiración abre Tumi con su lectura y el acceso móvil está
   await expect(chat.getByLabel('Dato en conversación')).toContainText('Elena Torres');
   await expect(chat.getByLabel('Dato en conversación')).toContainText('14:32 UTC');
   await chat.getByRole('button', { name: 'Ocultar chat' }).click();
-  await expect(launcher).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true }),
+  ).toBeVisible();
 });
 
 test('Tumi explica la muestra y el par elegidos sin inventar ubicación', async ({ page }) => {
@@ -237,8 +239,7 @@ test('Tumi vincula la lectura con su entorno y explica dónde guardar un autorre
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/mission/crew');
-  const launcher = page.getByRole('button', { name: 'Abrir chat de Tumi' });
-  await launcher.click();
+  await openTumiChat(page);
   const chat = page.getByRole('region', { name: 'Tumi' });
   const answer = chat.getByRole('log').locator('[data-role="assistant"]').last();
   const relationship = chat.getByRole('button', {
@@ -262,11 +263,11 @@ test('Tumi vincula la lectura con su entorno y explica dónde guardar un autorre
     .getByRole('button', { name: 'Historial', exact: true })
     .click();
   await expect(page.getByRole('region', { name: 'Historial y contexto' })).toBeVisible();
-  await launcher.click();
+  await openTumiChat(page);
   await relationship.click();
   await expect(answer).toContainText('Entorno simulado a esa hora');
   await page.reload();
-  await launcher.click();
+  await openTumiChat(page);
   await expect(answer).toHaveCount(0);
   await relationship.click();
   await expect(answer).toContainText('Entorno simulado a esa hora');

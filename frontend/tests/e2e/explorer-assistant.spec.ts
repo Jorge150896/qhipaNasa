@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { openTumiChat } from './tumi-chat-helpers';
 
 test('Tumi está disponible desde misión y conserva el chat entre pestañas del mapa', async ({
   page,
@@ -8,21 +9,24 @@ test('Tumi está disponible desde misión y conserva el chat entre pestañas del
   await nav.getByRole('button', { name: 'Mapa espacial' }).click();
   await expect(page).toHaveURL(/\/explore/);
 
-  const launcher = page.getByRole('button', { name: 'Abrir chat de Tumi' });
   await expect(
     page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Tumi' }),
-  ).toBeVisible();
-  await launcher.click();
+  ).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Abrir chat de Tumi' })).toHaveCount(0);
+  await openTumiChat(page);
   const chat = page.getByRole('region', { name: 'Tumi' });
   await chat.getByRole('button', { name: '¿Cómo uso el mapa espacial?' }).click();
   await expect(chat.getByRole('log')).toContainText('selecciona un destino');
   await chat.getByRole('button', { name: 'Ocultar chat' }).click();
+  await expect(
+    page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true }),
+  ).toBeFocused();
 
   await page.getByRole('tab', { name: 'Mapa de Marte' }).click();
   await expect(page).toHaveURL(/tab=mars/);
   await page.getByRole('tab', { name: 'Centros en Tierra' }).click();
   await expect(page).toHaveURL(/tab=earth/);
-  await launcher.click();
+  await openTumiChat(page);
   await expect(chat.getByRole('log')).toContainText('selecciona un destino');
   await chat.getByRole('button', { name: '¿Dónde están los centros en Tierra?' }).click();
   await expect(chat.getByRole('log')).toContainText('pestaña Centros en Tierra');
@@ -31,8 +35,8 @@ test('Tumi está disponible desde misión y conserva el chat entre pestañas del
   await page.reload();
   await expect(
     page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Tumi' }),
-  ).toBeVisible();
-  await launcher.click();
+  ).toHaveCount(0);
+  await openTumiChat(page);
   await expect(chat).toBeVisible();
   await chat.getByRole('textbox').fill('¿Cuál es el alcance de los datos?');
   await chat.getByRole('button', { name: 'Enviar' }).click();

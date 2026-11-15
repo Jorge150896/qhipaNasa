@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { openTumiChat } from './tumi-chat-helpers';
 import { confirmDailyCheck, openDailyAssessment } from './daily-check-helpers';
 
 test('Tumi abre Fuentes fuera del menú y enlaza el estudio desde el mismo hábitat', async ({
@@ -7,18 +8,15 @@ test('Tumi abre Fuentes fuera del menú y enlaza el estudio desde el mismo hábi
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/missions/selene/crew');
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
-  const more = nav.getByRole('button', { name: 'Más', exact: true });
-  await more.click();
   await expect(nav.getByRole('button', { name: 'Fuentes y alcance' })).toHaveCount(0);
-  await more.press('Escape');
-  await page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
+  await openTumiChat(page);
   const chat = page.getByRole('region', { name: 'Tumi' });
   await chat.getByRole('textbox').fill('¿De dónde vienen los datos?');
   await chat.getByRole('button', { name: 'Enviar' }).click();
   await chat.getByRole('button', { name: 'Ver Fuentes y alcance' }).click();
   await expect(page).toHaveURL('/missions/selene/sources');
   await expect(chat).toBeHidden();
-  await expect(more).not.toHaveAttribute('data-current');
+  await expect(nav.getByRole('button', { name: 'Más', exact: true })).toHaveCount(0);
   const sources = page.getByRole('region', { name: 'Origen de los datos' });
   await expect(sources).toContainText('Datos históricos reales');
   await expect(sources).toContainText('Datos simulados');

@@ -323,7 +323,6 @@ test('móvil sin WebGL permite consultar módulos y duración de las sesiones', 
   await timeline.getByRole('button', { name: /Pesas/ }).click();
   await expect(moment).toContainText('15 min');
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
-  await nav.getByRole('button', { name: 'Más', exact: true }).click();
   await nav.getByRole('button', { name: 'Simulación', exact: true }).click();
   await page.getByRole('button', { name: /Pérdida de señal/ }).click();
   await nav.getByRole('button', { name: 'Tripulación', exact: true }).click();

@@ -1,6 +1,5 @@
 import { useEffect, useId, useRef } from 'react';
 import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
-import { createPortal } from 'react-dom';
 import { Icon } from '@/ui/Icon';
 import { AppearanceOptions } from '@/ui/AppearanceOptions';
 import { TumiModeOptions } from '@/presentation/shared/tumi/TumiModeOptions';
@@ -12,7 +11,6 @@ export function MissionAssistantView({
   model,
   explorer,
   landing,
-  launcherHost,
   onGuide,
   onOpenSources,
   onOpen,
@@ -20,7 +18,6 @@ export function MissionAssistantView({
   following,
   onChangeMode,
 }: {
-  launcherHost: HTMLDivElement | null;
   model: ReturnType<typeof useMissionAssistantViewModel>;
   explorer: boolean;
   landing: boolean;
@@ -33,15 +30,28 @@ export function MissionAssistantView({
 }) {
   const log = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
-  const launcher = useRef<HTMLButtonElement>(null);
+  const opener = useRef<HTMLElement | null>(null);
+  const landingLauncher = useRef<HTMLButtonElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   const restoreFocus = useRef(false);
   const portraitId = useId();
   const { open, messages } = model;
   const { context } = model;
   useEffect(() => {
-    if (open) (input.current ?? closeButton.current)?.focus({ preventScroll: true });
-    else if (restoreFocus.current) launcher.current?.focus({ preventScroll: true });
+    if (open) {
+      const active = document.activeElement;
+      opener.current = active instanceof HTMLElement && active !== document.body ? active : null;
+      (input.current ?? closeButton.current)?.focus({ preventScroll: true });
+    } else if (restoreFocus.current) {
+      const target = opener.current?.isConnected
+        ? opener.current
+        : (landingLauncher.current ??
+          document.querySelector<HTMLElement>(
+            '.cursor-assistant-character,.cursor-assistant-restore',
+          ));
+      target?.focus({ preventScroll: true });
+      restoreFocus.current = false;
+    }
   }, [open]);
   useEffect(() => {
     if (log.current) log.current.scrollTop = log.current.scrollHeight;
@@ -52,22 +62,24 @@ export function MissionAssistantView({
     onClose();
   }
 
-  const dock = (
+  const guideControls = (following || landing) && (
     <div className="assistant-dock">
       {following && (
         <button type="button" className="assistant-exit-guide" onClick={() => onChangeMode(false)}>
           Salir de guía
         </button>
       )}
-      <button
-        type="button"
-        ref={launcher}
-        className="assistant-launcher"
-        onClick={onOpen}
-        aria-label="Abrir chat de Tumi"
-      >
-        <AssistantRobot /> <span>Tumi</span>
-      </button>
+      {landing && (
+        <button
+          type="button"
+          ref={landingLauncher}
+          className="assistant-launcher"
+          onClick={onOpen}
+          aria-label="Abrir chat de Tumi"
+        >
+          <AssistantRobot /> <span>Tumi</span>
+        </button>
+      )}
     </div>
   );
 
@@ -231,10 +243,8 @@ export function MissionAssistantView({
             </p>
           )}
         </section>
-      ) : launcherHost ? (
-        createPortal(dock, launcherHost)
       ) : (
-        dock
+        guideControls
       )}
     </div>
   );

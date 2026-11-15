@@ -14,7 +14,8 @@ test('elementos señalados se retiran en escritorio, móvil y recarga', async ({
       await expect(dock.getByRole('button', { name: 'Abrir chat de Tumi' })).toHaveCount(0);
       await expect(
         page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Tumi' }),
-      ).toBeVisible();
+      ).toHaveCount(0);
+      await expect(page.getByRole('button', { name: 'Abrir chat de Tumi' })).toHaveCount(0);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true,
       );

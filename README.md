@@ -39,7 +39,7 @@ Para generar esa misma exportación localmente, ejecuta `GITHUB_PAGES=true npm r
 
 - **Simulación**: «Pérdida de señal» abre el caso de SpO₂ de Elena en Odyssey. La captura rápida muestra el nuevo resultado con su propia hora y conserva los huecos del historial. Para guardar tus respuestas junto a las lecturas de la misión, usa Monitoreo diario.
 
-- Carga animada del Tumi con salto, sonrisa, rebote del tocado y spinner independiente. Introducción breve a pantalla completa solo tras «Iniciar mi misión»; dentro de la app, carga limitada al área de información. Vista permanente en `/loading-preview`.
+- Carga animada con el video local del Tumi dorado y sus giros originales, en bucle silencioso; imagen estática con movimiento reducido. Introducción breve a pantalla completa solo tras «Iniciar mi misión»; dentro de la app, carga limitada al área de información. Vista permanente en `/loading-preview`.
 
 - Tripulación conserva visor corporal, fichas contextuales, lecturas e historial de registros. Se retiraron la pestaña y el panel «Salud por sistemas» y los tres accesos inferiores «Ver corazón/visión/ejercicio». Las observaciones nuevas se añaden desde Monitoreo diario con el área correspondiente.
 

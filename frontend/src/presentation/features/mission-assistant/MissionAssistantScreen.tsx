@@ -96,7 +96,6 @@ export function MissionAssistantScreen({
   const targetId = guide?.path === pathname ? guide.id : undefined;
   const markerReady = point !== undefined;
   const marker = useRef<HTMLButtonElement>(null);
-  const [launcherHost, setLauncherHost] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!targetId) return;
@@ -151,9 +150,6 @@ export function MissionAssistantScreen({
           ? 'journal'
           : id;
     const target = document.getElementById(`assistant-target-${id}`);
-    if (target?.closest('#mission-dock-secondary') && target.getClientRects().length === 0) {
-      document.getElementById('mission-dock-more')?.click();
-    }
     const selected = target ? id : fallback;
     setGuide({
       id: selected,
@@ -203,7 +199,6 @@ export function MissionAssistantScreen({
           open();
           model.ask(question, { useReading: false });
         },
-        setLauncherHost,
         registerView,
       }}
     >
@@ -220,7 +215,6 @@ export function MissionAssistantScreen({
           model={model}
           explorer={explorer}
           landing={landing}
-          launcherHost={launcherHost}
           onGuide={guideTo}
           onOpenSources={openSources}
           onOpen={open}

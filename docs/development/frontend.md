@@ -8,6 +8,8 @@ Monitoreo diario reúne las respuestas, las lecturas corporales y las condicione
 
 ## Decisiones implementadas
 
+La barra inferior compartida mantiene el orden Tripulación → Monitoreo diario → Mapa espacial → Simulación en escritorio, tablet y móvil. Los cuatro accesos son directos: no hay menú «Más». El orden de teclado coincide con el visual, se conserva el indicador activo y el margen de seguridad inferior del dispositivo.
+
 La pestaña Centros en Tierra reúne los centros de apoyo y los sitios de lanzamiento (`tab=earth`, `site=<id>`). Los enlaces con `tab=launches` se normalizan conservando el sitio. El nuevo catálogo y su estado se aíslan en `launch-sites`, sin modificar `useMission` ni claves del diario. Al cambiar de sitio o salir se desmonta el video; el globo tiene lista HTML equivalente. El botón «Acercar a…» pausa el mapa para inspeccionar el objeto y «Volver a la misión» restaura su encuadre. Fuentes, límites, coordenadas y ciclo de vida en `frontend/src/presentation/features/launch-sites/README.md`.
 
 Workspace npm en la raíz y aplicación en `frontend/`. Next.js 16.4.5 y React 19.3.1 con TypeScript estricto. CSS propio, Lucide, Three.js, React Three Fiber y Drei. No hay servicios remotos ni variables de entorno necesarias para ejecutar la demo.
@@ -148,7 +150,7 @@ La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md
 
 ### Carga animada del Tumi
 
-`presentation/shared/loading/TumiLoader` representa carga de misión y mapa dentro del contenido; su variante fullscreen se reserva para iniciar misión desde la portada y la vista de revisión. `TumiHead` revela la referencia PNG original en capas SVG: cabeza, tocado, expresión y sombra tienen animaciones coordinadas, con spinner independiente y movimiento reducido. La imagen original se conserva sin redibujar; el loader es una capa de viewport completo y sin bordes. `/loading-preview` permite revisar el bucle sin depender de una carga real.
+`presentation/shared/loading/TumiLoader` representa carga de misión y mapa dentro del contenido; su variante fullscreen se reserva para iniciar misión desde la portada y la vista de revisión. `TumiLoadingAnimation` reproduce el MP4 local enviado por el usuario con sus giros originales (4,15 s), en bucle silencioso e inline. Pausa con el control de revisión o al ocultar la pestaña; movimiento reducido muestra su fotograma estático. El archivo original se conserva, pero Canvas elimina el fondo en cada fotograma y suaviza el contorno sin halos blancos. La misma máscara se aplica al poster. `TumiHead` permanece disponible para sus otros consumidores. `/loading-preview` permite revisar el bucle sin depender de una carga real.
 
 La introducción mínima de tres segundos pertenece ahora al ViewModel de portada y solo empieza tras «Iniciar mi misión». El provider de misión mantiene únicamente su carga real. Los Screens de misión/mapa usan `useTransition` para representar navegación pendiente dentro del área de información, con el shell interactivo. No hay fallback global a pantalla completa ni bloqueo global del scroll. Detalle en `features/loading-preview/README.md`.
 
@@ -180,5 +182,5 @@ Historial añade «Ver origen» por muestra, conservando la distribución y el t
 El backend Java ya ofrece catálogo y series de NASA RadLab. La web todavía no los consume; crear una feature/adapter ambiental separado del consumidor de signos vitales. Ejemplos, CORS, errores, zonas horarias y límites en [radlab-backend.md](radlab-backend.md). El contrato comparte `docs/contracts/openapi.yaml` y no requiere cambiar paleta o modelos.
 
 ### Limpieza visual de cabeceras
-Se retiran la hora/escenario y actividad/ubicación de la cabecera de Tripulación, la insignia «Archivo histórico» de Centros en Tierra y su pie de página. Las lecturas conservan su procedencia y fecha en las fichas e Historial. El selector corporal está en Personalización; Tumi deja la barra inferior y conserva su acceso en cabecera y el personaje flotante.
+Se retiran la hora/escenario y actividad/ubicación de la cabecera de Tripulación, la insignia «Archivo histórico» de Centros en Tierra y su pie de página. Las lecturas conservan su procedencia y fecha en las fichas e Historial. El selector corporal está en Personalización; Tumi no tiene un botón independiente en la barra ni en la cabecera. El chat sigue accesible desde el personaje flotante y las fichas.
 

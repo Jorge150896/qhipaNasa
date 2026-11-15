@@ -1,5 +1,17 @@
 # Verificación de la base frontend
 
+## Orden de la barra inferior (2026-11-15)
+
+La navegación compartida muestra Tripulación → Monitoreo diario → Mapa espacial → Simulación, con ese mismo orden visual y de teclado. Simulación queda disponible directamente en móvil; se retiraron el menú «Más» y su lógica/estilos. Se mantienen destinos, indicador activo, barra fija y safe-area. La guía de Tumi apunta a los controles directos.
+
+Build, TypeScript y ESLint aprobados. Tres E2E distintos aprobados: orden y selección de Mapa en escritorio (puerto 3081, después de esperar la carga del mapa), teclado/recarga y anchos 320/390/768/1024, y acceso contextual a Fuentes (puerto 3080). Capturas revisadas: `navigation-dock-order-desktop.png` y `navigation-dock-order-mobile.png`. El primer intento de escritorio clicó una pestaña antes de terminar la carga del mapa; se agregó la espera por la vista disponible. El chequeo global sigue detenido por formato existente, sin ejecutar toda la suite E2E ni repetir pruebas unitarias para este cambio visual.
+
+## Retirada del botón superior de Tumi (2026-11-15)
+
+Se eliminó el lanzador de Tumi de la cabecera compartida de misión y explorador, junto con el registro/portal que lo alojaba. No se crea un lanzador fijo alternativo en estas pantallas. El chat contextual sigue accesible desde la mascota mediante «Abrir chat contextual» y desde las fichas. Se mantiene «Salir de guía» y el acceso propio que ya existía en la portada.
+
+El cierre devuelve el foco al origen conectado o a la mascota. Se actualizaron los helpers E2E para abrir el chat por el acceso activo. Cuatro casos E2E aprobados sobre el build actualizado en puerto 3079: conversación entre pestañas del mapa y móvil, ausencia del botón con recarga/escritorio/móvil, modo guía con teclado y contexto de respiración. Se verificó devolución de foco a la mascota al cerrar. Build y TypeScript aprobados; el chequeo global sigue detenido en formato existente. No se ejecutó toda la suite E2E.
+
 ## Integración de main conservando la interfaz local (2026-11-15)
 
 Se guardaron los cambios locales de simplificación y navegación en `11f6fb1` antes de integrar `origin/main` (`cd133f1`). La integración conserva los controles retirados, el acceso de Tumi en la cabecera y los nuevos identificadores/contextos de pantalla del remoto. El conflicto en CrewView se resolvió combinando los identificadores del asistente con las tres secciones actuales; se retiraron del contexto las referencias al panel de sistemas ya eliminado.
@@ -166,4 +178,10 @@ Alcance de carga: se verifica la activación fullscreen solo mediante el CTA, m�
 Validación del alcance final de carga: `npm run check` aprobado (39 pruebas unitarias y build) y 23 pruebas de navegador aprobadas sobre el build actualizado. Se confirmó que una navegación pendiente permite seleccionar otra sección sin ocultar ni bloquear el menú.
 
 Limpieza de los elementos señalados en las capturas: build actualizado aprobado, 104 pruebas unitarias aprobadas y seis pruebas E2E aprobadas (retiro de elementos en escritorio/móvil con recarga, navegación, Tumi y selección corporal desde Personalización, incluido fallo del modelo). TypeScript y ESLint pasaron en la ejecución de check; check completo se detuvo por diferencias de formato preexistentes en 283 archivos. No se reformateó el proyecto completo.
+
+
+Carga con giros del Tumi: MP4 local de 308 × 308 y 4,15 segundos, con poster estático. Build, TypeScript y ESLint aprobados. Tres pruebas E2E de loading.spec.ts aprobadas sobre el build actualizado: bucle real, pausa/reanudación, móvil, movimiento reducido dinámico, recarga e integración de la carga interna y fullscreen. Capturas tumi-spin-loader-desktop.png y tumi-spin-loader-mobile.png revisadas. npm run check se detuvo por diferencias de formato preexistentes en 287 archivos; no se reformateó el repositorio completo.
+
+
+Recorte transparente del loader: fondo eliminado por fotograma y en poster mediante Canvas, conservando blancos interiores y suavizando contornos. Prueba unitaria de máscara aprobada, build actualizado aprobado y tres E2E de carga aprobadas; esquinas del Canvas verificadas con alfa cero, pausa, bucle, movimiento reducido, recarga y móvil. Capturas claras/oscuras revisadas (tumi-spin-loader-dark.png). TypeScript y ESLint aprobados durante check; check global se detiene en formato preexistente de 287 archivos.
 

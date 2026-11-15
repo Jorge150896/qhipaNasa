@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { openTumiChat } from './tumi-chat-helpers';
 
 test('chequeo por actividad en móvil con reintento, actualización y registros anteriores', async ({
   page,
@@ -118,7 +119,7 @@ test('Tumi responde al ánimo y Monitoreo diario conserva el borrador al cambiar
   const form = page.locator('#daily-check-form');
   const appearance = page.getByRole('group', { name: 'Apariencia de la app' });
   const root = page.locator('html');
-  const openTumi = () => page.getByRole('button', { name: 'Abrir chat de Tumi' }).click();
+  const openTumi = () => openTumiChat(page);
   const closeTumi = () => page.getByRole('button', { name: 'Ocultar chat' }).click();
   const readings = page.getByRole('heading', { name: 'Lecturas del cuerpo y del entorno' });
 
