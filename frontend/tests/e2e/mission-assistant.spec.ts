@@ -188,6 +188,10 @@ test('la ficha de respiración abre Tumi con su lectura y el acceso móvil está
 
 test('Tumi explica la muestra y el par elegidos sin inventar ubicación', async ({ page }) => {
   await page.goto('/mission/crew');
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   const telemetry = page.getByRole('region', { name: 'Tendencia de telemetría' });
   await telemetry.getByRole('button', { name: 'Respiración', exact: true }).click();
   await telemetry.getByRole('button', { name: '14:20 UTC: 15 rpm', exact: true }).click();

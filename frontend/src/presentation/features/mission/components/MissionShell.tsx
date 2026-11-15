@@ -4,19 +4,18 @@ import { navigation } from '../constants';
 import type { MissionSection } from '../types';
 import { Icon, type IconName } from '@/ui/Icon';
 import { SpaceBackground } from '@/presentation/shared/space/SpaceBackground';
+const primary = new Set<MissionSection>(['overview', 'monitoring', 'journal']);
 export function MissionShell({
   section,
   onNavigate,
   pendingCount = '0',
   missionName = 'Odyssey 01',
   onOpenExplorer,
-  onOpenEarth,
   children,
 }: {
   section: MissionSection | 'explorer' | 'earth';
   missionName?: string;
   onOpenExplorer?(): void;
-  onOpenEarth(): void;
   onNavigate(section: MissionSection): void;
   pendingCount?: string;
   children: ReactNode;
@@ -26,6 +25,29 @@ export function MissionShell({
     (host: HTMLDivElement | null) => setLauncherHost?.(host),
     [setLauncherHost],
   );
+  function sectionButton(item: (typeof navigation)[number]) {
+    return (
+      <button
+        key={item.id}
+        id={`assistant-target-${item.id}`}
+        aria-current={section === item.id ? 'page' : undefined}
+        onClick={() => onNavigate(item.id)}
+      >
+        <Icon name={item.icon as IconName} />
+        <span>
+          {item.id === 'habitat' &&
+          section !== 'explorer' &&
+          section !== 'earth' &&
+          missionName !== 'Odyssey 01'
+            ? 'Entorno del hábitat'
+            : item.label}
+        </span>
+        {item.id === 'observations' && pendingCount !== '0' && (
+          <span className="nav-count">{pendingCount}</span>
+        )}
+      </button>
+    );
+  }
   return (
     <div className={section === 'overview' ? 'app-shell overview-shell' : 'app-shell'}>
       <SpaceBackground />
@@ -49,47 +71,24 @@ export function MissionShell({
           <span>{missionName}</span>
           <span className="mono">SIM</span>
         </div>
-        <p className="nav-label">EXPLORAR</p>
         <nav aria-label="Navegación principal">
-          {onOpenExplorer && (
-            <button
-              id="assistant-target-map"
-              aria-current={section === 'explorer' ? 'page' : undefined}
-              onClick={onOpenExplorer}
-            >
-              <Icon name="dashboard" />
-              <span>Mapa espacial</span>
-            </button>
-          )}
-          <button
-            aria-label="Tierra"
-            aria-current={section === 'earth' ? 'page' : undefined}
-            onClick={onOpenEarth}
-          >
-            <Icon name="earth" />
-            <span>Tierra</span>
-          </button>
-          {navigation.map((item) => (
-            <button
-              key={item.id}
-              id={`assistant-target-${item.id}`}
-              aria-current={section === item.id ? 'page' : undefined}
-              onClick={() => onNavigate(item.id)}
-            >
-              <Icon name={item.icon as IconName} />
-              <span>
-                {item.id === 'habitat' &&
-                section !== 'explorer' &&
-                section !== 'earth' &&
-                missionName !== 'Odyssey 01'
-                  ? 'Entorno del hábitat'
-                  : item.label}
-              </span>
-              {item.id === 'observations' && pendingCount !== '0' && (
-                <span className="nav-count">{pendingCount}</span>
-              )}
-            </button>
-          ))}
+          <div className="mission-nav-core" role="group" aria-label="Salud de la tripulación">
+            {navigation.filter((item) => primary.has(item.id)).map(sectionButton)}
+          </div>
+          <div className="mission-nav-extra" role="group" aria-label="Explorar misión">
+            <p className="nav-label">EXPLORAR MISIÓN</p>
+            {onOpenExplorer && (
+              <button
+                id="assistant-target-map"
+                aria-current={section === 'explorer' || section === 'earth' ? 'page' : undefined}
+                onClick={onOpenExplorer}
+              >
+                <Icon name="dashboard" />
+                <span>Mapa espacial</span>
+              </button>
+            )}
+            {navigation.filter((item) => !primary.has(item.id)).map(sectionButton)}
+          </div>
         </nav>
         <div className="sidebar-bottom">
           <Icon name="shield" />
@@ -107,13 +106,19 @@ export function MissionShell({
                 ? 'Tierra'
                 : section === 'explorer'
                   ? 'Explorador espacial'
-                  : 'Centro de control'}
+                  : navigation.find((item) => item.id === section)?.label}
             </span>
           </div>
           <div className="topbar-status">
             <span className="demo-badge">
               <span className="status-dot" />
-              {section === 'monitoring' ? 'Origen indicado en la sesión' : 'Datos simulados'}
+              {section === 'earth'
+                ? 'Archivo histórico'
+                : section === 'explorer'
+                  ? 'Simulación y archivo histórico'
+                  : section === 'monitoring'
+                    ? 'Origen indicado en la sesión'
+                    : 'Datos simulados'}
             </span>
             <span className="avatar small">MC</span>
             {setLauncherHost && <div ref={attachLauncher} className="assistant-launcher-host" />}

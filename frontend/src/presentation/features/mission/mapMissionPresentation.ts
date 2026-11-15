@@ -132,6 +132,8 @@ export function mapMissionPresentation(
   }));
   const checks = journal.checks.map((item) => ({
     id: item.id,
+    crewId: item.crewId,
+    recordedAt: item.recordedAt,
     crew: crew.find((person) => person.id === item.crewId)?.name ?? item.crewId,
     date: `${date(item.recordedAt)} · ${time(item.recordedAt)} UTC`,
     sleep: `${number(item.sleepHours)} h`,

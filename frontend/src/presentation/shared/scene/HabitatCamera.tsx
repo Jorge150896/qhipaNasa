@@ -15,6 +15,7 @@ import { shuttleModules } from './shuttleModules';
 export type HabitatCameraView = 'module' | 'overview';
 export const shuttleOverview: [number, number, number] = [7.55, 5.25, -2.45];
 export const habitatOverview: [number, number, number] = [3, 1.8, -4.4];
+export const aresOverview: [number, number, number] = [3, 2.6, -5.2];
 
 function moduleTarget(zone: string, cutaway: boolean) {
   if (cutaway) {
@@ -39,11 +40,13 @@ export function HabitatCamera({
   request,
   zone,
   cutaway,
+  overview,
 }: {
   controls: RefObject<ComponentRef<typeof OrbitControls> | null>;
   request?: { view: HabitatCameraView; revision: number };
   zone?: string;
   cutaway: boolean;
+  overview: [number, number, number];
 }) {
   const camera = useThree((state) => state.camera);
   const transition = useRef<{ target: Vector3; position: Vector3 } | null>(null);
@@ -52,7 +55,6 @@ export function HabitatCamera({
     const orbit = controls.current;
     if (!orbit || !request) return;
 
-    const overview = cutaway ? shuttleOverview : habitatOverview;
     const target = zone && request.view === 'module' ? moduleTarget(zone, cutaway) : undefined;
     const offset = new Vector3(...overview);
     const next = {
@@ -84,7 +86,7 @@ export function HabitatCamera({
       orbit.removeEventListener('start', stop);
       motion.removeEventListener('change', onMotionChange);
     };
-  }, [camera, controls, request, zone, cutaway]);
+  }, [camera, controls, request, zone, cutaway, overview]);
 
   useFrame((_, delta) => {
     const orbit = controls.current;

@@ -27,10 +27,14 @@ test('de una lectura de respiración al módulo, Tumi y el autorregistro', async
   const reading = page.getByRole('complementary', { name: 'Frecuencia respiratoria' });
   await expect(reading).toContainText('14 respiraciones por minuto');
   await reading.getByRole('button', { name: 'Ver módulo de la tripulación' }).click();
-  const modulePanel = page.getByRole('complementary', { name: 'Contexto del módulo' });
-  await expect(modulePanel).toContainText('Hábitat de descanso · Descanso');
-  await expect(modulePanel).toContainText('14:32 UTC');
-  await page.getByRole('button', { name: 'Astronauta', exact: true }).click();
+  const habitat = page.getByRole('region', { name: 'Explorador de módulos' });
+  await expect(habitat).toContainText('Hábitat de descanso');
+  await expect(habitat).toContainText('14:32 UTC');
+  await habitat.getByRole('button', { name: 'Elena Torres' }).click();
+  await page
+    .getByRole('group', { name: 'Lecturas de la instantánea' })
+    .getByRole('button', { name: 'Respiración', exact: true })
+    .click();
   await reading.getByRole('button', { name: 'Preguntar a Tumi por esta lectura' }).click();
   const chat = page.getByRole('region', { name: 'Tumi' });
   await chat.getByRole('button', { name: '¿Qué significa este dato?' }).click();
@@ -47,6 +51,10 @@ test('de una lectura de respiración al módulo, Tumi y el autorregistro', async
   await entry.getByRole('button', { name: 'Guardar autorregistro' }).click();
   await expect(entry.getByRole('status')).toContainText('guardado');
   await page.reload();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .click();
   await expect(page.getByRole('region', { name: 'Historial de autorregistros' })).toContainText(
     'Observación ficticia durante el descanso.',
   );

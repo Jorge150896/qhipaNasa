@@ -7,7 +7,7 @@ Todas las carpetas de esta tabla están en `frontend/src/presentation/features/`
 | Menú | Carpeta | Screen → View | URL de Odyssey |
 | --- | --- | --- | --- |
 | Mapa espacial | `space-map/` | `SpaceExplorerScreen` → `SpaceExplorerView` | `/explore` |
-| Centro de misión | `mission-overview/` | `MissionOverviewScreen` → `MissionOverviewView` | `/mission/overview` |
+| Resumen de misión | `mission-overview/` | `MissionOverviewScreen` → `MissionOverviewView` | `/mission/overview` |
 | Monitoreo | `monitoring/` | `MonitoringScreen` → `MonitoringView` | `/mission/monitoring` |
 | Tripulación | `crew/` | `CrewScreen` → `CrewView` | `/mission/crew` |
 | Entorno de la nave | `habitat/` | `HabitatScreen` → `HabitatView` | `/mission/habitat` |
@@ -27,10 +27,16 @@ Otros hábitats conservan `/missions/[habitatId]/[section]` con las mismas secci
 - `mission/MissionWorkspaceProvider.tsx` y `mission/useMission.ts`: modelo del flujo existente. Mantienen persona, indicador, zona, escenario, datos, guardado y revisión entre secciones. Salir del hábitat desmonta el provider; los registros persistidos conservan sus claves.
 - `space-map/useSpaceExplorerViewModel.ts`: datos, destinos y actualización de registros del mapa.
 - `crew/useCrewViewModel.ts`: sistema corporal y modo de visor privados de Tripulación. `crew-health` conserva sus propios casos de uso y `useCrewHealthViewModel` para autorregistros/revisiones por área.
-- `presentation/shared/mission/useMissionDashboardViewModel.ts`: modo de visor y etiquetas de hábitat, reutilizado por Centro, Tripulación y Entorno. Se reinicia al salir de la sección.
+- `presentation/shared/mission/useMissionDashboardViewModel.ts`: modo de visor y etiquetas de hábitat, reutilizado por Tripulación y Entorno. Se reinicia al salir de la sección.
 - Historial, Chequeo, Observaciones y Simulación consumen datos y callbacks del modelo de misión existente. No duplican los casos de uso ni crean ViewModels vacíos. Los formularios conservan sus borradores visuales locales. Fuentes es estática.
 
 Las nuevas funcionalidades autónomas con estado/operaciones usan `NombreScreen.tsx`, `useNombreViewModel.ts`, `types.ts` y `components/NombreView.tsx`. Screen conecta y navega; ViewModel recibe casos de uso inyectados; View representa datos y emite callbacks. Seguir [screens-and-flows.md](screens-and-flows.md).
+
+## Recorridos de misión
+
+- Resumen de misión prioriza los pendientes de la persona seleccionada y enlaza a la observación o al registro correspondiente. «Ubicar mi módulo» abre Entorno con la zona de la persona seleccionada. Entorno mantiene un selector HTML sincronizado con el visor y una ficha de condiciones y ocupación. También incluye una serie archivada de NASA RadLab.
+- Tripulación muestra Ahora, Autoevaluación, Historial y Personalización como vistas seleccionables. Historial de Tripulación reúne el contexto de una muestra y los registros locales de esa persona. Las sesiones API conservan su identidad externa. Los registros mantienen sus repositorios y rutas de detalle.
+- Observaciones abre el indicador o el chequeo correspondiente. Simulación muestra el escenario seleccionado y enlaza a su resultado. Tierra se abre desde Mapa espacial.
 
 ## Dónde trabajar
 

@@ -1,9 +1,10 @@
 import type { MissionDashboardScreenProps } from '../../shared/mission/types';
-import type { MissionDashboardProps } from '../../shared/mission/MissionDashboardView';
+import type { ReactNode } from 'react';
 import type { IconName } from '@/ui/Icon';
 import type { BodySystemKey } from '../crew-health/types';
-import type { MetricData, SensorKey, ZoneData } from '../mission/types';
+import type { MetricData, MissionData, SensorKey, ZoneData } from '../mission/types';
 
+export type CrewSection = 'now' | 'history' | 'health' | 'avatar';
 export type CrewScreenProps = MissionDashboardScreenProps;
 export interface CrewViewProps {
   onSelectBodyRegion(id: BodySystemKey): void;
@@ -15,10 +16,13 @@ export interface CrewViewProps {
   sampleAt?: string;
   synchronizedMoment?: CrewTimelineDetail;
   onToggleSynchronization(): void;
-  dashboard: Pick<
-    MissionDashboardProps,
-    'data' | 'habitatLabel' | 'scene' | 'mode' | 'onModeChange'
-  >;
+  dashboard: {
+    data: MissionData;
+    habitatLabel: string;
+    scene: ReactNode;
+    mode: 'crew' | 'ship';
+    onModeChange(mode: 'crew' | 'ship'): void;
+  };
 }
 
 export interface CrewHologramData {

@@ -3,10 +3,13 @@ import { Icon } from '@/ui/Icon';
 import { SensorTabs } from '../../../shared/mission/SensorTabs';
 import { TrendChart } from '../../../shared/mission/TrendChart';
 import { MissionExplorerPanel } from '../../../shared/mission/MissionExplorerPanel';
-import type { CrewViewProps } from '../types';
+import type { CrewSection, CrewViewProps } from '../types';
 
 export function CrewView({
   dashboard,
+  section,
+  onChangeSection,
+  onOpenHabitat,
   avatarPanel,
   healthPanel,
   timelinePanel,
@@ -19,22 +22,48 @@ export function CrewView({
   onSelectTelemetrySensor,
   onSelectBodyRegion,
   onOpenHistory,
-}: CrewViewProps & { healthPanel: ReactNode; timelinePanel: ReactNode; avatarPanel: ReactNode }) {
+}: CrewViewProps & {
+  healthPanel: ReactNode;
+  timelinePanel: ReactNode;
+  avatarPanel: ReactNode;
+  section: CrewSection;
+  onChangeSection(section: CrewSection): void;
+  onOpenHabitat(): void;
+}) {
   const { data, habitatLabel, scene, mode, onModeChange } = dashboard;
   return (
     <>
       <nav className="crew-section-links" aria-label="Secciones de Tripulación">
-        <a href="#crew-now">Ahora</a>
-        <a href="#crew-history">Historial</a>
-        <a href="#crew-health">Autoevaluación</a>
-        <a href="#crew-avatar">Personalización</a>
+        {(
+          [
+            ['now', 'Ahora'],
+            ['health', 'Autoevaluación'],
+            ['history', 'Historial'],
+            ['avatar', 'Personalización'],
+          ] as const
+        ).map(([id, label]) => (
+          <button
+            className="button secondary"
+            type="button"
+            key={id}
+            aria-controls={`crew-${id === 'health' ? 'health-panel' : id === 'avatar' ? 'avatar-panel' : id}`}
+            aria-pressed={section === id}
+            onClick={() => onChangeSection(id)}
+          >
+            {label}
+          </button>
+        ))}
       </nav>
       <section
+        hidden={section !== 'now'}
         id="crew-now"
         className="crew-now"
         aria-label="Estado de la tripulación"
         tabIndex={-1}
       >
+        <button className="text-button crew-location-link" onClick={onOpenHabitat}>
+          Ver módulo · {data.selected.location} <Icon name="arrow" size={14} />
+        </button>
         <MissionExplorerPanel
           anchorId="crew-body"
           crewName={data.selected.name}
@@ -61,9 +90,9 @@ export function CrewView({
             </button>
           </div>
         )}
-        {avatarPanel}
       </section>
       <section
+        hidden={section !== 'history'}
         className="panel crew-history"
         id="crew-history"
         tabIndex={-1}
@@ -73,7 +102,7 @@ export function CrewView({
         <section className="crew-chart-panel" aria-label="Tendencia de telemetría">
           <div className="panel-heading">
             <div>
-              <p className="eyebrow">{data.selected.name} · HISTORIAL SINTÉTICO</p>
+              <p className="eyebrow">HISTORIAL SINTÉTICO</p>
               <h3>{telemetryMetric?.label ?? 'Lecturas de sensores'}</h3>
             </div>
             {telemetryMetric && (
@@ -112,20 +141,33 @@ export function CrewView({
               {synchronizedMoment.date} · {synchronizedMoment.activity ?? 'Actividad sin registrar'}{' '}
               · {synchronizedMoment.zone?.name ?? 'Ubicación sin registrar'}
               {' · '}
-              <a href="#crew-body">Ver en el visor</a>
+              <button type="button" className="text-button" onClick={() => onChangeSection('now')}>
+                Ver en el visor
+              </button>
             </p>
           )}
           {!telemetryMetric && (
             <p className="sub">
               Consulta los autorregistros del área en{' '}
-              <a href="#crew-health-history">Autoevaluación</a>. Elige un sensor para volver a sus
-              lecturas.
+              <button
+                type="button"
+                className="text-button"
+                onClick={() => onChangeSection('health')}
+              >
+                Autoevaluación
+              </button>
+              . Elige un sensor para volver a sus lecturas.
             </p>
           )}
         </section>
         {timelinePanel}
       </section>
-      {healthPanel}
+      <div id="crew-health-panel" hidden={section !== 'health'}>
+        {healthPanel}
+      </div>
+      <div id="crew-avatar-panel" hidden={section !== 'avatar'}>
+        {avatarPanel}
+      </div>
     </>
   );
 }

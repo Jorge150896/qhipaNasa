@@ -1,132 +1,172 @@
-.mission-personal-summary h1 {
-  margin: 0 0 10px;
-  font-size: 19px;
-}
-
-.mission-personal-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
-  gap: 10px;
-}
-
-.mission-personal-card {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  min-width: 0;
-  gap: 7px;
-  background: linear-gradient(145deg, #8338ec24, transparent 65%), var(--surface);
-  overflow-wrap: anywhere;
-}
-
-.mission-personal-card h3 {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin: 0;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.mission-personal-card h3 svg {
-  color: var(--accent-hover);
-}
-
-.mission-personal-card strong {
-  font-size: 16px;
-}
-
-.mission-personal-card p {
-  margin: 0;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.mission-personal-card > .button {
-  margin-top: auto;
-}
-
-.mission-personal-card .button {
-  min-height: 40px;
-}
-
-.mission-personal-attention {
-  border-color: #d28b56;
-}
-
-.mission-personal-signal {
+.mission-personal-summary {
   display: grid;
   justify-items: start;
-  gap: 7px;
+  gap: 1rem;
 }
 
-.mission-page.overview-page {
-  gap: 20px;
+.mission-personal-summary h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
 }
 
+.mission-priorities,
+.mission-context {
+  width: 100%;
+}
+
+.mission-priorities {
+  border-color: var(--line);
+  background: linear-gradient(120deg, var(--accent-soft), transparent 60%), var(--surface);
+}
+
+.mission-priorities h2,
+.mission-context h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+}
+
+.mission-priorities h2 svg {
+  color: var(--accent);
+}
+
+.mission-priorities ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mission-priorities li,
+.mission-context dl > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 0;
+}
+
+.mission-priorities li + li,
+.mission-context dl > div + div {
+  border-top: 1px solid var(--line-soft);
+}
+
+.mission-priorities h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.05rem;
+}
+
+.mission-priorities p,
+.mission-context dt,
+.mission-context small,
 .overview-snapshot-time {
   margin: 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 0.85rem;
 }
 
-.overview-page .mission-personal-card {
-  min-height: 138px;
+.mission-context dl,
+.mission-context dd {
+  margin: 0;
 }
 
-.mission-overview-explorer {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 14px;
-  align-items: start;
+.mission-context dt {
+  grid-column: 1 / -1;
 }
 
-.mission-overview-explorer .metric-card {
-  padding: 12px 15px;
-  background: var(--glass);
-  border-color: var(--line-soft);
+.mission-context small {
+  display: block;
+  margin-top: 0.2rem;
 }
 
-.mission-overview-explorer .metric-card[aria-pressed='true'] {
-  background: var(--glass-active);
-  border-color: var(--selection-border);
-  box-shadow: var(--glass-glow);
-}
-
-.mission-overview-explorer .metric-number {
-  margin-top: 4px;
-  font-size: 23px;
-}
-
-.mission-overview-explorer .metric-quality {
-  margin-left: 0;
-}
-
-.mission-overview-explorer .scene-panel {
-  background: var(--surface);
-}
-
-@media (min-width: 901px) {
-  .overview-shell .topbar {
-    min-height: 45px;
-  }
-
-  .mission-page.overview-page {
-    padding-top: 6px;
-  }
-
-  .mission-overview-explorer {
-    grid-template-columns: minmax(175px, 1fr) minmax(0, 2.7fr);
-    gap: clamp(20px, 4vw, 64px);
-  }
-
-  .mission-overview-explorer .metric-grid {
+@media (max-width: 600px) {
+  .mission-priorities li,
+  .mission-context dl > div {
     grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
-    padding-top: 9px;
+    justify-items: start;
   }
+}
 
-  .mission-overview-explorer .scene-viewport {
-    height: clamp(390px, 42vw, 530px);
+.mission-personal-heading,
+.signal-check-actions,
+.signal-check-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+}
+
+.mission-personal-heading {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.signal-check {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  grid-template-areas: 'action chart' 'sensor chart';
+  grid-template-rows: auto 1fr;
+  align-items: start;
+  gap: 1.25rem;
+  border-color: var(--selection-border);
+  background: linear-gradient(135deg, var(--accent-soft), transparent 48%), var(--surface);
+}
+
+.signal-check-content {
+  grid-area: action;
+}
+
+.signal-check-visuals {
+  grid-area: chart;
+}
+
+.signal-check h2,
+.signal-check-heading p {
+  margin: 0;
+}
+
+.signal-check h2 {
+  font-size: clamp(1.2rem, 2.1vw, 1.65rem);
+}
+
+.signal-check-heading .assistant-robot {
+  flex-shrink: 0;
+}
+
+.signal-check-result {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 0.85rem;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+}
+
+.signal-check-result span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.signal-check-scene {
+  grid-area: sensor;
+}
+
+.signal-check-scene summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+
+.signal-check-scene .scene-viewport {
+  height: 19rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 760px) {
+  .signal-check {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'action' 'chart' 'sensor';
+    grid-template-rows: auto;
   }
 }

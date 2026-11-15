@@ -41,7 +41,6 @@ export function MonitoringView({
               MEDICIÓN ASISTIDA · {d.mode === 'demo' ? 'DEMOSTRACIÓN SINTÉTICA' : 'CONSUMIDOR API'}
             </p>
             <h2>{d.subjectLabel}</h2>
-            <p className="sub">Preparar, capturar, repetir y revisar con trazabilidad.</p>
           </div>
         </div>
         <ol className={styles.steps} aria-label="Progreso de la medición">
@@ -64,10 +63,16 @@ export function MonitoringView({
           <p>{d.error} Las lecturas anteriores permanecen identificadas con su hora.</p>
         </div>
       )}
-      <div className={styles.layout}>
+      <div className={`${styles.layout} ${!preparing ? styles.activeLayout : ''}`}>
         <Panel label="Preparación de captura">
           <h3>Contexto de la medición</h3>
-          <fieldset disabled={!preparing} className={styles.fields}>
+          {!preparing && (
+            <p className="sub">
+              {activityOptions.find((option) => option.id === d.activity)?.label} ·{' '}
+              {phases[d.phase]} · {d.location} · {d.equipment}
+            </p>
+          )}
+          <fieldset disabled={!preparing} hidden={!preparing} className={styles.fields}>
             <legend className="sr-only">Configurar sesión</legend>
             <label>
               Origen de las lecturas
@@ -76,7 +81,9 @@ export function MonitoringView({
                 onChange={(e) => a.setMode(e.target.value === 'api' ? 'api' : 'demo')}
               >
                 <option value="demo">Demostración · datos sintéticos</option>
-                <option value="api">API · servicio externo</option>
+                <option value="api" disabled={!d.apiConfigured}>
+                  {d.apiConfigured ? 'API · servicio externo' : 'API · sin configurar'}
+                </option>
               </select>
             </label>
             {d.mode === 'api' ? (
@@ -382,7 +389,11 @@ export function MonitoringView({
           </div>
         ) : d.sessions.length ? (
           d.sessions.map((session) => (
-            <details className={styles.record} key={session.id}>
+            <details
+              className={styles.record}
+              id={`session-${encodeURIComponent(session.id)}`}
+              key={session.id}
+            >
               <summary>
                 {session.at} · {session.activity} · {session.count} capturas · {session.source}
               </summary>

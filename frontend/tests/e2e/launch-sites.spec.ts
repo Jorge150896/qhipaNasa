@@ -272,7 +272,8 @@ test('opción Todo de la Tierra: directorio completo, videos, acceso desde el ma
   });
   await page.screenshot({ path: '../docs/qa/earth-overview-desktop.png', fullPage: true });
   await page
-    .getByRole('button', { name: /Centro Espacial Johnson.*Ver información y video/ })
+    .getByRole('region', { name: 'Sedes principales de NASA', exact: true })
+    .getByRole('button', { name: /Centro Espacial Johnson/ })
     .click();
   await expect(page).toHaveURL(/tab=earth&site=johnson/);
   await expect(
@@ -294,7 +295,10 @@ test('opción Todo de la Tierra: directorio completo, videos, acceso desde el ma
   await expect(page.locator('.earth-place-card')).toHaveCount(8);
   await page.screenshot({ path: '../docs/qa/earth-overview-mobile.png', fullPage: true });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.getByRole('button', { name: /NASA Headquarters.*Ver información y video/ }).click();
+  await page
+    .getByRole('region', { name: 'Sedes principales de NASA', exact: true })
+    .getByRole('button', { name: /NASA Headquarters/ })
+    .click();
   await expect(
     page.getByRole('article', { name: 'NASA Headquarters · Sede central', exact: true }),
   ).toBeVisible();

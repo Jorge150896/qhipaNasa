@@ -25,8 +25,7 @@ const research = [
   },
   {
     title: 'Monitoreo de radiación de la Agencia Espacial Canadiense',
-    description:
-      'Describe CANS, un instrumento para medir radiación de neutrones. La demo no cuenta con mediciones de radiación.',
+    description: 'Describe CANS, un instrumento para medir radiación de neutrones.',
     url: 'https://www.asc-csa.gc.ca/eng/news/articles/2026/2026-02-26-monitoring-radiation-astronaut-health.asp',
   },
   {
@@ -49,10 +48,8 @@ export function SourcesView({ nasaHistoryHref }: { nasaHistoryHref: string }) {
             <span className="badge">Consumidor configurable</span>
             <h3>Sesiones de monitoreo asistido</h3>
             <p>
-              Preparación, captura, repetición, revisión y guardado local. El modo API exige una URL
-              y un sujeto propios; no sustituye errores por datos simulados. El contrato es
-              provisional y todavía no hay proveedor conectado. El modo demo conserva el origen
-              sintético. Los indicadores no determinan diagnóstico ni aptitud para una actividad.
+              Las lecturas de demostración son sintéticas. El modo API requiere una URL y un sujeto
+              configurados. Los indicadores no determinan diagnóstico ni aptitud.
             </p>
           </article>
           <article>
@@ -73,6 +70,15 @@ export function SourcesView({ nasaHistoryHref }: { nasaHistoryHref: string }) {
             <a href="https://osdr.nasa.gov/bio/repo/data/studies/OSD-575">
               Abrir el estudio OSD-575 <Icon name="arrow" size={14} />
             </a>
+          </article>
+          <article>
+            <span className="badge">Archivo NASA</span>
+            <h3>Radiación histórica de NASA RadLab</h3>
+            <p>
+              En Entorno puedes consultar la radiación ambiental de DosTel1 en Columbus y el
+              historial de cabina de la ISS. El mapa de Marte muestra una lectura exterior de
+              Curiosity en el cráter Gale.
+            </p>
           </article>
           <article>
             <span className="badge">Datos simulados</span>

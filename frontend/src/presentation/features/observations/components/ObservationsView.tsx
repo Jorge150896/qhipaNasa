@@ -5,7 +5,7 @@ export function ObservationsView({ pendingCount, ...props }: ObservationsScreenP
     <>
       <div className="section-summary">
         <span className="badge amber">{pendingCount} pendientes de revisión</span>
-        <p>Observaciones propias del escenario, sin detección clínica validada.</p>
+        <p>Observaciones del escenario simulado.</p>
       </div>
       <ObservationList {...props} />
     </>

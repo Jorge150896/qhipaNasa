@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 export type DestinationKey = 'earth' | 'moon' | 'mars' | 'station' | 'ship';
+export type ExplorerPanel = 'network' | 'launches' | 'earth' | 'mars';
 export interface HabitatData {
   id: string;
   name: string;

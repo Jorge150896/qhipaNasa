@@ -83,8 +83,6 @@ export function LaunchSitesView({
           <p className="eyebrow">RELACIÓN CON LA MISIÓN</p>
           <p>{selected.description}</p>
           <div className="launch-video-context">
-            <strong>El despegue del video ocurrió en:</strong>
-            <p>{selected.videoLocation}</p>
             <p>{selected.videoRelation}</p>
             <a href={selected.relationSourceUrl} target="_blank" rel="noreferrer">
               Fuente de la relación con esta misión ↗
@@ -98,14 +96,7 @@ export function LaunchSitesView({
         <div className="launch-empty">
           <span aria-hidden="true">↗</span>
           <h2>Elige un punto de partida</h2>
-          <p>
-            Selecciona un marcador en la Tierra o un lugar de la lista para abrir su tarjeta y un
-            video de despegue relacionado. Cada punto tiene una tarjeta individual con su nombre.
-          </p>
-          <p>
-            Este archivo educativo es independiente de los hábitats y tripulantes ficticios de la
-            demo.
-          </p>
+          <p>Selecciona un lugar para ver su historia y el video relacionado.</p>
         </div>
       )}
     </aside>
@@ -113,19 +104,9 @@ export function LaunchSitesView({
   return (
     <section className="launch-page" aria-labelledby="launch-title">
       <header className="launch-heading">
-        <p className="eyebrow">TIERRA / ARCHIVO DE EXPLORACIÓN</p>
         <h1 id="launch-title">{overview ? 'Todo de la Tierra' : 'Todo viaje empieza aquí.'}</h1>
-        <p>
-          Descubre sitios de lanzamiento y sedes principales de NASA. Cada lugar tiene su historia y
-          una misión relacionada.
-        </p>
-        <span className="launch-badge">
-          {sites.filter((site) => site.kind === 'launch-site').length} sitios de lanzamiento ·{' '}
-          {sites.filter((site) => site.kind !== 'launch-site').length} sedes NASA seleccionadas ·
-          Videos históricos
-        </span>
+        <p>Archivo histórico de sitios de lanzamiento y sedes de NASA.</p>
       </header>
-      {overview && <EarthOverview sites={sites} onSelect={onSelect} />}
       <div className="launch-layout">
         <div className="launch-map">
           <div
@@ -154,32 +135,33 @@ export function LaunchSitesView({
               Sede o laboratorio NASA
             </span>
           </div>
-          <div className="launch-sites" aria-label="Sitios de lanzamiento y sedes NASA">
-            {sites.map((site) => (
-              <button
-                key={site.id}
-                aria-pressed={site.id === selected?.id}
-                onClick={() => onSelect(site.id)}
-                aria-controls="launch-place-card"
-              >
-                <span
-                  className={`launch-number ${site.kind === 'launch-site' ? '' : 'launch-center-symbol'}`}
-                  aria-hidden="true"
+          {overview ? (
+            <EarthOverview sites={sites} onSelect={onSelect} />
+          ) : (
+            <div className="launch-sites" aria-label="Sitios de lanzamiento y sedes NASA">
+              {sites.map((site) => (
+                <button
+                  key={site.id}
+                  aria-pressed={site.id === selected?.id}
+                  onClick={() => onSelect(site.id)}
+                  aria-controls="launch-place-card"
                 >
-                  {site.symbol}
-                </span>
-                <span>
-                  <strong>{site.fullName}</strong>
-                  <small>{site.category}</small>
-                  <small>{site.region}</small>
-                  <small className="launch-video-available">
-                    ▶ Video de despegue: {site.mission}
-                  </small>
-                </span>
-                <span aria-hidden="true">↗</span>
-              </button>
-            ))}
-          </div>
+                  <span
+                    className={`launch-number ${site.kind === 'launch-site' ? '' : 'launch-center-symbol'}`}
+                    aria-hidden="true"
+                  >
+                    {site.symbol}
+                  </span>
+                  <span>
+                    <strong>{site.fullName}</strong>
+                    <small>{site.category}</small>
+                    <small>{site.region}</small>
+                  </span>
+                  <span aria-hidden="true">↗</span>
+                </button>
+              ))}
+            </div>
+          )}
           <p className="launch-caption">
             Coordenadas aproximadas en grados. Globo geográfico ilustrativo; no representa
             condiciones actuales. Selección de sedes, no es un directorio completo de NASA.

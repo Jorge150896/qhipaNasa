@@ -1,41 +1,59 @@
 import { expect, test } from '@playwright/test';
 import { confirmDailyCheck, openDailyAssessment } from './daily-check-helpers';
 
+test('Mi estado prioriza la observación de la persona y abre su detalle', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/mission/overview');
+  const pending = page.getByRole('region', { name: 'Pendientes' });
+  await expect(
+    pending.getByRole('heading', { name: 'Revisar el registro de descanso' }),
+  ).toBeVisible();
+  await expect(pending.locator('li').first().getByRole('button')).toHaveText('Abrir observación');
+  await page.getByRole('button', { name: 'Mateo Silva Especialista de misión' }).click();
+  await expect(pending.getByRole('button', { name: 'Completar chequeo diario' })).toBeVisible();
+  await expect(pending.getByRole('button', { name: 'Abrir observación' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Elena Torres Comandante' }).click();
+  await pending.getByRole('button', { name: 'Abrir observación' }).click();
+  await expect(page).toHaveURL(/observations#observation-sleep-elena-v1$/);
+  const observation = page.locator('#observation-sleep-elena-v1');
+  await expect(
+    observation.getByRole('heading', { name: 'Revisar el registro de descanso' }),
+  ).toBeVisible();
+  await observation.getByRole('button', { name: 'Marcar como revisada' }).click();
+  await page
+    .getByRole('navigation', { name: 'Navegación principal' })
+    .getByRole('button', { name: 'Mi estado' })
+    .click();
+  await expect(pending.getByRole('button', { name: 'Completar chequeo diario' })).toBeVisible();
+  await expect(pending.getByRole('button', { name: 'Abrir observación' })).toHaveCount(0);
+  await page.reload();
+  await expect(pending.getByRole('button', { name: 'Completar chequeo diario' })).toBeVisible();
+  await expect(pending.getByRole('button', { name: 'Abrir observación' })).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});
+
 test('modelo local, sensores, nave, escenarios y diario persistido', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  const modelRequest = page.waitForResponse(
-    (response) => response.url().endsWith('/models/astronaut.glb') && response.ok(),
-  );
   await page.goto('/mission/overview');
-  await expect(page.getByRole('heading', { name: 'Tu resumen de misión' })).toBeVisible();
-  await page.getByRole('button', { name: 'Consultar frecuencia cardíaca', exact: true }).waitFor();
-  await modelRequest;
+  await expect(page.getByRole('heading', { name: 'Mi estado' })).toBeVisible();
+  await expect(page.locator('main canvas')).toHaveCount(0);
   await page.screenshot({ path: '../docs/qa/dashboard-desktop.png', fullPage: true });
-  await page.getByRole('button', { name: 'Consultar temperatura corporal', exact: true }).click();
-  await expect(page.locator('.scene-reading strong')).toContainText(/36[.,]6/);
-  await page.getByRole('button', { name: 'Mateo Silva Especialista de misión' }).click();
-  await expect(page.locator('.scene-reading strong')).toContainText(/37[.,]1/);
-  await page.getByRole('button', { name: 'Nave', exact: true }).click();
-  await page.getByRole('button', { name: 'Seleccionar zona 03', exact: true }).click();
-  await expect(page.getByLabel('Zona de la nave')).toHaveValue('laboratory');
+  await page.getByRole('button', { name: 'Ubicar mi módulo' }).click();
+  const habitat = page.getByRole('region', { name: 'Explorador de módulos' });
+  await expect(habitat.getByRole('heading', { name: 'Hábitat de descanso' })).toBeVisible();
+  await habitat.getByRole('button', { name: 'Explorar Laboratorio' }).click();
+  await expect(habitat.getByRole('heading', { name: 'Laboratorio' })).toBeVisible();
   await page.screenshot({ path: '../docs/qa/nave-desktop.png', fullPage: true });
+  await page.getByText('Radiación histórica en la ISS · NASA RadLab', { exact: true }).click();
+  await expect(page.getByText(/65 registros archivados/)).toBeVisible();
   const navigation = page.getByRole('navigation', { name: 'Navegación principal' });
-  await navigation.getByRole('button', { name: 'Entorno de la nave', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Nave', exact: true })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
-  await page.getByRole('button', { name: 'Astronauta', exact: true }).click();
-  await page.getByRole('button', { name: 'Consultar frecuencia cardíaca', exact: true }).waitFor();
   await navigation.getByRole('button', { name: 'Simulación', exact: true }).click();
   await page.getByRole('button', { name: /Pérdida de señal/ }).click();
-  await navigation.getByRole('button', { name: 'Centro de misión', exact: true }).click();
+  await navigation.getByRole('button', { name: 'Mi estado', exact: true }).click();
   await page.getByRole('button', { name: 'Elena Torres Comandante' }).click();
-  await page.getByRole('button', { name: /SpO₂.*Sin señal reciente/ }).click();
-  await expect(page.locator('.scene-reading strong')).toContainText('—');
-  const summary = page.getByRole('region', { name: 'Tu resumen de misión' });
-  await summary.getByRole('button', { name: 'Revisar SpO₂' }).click();
+  const summary = page.getByRole('region', { name: 'Mi estado' });
+  await summary.getByRole('button', { name: 'Ver evidencia', exact: true }).click();
   await expect(page).toHaveURL(/\/mission\/history$/);
   await expect(page.locator('.telemetry-chart .chart-missing')).toHaveCount(3);
   await navigation.getByRole('button', { name: /Observaciones/ }).click();
@@ -49,6 +67,12 @@ test('modelo local, sensores, nave, escenarios y diario persistido', async ({ pa
   await expect(page.getByRole('status').filter({ hasText: 'guardado' })).toBeVisible();
   await page.reload();
   await expect(page.locator('.check-list').getByText(/7[.,]5 h/)).toBeVisible();
+  await navigation.getByRole('button', { name: 'Mi estado', exact: true }).click();
+  const context = page.getByRole('region', { name: 'Contexto y actividad reciente' });
+  await expect(context).toContainText('Registrado hoy');
+  await context.getByRole('button', { name: 'Consultar chequeo' }).click();
+  await expect(page).toHaveURL(/journal$/);
+  await expect(page.locator('.check-list')).toContainText(/7[.,]5 h/);
   await page.goto('/mission/history');
   await expect(page.getByRole('heading', { name: 'Más allá de una lectura.' })).toBeVisible();
   expect(errors).toEqual([]);
@@ -57,26 +81,22 @@ test('modelo local, sensores, nave, escenarios y diario persistido', async ({ pa
 test('móvil: sensores seleccionables y sin desbordamiento horizontal', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 1100 });
   await page.goto('/mission/overview');
-  await page.getByRole('button', { name: 'Consultar frecuencia cardíaca', exact: true }).waitFor();
-  await page.getByRole('button', { name: 'Consultar temperatura corporal', exact: true }).click();
-  await expect(page.locator('.scene-reading strong')).toContainText(/36[.,]6/);
   const sizes = await page.evaluate(() => ({
     width: innerWidth,
     scroll: document.documentElement.scrollWidth,
   }));
   expect(sizes.scroll).toBeLessThanOrEqual(sizes.width);
   await page.screenshot({ path: '../docs/qa/dashboard-mobile.png', fullPage: true });
-  const summary = page.getByRole('region', { name: 'Tu resumen de misión' });
+  const summary = page.getByRole('region', { name: 'Mi estado' });
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
-  await expect(summary.getByRole('heading', { name: 'Datos por revisar' })).toHaveCount(0);
   await page.getByRole('button', { name: 'Mateo Silva Especialista de misión' }).click();
   await expect(summary).toContainText('Módulo de ejercicio');
   await summary.getByRole('button', { name: 'Ubicar mi módulo' }).click();
-  await expect(page).toHaveURL(/\/mission\/crew#crew-module$/);
-  const explorer = page.getByRole('region', { name: 'Explorador tridimensional' });
+  await expect(page).toHaveURL(/\/mission\/habitat#occupied-module$/);
+  const explorer = page.getByRole('region', { name: 'Explorador de módulos' });
   await expect(explorer).toBeFocused();
   await expect(explorer.getByRole('heading', { name: 'Módulo de ejercicio' })).toBeVisible();
-  await nav.getByRole('button', { name: 'Centro de misión' }).click();
+  await nav.getByRole('button', { name: 'Mi estado' }).click();
   await summary.getByRole('button', { name: 'Nuevo autorregistro' }).click();
   await expect(page).toHaveURL(/\/mission\/crew#crew-health-entry$/);
   const entry = page.getByRole('region', { name: 'Autorregistro de salud' });
@@ -85,8 +105,8 @@ test('móvil: sensores seleccionables y sin desbordamiento horizontal', async ({
   await entry.getByRole('button', { name: 'Revisar respuestas' }).click();
   await entry.getByRole('button', { name: 'Guardar autorregistro' }).click();
   await expect(entry.getByRole('status')).toContainText('Autorregistro de demostración guardado');
-  await nav.getByRole('button', { name: 'Centro de misión' }).click();
-  await expect(summary).toContainText('Respuesta inmunitaria');
+  await nav.getByRole('button', { name: 'Mi estado' }).click();
+  await expect(summary).toContainText('Cardiovascular');
   await expect(summary).toContainText('Sin cambios reportados');
   await page.getByRole('button', { name: 'Elena Torres Comandante' }).click();
   await expect(summary).toContainText('Aún no hay autorregistros');
@@ -95,10 +115,14 @@ test('móvil: sensores seleccionables y sin desbordamiento horizontal', async ({
 test('un asset 3D fallido no impide consultar los indicadores', async ({ page }) => {
   const requestedModel = page.waitForRequest('**/models/astronaut.glb');
   await page.route('**/models/astronaut.glb', (route) => route.abort());
-  await page.goto('/mission/overview');
-  // HTML controls must work while the deferred viewer is still loading.
-  await page.getByRole('button', { name: /Temperatura.*Lectura disponible/ }).click();
-  await expect(page.locator('.scene-reading strong')).toContainText(/36[.,]6/);
+  await page.goto('/mission/crew');
+  await page
+    .getByRole('group', { name: 'Lecturas de la instantánea' })
+    .getByRole('button', { name: 'Temperatura', exact: true })
+    .click();
+  await expect(page.getByRole('complementary', { name: 'Temperatura corporal' })).toContainText(
+    /36[.,]6/,
+  );
   // Check the fallback after injecting the asset failure, not before its bundle loads.
   await requestedModel;
   await expect(page.getByRole('heading', { name: 'El visor 3D no está disponible' })).toBeVisible();
@@ -138,13 +162,13 @@ test('cada sección conserva navegación y entrada directa después de separar f
   await page.goto('/missions/selene/overview');
   const sections = [
     ['Tripulación', 'crew', 'Tripulación'],
-    ['Entorno del hábitat', 'habitat', 'El espacio que habitan.'],
+    ['Entorno del hábitat', 'habitat', 'Entorno del hábitat'],
     ['Historial', 'history', 'Más allá de una lectura.'],
     ['Chequeo diario', 'journal', '¿Cómo va tu día a bordo?'],
     ['Observaciones', 'observations', 'De la señal al seguimiento.'],
     ['Simulación', 'simulation', 'Explora lo que cambia.'],
     ['Fuentes y alcance', 'sources', 'Datos con contexto.'],
-    ['Centro de misión', 'overview', 'Tu resumen de misión'],
+    ['Mi estado', 'overview', 'Mi estado'],
   ];
   for (const [label, section, heading] of sections) {
     await page

@@ -87,6 +87,8 @@ export interface MissionData {
   checks: {
     id: string;
     crew: string;
+    crewId: string;
+    recordedAt: string;
     date: string;
     sleep: string;
     fatigue: string;

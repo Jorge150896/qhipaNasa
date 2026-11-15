@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { ObservationData } from '../../mission/types';
 import { Icon } from '@/ui/Icon';
 import { EmptyState, Panel } from '@/ui/Panel';
@@ -5,11 +6,27 @@ export function ObservationList({
   observations,
   saving,
   onReview,
+  onOpenRelated,
 }: {
   observations: ObservationData[];
   saving: boolean;
+  onOpenRelated(item: ObservationData): void;
   onReview(id: string, reviewed: boolean): Promise<void>;
 }) {
+  useEffect(() => {
+    const focusObservation = () => {
+      const id = window.location.hash.slice(1);
+      if (!id.startsWith('observation-')) return;
+      document.getElementById(id)?.focus();
+    };
+    const frame = requestAnimationFrame(focusObservation);
+    window.addEventListener('hashchange', focusObservation);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('hashchange', focusObservation);
+    };
+  }, []);
+
   if (!observations.length)
     return (
       <Panel>
@@ -22,7 +39,12 @@ export function ObservationList({
   return (
     <div className="observation-list">
       {observations.map((item) => (
-        <Panel key={item.id} className="observation-detail">
+        <section
+          key={item.id}
+          id={`observation-${item.id}`}
+          tabIndex={-1}
+          className="panel observation-detail"
+        >
           <div className="panel-heading">
             <span className={`icon-chip ${item.reviewed ? '' : 'amber'}`}>
               <Icon name={item.reviewed ? 'checked' : 'alert'} />
@@ -57,7 +79,10 @@ export function ObservationList({
             </div>
           </div>
           <div className="panel-footer">
-            <span className="sub">Seguimiento local · No equivale a resolución médica</span>
+            <button type="button" className="text-button" onClick={() => onOpenRelated(item)}>
+              {item.category === 'Calidad de datos' ? 'Revisar SpO₂' : 'Abrir chequeo diario'}{' '}
+              <Icon name="arrow" size={14} />
+            </button>
             <button
               className="button secondary"
               disabled={saving}
@@ -67,7 +92,7 @@ export function ObservationList({
               {item.reviewed ? 'Volver a pendiente' : 'Marcar como revisada'}
             </button>
           </div>
-        </Panel>
+        </section>
       ))}
     </div>
   );

@@ -3,7 +3,6 @@ import type { HealthEntry, HealthJournal } from '@/domain/health/models';
 import type { LoadCrewHealth } from '@/domain/usecases/ManageCrewHealth';
 import { healthSystems, reportedStateLabels } from '../crew-health/constants';
 import type { MissionData } from '../mission/types';
-import { useMissionDashboardViewModel } from '../../shared/mission/useMissionDashboardViewModel';
 import type { MissionPersonalSummary } from './types';
 
 const recordTime = new Intl.DateTimeFormat('es-PE', {
@@ -25,12 +24,7 @@ function summarizeRecord(entry: HealthEntry | undefined): MissionPersonalSummary
   };
 }
 
-export function useMissionOverviewViewModel(
-  habitatId: string,
-  mission: MissionData,
-  loadHealth: LoadCrewHealth,
-) {
-  const dashboard = useMissionDashboardViewModel(habitatId, 'crew');
+export function useMissionOverviewViewModel(mission: MissionData, loadHealth: LoadCrewHealth) {
   const [result, setResult] = useState<{ source: LoadCrewHealth; journal: HealthJournal | null }>();
   useEffect(() => {
     let active = true;
@@ -56,8 +50,40 @@ export function useMissionOverviewViewModel(
         : latest,
     undefined,
   );
+  const pending: MissionPersonalSummary['pending'] = mission.observations
+    .filter(({ crewId, reviewed }) => crewId === mission.selected.id && !reviewed)
+    .map(({ id, title, detail }) => ({
+      key: id,
+      title,
+      detail,
+      actionLabel: 'Abrir observación',
+      action: { kind: 'observation', id },
+    }));
+  for (const metric of mission.selected.metrics) {
+    if (metric.qualityTone === 'attention') {
+      pending.push({
+        key: metric.id,
+        title: metric.shortLabel,
+        detail: metric.quality,
+        actionLabel: `Revisar ${metric.shortLabel}`,
+        action: { kind: 'signal', id: metric.id },
+      });
+    }
+  }
+  if (!mission.todayCheck) {
+    pending.push({
+      key: 'daily-check',
+      title: 'Completar el chequeo diario',
+      detail: 'Registra cómo te sientes hoy.',
+      actionLabel: 'Completar chequeo diario',
+      action: { kind: 'check' },
+    });
+  }
+
   const summary: MissionPersonalSummary = {
     activity: mission.selected.activity,
+    todayCheck: mission.todayCheck,
+    pending,
     location: mission.selected.location,
     record:
       journal === undefined
@@ -69,10 +95,7 @@ export function useMissionOverviewViewModel(
               available: false,
             }
           : summarizeRecord(lastEntry),
-    signals: mission.selected.metrics
-      .filter((metric) => metric.qualityTone === 'attention')
-      .map(({ id, shortLabel, quality }) => ({ id, label: shortLabel, quality })),
   };
 
-  return { ...dashboard, summary };
+  return { summary };
 }

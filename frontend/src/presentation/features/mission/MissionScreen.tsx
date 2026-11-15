@@ -21,7 +21,11 @@ export function MissionScreen({
   const { data, loading, error, message, saving, actions } = useMissionWorkspace();
   function navigate(next: MissionSection, anchor?: CrewEntryAnchor) {
     const route = missionRoute(habitatId, next);
-    startNavigation(() => router.push(anchor ? `${route}#${anchor}` : route, { scroll: !anchor }));
+    startNavigation(() =>
+      router.push(anchor ? `${route}#${anchor}` : route, {
+        scroll: !anchor || next === 'observations',
+      }),
+    );
   }
   return (
     <MissionShell
@@ -29,7 +33,6 @@ export function MissionScreen({
       onNavigate={navigate}
       pendingCount={data?.pendingCount}
       missionName={data?.name}
-      onOpenEarth={() => startNavigation(() => router.push('/explore?destination=earth&tab=earth'))}
       onOpenExplorer={() =>
         startNavigation(() =>
           router.push(

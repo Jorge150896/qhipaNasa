@@ -22,7 +22,7 @@ export function HistoryView({
       <Panel>
         <div className="panel-heading">
           <div>
-            <span className="eyebrow">{crew.name} · HISTORIAL SINTÉTICO</span>
+            <span className="eyebrow">HISTORIAL SINTÉTICO</span>
             <h3>{metric.label}</h3>
           </div>
           <span className={`badge ${metric.qualityTone === 'attention' ? 'amber' : ''}`}>
@@ -35,11 +35,10 @@ export function HistoryView({
           Los segmentos se interrumpen cuando falta una muestra. No se interpolan valores ausentes.
         </p>
         <a className="text-button" href="#nasa-history">
-          Ver histórico de NASA
+          Ver referencias científicas de NASA
           <Icon name="arrow" size={14} />
         </a>
       </Panel>
-      <NasaHistoryPanel {...nasaHistory} />
       <Panel>
         <div className="panel-heading">
           <Icon name="radio" />
@@ -88,10 +87,8 @@ export function HistoryView({
             </tbody>
           </table>
         </div>
-        <p className="table-note">
-          Serie de demostración de 14 minutos. Sin conexión con una misión real.
-        </p>
       </Panel>
+      <NasaHistoryPanel {...nasaHistory} />
     </>
   );
 }

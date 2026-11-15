@@ -1,5 +1,5 @@
 'use client';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { createMonitoringDependencies } from '@/di/createMonitoringDependencies.client';
 import { useMonitoringViewModel } from './useMonitoringViewModel';
 import { MonitoringView } from './components/MonitoringView';
@@ -19,6 +19,15 @@ function MonitoringSessionScreen({
 }) {
   const dependencies = useMemo(() => createMonitoringDependencies(habitatId), [habitatId]);
   const model = useMonitoringViewModel(dependencies, person);
+  useEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (!id.startsWith('session-')) return;
+    const details = document.getElementById(id);
+    if (details instanceof HTMLDetailsElement) {
+      details.open = true;
+      details.scrollIntoView({ block: 'center' });
+    }
+  }, [model.data.journalLoading]);
   return (
     <MonitoringView
       {...model}

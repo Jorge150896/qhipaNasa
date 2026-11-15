@@ -5,7 +5,7 @@ export function useLoadingDelayViewModel(active = true) {
   const [introPending, setIntroPending] = useState(true);
   useEffect(() => {
     if (!active) return;
-    const timer = window.setTimeout(() => setIntroPending(false), 3000);
+    const timer = window.setTimeout(() => setIntroPending(false), 650);
     return () => window.clearTimeout(timer);
   }, [active]);
   return active && introPending;

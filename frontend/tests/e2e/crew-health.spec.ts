@@ -18,14 +18,25 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
     .getByRole('button', { name: 'Tripulación', exact: true })
     .click();
   const health = page.getByRole('region', { name: 'Salud por sistemas', exact: true });
+  await page.getByRole('button', { name: 'Autoevaluación', exact: true }).click();
   await expect(
     health.getByRole('navigation', { name: 'Sistemas corporales' }).getByRole('button'),
   ).toHaveCount(7);
   const telemetry = page.getByRole('region', { name: 'Tendencia de telemetría' });
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await expect(
     telemetry.getByRole('img', { name: /Historial de Frecuencia cardíaca/ }),
   ).toBeVisible();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Ahora', exact: true })
+    .click();
+
   await expect(page.locator('.crew-hologram')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Ahora', exact: true }).click();
   const chestMarker = page.getByRole('button', { name: 'Consultar frecuencia cardíaca' });
   await expect(chestMarker).toBeVisible();
   const markerBox = await chestMarker.boundingBox();
@@ -43,9 +54,18 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
   ).toBeVisible();
   await expect(telemetry.getByRole('img')).toHaveCount(0);
   await pulseCard.getByRole('button', { name: 'Ocultar tendencia' }).click();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await expect(
     telemetry.getByRole('img', { name: /Historial de Frecuencia cardíaca/ }),
   ).toBeVisible();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Ahora', exact: true })
+    .click();
+
   await expect(telemetry.getByRole('button', { name: 'Pausar gráfica' })).toHaveCount(0);
 
   const respirationMarker = page.getByRole('button', {
@@ -74,6 +94,10 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
   await hologram.getByText('Ver detalles', { exact: true }).click();
   await hologram.getByRole('button', { name: 'Ver mis autorregistros' }).click();
   await expect(health.getByRole('region', { name: 'Historial de autorregistros' })).toBeFocused();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Ahora', exact: true })
+    .click();
   await hologram.getByRole('button', { name: 'Registrar ejercicio' }).click();
   await expect(health.getByRole('region', { name: 'Autorregistro de salud' })).toBeFocused();
   await expect(
@@ -100,17 +124,35 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
   await health.getByRole('button', { name: 'Revisar respuestas', exact: true }).click();
   await health.getByRole('button', { name: 'Guardar autorregistro', exact: true }).click();
   await expect(health.getByRole('status')).toContainText('Autorregistro de demostración guardado');
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Ahora', exact: true })
+    .click();
   await expect(hologram).toContainText('Bicicleta ficticia · 20 min registrados');
+  const details = hologram.locator('details.crew-hologram-more');
+  if (!((await details.getAttribute('open')) === '')) await details.locator('summary').click();
   await expect(hologram.getByText('Bicicleta estática', { exact: true })).toBeVisible();
   await expect(hologram.locator('.crew-equipment-scene canvas')).toBeVisible();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .click();
   await health.getByRole('button', { name: 'Marcar revisión realizada', exact: true }).click();
   await expect(health.locator('.health-followup')).toContainText('Revisado hoy en UTC');
   expect(await page.evaluate(() => localStorage.getItem('astra.demo.journal.v1'))).toBe(oldJournal);
   await page.reload();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .click();
   await health.getByRole('button', { name: 'Ejercicio y aparato locomotor', exact: true }).click();
   await expect(health.locator('.health-history')).toContainText('20 min registrados');
   await expect(health.locator('.health-followup')).toContainText('Revisado hoy en UTC');
   const timeline = page.getByRole('region', { name: 'Línea de tiempo', exact: true });
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await timeline.getByRole('button', { name: /Bicicleta ficticia/ }).click();
   const moment = timeline.getByRole('region', { name: 'Detalle del momento' });
   await expect(moment).toContainText('Módulo de ejercicio');
@@ -130,9 +172,15 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
     .click();
   await expect(page.locator('.crew-hologram')).toHaveCount(0);
   await expect(health.locator('.health-history li')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Autoevaluación', exact: true }).click();
   await expect(health).toContainText('No hay autorregistros para Mateo Silva');
+  await page.getByRole('button', { name: 'Ahora', exact: true }).click();
   await page
     .getByRole('button', { name: 'Explorar visión y sistema neuroocular', exact: true })
+    .click();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Autoevaluación', exact: true })
     .click();
   await expect(health).toContainText('Sin evaluación ocular');
   const visualActivity = health.getByRole('radio', { name: 'Leer de cerca', exact: true });
@@ -162,8 +210,16 @@ test('sistemas corporales, puntos 3D y registros aislados conservando el diario'
   await expect(moment).toContainText('Leer de cerca');
   await expect(moment).toContainText('Cambio visual ficticio de Mateo');
   const visionCard = page.getByRole('complementary', { name: 'Visión y sistema neuroocular' });
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Ahora', exact: true })
+    .click();
   await expect(visionCard).toContainText('Cambio visual ficticio de Mateo');
   await expect(visionCard.getByRole('button', { name: 'Registrar observación' })).toBeVisible();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .click();
   await expect(health.locator('.health-next-step')).toContainText('Compartir el cambio reportado');
   await expect(health.getByRole('link', { name: 'Ir al seguimiento' })).toHaveAttribute(
     'href',
@@ -230,9 +286,17 @@ test('móvil y sin modelo 3D: controles de salud y autorregistro disponibles', a
     oxygenCard.getByRole('img', { name: /Historial de Saturación periférica/ }),
   ).toBeVisible();
   const oxygenTelemetry = page.getByRole('region', { name: 'Tendencia de telemetría' });
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await expect(oxygenTelemetry).toContainText('Saturación periférica');
   await expect(oxygenTelemetry.getByRole('img')).toHaveCount(0);
 
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Ahora', exact: true })
+    .click();
   await page.getByRole('button', { name: 'Ver visión', exact: true }).click();
   const hologram = page.getByRole('complementary', { name: 'Visión y sistema neuroocular' });
   await expect(hologram).toContainText('Sin observaciones registradas');
@@ -247,6 +311,10 @@ test('móvil y sin modelo 3D: controles de salud y autorregistro disponibles', a
   await expect(visionGuide.getByText('Leer de cerca', { exact: true })).toBeVisible();
   await hologram.getByRole('button', { name: 'Ver mis autorregistros' }).click();
   await expect(health.getByRole('region', { name: 'Historial de autorregistros' })).toBeFocused();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   const selectors = telemetry.getByRole('group', { name: 'Indicadores de telemetría' });
   await expect(selectors.getByRole('button')).toHaveCount(4);
   await selectors.getByRole('button', { name: 'Respiración' }).click();
@@ -254,11 +322,20 @@ test('móvil y sin modelo 3D: controles de salud y autorregistro disponibles', a
     telemetry.getByRole('img', { name: /Historial de Frecuencia respiratoria/ }),
   ).toBeVisible();
   await expect(page.locator('.crew-hologram')).toHaveCount(0);
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Ahora', exact: true })
+    .click();
   await page.getByRole('button', { name: 'Ver visión', exact: true }).click();
   await hologram.getByRole('button', { name: 'Cerrar ficha corporal' }).click();
   await expect(hologram).toHaveCount(0);
 
+  await page.getByRole('button', { name: 'Autoevaluación', exact: true }).click();
   await expect(health).toContainText('Sin autoevaluación registrada');
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .click();
   await expect(health.getByRole('link', { name: 'Abrir autorregistro' })).toBeVisible();
   const visionField = health.getByRole('group', { name: /Qué estabas haciendo/ });
   await expect(visionField.getByRole('radio', { name: 'Sin indicar' })).toBeChecked();
@@ -289,7 +366,7 @@ test('móvil y sin modelo 3D: controles de salud y autorregistro disponibles', a
     await page.evaluate(() => localStorage.getItem('astra.demo.health.v1:odyssey')),
   ).toBeNull();
   await page.goto('/missions/selene/history');
-  await page.getByRole('link', { name: 'Ver histórico de NASA' }).click();
+  await page.getByRole('link', { name: 'Ver referencias científicas de NASA' }).click();
   await expect(page).toHaveURL(/#nasa-history$/);
   const nasa = page.getByRole('region', { name: 'Historial real de Inspiration4' });
   await nasa.getByRole('button', { name: /^Sodio/ }).click();
@@ -308,10 +385,15 @@ test('error del registro de salud no borra datos ni bloquea los sensores; fallo 
   );
   await page.goto('/mission/crew');
   const health = page.getByRole('region', { name: 'Salud por sistemas', exact: true });
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .click();
   await expect(health.getByRole('alert')).toContainText('No se pudo leer');
   await expect(
     health.getByRole('button', { name: 'Revisar respuestas', exact: true }),
   ).toBeDisabled();
+  await page.getByRole('button', { name: 'Ahora', exact: true }).click();
   await page
     .getByRole('group', { name: 'Lecturas de la instantánea' })
     .getByRole('button', { name: 'Temperatura', exact: true })
@@ -342,7 +424,7 @@ test('error del registro de salud no borra datos ni bloquea los sensores; fallo 
       },
     });
   });
-  await failurePage.goto('/mission/crew');
+  await failurePage.goto('/mission/crew#crew-health');
   const failureHealth = failurePage.getByRole('region', {
     name: 'Salud por sistemas',
     exact: true,
@@ -357,6 +439,10 @@ test('error del registro de salud no borra datos ni bloquea los sensores; fallo 
 test('explicación visual por sistema: pasos, pausa y movimiento reducido', async ({ page }) => {
   await page.goto('/mission/crew');
   const health = page.getByRole('region', { name: 'Salud por sistemas', exact: true });
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Autoevaluación', exact: true })
+    .click();
   const visual = health.locator('.health-visual');
   const explanation = health.getByText('Cómo interpretarlo y fuente científica', { exact: true });
   await explanation.click();
@@ -407,7 +493,7 @@ test('nave de Tripulación distingue la ubicación de Elena del módulo explorad
   const legend = explorer.getByRole('list', { name: 'Leyenda del visor' });
   await expect(legend).toContainText('Ubicación del tripulante');
   await expect(legend).toContainText('Módulo explorado');
-  await expect(rest.locator('.crew-marker-occupancy')).toBeVisible();
+  await expect(rest.locator('.crew-marker-occupancy')).toBeVisible({ timeout: 15_000 });
   await expect(rest.locator('.crew-marker-selection')).toBeVisible();
   await expect(rest).toHaveAttribute('data-occupied', 'true');
   await expect(rest).toHaveAttribute('aria-pressed', 'true');
@@ -451,6 +537,10 @@ test('nave de Tripulación distingue la ubicación de Elena del módulo explorad
   await expect(moment).toContainText('88 lpm');
   await expect(moment).toContainText('No hay ubicación, actividad ni lecturas ambientales');
   await expect(moment.getByRole('button', { name: 'Ubicar módulo en el visor' })).toHaveCount(0);
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await telemetry.getByRole('button', { name: '14:32 UTC: 108 lpm', exact: true }).click();
   await expect(moment).toContainText('108 lpm');
   await expect(moment).toContainText('14:32 UTC');
@@ -458,11 +548,19 @@ test('nave de Tripulación distingue la ubicación de Elena del módulo explorad
   await moment.getByRole('button', { name: 'Ubicar módulo en el visor' }).click();
   await expect(explorer).toBeFocused();
   await expect(exercise).toHaveAttribute('aria-pressed', 'true');
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await timeline.getByRole('button', { name: 'Comparar dos muestras' }).click();
   const comparison = timeline.getByRole('group', { name: 'Comparación de Frecuencia cardíaca' });
   await comparison
     .getByRole('combobox', { name: 'Primera muestra' })
     .selectOption('2026-11-08T14:18:00Z');
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await telemetry.getByRole('button', { name: '14:32 UTC: 108 lpm', exact: true }).click();
   const first = comparison.getByRole('region', { name: 'Primera muestra' });
   const second = comparison.getByRole('region', { name: 'Segunda muestra' });
@@ -496,6 +594,10 @@ test('nave de Tripulación distingue la ubicación de Elena del módulo explorad
   await expect(comparison.getByRole('status')).toContainText('+20 lpm');
   await telemetry.getByRole('button', { name: 'Temperatura', exact: true }).click();
   await expect(comparison).toHaveCount(0);
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await timeline.getByRole('button', { name: 'Comparar dos muestras' }).click();
   await expect(timeline.getByRole('combobox', { name: 'Primera muestra' })).toHaveValue('');
 });
@@ -540,7 +642,7 @@ test('móvil sin WebGL permite consultar módulos y duración de las sesiones', 
       }),
     );
   });
-  await page.goto('/mission/crew');
+  await page.goto('/mission/crew#crew-history');
   const explorer = page.getByRole('region', { name: 'Explorador tridimensional' });
   const timeline = page.getByRole('region', { name: 'Línea de tiempo', exact: true });
   const moment = timeline.getByRole('region', { name: 'Detalle del momento' });
@@ -576,8 +678,16 @@ test('móvil sin WebGL permite consultar módulos y duración de las sesiones', 
   await page.getByRole('button', { name: /Pérdida de señal/ }).click();
   await nav.getByRole('button', { name: 'Tripulación', exact: true }).click();
   await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
+  await page
     .getByRole('region', { name: 'Tendencia de telemetría' })
     .getByRole('button', { name: 'SpO₂', exact: true })
+    .click();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
     .click();
   await timeline.getByRole('button', { name: 'Comparar dos muestras' }).click();
   await timeline
@@ -605,6 +715,10 @@ test('la gráfica sincroniza el módulo conocido y oculta la ubicación sin cont
   await page.getByRole('button', { name: /Mateo Silva/ }).click();
   const telemetry = page.getByRole('region', { name: 'Tendencia de telemetría' });
   const sync = telemetry.getByRole('button', { name: 'Sincronizar con el visor' });
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await sync.click();
   await expect(sync).toHaveAttribute('aria-pressed', 'true');
   const explorer = page.getByRole('region', { name: 'Explorador tridimensional' });
@@ -613,18 +727,47 @@ test('la gráfica sincroniza el módulo conocido y oculta la ubicación sin cont
     name: 'Ver Módulo de ejercicio',
     exact: true,
   });
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Ahora', exact: true })
+    .click();
   await expect(exerciseModule).toHaveAttribute('aria-pressed', 'true');
   await expect(panel).toContainText('14:32 UTC');
   const early = telemetry.getByRole('button', { name: '14:18 UTC: 88 lpm', exact: true });
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await early.click();
   await expect(early).toHaveAttribute('aria-pressed', 'true');
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Ahora', exact: true })
+    .click();
   await expect(panel).toContainText('No hay ubicación ni lecturas ambientales registradas');
   await expect(explorer.locator('[data-occupied="true"]')).toHaveCount(0);
   await expect(panel.getByText('CO₂')).toHaveCount(0);
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await telemetry.getByRole('button', { name: '14:32 UTC: 108 lpm', exact: true }).click();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Ahora', exact: true })
+    .click();
   await expect(exerciseModule).toHaveAttribute('aria-pressed', 'true');
   await expect(panel).toContainText('950');
   await panel.getByRole('button', { name: 'Ver Laboratorio', exact: true }).click();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
   await expect(sync).toHaveAttribute('aria-pressed', 'false');
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Ahora', exact: true })
+    .click();
+
   await expect(panel.getByRole('heading', { name: 'Laboratorio' })).toBeVisible();
 });

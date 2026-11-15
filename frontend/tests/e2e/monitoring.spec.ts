@@ -36,11 +36,23 @@ test('sesión asistida: contexto, repetición, revisión, guardado y recarga mó
   await expect(history).toContainText('observada');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: '../docs/qa/monitoring-mobile.png', fullPage: true });
+  await page
+    .getByRole('navigation', { name: 'Navegación principal' })
+    .getByRole('button', { name: 'Tripulación', exact: true })
+    .click();
+  await page
+    .getByRole('navigation', { name: 'Secciones de Tripulación' })
+    .getByRole('button', { name: 'Historial', exact: true })
+    .click();
+  const activity = page.getByRole('region', { name: 'Actividad guardada' });
+  await expect(activity).toContainText('2 capturas');
+  await activity.getByRole('button', { name: 'Sesión de monitoreo' }).click();
+  await expect(page).toHaveURL(/monitoring#session-/);
+  await expect(page.locator('details[id^="session-"][open]')).toContainText('Traje de prueba 01');
 });
-test('API sin configurar exige identidad propia y no ofrece capturas falsas', async ({ page }) => {
+test('la demo identifica la API sin configurar antes de iniciar', async ({ page }) => {
   await page.goto('/mission/monitoring');
-  await page.getByLabel('Origen de las lecturas').selectOption('api');
-  await expect(page.getByLabel('Identificador del sujeto en la API')).toHaveValue('');
-  await expect(page.getByText('API sin configurar.', { exact: false })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Preparar captura', exact: true })).toBeDisabled();
+  await expect(page.getByRole('option', { name: 'API · sin configurar' })).toBeDisabled();
+  await expect(page.getByLabel('Origen de las lecturas')).toHaveValue('demo');
+  await expect(page.getByRole('button', { name: 'Capturar lectura', exact: true })).toHaveCount(0);
 });

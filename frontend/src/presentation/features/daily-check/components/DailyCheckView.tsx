@@ -40,10 +40,6 @@ export function DailyCheckView({
                 </div>
               ))}
             </dl>
-            <p className="table-note">
-              Fuente: escenario sintético de misión. Tus respuestas se guardan como datos
-              ingresados.
-            </p>
           </Panel>
         )}
         <Panel>
@@ -59,7 +55,7 @@ export function DailyCheckView({
           ) : (
             <div className="check-list">
               {model.checks.map((check) => (
-                <article key={check.id}>
+                <article key={check.id} id={`check-${encodeURIComponent(check.id)}`}>
                   <div className="row">
                     <strong>{check.crew}</strong>
                     <span className="badge">Local</span>

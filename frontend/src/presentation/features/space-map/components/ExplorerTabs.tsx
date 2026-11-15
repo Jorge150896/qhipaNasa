@@ -1,13 +1,16 @@
+import type { ExplorerPanel } from '../types';
+
 export function ExplorerTabs({
   active,
   onSelect,
 }: {
-  active: 'network' | 'launches' | 'earth';
-  onSelect(panel: 'network' | 'launches' | 'earth'): void;
+  active: ExplorerPanel;
+  onSelect(panel: ExplorerPanel): void;
 }) {
   const tabs = [
     { id: 'network', label: 'Mapa espacial' },
     { id: 'launches', label: 'Despegues de la Tierra' },
+    { id: 'mars', label: 'Mapa de Marte' },
     { id: 'earth', label: 'Todo de la Tierra' },
   ] as const;
   return (

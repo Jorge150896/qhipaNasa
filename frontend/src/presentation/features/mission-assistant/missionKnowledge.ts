@@ -1,7 +1,7 @@
 export const guideControls = [
   {
     id: 'overview',
-    label: 'Centro de misión',
+    label: 'Mi estado',
     text: 'Ve la actividad del tripulante, sus registros y las señales que requieren revisión.',
   },
   {
@@ -37,7 +37,7 @@ export const guideControls = [
   {
     id: 'habitat',
     label: 'Entorno',
-    text: 'Elige un módulo para ver sus lecturas ambientales y quién está allí en la instantánea.',
+    text: 'Elige un módulo en el modelo 3D o en la lista para ver las condiciones y la tripulación presente.',
   },
   {
     id: 'observations',
@@ -78,7 +78,7 @@ export const missionTopics = [
   {
     question:
       /\b(nasa|procedencia|datos reales|simulados?|datos sinteticos|origen de (los )?datos)\b/,
-    text: 'La telemetría y el ambiente de la misión vienen de escenarios sintéticos. Historial incluye por separado una referencia de laboratorio de NASA OSDR. Los autorregistros son respuestas guardadas en este navegador.',
+    text: 'La telemetría y el ambiente de la misión vienen de escenarios sintéticos. Historial incluye Inspiration4 y Entorno ofrece un archivo de radiación de ISS Columbus, ambos con procedencia de NASA OSDR. Los autorregistros son respuestas guardadas en este navegador.',
     target: 'sources',
   },
   {
@@ -97,6 +97,11 @@ export const missionTopics = [
     question: /\b(sin senal|sensor caido|muestras? ausentes?|sin muestra|perdida de senal)\b/,
     text: 'Una muestra ausente aparece como un hueco en la serie. Puedes consultar la última muestra disponible con su hora y probar el caso Pérdida de señal en Simulación.',
     target: 'simulation',
+  },
+  {
+    question: /\b(radiacion|radlab|columbus)\b/,
+    text: 'En Entorno, abre Radiación histórica en la ISS. La gráfica muestra una hora del instrumento DosTel1 en Columbus y puedes consultar las lecturas y su fuente.',
+    target: 'habitat',
   },
   {
     question: /\b(sincroniz\w*|ubicar modulo|abrir (el )?modulo|abr[eo] (el )?modulo)\b/,

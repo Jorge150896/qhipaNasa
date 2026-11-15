@@ -44,9 +44,7 @@ export function LaunchPointCard({
         aria-label={`${site.kind === 'launch-site' ? 'Seleccionar punto de despegue' : 'Seleccionar sede NASA'} ${site.name}`}
         onClick={() => onSelect(site.id)}
       >
-        <small>{site.category}</small>
         <strong>{site.fullName}</strong>
-        <span>Información y video ↗</span>
       </button>
     </div>
   );

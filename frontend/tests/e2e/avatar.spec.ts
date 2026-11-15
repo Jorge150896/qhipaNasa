@@ -9,6 +9,7 @@ test('personaliza cada tripulante y carga sus piezas bajo demanda', async ({ pag
   await page.goto('/mission/crew');
   await expect(page.locator('#crew-avatar canvas')).toHaveCount(0);
   expect(assets).toEqual([]);
+  await page.getByRole('button', { name: 'Personalización', exact: true }).click();
   await page.getByText('Personalizar astronauta', { exact: true }).click();
   const editor = page.locator('#crew-avatar');
   await expect(editor.locator('canvas')).toBeVisible();
@@ -54,6 +55,7 @@ test('personaliza cada tripulante y carga sus piezas bajo demanda', async ({ pag
     'true',
   );
   await page.reload();
+  await page.getByRole('button', { name: 'Personalización', exact: true }).click();
   await page.getByText('Personalizar astronauta', { exact: true }).click();
   await expect(editor.getByRole('button', { name: 'Estudio orbital' })).toHaveAttribute(
     'aria-pressed',

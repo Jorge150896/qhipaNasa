@@ -114,16 +114,42 @@ test('nave renovada conserva hotspots, zonas HTML y desmontaje del portal', asyn
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/mission/habitat');
-  await page.getByRole('button', { name: 'Seleccionar zona 02', exact: true }).click();
-  await expect(page.getByLabel('Zona de la nave', { exact: true })).toHaveValue('exercise');
-  await expect(page.locator('.scene-hotspot')).toHaveCount(3);
+  await page.getByRole('button', { name: 'Explorar Módulo de ejercicio', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Módulo de ejercicio' })).toBeVisible();
+  await expect(page.locator('.scene-hotspot')).toHaveCount(5);
   await page.locator('.scene-viewport').screenshot({ path: '../docs/qa/3d-shuttle-habitat.png' });
-  await page.getByRole('button', { name: 'Seleccionar zona 03', exact: true }).click();
-  await expect(page.getByLabel('Zona de la nave', { exact: true })).toHaveValue('laboratory');
+  await page.getByRole('button', { name: 'Explorar Laboratorio', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Laboratorio' })).toBeVisible();
   await page
     .getByRole('navigation', { name: 'Navegación principal' })
     .getByRole('button', { name: 'Historial', exact: true })
     .click();
   await expect(page.locator('.scene-hotspot')).toHaveCount(0);
+  expect(errors).toEqual([]);
+});
+
+test('Base Ares conserva selección y encuadre del hábitat en escritorio y móvil', async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('/missions/ares/habitat');
+  let viewport = page.locator('.scene-viewport');
+  await expect(viewport.locator('canvas')).toBeVisible();
+  const lab = viewport.getByRole('button', { name: 'Explorar Laboratorio', exact: true });
+  await lab.click();
+  await expect(lab).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('heading', { name: 'Laboratorio', exact: true })).toBeVisible();
+  await viewport.getByRole('button', { name: 'Acercar al módulo', exact: true }).click();
+  await viewport.getByRole('button', { name: 'Ver base completa', exact: true }).click();
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/missions/ares/crew');
+  await page.getByRole('button', { name: 'Base', exact: true }).click();
+  viewport = page.locator('.scene-viewport');
+  await expect(viewport.locator('canvas')).toBeVisible();
+  await expect(viewport.locator('.scene-hotspot')).toHaveCount(3);
+  await viewport.getByRole('button', { name: 'Ver base completa', exact: true }).click();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   expect(errors).toEqual([]);
 });

@@ -22,6 +22,7 @@ import { HabitatModel } from './HabitatModel';
 import { SpaceBackdrop } from './SpaceBackdrop';
 import {
   HabitatCamera,
+  aresOverview,
   habitatOverview,
   shuttleOverview,
   type HabitatCameraView,
@@ -31,6 +32,7 @@ interface Props {
   activeBodyRegion?: SceneBodyRegion;
   onSelectSystem?(id: 'cardio' | 'fitness' | 'vision'): void;
   habitatKind?: 'ship' | 'station' | 'base';
+  martian?: boolean;
   mode: 'crew' | 'ship';
   selectedSensor: SceneSensor;
   selectedZone: string;
@@ -68,14 +70,16 @@ class SceneBoundary extends Component<
   }
 }
 
-function FitShuttleCamera() {
+function FitWideModel({ aspectLimit }: { aspectLimit: number }) {
   const camera = useThree((state) => state.camera);
   const aspect = useThree((state) => state.size.width / Math.max(state.size.height, 1));
   useEffect(() => {
     if (!(camera instanceof PerspectiveCamera) || aspect <= 0) return;
     const halfHeight = Math.tan(MathUtils.degToRad(13));
-    camera.setFocalLength(camera.getFilmHeight() / (2 * halfHeight * Math.max(1, 1.55 / aspect)));
-  }, [aspect, camera]);
+    camera.setFocalLength(
+      camera.getFilmHeight() / (2 * halfHeight * Math.max(1, aspectLimit / aspect)),
+    );
+  }, [aspect, aspectLimit, camera]);
   return null;
 }
 
@@ -96,6 +100,8 @@ export default function MissionScene(props: Props) {
   const shuttleExterior =
     props.mode === 'ship' && (!props.habitatKind || props.habitatKind === 'ship') && !props.modules;
   const cutaway = props.mode === 'ship' && props.habitatKind === 'ship' && Boolean(props.modules);
+  const martian = props.mode === 'ship' && props.habitatKind === 'base' && Boolean(props.martian);
+  const overview = cutaway ? shuttleOverview : martian ? aresOverview : habitatOverview;
   const fullViewLabel =
     props.habitatKind === 'station'
       ? 'Ver estación completa'
@@ -139,12 +145,7 @@ export default function MissionScene(props: Props) {
           <Canvas
             dpr={[1, 1.75]}
             camera={{
-              position:
-                props.mode === 'crew'
-                  ? [0, 0.08, 4.3]
-                  : cutaway
-                    ? shuttleOverview
-                    : habitatOverview,
+              position: props.mode === 'crew' ? [0, 0.08, 4.3] : overview,
               fov: 32,
             }}
             fallback={<SceneFallback />}
@@ -153,22 +154,30 @@ export default function MissionScene(props: Props) {
             {!props.transparentBackground && (
               <SpaceBackdrop radius={100} brightness={shuttleExterior ? 0.65 : 1} />
             )}
-            <ambientLight intensity={props.transparentBackground || shuttleExterior ? 0.85 : 1.8} />
+            <ambientLight
+              intensity={
+                props.transparentBackground || shuttleExterior ? 0.85 : martian ? 0.75 : 1.8
+              }
+            />
             <hemisphereLight
               args={
                 props.transparentBackground
                   ? ['#e9ecef', '#38294c', 1.25]
-                  : ['#e7f5ff', '#34445b', shuttleExterior ? 0.8 : 2]
+                  : martian
+                    ? ['#ffe2ce', '#513123', 0.9]
+                    : ['#e7f5ff', '#34445b', shuttleExterior ? 0.8 : 2]
               }
             />
             <directionalLight
               position={[-3, 5, 4]}
-              intensity={props.transparentBackground ? 2.65 : shuttleExterior ? 2.4 : 3.5}
+              intensity={
+                props.transparentBackground ? 2.65 : shuttleExterior ? 2.4 : martian ? 2 : 3.5
+              }
             />
             <directionalLight
               position={[3, 1, -3]}
               color={props.transparentBackground ? '#a66af7' : '#69d9ec'}
-              intensity={shuttleExterior ? 0.9 : 2}
+              intensity={shuttleExterior ? 0.9 : martian ? 0.55 : 2}
             />
             {props.transparentBackground && (
               <directionalLight position={[-4, -1, -3]} color="#fb5607" intensity={0.6} />
@@ -196,6 +205,7 @@ export default function MissionScene(props: Props) {
               ) : props.habitatKind && props.habitatKind !== 'ship' ? (
                 <HabitatModel
                   kind={props.habitatKind}
+                  martian={martian}
                   portal={{ current: overlay }}
                   modules={props.modules}
                   selectedZone={props.selectedZone}
@@ -220,13 +230,14 @@ export default function MissionScene(props: Props) {
               maxPolarAngle={Math.PI * 0.8}
               makeDefault
             />
-            {cutaway && <FitShuttleCamera />}
+            {(cutaway || martian) && <FitWideModel aspectLimit={martian ? 1.75 : 1.55} />}
             {props.showModuleCamera && (
               <HabitatCamera
                 controls={controls}
                 request={cameraRequest}
                 zone={cameraRequest?.view === 'module' ? props.selectedZone : undefined}
                 cutaway={cutaway}
+                overview={overview}
               />
             )}
             {props.mode === 'crew' && props.onSelectSystem && !props.transparentBackground && (

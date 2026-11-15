@@ -1,11 +1,14 @@
 'use client';
-import { useContext, useEffect, useEffectEvent } from 'react';
+import { useContext, useEffect, useEffectEvent, useMemo, useState } from 'react';
+import { createMonitoringDependencies } from '@/di/createMonitoringDependencies.client';
+import { CrewActivity } from './components/CrewActivity';
+import { useCrewActivityViewModel } from './useCrewActivityViewModel';
 import { useCrewHologramViewModel } from './useCrewHologramViewModel';
 import { HumanHologramSlot } from './components/HumanHologramSlot';
 import { HumanHologramControls } from './components/HumanHologramControls';
 import { useCrewViewModel } from './useCrewViewModel';
 import { CrewHealthScreen } from '../crew-health/CrewHealthScreen';
-import type { CrewScreenProps } from './types';
+import type { CrewScreenProps, CrewSection } from './types';
 import type { SensorKey } from '../mission/types';
 import type { BodySystemKey } from '../crew-health/types';
 import { CrewView } from './components/CrewView';
@@ -23,7 +26,10 @@ import { AvatarScreen } from './avatar/AvatarScreen';
 import './crew-explorer.css';
 
 export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenProps) {
+  const [section, setSection] = useState<CrewSection>('now');
   const assistant = useContext(AssistantActionsContext);
+  const monitoring = useMemo(() => createMonitoringDependencies(habitatId), [habitatId]);
+  const activity = useCrewActivityViewModel(monitoring.load, data);
   const model = useCrewViewModel(habitatId, data);
   const body = useCrewHologramViewModel(habitatId, data.selected.id);
 
@@ -48,12 +54,19 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
   function focusSection(
     id: 'crew-health-history' | 'crew-health-entry' | 'crew-timeline' | 'crew-body',
   ) {
-    const detail = document.getElementById(id);
-    detail?.focus({ preventScroll: true });
-    detail?.scrollIntoView({
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-      block: 'start',
-    });
+    setSection(id === 'crew-body' ? 'now' : id === 'crew-timeline' ? 'history' : 'health');
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const detail = document.getElementById(id);
+        detail?.focus({ preventScroll: true });
+        detail?.scrollIntoView({
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            ? 'auto'
+            : 'smooth',
+          block: 'start',
+        });
+      }),
+    );
   }
 
   function openOccupiedModule() {
@@ -67,10 +80,19 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
       openOccupiedModule();
     } else if (window.location.hash === '#crew-health-entry') {
       focusSection('crew-health-entry');
+    } else if (window.location.hash === '#crew-avatar') {
+      setSection('avatar');
+    } else if (['#crew-history', '#crew-timeline'].includes(window.location.hash)) {
+      setSection('history');
+    } else if (
+      ['#crew-health', '#crew-health-history', '#crew-health-review'].includes(window.location.hash)
+    ) {
+      setSection('health');
     }
   });
   useEffect(() => {
-    openEntryAnchor();
+    const frame = requestAnimationFrame(() => openEntryAnchor());
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   return (
@@ -91,6 +113,12 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
     >
       {({ healthPanel, recordPreview, timelineRecords, timelineStatus }) => (
         <CrewView
+          section={section}
+          onChangeSection={setSection}
+          onOpenHabitat={() => {
+            actions.selectZone(data.selected.zoneId);
+            onNavigate('habitat', 'occupied-module');
+          }}
           avatarPanel={<AvatarScreen crewId={data.selected.id} crewName={data.selected.name} />}
           onOpenHistory={() => onNavigate('history')}
           telemetryMetric={model.telemetryMetric}
@@ -106,24 +134,41 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
           healthPanel={healthPanel}
           onSelectTimelineSample={model.selectTimelineSample}
           timelinePanel={
-            <CrewTimeline
-              data={model.timelineData(timelineRecords, timelineStatus)}
-              comparison={model.comparison}
-              canCompare={model.canCompare}
-              onToggleComparison={model.toggleComparison}
-              onSelectComparisonSample={model.selectComparisonSample}
-              onSelectMoment={model.selectTimelineMoment}
-              onAskTumi={
-                assistant && telemetryId
-                  ? (at, compareFrom) => assistant.askAboutReading(telemetryId, { at, compareFrom })
-                  : undefined
-              }
-              onOpenModule={(origin) => {
-                model.openTimelineModule(origin);
-                actions.selectZone(origin.zone.id);
-                focusSection('crew-body');
-              }}
-            />
+            <>
+              <CrewActivity
+                entries={activity.entries(timelineRecords)}
+                incomplete={timelineStatus !== 'ready' || activity.status !== 'ready'}
+                onOpen={(entry) => {
+                  if (entry.kind === 'check')
+                    onNavigate('journal', `check-${encodeURIComponent(entry.id)}`);
+                  else if (entry.kind === 'monitoring')
+                    onNavigate('monitoring', `session-${encodeURIComponent(entry.id)}`);
+                  else {
+                    model.openSavedTimelineRecord(entry.id);
+                    focusSection('crew-timeline');
+                  }
+                }}
+              />
+              <CrewTimeline
+                data={model.timelineData(timelineRecords, timelineStatus)}
+                comparison={model.comparison}
+                canCompare={model.canCompare}
+                onToggleComparison={model.toggleComparison}
+                onSelectComparisonSample={model.selectComparisonSample}
+                onSelectMoment={model.selectTimelineMoment}
+                onAskTumi={
+                  assistant && telemetryId
+                    ? (at, compareFrom) =>
+                        assistant.askAboutReading(telemetryId, { at, compareFrom })
+                    : undefined
+                }
+                onOpenModule={(origin) => {
+                  model.openTimelineModule(origin);
+                  actions.selectZone(origin.zone.id);
+                  focusSection('crew-body');
+                }}
+              />
+            </>
           }
           dashboard={{
             data,
@@ -179,6 +224,7 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                     <MissionSceneSlot
                       key={model.mode}
                       habitatKind={model.habitatKind}
+                      martian={habitatId === 'ares'}
                       mode={model.mode}
                       transparentBackground={model.mode === 'crew'}
                       selectedSensor={data.metric.id}
@@ -206,7 +252,10 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                       onClose={model.closeHologram}
                       onOpenHistory={() => focusSection('crew-health-history')}
                       onOpenTelemetryHistory={() => onNavigate('history')}
-                      onOpenModule={openOccupiedModule}
+                      onOpenModule={() => {
+                        actions.selectZone(data.selected.zoneId);
+                        onNavigate('habitat', 'occupied-module');
+                      }}
                       onOpenEntry={() => focusSection('crew-health-entry')}
                       sampleAt={model.sampleAt}
                       onSelectTimelineSample={model.selectTimelineSample}

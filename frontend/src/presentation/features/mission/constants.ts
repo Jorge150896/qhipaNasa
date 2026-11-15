@@ -1,6 +1,6 @@
 import type { MissionSection, ScenarioKey, SensorKey } from './types';
 export const navigation: { id: MissionSection; label: string; icon: string }[] = [
-  { id: 'overview', label: 'Centro de misión', icon: 'orbit' },
+  { id: 'overview', label: 'Mi estado', icon: 'orbit' },
   { id: 'monitoring', label: 'Monitoreo', icon: 'chart' },
   { id: 'crew', label: 'Tripulación', icon: 'users' },
   { id: 'habitat', label: 'Entorno de la nave', icon: 'rocket' },
@@ -24,7 +24,7 @@ export const sectionTitles: Record<MissionSection, { title: string; description:
     description: 'Explora los indicadores de cada tripulante en su contexto.',
   },
   habitat: {
-    title: 'El espacio que habitan.',
+    title: 'Entorno del hábitat',
     description: 'Relaciona la ubicación de la tripulación con su ambiente.',
   },
   history: {

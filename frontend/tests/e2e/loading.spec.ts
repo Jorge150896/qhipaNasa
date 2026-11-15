@@ -107,12 +107,10 @@ test('pantalla completa solo desde Iniciar misión; carga interna conserva menú
   const started = Date.now();
   await page.getByRole('button', { name: 'Iniciar mi misión', exact: true }).click();
   await expect(page.locator('.tumi-loader--fullscreen')).toBeVisible();
-  await expect(
-    page.getByRole('heading', { name: 'Tu resumen de misión', exact: true }),
-  ).toBeVisible({
+  await expect(page.getByRole('heading', { name: 'Mi estado', exact: true })).toBeVisible({
     timeout: 10_000,
   });
-  expect(Date.now() - started).toBeGreaterThanOrEqual(2900);
+  expect(Date.now() - started).toBeGreaterThanOrEqual(550);
   await expect(page.locator('.tumi-loader--fullscreen')).toHaveCount(0);
   let release = () => {};
   const gate = new Promise<void>((resolve) => {

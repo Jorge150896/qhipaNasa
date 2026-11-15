@@ -8,7 +8,7 @@ El video de despegue aparece inmediatamente después del nombre del lugar selecc
 
 ## Vista general de la Tierra
 
-El menú compartido ofrece «Tierra» desde el explorador y todas las pantallas de misión, incluida Tripulación. Abre `/explore?destination=earth&tab=earth` y permanece activo también en la pestaña de despegues y al seleccionar un lugar. «Mapa espacial» conserva su acceso y estado activo independiente. Screen traduce `onOpenEarth` a navegación.
+Se llega a Tierra desde «Mapa espacial». La pestaña «Todo de la Tierra» abre el globo, la ficha seleccionada, el directorio y los videos históricos. La URL conserva la pestaña y el lugar.
 
 La opción «Ver todo de la Tierra» se ofrece en el detalle de Tierra y su tarjeta 3D. La tercera pestaña «Todo de la Tierra» abre `/explore?destination=earth&tab=earth`; `site=<id>` conserva la ficha seleccionada. `EarthOverview` es una View presentacional dentro del mismo flujo y usa el mismo catálogo/caso de uso/ViewModel: tres sitios de lanzamiento, cinco sedes NASA y tres videos históricos únicos. Sus botones emiten intención de selección al Screen, que actualiza la URL. No carga un reproductor por tarjeta: el único iframe continúa en la ficha elegida. Las URLs anteriores `tab=launches` se conservan.
 

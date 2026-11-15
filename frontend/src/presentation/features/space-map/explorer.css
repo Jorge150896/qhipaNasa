@@ -387,29 +387,6 @@
   font-size: 9px !important;
   margin: 12px 0 0;
 }
-.fleet-note {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  color: var(--muted);
-  margin-top: 18px;
-  padding: 15px 18px;
-  border: 1px solid #42265a;
-  border-radius: 10px;
-}
-.fleet-note svg {
-  color: var(--accent);
-  flex-shrink: 0;
-}
-.fleet-note p {
-  font-size: 11px;
-  line-height: 1.7;
-  margin: 0;
-}
-.fleet-note strong {
-  color: #efcab5;
-  font-weight: 500;
-}
 .fleet-warning {
   color: var(--amber) !important;
 }
@@ -525,9 +502,6 @@
   .fleet-reset {
     font-size: 8px;
     top: 0;
-  }
-  .fleet-note {
-    align-items: start;
   }
 }
 .fleet-transit-controls {

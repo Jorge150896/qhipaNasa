@@ -5,8 +5,10 @@ import { Panel } from '@/ui/Panel';
 export function SimulationView({
   selected,
   onSelect,
+  onOpenResult,
 }: {
   selected: ScenarioKey;
+  onOpenResult(): void;
   onSelect(id: ScenarioKey): void;
 }) {
   return (
@@ -19,7 +21,6 @@ export function SimulationView({
             aria-pressed={selected === item.id}
             onClick={() => onSelect(item.id)}
           >
-            <span className="scenario-number">0{i + 1}</span>
             <Icon name={i === 0 ? 'orbit' : i === 1 ? 'clock' : 'radio'} size={28} />
             <h3>{item.label}</h3>
             <p>{item.description}</p>
@@ -42,31 +43,16 @@ export function SimulationView({
       <Panel>
         <div className="panel-heading">
           <Icon name="sliders" />
-          <h3>Qué cambia al simular</h3>
+          <h3>Resultado del escenario</h3>
+          <button type="button" className="button secondary" onClick={onOpenResult}>
+            {selected === 'sensor-gap'
+              ? 'Ver historial de SpO₂'
+              : selected === 'sleep-change'
+                ? 'Ver observaciones'
+                : 'Abrir Mi estado'}
+          </button>
         </div>
-        <div className="explanation-grid">
-          <div>
-            <span className="eyebrow">REPRODUCIBLE</span>
-            <p>
-              Cada escenario genera las mismas lecturas y observaciones. Puedes comparar sus
-              resultados sin aleatoriedad.
-            </p>
-          </div>
-          <div>
-            <span className="eyebrow">INDEPENDIENTE DEL DIARIO</span>
-            <p>
-              Los chequeos y las revisiones locales se conservan al cambiar de escenario. No alteran
-              la serie sintética.
-            </p>
-          </div>
-          <div>
-            <span className="eyebrow">SIN FALSA CONEXIÓN</span>
-            <p>
-              No hay sensores, WebSockets ni IA activos. La fecha de las muestras permanece visible
-              para distinguir el historial del presente.
-            </p>
-          </div>
-        </div>
+        <p className="sub">Cambiar de escenario conserva tus chequeos y revisiones locales.</p>
       </Panel>
     </>
   );

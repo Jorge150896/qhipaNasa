@@ -36,15 +36,6 @@
   color: var(--muted);
   max-width: 65ch;
 }
-.launch-badge {
-  display: inline-block;
-  padding: 0.55rem 0.8rem;
-  margin-top: 1rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--accent);
-  font-size: 0.75rem;
-}
 .launch-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -96,23 +87,10 @@
   cursor: pointer;
   pointer-events: auto;
 }
-.launch-point-card strong,
-.launch-point-card small,
-.launch-point-card > span {
-  display: block;
-  line-height: 1.4;
-}
 .launch-point-card strong {
   font-size: 12px;
-  margin: 3px 0;
-}
-.launch-point-card small {
-  font-size: 9px;
-  color: #bac8da;
-}
-.launch-point-card > span {
-  font-size: 10px;
-  color: #ffd2ae;
+  display: block;
+  line-height: 1.4;
 }
 .launch-point-card[aria-pressed='true'],
 .launch-point-card:focus-visible {
@@ -128,9 +106,6 @@
   }
   .launch-point-card strong {
     font-size: 10px;
-  }
-  .launch-point-card small {
-    display: none;
   }
   .launch-point-leader {
     transform: scale(0.6);
@@ -480,25 +455,6 @@
   margin: 0 0 1rem;
   font-size: 1.5rem;
 }
-.earth-overview-summary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding: 1rem;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--surface);
-  color: var(--muted);
-}
-.earth-overview-summary span {
-  display: flex;
-  gap: 0.6rem;
-  align-items: center;
-}
-.earth-overview-summary strong {
-  font-size: 1.5rem;
-  color: var(--accent);
-}
 .earth-overview-grid,
 .earth-video-grid {
   display: grid;
@@ -509,8 +465,8 @@
 .earth-video-card {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 1.1rem;
+  gap: 0.35rem;
+  padding: 0.75rem 0.9rem;
   min-width: 0;
   text-align: left;
   border: 1px solid var(--line);
@@ -528,30 +484,16 @@
   font-size: 1rem;
   line-height: 1.5;
 }
-.earth-place-card > span:not(.eyebrow),
+.earth-place-card > span,
 .earth-video-card > span,
-.earth-video-card small,
-.earth-overview section > p,
-.earth-overview-note {
+.earth-video-card small {
   font-size: 0.8rem;
   line-height: 1.7;
   color: var(--muted);
 }
-.earth-place-card .earth-card-action {
-  color: var(--accent) !important;
-  margin-top: auto;
-  padding-top: 0.6rem;
-}
 .earth-video-card > span:first-child {
   font-size: 1.5rem;
   color: var(--accent);
-}
-.earth-overview-note {
-  margin: 0;
-  padding: 1rem;
-  background: var(--surface);
-  border-radius: 12px;
-  border-left: 3px solid var(--accent);
 }
 @media (max-width: 800px) {
   .earth-overview-grid,
@@ -599,10 +541,6 @@
 }
 .launch-video-heading > p {
   margin: 0.25rem 0;
-}
-.launch-sites .launch-video-available,
-.earth-place-card .launch-video-available {
-  color: var(--accent);
 }
 .launch-video iframe {
   display: block;
@@ -659,9 +597,5 @@
   }
   .launch-detail {
     padding: 1rem;
-  }
-  .launch-badge {
-    border-radius: 10px;
-    line-height: 1.7;
   }
 }

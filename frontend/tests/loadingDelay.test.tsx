@@ -3,11 +3,11 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { useLoadingDelayViewModel } from '@/presentation/shared/loading/useLoadingDelayViewModel';
 afterEach(() => vi.useRealTimers());
 
-it('mantiene la introducción durante tres segundos y no la reinicia al renderizar', () => {
+it('mantiene la introducción durante 650 ms y no la reinicia al renderizar', () => {
   vi.useFakeTimers();
   const { result, rerender } = renderHook(() => useLoadingDelayViewModel());
   expect(result.current).toBe(true);
-  act(() => vi.advanceTimersByTime(2999));
+  act(() => vi.advanceTimersByTime(649));
   rerender();
   expect(result.current).toBe(true);
   act(() => vi.advanceTimersByTime(1));

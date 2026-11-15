@@ -34,6 +34,10 @@ export function MissionFeatureScreen({
           actions={actions}
           habitatId={habitatId}
           onNavigate={onNavigate}
+          onStartSignalDemo={() => {
+            if (data.crew[0]) actions.selectCrew(data.crew[0].id);
+            actions.selectScenario('sensor-gap');
+          }}
         />
       );
     case 'crew':
@@ -46,7 +50,12 @@ export function MissionFeatureScreen({
           data={data}
           actions={actions}
           habitatId={habitatId}
-          onNavigate={onNavigate}
+          openCheck={() => onNavigate('journal')}
+          selectCrew={actions.selectCrew}
+          openCrew={(id) => {
+            actions.selectCrew(id);
+            onNavigate('crew');
+          }}
         />
       );
     case 'history':
@@ -62,10 +71,36 @@ export function MissionFeatureScreen({
           pendingCount={data.pendingCount}
           saving={saving}
           onReview={actions.reviewObservation}
+          onOpenRelated={(item) => {
+            actions.selectCrew(item.crewId);
+            if (item.category === 'Calidad de datos') {
+              actions.selectMetric('oxygen');
+              onNavigate('history');
+            } else {
+              onNavigate('journal');
+            }
+          }}
         />
       );
     case 'simulation':
-      return <SimulationScreen selected={data.scenario} onSelect={actions.selectScenario} />;
+      return (
+        <SimulationScreen
+          selected={data.scenario}
+          onSelect={actions.selectScenario}
+          onOpenResult={() => {
+            if (data.scenario === 'sensor-gap') {
+              const item = data.observations.find(
+                (observation) => observation.category === 'Calidad de datos',
+              );
+              if (item) actions.selectCrew(item.crewId);
+              actions.selectMetric('oxygen');
+              onNavigate('history');
+            } else {
+              onNavigate(data.scenario === 'sleep-change' ? 'observations' : 'overview');
+            }
+          }}
+        />
+      );
     case 'sources':
       return <SourcesScreen habitatId={habitatId} />;
   }

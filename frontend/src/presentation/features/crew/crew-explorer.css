@@ -1056,3 +1056,36 @@
     margin: 16px 0 0;
   }
 }
+
+.crew-now[hidden],
+.crew-history[hidden] {
+  display: none;
+}
+
+.crew-section-links button[aria-pressed='true'] {
+  border-color: var(--accent);
+}
+
+.crew-location-link {
+  margin-bottom: 0.65rem;
+}
+
+.crew-activity ul {
+  padding: 0;
+  list-style: none;
+}
+
+.crew-activity li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  padding-block: 0.55rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.crew-activity li span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}

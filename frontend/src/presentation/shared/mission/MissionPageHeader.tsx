@@ -1,5 +1,5 @@
 import type { MissionActions, MissionData, MissionSection } from '../../features/mission/types';
-import { sectionTitles } from '../../features/mission/constants';
+import { scenarioOptions, sectionTitles } from '../../features/mission/constants';
 import { Icon } from '@/ui/Icon';
 export function MissionPageHeader({
   data,
@@ -11,7 +11,9 @@ export function MissionPageHeader({
   onSelectCrew: MissionActions['selectCrew'];
 }) {
   const title = sectionTitles[section];
-  const showCrewPicker = !['sources', 'simulation', 'observations'].includes(section);
+  const scenario = scenarioOptions.find((option) => option.id === data.scenario)?.label;
+  const showCrewPicker = !['habitat', 'sources', 'simulation', 'observations'].includes(section);
+  const showSnapshot = section === 'crew' || section === 'history' || section === 'observations';
   return (
     <>
       {section !== 'overview' && (
@@ -25,13 +27,17 @@ export function MissionPageHeader({
             <h1>{title.title}</h1>
             {section !== 'crew' && <p className="page-description">{title.description}</p>}
           </div>
-          <div className="snapshot-time">
-            <Icon name="clock" size={15} />
-            <div>
-              {data.time}
-              <span>{data.date} · Historial simulado</span>
+          {showSnapshot && (
+            <div className="snapshot-time">
+              <Icon name="clock" size={15} />
+              <div>
+                {data.time}
+                <span>
+                  {data.date} · {scenario}
+                </span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
       {showCrewPicker && (
@@ -55,7 +61,7 @@ export function MissionPageHeader({
           </div>
           {section === 'overview' ? (
             <p className="overview-snapshot-time">
-              {data.date} · {data.time}
+              {data.date} · {data.time} · {scenario}
             </p>
           ) : (
             <div className="crew-context">

@@ -10,7 +10,7 @@ import { MissionShell } from '../mission/components/MissionShell';
 import { useSpaceExplorerViewModel } from './useSpaceExplorerViewModel';
 import { SpaceExplorerView } from './components/SpaceExplorerView';
 import './explorer.css';
-import type { DestinationKey } from './types';
+import type { DestinationKey, ExplorerPanel } from './types';
 import { ExplorerTabs } from './components/ExplorerTabs';
 import '../launch-sites/launch-sites.css';
 const LaunchSitesScreen = dynamic(
@@ -30,10 +30,12 @@ const SpaceMapScene = dynamic(() => import('./components/SpaceMapScene'), {
 export function SpaceExplorerScreen() {
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
-  const panel = tab === 'earth' ? 'earth' : tab === 'launches' ? 'launches' : 'network';
-  const destination =
-    panel !== 'network'
-      ? 'earth'
+  const panel = tab === 'earth' || tab === 'launches' || tab === 'mars' ? tab : 'network';
+  const showsEarth = panel === 'earth' || panel === 'launches';
+  const destination = showsEarth
+    ? 'earth'
+    : panel === 'mars'
+      ? 'mars'
       : (destinationIds.find((id) => id === searchParams.get('destination')) ?? 'ship');
   const launchSite = searchParams.get('site') ?? undefined;
   const router = useRouter();
@@ -44,29 +46,30 @@ export function SpaceExplorerScreen() {
   const model = useSpaceExplorerViewModel(dependencies, destination);
   const select = (id: DestinationKey) => {
     setVisibleCard(id);
+    if (panel === 'mars' && id === 'mars') return;
     router.replace(`/explore?destination=${id}`, { scroll: false });
   };
+  function selectPanel(next: ExplorerPanel) {
+    if (next === panel) return;
+    setVisibleCard(null);
+    const path =
+      next === 'network'
+        ? panel === 'mars'
+          ? '/explore'
+          : `/explore?destination=${destination}`
+        : `/explore?destination=${next === 'mars' ? 'mars' : 'earth'}&tab=${next}`;
+    router.push(path, { scroll: false });
+  }
   return (
     <MissionShell
-      section={panel === 'network' ? 'explorer' : 'earth'}
+      section={showsEarth ? 'earth' : 'explorer'}
       missionName="Red de exploración"
       onOpenExplorer={() => navigateTo('/explore')}
-      onOpenEarth={() => navigateTo('/explore?destination=earth&tab=earth')}
       onNavigate={(section) => navigateTo(missionRoute('odyssey', section))}
     >
-      <ExplorerTabs
-        active={panel}
-        onSelect={(next) =>
-          router.push(
-            next !== 'network'
-              ? `/explore?destination=earth&tab=${next}`
-              : `/explore?destination=${destination}`,
-            { scroll: false },
-          )
-        }
-      />
+      <ExplorerTabs active={panel} onSelect={selectPanel} />
       <div id="explorer-panel" role="tabpanel" aria-labelledby={`explorer-tab-${panel}`}>
-        {panel !== 'network' ? (
+        {showsEarth ? (
           <LaunchSitesScreen
             overview={panel === 'earth'}
             selectedId={launchSite}
@@ -107,8 +110,10 @@ export function SpaceExplorerScreen() {
             }
             scene={
               <SpaceMapScene
+                key={panel}
                 destinations={model.data.destinations}
                 selected={model.selected.id}
+                initialFocus={panel === 'mars' ? 'mars' : undefined}
                 onSelect={select}
                 visibleCard={visibleCard}
                 onDismissCard={() => setVisibleCard(null)}

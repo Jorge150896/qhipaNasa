@@ -2,7 +2,7 @@
 
 ## Alcance implementado
 
-Backend Java 21/Spring Boot 3.5.16 con dos operaciones GET. Consulta radiación ambiental histórica de DosTel1 y DosTel2 en ISS/Columbus, valida la respuesta CSV y conserva una copia versionada en disco. No incluye base de datos, login, datos de salud personales, alertas clínicas ni UI nueva. La identidad visual y los datos actuales de la web permanecen intactos.
+Backend Java 21/Spring Boot 3.5.16 con dos operaciones GET. Consulta radiación ambiental histórica de DosTel1 y DosTel2 en ISS/Columbus, valida la respuesta CSV y conserva una copia versionada en disco. La pantalla Entorno publica una serie de referencia archivada de 65 lecturas DosTel1. El archivo incluye la consulta, la procedencia, el hash y los valores. Para filtrar fechas desde la app se requiere integrar el consumidor HTTP.
 
 Fuentes oficiales: [API RadLab](https://visualization.osdr.nasa.gov/radlab/gui/data-api/), [descripción NASA](https://science.nasa.gov/reference/osdr-faq/), [timestamp de origen](https://visualization.osdr.nasa.gov/radlab/gui/knowledgebase/timestamp). El endpoint oficial termina en `/radlab/api/`, sin punto final. No requiere API key para las consultas verificadas.
 

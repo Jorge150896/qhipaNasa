@@ -38,19 +38,22 @@ Para generar esa misma exportación localmente, ejecuta `GITHUB_PAGES=true npm r
 - Pestaña «Despegues de la Tierra» en `/explore?destination=earth&tab=launches`: Kennedy, Vandenberg y Kourou, más las sedes NASA Headquarters, Johnson, Goddard, Marshall y JPL. Cada lugar abre una tarjeta con nombre completo, ciudad, función, fuentes y un video histórico de despegue relacionado, indicando dónde ocurrió realmente. Símbolos distintos y cards individuales junto a los puntos visibles; lista equivalente sin 3D. La URL conserva el sitio; los videos externos requieren conexión. Texturas locales de Solar System Scope / INOVE (CC BY 4.0). Aurora sigue siendo una estación ficticia.
 
 - **Monitoreo asistido**: preparar equipo/contexto, capturar, repetir, consultar cada 5 s, revisar y guardar sesiones locales. Calidad, ausencia, origen, tiempo y comparación por indicador. Demo explícita y modo API sin fallback; [configuración y límites](docs/development/monitoring.md), [contrato provisional](docs/contracts/openapi.yaml).
+- **Mi estado**: Tumi destaca las lecturas que requieren revisión. «Probar pérdida de señal» abre el caso de SpO₂ de Elena en Odyssey. La captura rápida muestra el nuevo resultado con su propia hora y conserva los huecos del historial. Para guardar una sesión, usa Monitoreo.
 
-- Carga animada del Tumi con salto, sonrisa, rebote del tocado y spinner independiente. Introducción a pantalla completa de 3 segundos solo tras «Iniciar mi misión»; dentro de la app, carga limitada al área de información. Vista permanente en `/loading-preview`.
+- Carga animada del Tumi con salto, sonrisa, rebote del tocado y spinner independiente. Introducción breve a pantalla completa solo tras «Iniciar mi misión»; dentro de la app, carga limitada al área de información. Vista permanente en `/loading-preview`.
 
 - Salud por siete sistemas corporales en Tripulación: explicaciones y fuentes HHC, contexto, comparación descriptiva de series, autoevaluación guiada con confirmación, historial y siguientes pasos, revisión documental y análisis explicable de cada persona. Los registros de salud tienen almacenamiento separado del diario anterior.
 
 - Rotación axial de planetas, órbitas ilustrativas de Luna y estación, perspectiva inicial inclinada y pausa global. Al alejarse aparecen el Sol y los ocho planetas, con seguimiento Tierra–Marte y regreso a la misión. Distancias medias en UA; tamaños y tiempos ilustrativos.
 - Nuevo [mapa espacial 3D](http://127.0.0.1:3000/explore): Tierra, Luna, Marte, estación y nave seleccionables. Desde cada ficha se entra a su tripulación, indicadores y seguimiento.
+- La pestaña «Mapa de Marte» abre el planeta de cerca en `/explore?destination=mars&tab=mars`, con la referencia de Curiosity y el acceso a la tripulación de Ares.
 - Cuatro hábitats de demo y 12 personas ficticias distintas. Tierra comparte el contexto de Aurora, sin duplicar personas; Odyssey permanece en tránsito. La misión original y sus ocho secciones se conservan.
 - Diarios separados por hábitat; la clave original de Odyssey permanece intacta. Selección de destino en URL y alternativa HTML sin WebGL.
 
 - Centro de misión original con sus tres tripulantes ficticios, más perfiles por hábitat.
 - Astronauta 3D con rotación, zoom y sensores seleccionables; modelo GLB local con detalles morados y naranjas. Fallback si no hay WebGL o falla el asset.
-- Odyssey 01 en corte 3D interactivo dentro de Tripulación, con cinco módulos, ubicación del tripulante y lecturas ambientales simuladas. La distribución de la nave es ilustrativa.
+- Entorno abre el corte 3D interactivo de Odyssey 01, con cinco módulos, ocupación y lecturas ambientales simuladas. Tripulación abre el visor contextual desde su línea de tiempo. La distribución de la nave es ilustrativa.
+- Entorno compara las lecturas simuladas de cada tripulante con su actividad y ubicación y ofrece acceso a su chequeo diario. «Ver historial de la ISS» reproduce 288 muestras de temperatura del aire, humedad y CO₂ del 20 de agosto de 2018, fecha de la serie publicada de [NASA OSDR EDA](https://visualization.osdr.nasa.gov/eda/). El archivo muestra el ambiente de cabina en el contexto de RR-9. En el mapa, Marte muestra una muestra exterior de Curiosity REMS tomada del [sol 10 de NASA PDS](https://atmos.nmsu.edu/PDS/data/PDS4/msl_rems_bundle/data_calibrated/SOL_00001_00089/SOL00010/), con temperatura convertida de kelvin a Celsius.
 - Frecuencia cardíaca, temperatura, SpO₂ y respiración; historial, unidades, hora UTC, procedencia y calidad de datos visibles.
 - «Ver origen» por muestra en Historial: identificador, persona, fecha completa, método y contexto. Contrato cuantitativo independiente de la fuente, con distinción entre datos individuales, agregados y ausentes.
 - Escenarios de rutina, cambio de sueño y pérdida de señal. Las muestras ausentes no se reemplazan por valores antiguos ni se interpolan.
@@ -63,7 +66,7 @@ No existe un modo offline completo ni sincronización: el almacenamiento local c
 
 ## Arquitectura
 
-El backend ambiental puede ejecutarse aparte con `cd backend`, `./mvnw verify` y `./mvnw spring-boot:run`. Escucha en `127.0.0.1:8080`; el frontend aún no consume esas nuevas operaciones.
+El backend ambiental puede ejecutarse aparte con `cd backend`, `./mvnw verify` y `./mvnw spring-boot:run`. Escucha en `127.0.0.1:8080`; la sección Entorno muestra una serie de referencia archivada de ISS Columbus. La consulta por fecha e instrumento queda disponible en la API Java.
 
 ```text
 frontend/src/app                      rutas y layouts delgados (servidor)

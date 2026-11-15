@@ -1,6 +1,7 @@
 import { Icon } from '@/ui/Icon';
 import { useState } from 'react';
 import type { ExplorerViewProps } from '../types';
+import { MarsWeatherReference } from './MarsWeatherReference';
 export function SpaceExplorerView({
   data,
   selected,
@@ -16,7 +17,6 @@ export function SpaceExplorerView({
     <div className="fleet-page">
       <div className="fleet-heading">
         <div>
-          <p className="eyebrow">EXPLORADOR DE TRIPULACIÓN / DEMO</p>
           <h1>
             Distintos mundos.
             <br />
@@ -55,9 +55,7 @@ export function SpaceExplorerView({
         <section className="fleet-map" aria-label="Exploración espacial">
           <div className="fleet-map-heading">
             <div>
-              <span className="eyebrow">01 / MAPA DE LA RED</span>
               <h2>Explora el espacio</h2>
-              <p>Elige un destino y descubre su tripulación.</p>
             </div>
             <button
               className="button secondary fleet-expand-map"
@@ -95,7 +93,6 @@ export function SpaceExplorerView({
           </div>
         </section>
         <aside className="fleet-detail" aria-label="Detalle del destino" aria-live="polite">
-          <p className="eyebrow">02 / DESTINO SELECCIONADO</p>
           <div className="fleet-detail-title">
             <div>
               <span className="fleet-category">{selected.category}</span>
@@ -104,6 +101,7 @@ export function SpaceExplorerView({
             <Icon name={selected.id === 'ship' ? 'rocket' : 'orbit'} size={34} />
           </div>
           <p className="fleet-subtitle">{selected.subtitle}</p>
+          {selected.id === 'mars' && <MarsWeatherReference />}
           {selected.id === 'earth' && (
             <div className="earth-destination-options">
               <button className="button primary" onClick={onOpenEarthOverview}>
@@ -185,15 +183,6 @@ export function SpaceExplorerView({
             ))
           )}
         </aside>
-      </div>
-      <div className="fleet-note">
-        <Icon name="sparkles" />
-        <p>
-          <strong>Del lugar a la persona.</strong> Entra a un hábitat para explorar el astronauta
-          3D, sus indicadores, historial, entorno y seguimiento. Los pendientes describen registros
-          y calidad de datos; no son un diagnóstico. Tierra y Aurora comparten tripulación y solo se
-          cuentan una vez.
-        </p>
       </div>
       <p className="launch-caption">
         Superficies:{' '}

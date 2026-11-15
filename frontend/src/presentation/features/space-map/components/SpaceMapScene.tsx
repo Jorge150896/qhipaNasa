@@ -260,6 +260,7 @@ function MapObjects({
 export default function SpaceMapScene(props: {
   destinations: DestinationData[];
   selected: DestinationKey;
+  initialFocus?: DestinationKey;
   visibleCard: DestinationKey | null;
   onDismissCard(): void;
   onOpenEarthOverview(): void;
@@ -267,13 +268,17 @@ export default function SpaceMapScene(props: {
 }) {
   const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
   const [attempt, setAttempt] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [inspection, setInspection] = useState<DestinationKey | null>(null);
+  const [paused, setPaused] = useState(Boolean(props.initialFocus));
+  const [inspection, setInspection] = useState<DestinationKey | null>(props.initialFocus ?? null);
   const [view, setView] = useState<{ level: SolarViewLevel; zoom: number }>({
     level: 'mission',
     zoom: 0,
   });
-  const [request, setRequest] = useState<ZoomRequest>({ action: 'mission', version: 0 });
+  const [request, setRequest] = useState<ZoomRequest>(
+    props.initialFocus
+      ? { action: 'focus', destination: props.initialFocus, version: 0 }
+      : { action: 'mission', version: 0 },
+  );
   const onViewChange = useCallback(
     (level: SolarViewLevel, zoom: number) =>
       setView((previous) =>

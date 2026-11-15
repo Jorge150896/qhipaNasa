@@ -59,8 +59,12 @@ test('mapa 3D, destinos y navegación preservando diarios y contexto', async ({ 
   await expect(page.locator('.crew-picker')).not.toContainText('Elena');
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
   await nav.getByRole('button', { name: 'Entorno del hábitat', exact: true }).click();
-  await page.getByRole('button', { name: 'Seleccionar zona 02', exact: true }).click();
-  await expect(page.getByLabel('Zona de la base')).toHaveValue('exercise');
+  const modules = page.getByRole('group', { name: 'Módulos del hábitat' });
+  await modules.getByRole('button', { name: /ejercicio/i }).click();
+  await expect(modules.getByRole('button', { name: /ejercicio/i })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
   await nav.getByRole('button', { name: 'Chequeo diario', exact: true }).click();
   await openDailyAssessment(page);
   await page.getByRole('spinbutton', { name: 'Horas de sueño', exact: true }).fill('6.8');

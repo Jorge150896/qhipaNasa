@@ -256,3 +256,13 @@
     grid-template-columns: 1fr;
   }
 }
+
+.fields[hidden] {
+  display: none;
+}
+
+@media (max-width: 850px) {
+  .activeLayout > .main {
+    order: -1;
+  }
+}
