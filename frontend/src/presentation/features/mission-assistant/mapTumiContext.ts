@@ -1,3 +1,4 @@
+import { describeProjectView, getProjectOverview } from '@/domain/assistant/projectKnowledge';
 import type { TumiScreenContext } from '@/domain/assistant/TumiConversation';
 import { scenarioOptions } from '../mission/constants';
 import type { MissionData, ZoneData } from '../mission/types';
@@ -5,12 +6,17 @@ import type { AssistantMetricContext, AssistantSample } from './types';
 import { getTumiCrewNames } from './tumiCrewNames';
 
 const views: Record<string, string> = {
-  crew: 'Tripulación',
+  crew: 'Tripulación · Ahora',
   journal: 'Monitoreo diario',
-  simulation: 'Simulación',
+  simulation: 'Simulación · Ruta emocional',
   sources: 'Fuentes y alcance',
   explore: 'Mapa espacial',
 };
+
+export function tumiViewForPath(pathname: string) {
+  const section = pathname.split('/').filter(Boolean).at(-1) ?? '';
+  return views[section] ?? 'Portada';
+}
 
 export function describeTumiZone(zone: ZoneData, readings = zone.readings) {
   return `${zone.name}${readings.length ? ` · ${readings.map(({ label, value, unit }) => `${label} ${value} ${unit}`).join(', ')}` : ''}`;
@@ -39,7 +45,14 @@ export function mapTumiContext(
   reading?: AssistantMetricContext,
 ): TumiScreenContext {
   const section = pathname.split('/').filter(Boolean).at(-1) ?? '';
-  const facts = [activeView?.details];
+  const view = activeView?.view ?? tumiViewForPath(pathname);
+  const viewGuide = describeProjectView(view);
+  const facts = [
+    'Identidad: Nami es la asistente virtual del proyecto. Los tripulantes son personajes de la simulación.',
+    getProjectOverview(),
+    viewGuide && `Acciones disponibles en ${view}: ${viewGuide}`,
+    activeView?.details,
+  ];
   if (mission && ['crew', 'journal', 'simulation'].includes(section)) {
     const { selected } = mission;
     const scenario = scenarioOptions.find(({ id }) => id === mission.scenario)?.label;
@@ -61,7 +74,7 @@ export function mapTumiContext(
   }
   if (reading) facts.unshift(describeTumiReading(reading));
   return {
-    view: activeView?.view ?? views[section] ?? 'Portada',
+    view,
     details: facts.filter(Boolean).join('\n').slice(0, 6000),
   };
 }

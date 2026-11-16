@@ -15,29 +15,35 @@ export class HttpTumiConversation implements TumiConversation {
     signal: AbortSignal,
     context?: TumiScreenContext,
   ): Promise<TumiReply> {
-    const response = await fetch(new URL('/api/v1/tumi/replies', this.origin), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, context }),
-      signal,
-    });
-    if (response.status === 429) throw new TumiDailyLimitError();
-    if (!response.ok) throw new Error('Nami no está disponible.');
-    const body: unknown = await response.json();
-    if (
-      typeof body !== 'object' ||
-      body === null ||
-      !('text' in body) ||
-      typeof body.text !== 'string' ||
-      !body.text.trim()
-    ) {
-      throw new Error('Nami recibió una respuesta vacía.');
+    const timeout = new AbortController();
+    const timer = setTimeout(() => timeout.abort(), 24_000);
+    try {
+      const response = await fetch(new URL('/api/v1/tumi/replies', this.origin), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, context }),
+        signal: AbortSignal.any([signal, timeout.signal]),
+      });
+      if (response.status === 429) throw new TumiDailyLimitError();
+      if (!response.ok) throw new Error('Nami no está disponible.');
+      const body: unknown = await response.json();
+      if (
+        typeof body !== 'object' ||
+        body === null ||
+        !('text' in body) ||
+        typeof body.text !== 'string' ||
+        !body.text.trim()
+      ) {
+        throw new Error('Nami recibió una respuesta vacía.');
+      }
+      if (context?.language === 'en' && isSpanishAssistantText(body.text)) {
+        throw new Error('Nami returned a reply in the wrong language.');
+      }
+      const reaction =
+        'reaction' in body ? tumiReactions.find((item) => item === body.reaction) : undefined;
+      return { text: body.text.replace(/\bTumi\b/gi, 'Nami'), reaction };
+    } finally {
+      clearTimeout(timer);
     }
-    if (context?.language === 'en' && isSpanishAssistantText(body.text)) {
-      throw new Error('Nami returned a reply in the wrong language.');
-    }
-    const reaction =
-      'reaction' in body ? tumiReactions.find((item) => item === body.reaction) : undefined;
-    return { text: body.text.replace(/\bTumi\b/gi, 'Nami'), reaction };
   }
 }

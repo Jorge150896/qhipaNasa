@@ -14,10 +14,12 @@ paths:
     servers: [{ url: 'http://127.0.0.1:8080' }]
     post:
       operationId: askTumi
-      summary: Generar una respuesta de texto para el chat flotante de Nami
+      summary: Generar una respuesta de acompañamiento o de ayuda con la app para los chats de Nami
       description: >-
         Disponible en desarrollo local o desde el origen HTTPS autorizado del sitio público.
-        Envía el mensaje y el contexto acotado de la vista a OpenAI desde el servidor.
+        Envía el mensaje a OpenAI desde el servidor. Las consultas sobre la app pueden incluir
+        el contexto acotado de la vista. Las peticiones claramente personales conservan
+        el idioma seleccionado y se procesan sin los datos de la pantalla.
         El cliente omite el diario privado, los borradores y la transcripción previa.
       requestBody:
         required: true

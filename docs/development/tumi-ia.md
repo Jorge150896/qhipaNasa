@@ -117,3 +117,5 @@ npm run test:e2e --workspace frontend -- cursor-assistant.spec.ts
 ```
 
 `npm run check` incluye formato global: si falla, las fases posteriores no se ejecutan y deben verificarse por separado. Consultar el registro de QA para distinguir checks aprobados del bloqueo preexistente de formato. Las pruebas unitarias cubren estados, geometría, cancelación, emociones, negaciones y temporizadores. E2E comprueba conversación, reacciones, navegación/recarga, controles finales, arrastre y móvil táctil con movimiento reducido.
+
+Con GPT configurado, ambos chats envían las preguntas y mensajes libres al servidor primero. Nami prioriza el acompañamiento emocional, con escucha y pasos prácticos, y usa el mapa del proyecto y el contexto de la pantalla para explicar la app. Los comandos de idioma se ejecutan localmente. Sin conexión o ante un fallo del servidor, la guía local reconoce nombres y variantes en inglés y español de las secciones. El cliente corta la espera remota a los 24 segundos.

@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useId, useState } from 'react';
 import { BookOpen, Square, Volume2 } from 'lucide-react';
 import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { TumiTechPortrait, type TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
@@ -33,7 +33,6 @@ export function SimulationNarration({
 }: SimulationNarrationProps) {
   const t = useTranslation();
   const id = useId();
-  const section = useRef<HTMLElement>(null);
   const [presentation, setPresentation] = useState<'automatic' | 'reading' | 'compact'>(
     'automatic',
   );
@@ -57,15 +56,6 @@ export function SimulationNarration({
   const finished = !playing && spokenWords === wordCount && presentation === 'automatic';
   let offset = 0;
 
-  useEffect(() => {
-    const element = section.current;
-    if (!element) return;
-    const { top } = element.getBoundingClientRect();
-    if (top >= 0 && top < window.innerHeight - 144) return;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    element.scrollIntoView({ block: 'start', behavior: reduced ? 'instant' : 'smooth' });
-  }, []);
-
   function renderWords(value: string) {
     const start = offset;
     const words = value.match(/\S+\s*/g) ?? [];
@@ -79,7 +69,6 @@ export function SimulationNarration({
 
   return (
     <section
-      ref={section}
       className="simulation-narration"
       aria-label={t('Resumen de Nami')}
       data-compact={compact}

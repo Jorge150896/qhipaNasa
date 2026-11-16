@@ -4,7 +4,7 @@ import { TumiVoiceOptions } from '@/presentation/shared/tumi/TumiVoiceOptions';
 import { TumiReplyOptions } from '@/presentation/shared/tumi/TumiReplyOptions';
 import type { TumiReplyFormat } from '@/presentation/shared/tumi/useTumiReplyAudio';
 import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
-import { EyeOff, Send, Volume2, VolumeX, X } from 'lucide-react';
+import { EyeOff, Send, Settings, Volume2, VolumeX, X } from 'lucide-react';
 import { Fragment, useEffect, useId, useRef, useState, type RefObject } from 'react';
 import type { CursorAssistantData, TumiEmotion } from '../types';
 import { TumiSpeechBubble } from './TumiSpeechBubble';
@@ -133,8 +133,11 @@ export function CursorAssistantView({
         >
           <div className="tumi-dialogue">
             <div className="tumi-chat-header">
+              <h2 className="tumi-chat-name">Nami</h2>
               <details className="tumi-chat-options">
-                <summary>{t('Opciones')}</summary>
+                <summary aria-label={t('Ajustes de Nami')} title={t('Ajustes de Nami')}>
+                  <Settings size={17} aria-hidden="true" />
+                </summary>
                 <div className="tumi-chat-settings">
                   <TumiReplyOptions format={replyFormat} onChange={onChangeReplyFormat} />
                   <TumiVoiceOptions />

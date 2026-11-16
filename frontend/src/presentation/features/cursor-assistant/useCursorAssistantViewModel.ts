@@ -1,4 +1,5 @@
 'use client';
+import { answerProjectQuestion } from '@/domain/assistant/projectKnowledge';
 import { requestedAppLanguage } from '@/domain/assistant/AppLanguage';
 import { answerAssistantIdentity } from '@/domain/assistant/assistantIdentity';
 import { isSpanishAssistantText } from '@/domain/assistant/isSpanishAssistantText';
@@ -11,7 +12,11 @@ import {
   type TumiScreenContext,
 } from '@/domain/assistant/TumiConversation';
 import { detectTextEmotion } from '@/domain/assistant/detectTextEmotion';
-import { getDirectWellbeingMood, tumiWellbeingReplies } from '@/domain/assistant/tumiWellbeing';
+import {
+  answerWellbeingQuestionLocally,
+  getDirectWellbeingMood,
+  tumiWellbeingReplies,
+} from '@/domain/assistant/tumiWellbeing';
 import { autonomousEmotion, reactionToText } from './emotions';
 import { transitionTumi } from './behavior';
 import type { TumiReplyAudio } from '@/presentation/shared/tumi/useTumiReplyAudio';
@@ -169,9 +174,22 @@ export function useCursorAssistantViewModel(
       );
       try {
         const signal = controller.signal;
+        const context = getContext?.();
+        let answeredByGpt = false;
         const answer = await (async () => {
+          if (fallback) {
+            try {
+              const remoteReply = await conversation.reply(text, signal, context);
+              answeredByGpt = true;
+              return remoteReply;
+            } catch (error) {
+              if (signal.aborted || error instanceof TumiDailyLimitError) throw error;
+            }
+          }
           const identity = answerAssistantIdentity(text, language);
           if (identity) return { text: identity, reaction: 'happy' as const };
+          const wellbeing = answerWellbeingQuestionLocally(text, language);
+          if (wellbeing) return { text: wellbeing, reaction: 'understanding' as const };
           const mood = getDirectWellbeingMood(text);
           if (mood) {
             return {
@@ -179,17 +197,12 @@ export function useCursorAssistantViewModel(
               reaction: mood === 'good' ? ('happy' as const) : ('understanding' as const),
             };
           }
-          const context = getContext?.();
+          const projectReply = answerProjectQuestion(text, context?.view ?? '', language);
+          if (projectReply) return { text: projectReply };
           const localReply = getLocalReply?.(text);
-          if (localReply && (!fallback || context?.view === 'Simulación · Ruta emocional')) {
-            return { text: localReply };
-          }
-          try {
-            return await conversation.reply(text, signal, context);
-          } catch (error) {
-            if (!fallback || signal.aborted || error instanceof TumiDailyLimitError) throw error;
-            return localReply ? { text: localReply } : fallback.reply(text, signal, context);
-          }
+          return localReply
+            ? { text: localReply }
+            : (fallback ?? conversation).reply(text, signal, context);
         })();
         if (controller.signal.aborted) return;
         const translated = t(answer.text.trim());
@@ -198,7 +211,9 @@ export function useCursorAssistantViewModel(
             ? 'I can help with the crew, the space map or your daily check-in. Which part would you like to explore?'
             : translated;
         const textWithFollowUp =
-          !reply || /\?[\s✨♡:3]*$|si (?:quieres|te apetece), (?:cuéntame|podemos)/iu.test(reply)
+          answeredByGpt ||
+          !reply ||
+          /\?[\s✨♡:3]*$|si (?:quieres|te apetece), (?:cuéntame|podemos)/iu.test(reply)
             ? reply
             : `${reply} ${t(followUps[Math.floor(sequence.current / 2) % followUps.length])}`;
         setMessages((previous) =>

@@ -148,6 +148,7 @@ test('reproduce los 30 días en 6 segundos y sincroniza la línea con el autorre
   const scrubber = timeline.getByRole('slider', { name: 'Día de la línea de tiempo' });
   const marker = timeline.locator('.wellbeing-timeline__marker');
   const routes = page.getByRole('list', { name: 'Rutas emocionales disponibles' });
+  const board = page.locator('.simulation-routes__layout');
   const record = page.getByRole('heading', { name: 'Autorregistro del día' }).locator('..');
   const summary = page.getByRole('region', { name: 'Resumen de Nami' });
   await expect(day).toHaveValue('29');
@@ -163,6 +164,7 @@ test('reproduce los 30 días en 6 segundos y sincroniza la línea con el autorre
   await expect(marker).toHaveAttribute('data-route', 'routine');
   await expect(routes.locator('[aria-current="step"]')).toHaveAttribute('data-route', 'routine');
   await expect(record).toContainText('7.2 h');
+  const initialTop = await board.evaluate((element) => element.getBoundingClientRect().top);
 
   await page.clock.fastForward(621);
   await expect(day).toHaveValue('3');
@@ -170,9 +172,14 @@ test('reproduce los 30 días en 6 segundos y sincroniza la línea con el autorre
   await expect(marker).toHaveAttribute('data-route', 'adjustment');
   await expect(marker).toHaveCSS('rotate', '62deg');
   await expect(routes.locator('[aria-current="step"]')).toHaveAttribute('data-route', 'adjustment');
+  await expect
+    .poll(() => board.evaluate((element) => element.getBoundingClientRect().top))
+    .toBeLessThan(initialTop);
   await timeline.getByRole('button', { name: 'Pausar mes' }).click();
+  const pausedScroll = await page.evaluate(() => window.scrollY);
   await page.clock.fastForward(10_000);
   await expect(day).toHaveValue('3');
+  expect(await page.evaluate(() => window.scrollY)).toBe(pausedScroll);
 
   await timeline.getByRole('button', { name: 'Continuar mes' }).click();
   await page.clock.fastForward(5_378);
@@ -180,6 +187,9 @@ test('reproduce los 30 días en 6 segundos y sincroniza la línea con el autorre
   await expect(summary).toHaveCount(0);
   await page.clock.runFor(1);
   await expect(day).toHaveValue('29');
+  await expect
+    .poll(() => board.evaluate((element) => Math.abs(element.getBoundingClientRect().top - 40)))
+    .toBeLessThan(10);
   await expect(routes.locator('[aria-current="step"]')).toHaveAttribute('data-route', 'support');
   await expect(record).toContainText('5.2 h');
   const balloon = summary.locator('.simulation-narration__bubble');

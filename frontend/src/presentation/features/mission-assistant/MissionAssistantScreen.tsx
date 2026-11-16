@@ -33,7 +33,7 @@ import { AssistantCoachmark } from './components/AssistantCoachmark';
 import { TumiAvatar } from '@/presentation/shared/tumi/TumiAvatar';
 import './mission-assistant.css';
 import { CursorAssistantScreen } from '../cursor-assistant/CursorAssistantScreen';
-import { mapTumiContext } from './mapTumiContext';
+import { mapTumiContext, tumiViewForPath } from './mapTumiContext';
 import { tumiViewIntroductions } from './tumiViewIntroductions';
 
 interface Point {
@@ -163,6 +163,7 @@ export function MissionAssistantScreen({
     audio,
     changeLanguageFromQuestion,
     language,
+    () => visibleViews()[0]?.context.view ?? tumiViewForPath(pathname),
   );
   const [following, setFollowing] = useState(false);
   const mobile = useSyncExternalStore(subscribeToTumiViewport, isTumiMobile, () => false);

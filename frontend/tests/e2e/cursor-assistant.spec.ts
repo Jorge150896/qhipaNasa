@@ -13,6 +13,8 @@ test('el lápiz del globo abre el campo y permite preguntar de nuevo en móvil',
   const panel = page.getByRole('region', { name: 'Asistente Nami', exact: true });
   const field = panel.getByRole('textbox', { name: 'Mensaje para Nami' });
   const log = panel.getByRole('log');
+  await expect(panel.getByRole('heading', { name: 'Nami', exact: true })).toBeVisible();
+  await expect(panel.getByText(/^(Options|Opciones)$/)).toHaveCount(0);
   await expect(field).toBeFocused();
   await expect(panel).toBeInViewport();
   await expect(bubble).toHaveCount(0);

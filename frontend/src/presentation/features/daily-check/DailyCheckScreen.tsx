@@ -31,7 +31,12 @@ function DailyCheckSession({ data, saving, onSave }: DailyCheckScreenProps) {
     startLocalDictation(callbacks, 'Puedes responder en la pantalla.', language),
   );
   useTumiViewContext('Monitoreo diario', [
-    `Paso actual: ${['Contexto', 'Autoevaluación', 'Confirmación', 'Resultado'][model.step]}.`,
+    guide.active && guide.mode === 'choose'
+      ? 'Pantalla actual: elección entre llenar el chequeo a mano o hacerlo con Nami.'
+      : `Paso actual: ${['Contexto', 'Autoevaluación', 'Confirmación', 'Resultado'][model.step]}.`,
+    guide.active && guide.mode === 'guided' && guide.prompt
+      ? `Pregunta del chequeo guiado: ${guide.prompt}`
+      : '',
     'Las respuestas y notas del formulario se guardan localmente y no forman parte de este contexto.',
   ]);
   const openEntry = useEffectEvent(() => {

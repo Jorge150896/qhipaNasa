@@ -64,12 +64,36 @@ class TumiTest {
           .contains("comienza por su nombre y su rol o actividad")
           .contains("«Lena» se refiere a Elena Torres")
           .contains("con el ritmo de una conversación de voz")
+          .contains("Tu prioridad es el acompañamiento emocional")
+          .contains("No los uses para inferir cómo se siente la persona que escribe")
+          .contains("Ante peligro inmediato para sí misma u otra persona")
           .contains("con un paso pequeño y concreto")
           .contains("responde con una proyección de la simulación")
           .contains("sin usar registros posteriores")
           .contains("sugiere acordar un momento con el equipo de apoyo");
       assertThat(requestBody.get().at("/text/format/type").asText()).isEqualTo("json_schema");
       assertThat(requestBody.get().path("store").asBoolean(true)).isFalse();
+      var englishContext = new TumiScreenContext(context.view(), context.details(), "en");
+      client.reply("i have a problem", englishContext);
+      var supportInput = mapper.readTree(requestBody.get().path("input").asText());
+      assertThat(supportInput.path("mensaje").asText()).isEqualTo("i have a problem");
+      assertThat(supportInput.has("pantalla")).isFalse();
+      assertThat(requestBody.get().path("instructions").asText()).contains("natural English");
+      for (var message : new String[] {
+          "Tengo un problema", "Me siento mal", "Hoy no me siento bien",
+          "Me siento mal porque discutí con Lena"
+      }) {
+        client.reply(message, context);
+        var personalInput = mapper.readTree(requestBody.get().path("input").asText());
+        assertThat(personalInput.path("mensaje").asText()).isEqualTo(message);
+        assertThat(personalInput.has("pantalla")).isFalse();
+        assertThat(requestBody.get().path("instructions").asText())
+            .contains("Responde íntegramente en español")
+            .contains("Mantén la conversación centrada en la persona")
+            .doesNotContain("Mapa de la app");
+      }
+      client.reply("Tengo un problema con el mapa", context);
+      assertThat(mapper.readTree(requestBody.get().path("input").asText()).has("pantalla")).isTrue();
       assertThatThrownBy(() -> new AskTumi(client).execute(" ".repeat(601), null))
           .isInstanceOf(AskTumi.InvalidMessage.class);
     } finally {

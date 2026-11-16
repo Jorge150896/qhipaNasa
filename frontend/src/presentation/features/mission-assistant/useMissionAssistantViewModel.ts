@@ -1,7 +1,13 @@
+import { answerProjectQuestion } from '@/domain/assistant/projectKnowledge';
 import { isSpanishAssistantText } from '@/domain/assistant/isSpanishAssistantText';
 import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { requestedAppLanguage, type AppLanguage } from '@/domain/assistant/AppLanguage';
 import { answerAssistantIdentity } from '@/domain/assistant/assistantIdentity';
+import {
+  answerWellbeingQuestionLocally,
+  getDirectWellbeingMood,
+  tumiWellbeingReplies,
+} from '@/domain/assistant/tumiWellbeing';
 import { useEffect, useRef, useState } from 'react';
 import type { MissionData } from '../mission/types';
 import { answerMissionQuestion } from './explainMission';
@@ -35,6 +41,7 @@ export function useMissionAssistantViewModel(
   audio?: Pick<TumiReplyAudio, 'readReply' | 'stop'>,
   changeLanguageFromQuestion?: (question: string) => string | undefined,
   language?: AppLanguage,
+  getActiveView?: () => string,
 ) {
   const t = useTranslation();
   const [open, setOpen] = useState(false);
@@ -123,21 +130,18 @@ export function useMissionAssistantViewModel(
         answer(trimmed, { text: confirmation }, false, requestedAppLanguage(trimmed));
         return;
       }
-      const identity = answerAssistantIdentity(trimmed, language);
-      if (identity) {
-        setDraft('');
-        setVoiceStatus('');
-        setRemoteStatus('');
-        setReaction('happy');
-        answer(trimmed, { text: identity });
-        return;
-      }
       const previous = useReading ? previousReading.current : undefined;
       if (!useReading) {
         setContext(undefined);
         previousReading.current = undefined;
       }
-      const viewAnswer = !useReading || !context ? getLocalAnswer?.(trimmed) : undefined;
+      const mood = getDirectWellbeingMood(trimmed);
+      const viewAnswer =
+        answerAssistantIdentity(trimmed, language) ??
+        answerWellbeingQuestionLocally(trimmed, language) ??
+        (mood ? tumiWellbeingReplies[mood] : undefined) ??
+        answerProjectQuestion(trimmed, getActiveView?.() ?? '', language) ??
+        (!useReading || !context ? getLocalAnswer?.(trimmed) : undefined);
       const { discussedMetric, ...reply } = viewAnswer
         ? { text: viewAnswer }
         : answerMissionQuestion(
@@ -159,11 +163,7 @@ export function useMissionAssistantViewModel(
       setRemoteStatus('');
       const textEmotion = detectTextEmotion(trimmed);
       const remoteContext = remote?.getContext(useReading ? context : undefined);
-      if (
-        !remote ||
-        (viewAnswer && remoteContext?.view === 'Simulación · Ruta emocional') ||
-        reply.destination
-      ) {
+      if (!remote) {
         answer(trimmed, reply);
         setReaction(
           viewAnswer && textEmotion === 'neutral' ? 'understanding' : reactionToText(textEmotion),
@@ -190,11 +190,9 @@ export function useMissionAssistantViewModel(
         );
       } catch (error) {
         if (controller.signal.aborted) return;
-        setRemoteStatus(
-          error instanceof TumiDailyLimitError
-            ? `${error.message} Nami respondió con la guía local.`
-            : 'Te respondo con lo que tengo a mano.',
-        );
+        if (error instanceof TumiDailyLimitError) {
+          setRemoteStatus(`${error.message} Nami respondió con la guía local.`);
+        }
         answer(trimmed, reply);
         setReaction('understanding');
       } finally {

@@ -167,6 +167,11 @@ export function useSimulationViewModel(report?: MonthlyWellbeing) {
       setPlayback({ elapsed: lastDay ? (index * playbackDuration) / lastDay : 0 });
     },
     playing,
+    playbackEndsAt:
+      playback?.startedAt === undefined
+        ? undefined
+        : playback.startedAt + playbackDuration - playback.elapsed,
+    playbackCompleted: playback?.completed === true,
     guidance,
     summary:
       playback?.completed && report && positions

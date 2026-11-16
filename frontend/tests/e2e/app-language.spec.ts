@@ -86,7 +86,16 @@ test('English check-in translates Nami’s full speech and preserves the draft w
     /^en-GB\|en-GB\|0\.9\|Thanks for telling me\..*What activity would you like to log\?$/,
   );
 
-  await guide.getByRole('button', { name: 'Cabin routine', exact: true }).click();
+  await guide.getByRole('button', { name: 'Exercise', exact: true }).click();
+  await expect(
+    guide.getByText('Let’s go with exercise. That helps put your answers in context.', {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(html).toHaveAttribute(
+    'data-test-speech',
+    /^en-GB\|en-GB\|0\.9\|Let’s go with exercise\. That helps put your answers in context\. When are you checking in relative to the activity\?$/,
+  );
   await guide.getByRole('button', { name: 'Before', exact: true }).click();
   await guide.getByLabel('Hours of sleep').fill('7');
   await expect(html).toHaveAttribute('data-test-dictation', 'en-US');
@@ -140,4 +149,40 @@ test('Nami describes the visible simulation in English even when the question is
       .first(),
   ).toBeAttached();
   await expect(assistant.getByRole('log')).not.toContainText('Veo una');
+});
+
+test('Nami se presenta y explica la app y cada vista en ambos chats', async ({ page }) => {
+  await page.goto('/mission/journal');
+  await page.getByRole('button', { name: 'Open Nami assistant', exact: true }).click();
+  const floating = page.locator('.cursor-assistant-panel');
+  const ask = floating.getByPlaceholder('Ask me something…');
+  await ask.fill('can i say me about you');
+  await ask.press('Enter');
+  await expect(floating.getByRole('log')).toContainText('I’m Nami, the virtual companion');
+  await ask.fill('can you explain me about the app?');
+  await ask.press('Enter');
+  await expect(floating.getByRole('log')).toContainText('Qhipa Pacha is a wellbeing demo');
+  await ask.fill('What can I do here?');
+  await ask.press('Enter');
+  await expect(floating.getByRole('log')).toContainText('Fill in the check-in manually');
+  await ask.fill('tell me about the section simulation');
+  await ask.press('Enter');
+  await expect(floating.getByRole('log')).toContainText('30 simulated days in 6 seconds');
+
+  await page.getByRole('combobox', { name: 'App language', exact: true }).selectOption('es');
+  await floating.locator('summary').click();
+  await page.getByRole('button', { name: 'Abrir chat contextual', exact: true }).click();
+  const contextual = page.getByRole('region', { name: 'Nami', exact: true });
+  const question = contextual.getByRole('textbox', { name: 'Pregunta para Nami' });
+  await question.fill('¿Cuéntame sobre Nami?');
+  await question.press('Enter');
+  await expect(contextual.getByRole('log')).toContainText('Soy Nami, tu compañera virtual');
+  await question.fill('¿De qué trata esta app?');
+  await question.press('Enter');
+  await expect(contextual.getByRole('log')).toContainText(
+    'demo de bienestar en una misión espacial ficticia',
+  );
+  await question.fill('¿Qué hay en Simulación?');
+  await question.press('Enter');
+  await expect(contextual.getByRole('log')).toContainText('30 días simulados en 6 segundos');
 });

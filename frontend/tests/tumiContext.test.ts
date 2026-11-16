@@ -42,3 +42,18 @@ it('envía la muestra elegida sin atribuirle la ubicación actual ni incluir not
   expect(context.details).toContain('Lecturas simuladas de Elena Torres');
   expect(context.details).toContain('Elena Torres, Comandante (también llamada Lena)');
 });
+
+it('distingue la identidad de Nami de la tripulación y describe la vista activa', () => {
+  const context = mapTumiContext('/mission/journal', null, {
+    view: 'Monitoreo diario',
+    details: 'Pantalla actual: elección entre llenar el chequeo a mano o hacerlo con Nami.',
+  });
+  expect(context.details).toContain('Nami es la asistente virtual');
+  expect(context.details).toContain('misión espacial ficticia');
+  expect(context.details).toContain('Acciones disponibles en Monitoreo diario');
+  expect(context.details).toContain('Pantalla actual: elección');
+
+  expect(mapTumiContext('/mission/simulation', null).details).toContain(
+    '30 días simulados en 6 segundos',
+  );
+});

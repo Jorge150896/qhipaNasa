@@ -7,6 +7,7 @@ import type { useSimulationViewModel } from '../useSimulationViewModel';
 import { FlightEvidence } from './FlightEvidence';
 import { SimulationNarration, type SimulationNarrationProps } from './SimulationNarration';
 import { WellbeingTimeline } from './WellbeingTimeline';
+import { useSimulationPlaybackScroll } from './useSimulationPlaybackScroll';
 
 const routes: {
   id: WellbeingRoute;
@@ -66,6 +67,7 @@ export function WellbeingRoutesView({
   const t = useTranslation();
   const { position, days, point, trial } = model;
   const portraitId = useId();
+  const board = useSimulationPlaybackScroll(model.playbackEndsAt, model.playbackCompleted);
   const activeStep = point && routes.find(({ id }) => id === point.route)?.steps[point.index];
 
   return (
@@ -106,6 +108,7 @@ export function WellbeingRoutesView({
       )}
 
       <div
+        ref={board}
         className="simulation-routes__layout"
         style={{
           backgroundImage: `linear-gradient(145deg, #24113fe8, #1f143ebb 60%, #160b32ed), url("${backdrop}")`,

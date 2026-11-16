@@ -388,28 +388,42 @@ html:has([data-navigation-layout='dock']) .cursor-assistant-restore {
 
 .tumi-chat-header {
   display: grid;
-  grid-template-columns: 1fr 44px 44px;
+  grid-template-columns: 1fr repeat(3, 44px);
   align-items: start;
+}
+.tumi-chat-name {
+  grid-area: 1 / 1;
+  align-self: start;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
+  padding-inline: 4px;
+  font-size: 15px;
+  color: var(--text);
 }
 .tumi-chat-options {
   grid-area: 1 / 1 / 2 / -1;
   min-width: 0;
+  pointer-events: none;
 }
 .cursor-assistant-panel .tumi-chat-options summary {
-  display: flex;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
   cursor: pointer;
   list-style: none;
   align-items: center;
   min-height: 44px;
-  width: max-content;
+  width: 44px;
+  margin-inline-start: auto;
   margin-inline-end: 88px;
-  padding-inline: 4px;
-  font-size: 12px;
 }
 .tumi-chat-options summary::-webkit-details-marker {
   display: none;
 }
 .tumi-chat-settings {
+  pointer-events: auto;
   padding: 10px;
   max-height: min(195px, max(50px, calc(var(--tumi-viewport-height, 100dvh) - 165px)));
   overflow: auto;
@@ -418,10 +432,10 @@ html:has([data-navigation-layout='dock']) .cursor-assistant-restore {
   background: var(--surface);
 }
 .cursor-assistant-panel .tumi-chat-audio {
-  grid-area: 1 / 2;
+  grid-area: 1 / 3;
 }
 .cursor-assistant-panel .tumi-close {
-  grid-area: 1 / 3;
+  grid-area: 1 / 4;
 }
 .cursor-assistant-panel .tumi-chat-header > button,
 .cursor-assistant-panel .tumi-chat-compose button {
