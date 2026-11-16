@@ -5,7 +5,6 @@
   --brand-charcoal: #212529;
   --brand-light: #e9ecef;
   --brand-wordmark-text: #fbf4ff;
-  --brand-wordmark-accent: #ffa36e;
   --brand-wordmark-muted: #e1cfee;
   --bg: var(--brand-charcoal);
   --surface: #251c30c9;
@@ -1670,10 +1669,6 @@ dd {
 .brand-name {
   color: var(--brand-wordmark-text);
   white-space: nowrap;
-}
-.brand-name strong {
-  color: var(--brand-wordmark-accent);
-  font-weight: inherit;
 }
 .panel {
   box-shadow:

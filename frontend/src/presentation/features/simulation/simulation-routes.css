@@ -341,3 +341,325 @@
 .simulation-routes__trial p {
   margin: 0.45rem 0 0;
 }
+
+.wellbeing-timeline {
+  display: grid;
+  gap: 0.65rem;
+  min-width: 0;
+  margin-bottom: 1rem;
+  padding: clamp(0.7rem, 2vw, 1.1rem);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  background: var(--field);
+}
+
+.wellbeing-timeline__header,
+.wellbeing-timeline__controls,
+.wellbeing-timeline__dates {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+}
+
+.wellbeing-timeline__header,
+.wellbeing-timeline__dates {
+  justify-content: space-between;
+}
+
+.wellbeing-timeline__header h3 {
+  margin: 0;
+}
+
+.wellbeing-timeline__header small,
+.wellbeing-timeline__dates {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.wellbeing-timeline__controls .button {
+  min-height: 44px;
+}
+
+.wellbeing-timeline__chart {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.65rem;
+}
+
+.wellbeing-timeline__levels {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.wellbeing-timeline__plot {
+  position: relative;
+  min-height: 84px;
+}
+
+.wellbeing-timeline__plot svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+}
+
+.wellbeing-timeline__guide {
+  stroke: var(--line-soft);
+  stroke-dasharray: 3 4;
+}
+
+.wellbeing-timeline__future {
+  stroke: var(--line);
+  stroke-width: 2;
+}
+
+.wellbeing-timeline__trace {
+  stroke: #d5b4ff;
+  stroke-width: 3;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.wellbeing-timeline [data-route='routine'] {
+  color: #a1f1d3;
+}
+
+.wellbeing-timeline [data-route='adjustment'] {
+  color: #ffdc99;
+}
+
+.wellbeing-timeline [data-route='support'] {
+  color: #ffc0d6;
+}
+
+.wellbeing-timeline__marker {
+  position: absolute;
+  width: auto;
+  height: clamp(28px, 3vw, 40px);
+  aspect-ratio: 88 / 128;
+  translate: -50% -50%;
+  rotate: 62deg;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: drop-shadow(0 2px 2px #18072a)
+    drop-shadow(0 0 5px color-mix(in srgb, currentColor 48%, transparent));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .wellbeing-timeline__marker {
+    animation: wellbeing-day-arrival 220ms ease-out;
+  }
+}
+
+@keyframes wellbeing-day-arrival {
+  from {
+    scale: 0.72;
+  }
+  to {
+    scale: 1;
+  }
+}
+
+.wellbeing-timeline__scrubber {
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  accent-color: var(--selection);
+  cursor: pointer;
+}
+
+.wellbeing-timeline__dates strong {
+  color: var(--text);
+}
+
+.simulation-narration {
+  display: grid;
+  grid-template-columns: clamp(10.5rem, 21vw, 19.5rem) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(0.7rem, 2vw, 1.15rem);
+  margin-bottom: 0.85rem;
+  scroll-margin-top: 1rem;
+}
+
+.simulation-narration[data-compact='true'] {
+  grid-template-columns: 3rem minmax(0, 1fr);
+  align-items: center;
+}
+
+.simulation-narration__avatar {
+  padding-top: 0.65rem;
+  filter: drop-shadow(0 0.35rem 0.9rem #daa1ff4a);
+}
+
+.simulation-narration[data-compact='true'] .simulation-narration__avatar {
+  padding-top: 0;
+}
+
+.simulation-narration__avatar > svg {
+  display: block;
+  width: 100%;
+}
+
+.simulation-narration__bubble {
+  position: relative;
+  display: grid;
+  gap: 0.65rem;
+  min-width: 0;
+  padding: clamp(0.8rem, 2vw, 1.2rem);
+  border: 1px solid #c595fa;
+  border-radius: 1.25rem 1.25rem 1.25rem 0.85rem;
+  background: linear-gradient(150deg, #3b205d, #2c1947 70%);
+  color: #fff4ff;
+  box-shadow: 0 0.6rem 1.6rem #13062255;
+  transform-origin: top left;
+}
+
+.simulation-narration__bubble::before {
+  position: absolute;
+  top: 1.44rem;
+  left: -0.38rem;
+  width: 0.65rem;
+  height: 0.65rem;
+  rotate: 45deg;
+  border-bottom: 1px solid #c595fa;
+  border-left: 1px solid #c595fa;
+  background: #3a205b;
+  content: '';
+}
+
+.simulation-narration__heading,
+.simulation-narration__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.75rem;
+}
+
+.simulation-narration__heading {
+  justify-content: space-between;
+}
+
+.simulation-narration :is(h3, p) {
+  margin: 0;
+}
+
+.simulation-narration__transcript {
+  display: grid;
+  gap: 0.6rem;
+  color: #efddfa;
+  line-height: 1.55;
+}
+
+.simulation-narration__transcript strong {
+  color: #fff4ff;
+}
+
+.simulation-narration__bubble .text-button {
+  color: #f1d3ff;
+}
+
+.simulation-narration__transcript [data-visible='false'] {
+  visibility: hidden;
+}
+
+@media (max-width: 760px) {
+  .simulation-narration[data-compact='false'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .simulation-narration[data-compact='false'] .simulation-narration__avatar {
+    justify-self: center;
+    width: min(100%, clamp(10.5rem, 21vw, 19.5rem));
+    padding-top: 0;
+  }
+
+  .simulation-narration__bubble::before {
+    top: -0.38rem;
+    left: calc(50% - 0.325rem);
+    rotate: 135deg;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .simulation-routes__layout:has(.simulation-narration) {
+    animation: simulation-summary-bounce 420ms ease-out both;
+  }
+
+  .simulation-narration__avatar,
+  .simulation-narration__bubble {
+    animation: simulation-bubble-enter 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .simulation-narration[data-speaking='true'] [data-visible='true'] {
+    animation: simulation-word-in 180ms ease-out both;
+  }
+
+  .simulation-narration[data-speaking='true'] .simulation-narration__avatar > svg {
+    animation: simulation-speaking-hover 2.8s ease-in-out infinite;
+  }
+
+  .simulation-narration[data-finished='true']:not(:hover, :focus-within)
+    .simulation-narration__bubble {
+    animation: simulation-bubble-exit 230ms ease-in 2s forwards;
+  }
+}
+
+@keyframes simulation-summary-bounce {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  34% {
+    translate: 0 -7px;
+  }
+  66% {
+    translate: 0 2px;
+  }
+}
+
+@keyframes simulation-bubble-enter {
+  from {
+    opacity: 0;
+    scale: 0.94;
+    translate: -0.4rem 0.4rem;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes simulation-bubble-exit {
+  to {
+    opacity: 0;
+    scale: 0.96;
+    translate: -0.4rem 0.3rem;
+  }
+}
+
+@keyframes simulation-word-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes simulation-speaking-hover {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -0.3rem;
+  }
+}

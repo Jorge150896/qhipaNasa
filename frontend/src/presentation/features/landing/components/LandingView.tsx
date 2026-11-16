@@ -51,14 +51,14 @@ export function LandingView({
         <button
           className="qhipa-brand"
           onClick={onReplayLogo}
-          aria-label={t('Animar logo de Qhipa Pacha')}
+          aria-label={t('Animar logo de Nami')}
         >
           <span key={logoRevision} className="qhipa-brand-bounce">
             <span className="qhipa-brand-mark" aria-hidden="true">
               <TumiTechPortrait id={brandPortraitId} emotion="wink" />
             </span>
             <span className="qhipa-wordmark">
-              QHIPA <strong>PACHA</strong>
+              NAMI
               <small>{t('BIENESTAR SIN FRONTERAS')}</small>
             </span>
           </span>

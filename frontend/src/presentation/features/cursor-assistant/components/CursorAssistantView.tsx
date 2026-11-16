@@ -4,7 +4,7 @@ import { TumiVoiceOptions } from '@/presentation/shared/tumi/TumiVoiceOptions';
 import { TumiReplyOptions } from '@/presentation/shared/tumi/TumiReplyOptions';
 import type { TumiReplyFormat } from '@/presentation/shared/tumi/useTumiReplyAudio';
 import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
-import { Ellipsis, EyeOff, Send, Volume2, VolumeX, X } from 'lucide-react';
+import { EyeOff, Send, Volume2, VolumeX, X } from 'lucide-react';
 import { Fragment, useEffect, useId, useRef, useState, type RefObject } from 'react';
 import type { CursorAssistantData, TumiEmotion } from '../types';
 import { TumiSpeechBubble } from './TumiSpeechBubble';
@@ -132,6 +132,73 @@ export function CursorAssistantView({
           aria-label={t('Asistente Nami')}
         >
           <div className="tumi-dialogue">
+            <div className="tumi-chat-header">
+              <details className="tumi-chat-options">
+                <summary>{t('Opciones')}</summary>
+                <div className="tumi-chat-settings">
+                  <TumiReplyOptions format={replyFormat} onChange={onChangeReplyFormat} />
+                  <TumiVoiceOptions />
+                  <TumiModeOptions following={following} onChangeMode={onChangeMode} />
+                  <p className="tumi-chat-disclaimer">
+                    {t(
+                      usesOpenAi
+                        ? 'OpenAI recibe tu mensaje y el contexto de demostración de esta pantalla.'
+                        : 'Sin IA conectada · Respuestas locales sobre la web',
+                    )}
+                  </p>
+                  <div className="tumi-chat-controls">
+                    {onOpenChat && (
+                      <button type="button" onClick={onOpenChat}>
+                        {t('Abrir chat contextual')}
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      className="tumi-icon-button"
+                      onClick={onHide}
+                      aria-label={t('Ocultar Nami')}
+                      title={t('Ocultar Nami')}
+                    >
+                      <EyeOff size={18} aria-hidden="true" />
+                    </button>
+                  </div>
+                </div>
+              </details>
+              <button
+                type="button"
+                className="tumi-icon-button tumi-chat-audio"
+                onClick={data.speaking ? onStopVoice : onGreet}
+                aria-label={t(
+                  data.speaking
+                    ? 'Detener voz'
+                    : hasReply
+                      ? 'Escuchar respuesta'
+                      : 'Escuchar saludo',
+                )}
+                title={t(
+                  data.speaking
+                    ? 'Detener voz'
+                    : hasReply
+                      ? 'Escuchar respuesta'
+                      : 'Escuchar saludo',
+                )}
+              >
+                {data.speaking ? (
+                  <VolumeX size={18} aria-hidden="true" />
+                ) : (
+                  <Volume2 size={18} aria-hidden="true" />
+                )}
+              </button>
+              <button
+                type="button"
+                className="tumi-icon-button tumi-close"
+                aria-label={t('Cerrar conversación')}
+                title={t('Cerrar conversación')}
+                onClick={onToggle}
+              >
+                <X size={17} aria-hidden="true" />
+              </button>
+            </div>
             <div className="tumi-chat-messages" role="log" aria-label={t('Conversación con Nami')}>
               {data.busy ? (
                 <p className="tumi-thinking">{t('¡Un momentito, estoy pensando! ✨')}</p>
@@ -200,68 +267,6 @@ export function CursorAssistantView({
               </button>
             </form>
             {data.error && <p role="alert">{t(data.error)}</p>}
-          </div>
-          <div className="tumi-chat-footer">
-            <details className="tumi-chat-options">
-              <summary className="tumi-icon-button" title={t('Opciones')}>
-                <Ellipsis size={20} aria-hidden="true" />
-                <span className="sr-only">{t('Opciones')}</span>
-              </summary>
-              <div className="tumi-chat-settings">
-                <TumiReplyOptions format={replyFormat} onChange={onChangeReplyFormat} />
-                <TumiVoiceOptions />
-                <TumiModeOptions following={following} onChangeMode={onChangeMode} />
-                <p className="tumi-chat-disclaimer">
-                  {t(
-                    usesOpenAi
-                      ? 'OpenAI recibe tu mensaje y el contexto de demostración de esta pantalla.'
-                      : 'Sin IA conectada · Respuestas locales sobre la web',
-                  )}
-                </p>
-                <div className="tumi-chat-controls">
-                  {onOpenChat && (
-                    <button type="button" onClick={onOpenChat}>
-                      {t('Abrir chat contextual')}
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    className="tumi-icon-button"
-                    onClick={onHide}
-                    aria-label={t('Ocultar Nami')}
-                    title={t('Ocultar Nami')}
-                  >
-                    <EyeOff size={18} aria-hidden="true" />
-                  </button>
-                </div>
-              </div>
-            </details>
-            <button
-              type="button"
-              className="tumi-icon-button tumi-chat-audio"
-              onClick={data.speaking ? onStopVoice : onGreet}
-              aria-label={t(
-                data.speaking ? 'Detener voz' : hasReply ? 'Escuchar respuesta' : 'Escuchar saludo',
-              )}
-              title={t(
-                data.speaking ? 'Detener voz' : hasReply ? 'Escuchar respuesta' : 'Escuchar saludo',
-              )}
-            >
-              {data.speaking ? (
-                <VolumeX size={18} aria-hidden="true" />
-              ) : (
-                <Volume2 size={18} aria-hidden="true" />
-              )}
-            </button>
-            <button
-              type="button"
-              className="tumi-icon-button tumi-close"
-              aria-label={t('Cerrar conversación')}
-              title={t('Cerrar conversación')}
-              onClick={onToggle}
-            >
-              <X size={17} aria-hidden="true" />
-            </button>
           </div>
           {audioStatus && <p role="status">{t(audioStatus)}</p>}
         </section>

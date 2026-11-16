@@ -92,7 +92,7 @@ test('cada sección conserva navegación y entrada directa después de separar f
     await expect(page).toHaveURL(new RegExp(`/missions/selene/${section}$`));
     const wordmark = page.locator('.topbar .brand-name');
     await expect(wordmark).toHaveCSS('color', 'rgb(251, 244, 255)');
-    await expect(wordmark.locator('strong')).toHaveCSS('color', 'rgb(255, 163, 110)');
+    await expect(wordmark).toHaveText('NAMI');
     await expect(page.locator('.topbar .brand small')).toHaveCSS('color', 'rgb(225, 207, 238)');
     await expect(page.getByRole('heading', { level: 1, name: heading, exact: true })).toBeVisible();
     await page.reload();

@@ -52,7 +52,7 @@ Los modelos, dominio, adapters, DI y claves de persistencia no se reorganizan po
 
 ## Animación de carga
 
-`loading-preview/` ofrece la vista de revisión `/loading-preview`, con Screen/ViewModel/View y pausa local. El componente reusable del Nami y el temporizador de introducción viven en `presentation/shared/loading/`; consumidores reales: misión, mapa y fallback de rutas. No se duplican operaciones ni datos del provider.
+`loading-preview/` ofrece la vista de revisión `/loading-preview`, con Screen/ViewModel/View y pausa local. El componente reusable de Nami y el temporizador de introducción viven en `presentation/shared/loading/`; consumidores reales: misión, mapa y fallback de rutas. No se duplican operaciones ni datos del provider.
 
 ## Sitios de lanzamiento
 

@@ -41,9 +41,7 @@ export function MissionShell({
               <TumiTechPortrait id={brandPortraitId} emotion="wink" />
             </span>
             <div>
-              <div className="brand-name">
-                QHIPA <strong>PACHA</strong>
-              </div>
+              <div className="brand-name">NAMI</div>
               <small>{t('BIENESTAR SIN FRONTERAS')}</small>
             </div>
           </div>
@@ -63,10 +61,10 @@ export function MissionShell({
             </span>
           </div>
           <div className="topbar-status">
-            {section !== 'earth' && (
+            {section === 'explorer' && (
               <span className="demo-badge">
                 <span className="status-dot" />
-                {t(section === 'explorer' ? 'Simulación y archivo histórico' : 'Datos simulados')}
+                {t('Simulación y archivo histórico')}
               </span>
             )}
             <LanguageSelect />

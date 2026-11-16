@@ -33,7 +33,7 @@ Para generar esa misma exportación localmente, ejecuta `GITHUB_PAGES=true npm r
 
 ## Funciona en esta versión
 
-- **Navegación inferior**: Tripulación → Monitoreo diario → Mapa espacial → Simulación, con cuatro accesos directos en escritorio, tablet y móvil. Se retiró el botón Nami de la cabecera; la mascota conserva el acceso al chat contextual. [Detalles de uso y mantenimiento](docs/development/frontend.md).
+- **Navegación inferior**: Monitoreo diario → Simulación → Tripulación → Mapa espacial, con cuatro accesos directos en escritorio, tablet y móvil. Se retiró el botón Nami de la cabecera; la mascota conserva el acceso al chat contextual. [Detalles de uso y mantenimiento](docs/development/frontend.md).
 
 - **Nami flotante** acompaña con movimiento autónomo, arrastre, expresiones y respuestas locales a señales del texto. Puedes escuchar su saludo, ocultarla o abrir el chat contextual. [Guía de Nami](docs/development/tumi-ia.md).
 

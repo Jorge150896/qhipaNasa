@@ -5,8 +5,6 @@ import { navigation } from '../constants';
 import type { MissionSection } from '../types';
 import styles from './mission-navigation.module.css';
 
-const primarySections = new Set<MissionSection>(['crew', 'journal']);
-
 export function MissionNavigationDock({
   section,
   onOpenExplorer,
@@ -58,7 +56,7 @@ export function MissionNavigationDock({
   return (
     <nav ref={dock} className={styles.dock} aria-label={t('Navegación principal')}>
       <div className={styles.track}>
-        {navigation.filter((item) => primarySections.has(item.id)).map(sectionButton)}
+        {navigation.map(sectionButton)}
         {onOpenExplorer && (
           <button
             type="button"
@@ -71,7 +69,6 @@ export function MissionNavigationDock({
             <span>{t('Mapa espacial')}</span>
           </button>
         )}
-        {navigation.filter((item) => item.id === 'simulation').map(sectionButton)}
       </div>
     </nav>
   );

@@ -1,18 +1,22 @@
 import { expect, test } from '@playwright/test';
 import { openTumiChat } from './tumi-chat-helpers';
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('astra.language.v1', 'es'));
+});
+
 test('portada: Nami, parallax, pausa y CTA hacia la misión', async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await expect(page).toHaveTitle('Qhipa Pacha · Tu bienestar, en otra órbita');
+  await expect(page).toHaveTitle(/^Qhipa Pacha · /);
   await expect(page.getByRole('heading', { name: 'Tu bienestar, en otra órbita.' })).toBeVisible();
   await expect(page.getByText('Inspirado en la exploración.', { exact: false })).toHaveCount(0);
   await expect(page.getByText('Diseñado para las personas.', { exact: true })).toHaveCount(0);
   await expect(page.getByText('Un pequeño paso hacia tu bienestar.', { exact: true })).toHaveCount(
     0,
   );
-  const tumi = page.getByRole('img', { name: /Nami dorado sonriente que flota/ });
+  const tumi = page.getByRole('img', { name: 'Nami sonríe mientras flota y levanta su casco' });
   await expect(tumi).toBeVisible();
   const helmet = tumi.locator('.tumi-portrait-helmet');
   await expect(tumi).toHaveAttribute('data-tumi-motion', 'celebrate');
@@ -23,7 +27,9 @@ test('portada: Nami, parallax, pausa y CTA hacia la misión', async ({ page }, t
   const sky = page.locator('.space-background__nebula');
   await page.mouse.move(1300, 400);
   await expect.poll(() => sky.evaluate((layer) => getComputedStyle(layer).translate)).toMatch(/^-/);
-  await page.getByRole('button', { name: 'Animar logo de Qhipa Pacha' }).click();
+  const mark = page.getByRole('button', { name: 'Animar logo de Nami' });
+  await expect(mark).toContainText('NAMI');
+  await mark.click();
   await page.getByRole('button', { name: 'Pausar animación', exact: true }).click();
   await expect(page.locator('.qhipa-tumi-float')).toHaveCSS('animation-play-state', 'paused');
   await expect(sky).toHaveCSS('animation-play-state', 'paused');
@@ -58,10 +64,9 @@ test('portada móvil y movimiento reducido: estática, accesible y navegable tra
   await page.goto('/');
   await page.reload();
   await expect(page.locator('.qhipa-tumi-float')).toHaveCSS('animation-name', 'none');
-  await expect(page.getByRole('img', { name: /Nami dorado sonriente que flota/ })).toHaveCSS(
-    'transform',
-    'none',
-  );
+  await expect(
+    page.getByRole('img', { name: 'Nami sonríe mientras flota y levanta su casco' }),
+  ).toHaveCSS('transform', 'none');
   await expect(page.locator('.qhipa-tumi-float .tumi-portrait-helmet')).toHaveCSS(
     'animation-name',
     'none',

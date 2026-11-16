@@ -6,7 +6,7 @@ Estado de la entrega del 15 de noviembre de 2026. Esta guía reúne el acompaña
 
 Nami aparece como una cabeza tecnológica dorada con visor oscuro y rasgos turquesa. Se desplaza de forma moderada por espacios libres, observa el puntero, parpadea, inclina la cabeza y mueve suavemente el tocado. Al pulsarlo abre una conversación cerca de su posición y suspende los recorridos. Puede arrastrarse manualmente a otra zona libre.
 
-El acompañante está disponible en el explorador y la misión. En misión ofrece acceso al chat contextual existente. Solo hay una instancia del acompañante por página. El Nami del loader y la guía de misión conservan sus funciones; esta entrega no modifica los modelos 3D ni los registros de salud.
+El acompañante está disponible en el explorador y la misión. En misión ofrece acceso al chat contextual existente. Solo hay una instancia del acompañante por página. La animación de carga de Nami y la guía de misión conservan sus funciones; esta entrega no modifica los modelos 3D ni los registros de salud.
 
 ## Controles finales
 

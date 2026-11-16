@@ -1,8 +1,8 @@
 import type { MissionSection, ScenarioKey, SensorKey } from './types';
 export const navigation: { id: MissionSection; label: string; icon: string }[] = [
-  { id: 'crew', label: 'Tripulación', icon: 'users' },
   { id: 'journal', label: 'Monitoreo diario', icon: 'clipboard' },
   { id: 'simulation', label: 'Simulación', icon: 'sliders' },
+  { id: 'crew', label: 'Tripulación', icon: 'users' },
 ];
 export const sectionTitles: Record<MissionSection, { title: string; description: string }> = {
   crew: {

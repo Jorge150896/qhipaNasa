@@ -121,9 +121,6 @@
   letter-spacing: 1px;
   line-height: 1.25;
 }
-.qhipa-wordmark strong {
-  color: var(--brand-wordmark-accent);
-}
 .qhipa-wordmark small {
   display: block;
   margin-top: 5px;

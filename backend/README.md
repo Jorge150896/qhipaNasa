@@ -12,7 +12,7 @@ Windows: `mvnw.cmd`. Requiere `JAVA_HOME` configurado y red para la primera desc
 
 ### Chat flotante de Nami con GPT en local
 
-Abre `backend/.env.tumi.local` o créalo con permisos privados. Deja una línea `OPENAI_API_KEY=` y escribe tu clave después del igual. Git ignora este archivo. Inicia Spring Boot desde `backend/` con `./mvnw spring-boot:run`. En otra terminal, desde la raíz, ejecuta `NEXT_PUBLIC_TUMI_LOCAL=true npm run dev -- --port 3000`. Abre el Nami flotante en `http://127.0.0.1:3000`. Para que Spring cargue una clave nueva, reinicia el backend.
+Abre `backend/.env.tumi.local` o créalo con permisos privados. Deja una línea `OPENAI_API_KEY=` y escribe tu clave después del igual. Git ignora este archivo. Inicia Spring Boot desde `backend/` con `./mvnw spring-boot:run`. En otra terminal, desde la raíz, ejecuta `NEXT_PUBLIC_TUMI_LOCAL=true npm run dev -- --port 3000`. Abre el chat de Nami en `http://127.0.0.1:3000`. Para que Spring cargue una clave nueva, reinicia el backend.
 
 `POST /api/v1/tumi/replies` recibe hasta 600 caracteres de mensaje y un resumen acotado de la pantalla. Usa GPT-5.4 mini por defecto. El chat flotante y el contextual comparten la integración. El contexto puede incluir lecturas simuladas y puntos seleccionados de archivos públicos. El diario, sus borradores y el historial de mensajes quedan fuera de esta llamada.
 

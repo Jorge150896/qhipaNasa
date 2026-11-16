@@ -1,6 +1,6 @@
 # Desarrollo del frontend
 
-Monitoreo diario reúne las respuestas, las lecturas corporales y las condiciones del hábitat en un solo formulario. Los chequeos guardados y [las sesiones anteriores](monitoring.md) se despliegan en Tripulación → Historial → Actividad guardada. El chat se abre desde el Nami flotante.
+Monitoreo diario reúne las respuestas, las lecturas corporales y las condiciones del hábitat en un solo formulario. Los chequeos guardados y [las sesiones anteriores](monitoring.md) se despliegan en Tripulación → Historial → Actividad guardada. El chat se abre desde la mascota flotante Nami.
 
 En el chequeo guiado, Nami reacciona a la respuesta al presentar la siguiente pregunta. Al elegir «Hacerlo con Nami», el dictado local espera a que Nami termine de leer cada pregunta y abre el micrófono. La persona puede elegir español o inglés y pausar la escucha. Si el navegador necesita preparar un paquete, el flujo permite reintentar el micrófono al terminar. Una onda y la transcripción provisional muestran cuándo el micrófono captura audio y qué está oyendo Nami. «Terminar de hablar» cierra la captura y permite procesar el audio recibido. Una opción o cantidad reconocida con claridad se aplica y avanza a la siguiente pregunta. El registro completo mantiene su revisión antes de guardarse. Si el navegador devuelve solo una transcripción provisional, queda disponible para corregirla. Si no entrega texto, la persona puede escribir la respuesta o usar el dictado de su teclado. Tras guardar, Nami muestra un resumen que se puede volver a escuchar.
 
@@ -12,7 +12,7 @@ En Tripulación → Ahora, el visor corporal ajusta el encuadre al tamaño dispo
 
 ## Decisiones implementadas
 
-La barra inferior compartida mantiene el orden Tripulación → Monitoreo diario → Mapa espacial → Simulación en escritorio, tablet y móvil. Los cuatro accesos son directos: no hay menú «Más». El orden de teclado coincide con el visual, se conserva el indicador activo y el margen de seguridad inferior del dispositivo.
+La barra inferior compartida mantiene el orden Monitoreo diario → Simulación → Tripulación → Mapa espacial en escritorio, tablet y móvil. Los cuatro accesos son directos: no hay menú «Más». El orden de teclado coincide con el visual, se conserva el indicador activo y el margen de seguridad inferior del dispositivo.
 
 La pestaña Centros en Tierra reúne los centros de apoyo y los sitios de lanzamiento (`tab=earth`, `site=<id>`). Los enlaces con `tab=launches` se normalizan conservando el sitio. El nuevo catálogo y su estado se aíslan en `launch-sites`, sin modificar `useMission` ni claves del diario. Al cambiar de sitio o salir se desmonta el video; el globo tiene lista HTML equivalente. El botón «Acercar a…» pausa el mapa para inspeccionar el objeto y «Volver a la misión» restaura su encuadre. Fuentes, límites, coordenadas y ciclo de vida en `frontend/src/presentation/features/launch-sites/README.md`.
 
@@ -152,7 +152,7 @@ La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md
 
 `presentation/shared/scene/SpaceBackdrop.tsx` representa el mismo cielo local de estrellas y nebulosas en el mapa general, astronauta, nave, estación y base. La textura se genera de forma determinista, sigue la posición de la cámara y se libera al desmontar. El mapa utiliza radio 12000 y el visor de misión radio 100 para respetar sus planos de recorte; las proporciones angulares del fondo se conservan. La esfera decorativa no participa en raycasting ni tapa modelos mediante escritura de profundidad. No cambia el portal HTML independiente, los controles ni los fallbacks.
 
-### Carga animada del Nami
+### Carga animada de Nami
 
 `presentation/shared/loading/TumiLoader` representa carga de misión y mapa dentro del contenido; su variante fullscreen se reserva para iniciar misión desde la portada y la vista de revisión. `TumiLoadingAnimation` reproduce el MP4 local enviado por el usuario con sus giros originales (4,15 s), en bucle silencioso e inline. Pausa con el control de revisión o al ocultar la pestaña; movimiento reducido muestra su fotograma estático. El archivo original se conserva, pero Canvas elimina el fondo en cada fotograma y suaviza el contorno sin halos blancos. La misma máscara se aplica al poster. `TumiHead` permanece disponible para sus otros consumidores. `/loading-preview` permite revisar el bucle sin depender de una carga real.
 

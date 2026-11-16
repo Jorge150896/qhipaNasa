@@ -4,6 +4,8 @@ import { Icon, type IconName } from '@/ui/Icon';
 import { TumiTechPortrait, type TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
 import { wellbeingRouteLabels, type WellbeingRoute } from '../types';
 import type { useSimulationViewModel } from '../useSimulationViewModel';
+import { SimulationNarration, type SimulationNarrationProps } from './SimulationNarration';
+import { WellbeingTimeline } from './WellbeingTimeline';
 
 const routes: {
   id: WellbeingRoute;
@@ -37,7 +39,7 @@ const routes: {
     steps: [
       { emotion: 'worried', label: 'Preocupado' },
       { emotion: 'sad', label: 'Triste' },
-      { emotion: 'worried', label: 'Pidió apoyo' },
+      { emotion: 'worried', label: 'Necesita apoyo' },
     ],
     action: 'Abrir monitoreo diario',
   },
@@ -49,6 +51,7 @@ export function WellbeingRoutesView({
   astronaut,
   backdrop,
   model,
+  narration,
   onOpenRoute,
 }: {
   crewName: string;
@@ -56,6 +59,7 @@ export function WellbeingRoutesView({
   astronaut: ReactNode;
   backdrop: string;
   model: ReturnType<typeof useSimulationViewModel>;
+  narration?: SimulationNarrationProps;
   onOpenRoute(route: WellbeingRoute): void;
 }) {
   const t = useTranslation();
@@ -87,6 +91,18 @@ export function WellbeingRoutesView({
           </div>
         )}
       </header>
+
+      {days && days.length > 1 && (
+        <WellbeingTimeline
+          days={days}
+          dayIndex={model.dayIndex}
+          playing={model.playing}
+          canResume={model.canResume}
+          setDayIndex={model.setDayIndex}
+          togglePlayback={model.togglePlayback}
+          restartPlayback={model.restartPlayback}
+        />
+      )}
 
       <div
         className="simulation-routes__layout"
@@ -169,7 +185,8 @@ export function WellbeingRoutesView({
         </div>
 
         <div className="simulation-routes__content">
-          <p className="simulation-routes__position" aria-live="polite">
+          {narration && <SimulationNarration {...narration} />}
+          <p className="simulation-routes__position" aria-live={model.playing ? 'off' : 'polite'}>
             {point && activeStep ? (
               <>
                 <span className="simulation-routes__dot" aria-hidden="true" />
