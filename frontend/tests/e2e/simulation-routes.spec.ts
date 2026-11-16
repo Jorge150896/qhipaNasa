@@ -94,7 +94,7 @@ test('Los hábitos de la prueba mueven un solo punto sin cambiar el autorregistr
   await expect(point).toContainText('Necesita apoyo');
 });
 
-test('reproduce los 30 días en 10 segundos y sincroniza la línea con el autorregistro', async ({
+test('reproduce los 30 días en 6 segundos y sincroniza la línea con el autorregistro', async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -152,7 +152,7 @@ test('reproduce los 30 días en 10 segundos y sincroniza la línea con el autorr
   const summary = page.getByRole('region', { name: 'Resumen de Nami' });
   await expect(day).toHaveValue('29');
   await expect(summary).toHaveCount(0);
-  await expect(timeline).toContainText('30 días en 10 segundos');
+  await expect(timeline).toContainText('30 días en 6 segundos');
   await expect(marker).toHaveCSS('background-image', /timeline-rocket\.webp/);
   expect((await page.request.get('/brand/timeline-rocket.webp')).ok()).toBe(true);
   await page.clock.pauseAt(new Date(start.getTime() + 30_000));
@@ -164,7 +164,7 @@ test('reproduce los 30 días en 10 segundos y sincroniza la línea con el autorr
   await expect(routes.locator('[aria-current="step"]')).toHaveAttribute('data-route', 'routine');
   await expect(record).toContainText('7.2 h');
 
-  await page.clock.fastForward(1_035);
+  await page.clock.fastForward(621);
   await expect(day).toHaveValue('3');
   await expect(scrubber).toHaveValue('3');
   await expect(marker).toHaveAttribute('data-route', 'adjustment');
@@ -175,7 +175,7 @@ test('reproduce los 30 días en 10 segundos y sincroniza la línea con el autorr
   await expect(day).toHaveValue('3');
 
   await timeline.getByRole('button', { name: 'Continuar mes' }).click();
-  await page.clock.fastForward(8_964);
+  await page.clock.fastForward(5_378);
   await expect(day).toHaveValue('28');
   await expect(summary).toHaveCount(0);
   await page.clock.runFor(1);

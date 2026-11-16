@@ -15,7 +15,7 @@ export type SignalCheckState =
 
 export type { WellbeingRoute, HabitResult } from '@/domain/mission/wellbeingRoute';
 
-export const wellbeingPlaybackSeconds = 10;
+export const wellbeingPlaybackSeconds = 6;
 
 export const wellbeingRouteLabels: Record<WellbeingRoute, string> = {
   routine: 'Bienestar',
