@@ -49,6 +49,28 @@
   scroll-margin-top: 90px;
 }
 
+.daily-check-step-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+}
+
+.daily-check-review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.daily-check-review-actions .button {
+  min-height: 48px;
+  padding: 10px 16px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
 .daily-activity-options,
 .daily-moment-options,
 .daily-check-summary,
@@ -523,6 +545,31 @@
 
 .daily-wellbeing .button.primary:hover:not(:disabled) {
   background: #8845c5;
+}
+
+.daily-wellbeing .daily-check-review-actions .button.secondary {
+  color: var(--text);
+  border-color: var(--selection-border);
+  background: var(--selection-soft);
+}
+
+.daily-wellbeing .daily-check-review-actions .button.secondary:hover:not(:disabled) {
+  border-color: var(--accent-hover);
+}
+
+.daily-wellbeing .daily-check-review-actions .button.primary {
+  border-color: var(--accent-hover);
+  box-shadow: 0 0 18px #ba69ff55;
+}
+
+@media (max-width: 550px) {
+  .daily-check-review-actions {
+    width: 100%;
+  }
+
+  .daily-check-review-actions .button {
+    flex: 1 1 auto;
+  }
 }
 
 .daily-wellbeing .daily-readings .panel-heading {

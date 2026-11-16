@@ -277,6 +277,18 @@ test('chequeo por actividad en móvil con reintento, actualización y registros 
     .getByRole('radio', { name: 'No', exact: true })
     .check();
   await form.getByRole('button', { name: 'Revisar chequeo' }).click();
+  const editAnswers = form.getByRole('button', { name: 'Corregir respuestas', exact: true });
+  const saveCheck = form.getByRole('button', { name: 'Guardar chequeo', exact: true });
+  await expect(form.getByRole('heading', { name: 'Confirmación', exact: true })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(editAnswers).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(saveCheck).toBeFocused();
+  const answersHeading = await form.getByRole('heading', { name: 'Tus respuestas' }).boundingBox();
+  expect((await saveCheck.boundingBox())!.y).toBeLessThan(answersHeading!.y);
+  await editAnswers.click();
+  await expect(form.getByRole('spinbutton', { name: 'Horas de sueño' })).toHaveValue('7.5');
+  await form.getByRole('button', { name: 'Revisar chequeo' }).click();
   await expect(form).toContainText('0 km');
   const attachments = form.getByRole('region', { name: 'Datos adjuntos' });
   await expect(attachments).toContainText('Temperatura de cabina');

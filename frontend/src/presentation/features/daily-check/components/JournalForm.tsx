@@ -1,7 +1,7 @@
 import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useEffect, useRef, type FormEvent } from 'react';
 import { CheckAttachments } from './CheckAttachments';
-import { Frown, Meh, Smile } from 'lucide-react';
+import { Frown, Meh, Pencil, Smile } from 'lucide-react';
 import { Icon } from '@/ui/Icon';
 import { DailyWellbeingWelcome } from './DailyWellbeingWelcome';
 import type { DailyCheckGuideViewModel, DailyCheckViewModel } from '../types';
@@ -115,9 +115,33 @@ export function JournalForm({
           </li>
         ))}
       </ol>
-      <h4 ref={heading} tabIndex={-1}>
-        {t(steps[step])}
-      </h4>
+      <div className="daily-check-step-header">
+        <h4 ref={heading} tabIndex={-1}>
+          {t(steps[step])}
+        </h4>
+        {step === 2 && (
+          <div className="daily-check-review-actions">
+            <button
+              type="button"
+              className="button secondary"
+              disabled={saving}
+              onClick={model.back}
+            >
+              <Pencil aria-hidden="true" size={18} />
+              {t('Corregir respuestas')}
+            </button>
+            <button
+              id="assistant-target-save-check"
+              type="submit"
+              className="button primary"
+              disabled={saving}
+            >
+              <Icon name={saving ? 'loader' : 'clipboard'} />
+              {t(saving ? 'Guardando…' : model.failed ? 'Reintentar guardado' : 'Guardar chequeo')}
+            </button>
+          </div>
+        )}
+      </div>
       {step === 0 && (
         <>
           <fieldset>
@@ -333,6 +357,11 @@ export function JournalForm({
               {t('Ya existe un chequeo para este día UTC. Guardar actualizará ese registro.')}
             </p>
           )}
+          {model.failed && (
+            <p className="daily-check-notice" role="alert">
+              {t('El borrador sigue disponible. Revisa los datos o vuelve a intentar el guardado.')}
+            </p>
+          )}
           <h5>{t('Tus respuestas')}</h5>
           <dl className="daily-check-summary">
             {model.review.map(({ label, value }) => (
@@ -350,14 +379,9 @@ export function JournalForm({
               <p>{t('Sin datos adjuntos disponibles.')}</p>
             )}
           </section>
-          {model.failed && (
-            <p className="daily-check-notice" role="alert">
-              {t('El borrador sigue disponible. Revisa los datos o vuelve a intentar el guardado.')}
-            </p>
-          )}
         </>
       )}
-      {step === 3 ? (
+      {step === 3 && (
         <>
           {tumi}
           <div className="daily-check-result">
@@ -368,7 +392,8 @@ export function JournalForm({
             </button>
           </div>
         </>
-      ) : (
+      )}
+      {step < 2 && (
         <div className="form-footer">
           {step > 0 && (
             <button
@@ -377,32 +402,18 @@ export function JournalForm({
               disabled={saving}
               onClick={model.back}
             >
-              {t(step === 2 ? 'Corregir respuestas' : 'Volver al contexto')}
+              {t('Volver al contexto')}
             </button>
           )}
           <button
             className="button primary"
             disabled={saving || (step === 0 && (!model.activity || !model.moment))}
-            id={
-              step === 1
-                ? 'assistant-target-review-check'
-                : step === 2
-                  ? 'assistant-target-save-check'
-                  : undefined
-            }
+            id={step === 1 ? 'assistant-target-review-check' : undefined}
             data-assistant-control={step === 0 ? 'check-context' : undefined}
             type="submit"
           >
             {t(
-              saving
-                ? 'Guardando…'
-                : step === 0
-                  ? 'Continuar a autoevaluación'
-                  : step === 1
-                    ? 'Revisar chequeo'
-                    : model.failed
-                      ? 'Reintentar guardado'
-                      : 'Guardar chequeo',
+              saving ? 'Guardando…' : step === 0 ? 'Continuar a autoevaluación' : 'Revisar chequeo',
             )}
           </button>
         </div>
