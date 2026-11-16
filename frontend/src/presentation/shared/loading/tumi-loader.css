@@ -27,10 +27,6 @@
   letter-spacing: 2px;
   margin: 0 0 24px;
 }
-.tumi-loader-brand strong {
-  color: var(--accent);
-  font-weight: inherit;
-}
 .tumi-loader-stage {
   width: clamp(270px, 34vw, 340px);
   aspect-ratio: 1;

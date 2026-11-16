@@ -163,8 +163,7 @@ button:hover:not(:disabled) {
   box-shadow: 0 0 8px #e5a98722;
 }
 .badge,
-.tiny-badge,
-.demo-badge {
+.tiny-badge {
   display: inline-flex;
   gap: 7px;
   align-items: center;
@@ -256,15 +255,6 @@ button:hover:not(:disabled) {
   gap: 20px;
   align-items: center;
   margin-inline-start: auto;
-}
-.demo-badge {
-  color: var(--muted);
-  background: transparent;
-  border: 0;
-  font-size: 12px;
-}
-.demo-badge .status-dot {
-  background: var(--amber);
 }
 #mission-content {
   flex: 1;
@@ -1325,10 +1315,6 @@ dd {
   }
   .topbar-status .avatar {
     display: none;
-  }
-  .demo-badge {
-    padding: 0;
-    font-size: 12px;
   }
   .mission-page {
     padding: 24px 16px;

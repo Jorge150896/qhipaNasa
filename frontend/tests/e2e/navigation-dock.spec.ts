@@ -31,6 +31,8 @@ test('escritorio: la barra inferior enlaza misión y agrupa Centros en Tierra ba
   await expect(dock.getByRole('button', { name: 'Centros en Tierra', exact: true })).toHaveCount(0);
   await dock.getByRole('button', { name: 'Mapa espacial', exact: true }).click();
   await expect(page).toHaveURL('/explore?destination=ship');
+  const banner = page.getByRole('banner');
+  await expect(banner.locator('.breadcrumb, .demo-badge')).toHaveCount(0);
   await expect(
     page.getByRole('region', { name: 'Exploración espacial', exact: true }),
   ).toBeVisible();

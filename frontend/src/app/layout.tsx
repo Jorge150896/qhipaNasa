@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { defaultAppLanguage } from '@/domain/assistant/AppLanguage';
 import { AppLanguageProvider } from '@/presentation/shared/language/AppLanguageProvider';
 import { AppBackgroundProvider } from '@/presentation/shared/space/AppBackgroundProvider';
 import { defaultAppBackground } from '@/presentation/shared/space/appBackground';
@@ -12,7 +13,11 @@ export const metadata: Metadata = {
 };
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" data-appearance="dark" data-app-background={defaultAppBackground}>
+    <html
+      lang={defaultAppLanguage}
+      data-appearance="dark"
+      data-app-background={defaultAppBackground}
+    >
       <body>
         <AppLanguageProvider>
           <AppBackgroundProvider>{children}</AppBackgroundProvider>

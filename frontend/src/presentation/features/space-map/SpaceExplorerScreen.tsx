@@ -92,7 +92,6 @@ export function SpaceExplorerScreen() {
   return (
     <MissionShell
       section={showsEarth ? 'earth' : 'explorer'}
-      missionName="Red de exploración"
       onOpenExplorer={() => navigateTo('/explore')}
       onNavigate={(section) => navigateTo(missionRoute('odyssey', section))}
     >

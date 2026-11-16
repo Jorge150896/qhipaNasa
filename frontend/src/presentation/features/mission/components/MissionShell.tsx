@@ -46,27 +46,19 @@ export function MissionShell({
             </div>
           </div>
 
-          <div className="breadcrumb">
-            {t(missionName)} <Icon name="chevron" size={13} />
-            <span>
-              {t(
-                section === 'earth'
-                  ? 'Centros en Tierra'
-                  : section === 'explorer'
-                    ? 'Explorador espacial'
-                    : section === 'sources'
-                      ? 'Fuentes y alcance'
-                      : navigation.find((item) => item.id === section)?.label,
-              )}
-            </span>
-          </div>
-          <div className="topbar-status">
-            {section === 'explorer' && (
-              <span className="demo-badge">
-                <span className="status-dot" />
-                {t('Simulación y archivo histórico')}
+          {section !== 'explorer' && section !== 'earth' && (
+            <div className="breadcrumb">
+              {t(missionName)} <Icon name="chevron" size={13} />
+              <span>
+                {t(
+                  section === 'sources'
+                    ? 'Fuentes y alcance'
+                    : navigation.find((item) => item.id === section)?.label,
+                )}
               </span>
-            )}
+            </div>
+          )}
+          <div className="topbar-status">
             <LanguageSelect />
             <span className="avatar small">MC</span>
           </div>

@@ -148,9 +148,6 @@
 }
 
 @media (max-width: 390px) {
-  .shell :global(.topbar-status .demo-badge) {
-    font-size: 12px;
-  }
   .shell :global(.topbar) {
     gap: 6px;
     padding-inline: 10px;

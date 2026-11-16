@@ -154,6 +154,8 @@ La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md
 
 ### Carga animada de Nami
 
+Una sesión nueva empieza en inglés. La pantalla de carga usa el nombre NAMI y traduce el título y la descripción según la preferencia del navegador guardada por la app.
+
 `presentation/shared/loading/TumiLoader` representa carga de misión y mapa dentro del contenido; su variante fullscreen se reserva para iniciar misión desde la portada y la vista de revisión. `TumiLoadingAnimation` reproduce el MP4 local enviado por el usuario con sus giros originales (4,15 s), en bucle silencioso e inline. Pausa con el control de revisión o al ocultar la pestaña; movimiento reducido muestra su fotograma estático. El archivo original se conserva, pero Canvas elimina el fondo en cada fotograma y suaviza el contorno sin halos blancos. La misma máscara se aplica al poster. `TumiHead` permanece disponible para sus otros consumidores. `/loading-preview` permite revisar el bucle sin depender de una carga real.
 
 La introducción mínima de tres segundos pertenece ahora al ViewModel de portada y solo empieza tras «Iniciar mi misión». El provider de misión mantiene únicamente su carga real. Los Screens de misión/mapa usan `useTransition` para representar navegación pendiente dentro del área de información, con el shell interactivo. No hay fallback global a pantalla completa ni bloqueo global del scroll. Detalle en `features/loading-preview/README.md`.
@@ -188,5 +190,5 @@ Historial añade «Ver origen» por muestra, conservando la distribución y el t
 El backend Java ya ofrece catálogo y series de NASA RadLab. La web todavía no los consume; crear una feature/adapter ambiental separado del consumidor de signos vitales. Ejemplos, CORS, errores, zonas horarias y límites en [radlab-backend.md](radlab-backend.md). El contrato comparte `docs/contracts/openapi.yaml` y no requiere cambiar paleta o modelos.
 
 ### Limpieza visual de cabeceras
-Se retiran la hora/escenario y actividad/ubicación de la cabecera de Tripulación, la insignia «Archivo histórico» de Centros en Tierra y su pie de página. Las lecturas conservan su procedencia y fecha en las fichas e Historial. Nami no tiene un botón independiente en la barra ni en la cabecera. El chat sigue accesible desde el personaje flotante y las fichas.
+Se retiran la hora/escenario y actividad/ubicación de la cabecera de Tripulación, la insignia «Archivo histórico» de Centros en Tierra y su pie de página. Mapa espacial y Centros en Tierra muestran la cabecera sin la ruta de navegación ni la insignia de simulación. Las lecturas conservan su procedencia y fecha en las fichas e Historial. Nami no tiene un botón independiente en la barra ni en la cabecera. El chat sigue accesible desde el personaje flotante y las fichas.
 

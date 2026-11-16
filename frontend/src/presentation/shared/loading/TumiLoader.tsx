@@ -24,14 +24,12 @@ export function TumiLoader({
       className={`tumi-loader tumi-loader--${variant}`}
       data-variant={variant}
       data-paused={paused}
-      aria-label={t('Cargando Qhipa Pacha')}
+      aria-label={t('Cargando Nami')}
       aria-busy={busy}
     >
       {variant === 'fullscreen' && <SpaceBackground paused={paused} />}
       <div className="tumi-loader-content">
-        <p className="tumi-loader-brand">
-          QHIPA <strong>PACHA</strong>
-        </p>
+        <p className="tumi-loader-brand">NAMI</p>
         <div className="tumi-loader-stage">
           <TumiTechPortrait
             id={portraitId}
