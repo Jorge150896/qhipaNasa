@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useId, type ReactNode } from 'react';
 import { Icon, type IconName } from '@/ui/Icon';
 import { TumiTechPortrait, type TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
@@ -36,7 +37,7 @@ const routes: {
     steps: [
       { emotion: 'worried', label: 'Preocupado' },
       { emotion: 'sad', label: 'Triste' },
-      { emotion: 'understanding', label: 'Pidió apoyo' },
+      { emotion: 'worried', label: 'Pidió apoyo' },
     ],
     action: 'Abrir monitoreo diario',
   },
@@ -57,6 +58,7 @@ export function WellbeingRoutesView({
   model: ReturnType<typeof useSimulationViewModel>;
   onOpenRoute(route: WellbeingRoute): void;
 }) {
+  const t = useTranslation();
   const { position, days, point, trial } = model;
   const portraitId = useId();
   const activeStep = point && routes.find(({ id }) => id === point.route)?.steps[point.index];
@@ -65,12 +67,12 @@ export function WellbeingRoutesView({
     <section className="simulation-routes" aria-labelledby="simulation-routes-title">
       <header className="simulation-routes__heading">
         <div>
-          <h2 id="simulation-routes-title">Ruta emocional</h2>
-          <p>Explora el bienestar del tripulante día a día.</p>
+          <h2 id="simulation-routes-title">{t('Ruta emocional')}</h2>
+          <p>{t('Explora el bienestar del tripulante día a día.')}</p>
         </div>
         {days && (
           <div className="simulation-routes__day">
-            <label htmlFor={`${portraitId}-day`}>Día simulado</label>
+            <label htmlFor={`${portraitId}-day`}>{t('Día simulado')}</label>
             <select
               id={`${portraitId}-day`}
               value={model.dayIndex}
@@ -78,7 +80,7 @@ export function WellbeingRoutesView({
             >
               {days.map(({ number, label }, index) => (
                 <option value={index} key={number}>
-                  {label}
+                  {t(label)}
                 </option>
               ))}
             </select>
@@ -96,46 +98,52 @@ export function WellbeingRoutesView({
           <div className="simulation-routes__astronaut">
             <div className="simulation-routes__model">{astronaut}</div>
             <div className="simulation-routes__profile">
-              <strong>{crewName}</strong>
-              <span>Ubicación en la misión · {location}</span>
+              <strong>{t(crewName)}</strong>
+              <span>
+                {t('Ubicación en la misión · ')}
+                {t(location)}
+              </span>
             </div>
           </div>
           <div className="simulation-routes__details">
             {position ? (
               <div className="simulation-routes__evidence">
-                <h3>Autorregistro del día</h3>
+                <h3>{t('Autorregistro del día')}</h3>
                 <p>
-                  <strong>Ánimo:</strong> {position.mood} · <strong>Sueño:</strong> {position.sleep}{' '}
-                  · <strong>Fatiga:</strong> {position.fatigue}
+                  <strong>{t('Ánimo:')}</strong> {t(position.mood)} · <strong>{t('Sueño:')}</strong>{' '}
+                  {t(position.sleep)}
+                  {t(' ')}· <strong>{t('Fatiga:')}</strong> {t(position.fatigue)}
                 </p>
                 <p>
-                  <strong>Ejercicio del día anterior:</strong> {position.exercise} ·{' '}
-                  <strong>Aislamiento percibido:</strong>{' '}
-                  {position.isolation === null ? 'Sin responder' : `${position.isolation}/4`}
+                  <strong>{t('Ejercicio del día anterior:')}</strong> {t(position.exercise)} ·
+                  {t(' ')}
+                  <strong>{t('Aislamiento percibido:')}</strong>
+                  {t(' ')}
+                  {t(position.isolation === null ? 'Sin responder' : `${position.isolation}/4`)}
                 </p>
-                <p>{position.reason}</p>
+                <p>{t(position.reason)}</p>
               </div>
             ) : (
               <p className="simulation-routes__evidence">
-                Este tripulante aún no tiene una serie de bienestar simulada.
+                {t('Este tripulante aún no tiene una serie de bienestar simulada.')}
               </p>
             )}
 
             <fieldset className="simulation-routes__habits">
-              <legend>Simular un cambio de hábitos</legend>
+              <legend>{t('Simular un cambio de hábitos')}</legend>
               <div className="simulation-routes__fields">
                 {model.habitFields.map(({ id, label, value, options }) => (
                   <div className="simulation-routes__day" key={id}>
-                    <label htmlFor={`${portraitId}-habit-${id}`}>{label}</label>
+                    <label htmlFor={`${portraitId}-habit-${id}`}>{t(label)}</label>
                     <select
                       id={`${portraitId}-habit-${id}`}
                       value={value}
                       onChange={(event) => model.setHabit(id, event.target.value)}
                     >
-                      <option value="">Elige una opción</option>
+                      <option value="">{t('Elige una opción')}</option>
                       {options.map((option) => (
                         <option key={option.value} value={option.value}>
-                          {option.text}
+                          {t(option.text)}
                         </option>
                       ))}
                     </select>
@@ -144,13 +152,15 @@ export function WellbeingRoutesView({
               </div>
               <div className="simulation-routes__trial">
                 <p>
-                  {trial
-                    ? `Resultado de la prueba: ${activeStep?.label}. Los hábitos elegidos solo se aplican a esta simulación.`
-                    : 'Elige los tres hábitos para mover el punto en el mapa. Es un escenario de ejemplo.'}
+                  {t(
+                    trial
+                      ? `Resultado de la prueba: ${activeStep?.label}. Los hábitos elegidos solo se aplican a esta simulación.`
+                      : 'Elige los tres hábitos para mover el punto en el mapa. Es un escenario de ejemplo.',
+                  )}
                 </p>
                 {model.habitFields.some(({ value }) => value) && (
                   <button type="button" className="text-button" onClick={model.resetHabits}>
-                    Restablecer hábitos
+                    {t('Restablecer hábitos')}
                   </button>
                 )}
               </div>
@@ -162,15 +172,16 @@ export function WellbeingRoutesView({
           <p className="simulation-routes__position" aria-live="polite">
             {point && activeStep ? (
               <>
-                <span className="simulation-routes__dot" aria-hidden="true" />{' '}
-                <strong>{crewName}</strong> · {wellbeingRouteLabels[point.route]} /{' '}
-                {activeStep.label} <small>{point.source}</small>
+                <span className="simulation-routes__dot" aria-hidden="true" />
+                {t(' ')}
+                <strong>{t(crewName)}</strong> · {t(wellbeingRouteLabels[point.route])} /{t(' ')}
+                {t(activeStep.label)} <small>{t(point.source)}</small>
               </>
             ) : (
-              'Todavía no hay una posición asignada.'
+              t('Todavía no hay una posición asignada.')
             )}
           </p>
-          <ul className="simulation-routes__tracks" aria-label="Rutas emocionales disponibles">
+          <ul className="simulation-routes__tracks" aria-label={t('Rutas emocionales disponibles')}>
             {routes.map(({ id, icon, steps, action }) => {
               const active = point?.route === id;
 
@@ -183,17 +194,17 @@ export function WellbeingRoutesView({
                 >
                   <div className="simulation-track__top">
                     <h3>
-                      <Icon name={icon} /> {wellbeingRouteLabels[id]}
+                      <Icon name={icon} /> {t(wellbeingRouteLabels[id])}
                     </h3>
                     <button
                       type="button"
                       className="text-button simulation-track__action"
                       onClick={() => onOpenRoute(id)}
                     >
-                      {action} <Icon name="arrow" size={15} />
+                      {t(action)} <Icon name="arrow" size={15} />
                     </button>
                   </div>
-                  <ol className="simulation-track__steps" aria-label={wellbeingRouteLabels[id]}>
+                  <ol className="simulation-track__steps" aria-label={t(wellbeingRouteLabels[id])}>
                     {steps.map(({ emotion, label }, index) => {
                       const here = active && point.index === index;
                       return (
@@ -204,10 +215,10 @@ export function WellbeingRoutesView({
                               emotion={emotion}
                             />
                           </div>
-                          <span className="simulation-track__label">{label}</span>
+                          <span className="simulation-track__label">{t(label)}</span>
                           {here && (
                             <span className="simulation-track__marker">
-                              Aquí está {crewName.split(' ')[0]}
+                              {t('Aquí está')} {crewName.split(' ')[0]}
                             </span>
                           )}
                         </li>

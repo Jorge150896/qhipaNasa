@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useEffectEvent } from 'react';
+import { speechLanguage } from '@/domain/assistant/AppLanguage';
+import { useAppLanguage } from '@/presentation/shared/language/AppLanguageProvider';
 import { speakInBrowser } from '@/infrastructure/speech/browserVoice';
+import { startLocalDictation } from '@/infrastructure/speech/localDictation';
 import { useTumiReplyAudio } from '@/presentation/shared/tumi/useTumiReplyAudio';
 import { useTumiViewContext } from '../mission-assistant/useTumiViewContext';
 import type { DailyCheckScreenProps } from './types';
@@ -19,9 +22,14 @@ export function DailyCheckScreen(props: DailyCheckScreenProps) {
 }
 
 function DailyCheckSession({ data, saving, onSave }: DailyCheckScreenProps) {
-  const audio = useTumiReplyAudio(speakInBrowser);
+  const { language } = useAppLanguage();
+  const audio = useTumiReplyAudio((text, callbacks) =>
+    speakInBrowser(text, callbacks, speechLanguage(language)),
+  );
   const model = useDailyCheckViewModel(data, onSave, audio);
-  const guide = useDailyCheckGuideViewModel(model, audio);
+  const guide = useDailyCheckGuideViewModel(model, audio, (callbacks, language) =>
+    startLocalDictation(callbacks, 'Puedes responder en la pantalla.', language),
+  );
   useTumiViewContext('Monitoreo diario', [
     `Paso actual: ${['Contexto', 'Autoevaluación', 'Confirmación', 'Resultado'][model.step]}.`,
     'Las respuestas y notas del formulario se guardan localmente y no forman parte de este contexto.',

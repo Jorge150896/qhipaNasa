@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useId, useState } from 'react';
 import type { MetricData } from '../../features/mission/types';
 
@@ -39,6 +40,7 @@ function InteractiveTrend({
   selectedAt?: string;
   onSelectSample?(at: string): void;
 }) {
+  const t = useTranslation();
   const id = useId();
   const [paused, setPaused] = useState(false);
   const [localAt, setLocalAt] = useState<string>();
@@ -53,21 +55,21 @@ function InteractiveTrend({
     >
       <div className="telemetry-toolbar">
         <span className="telemetry-mode">
-          {!animated ? 'HISTORIAL SINTÉTICO' : 'BARRIDO DEMO · HISTORIAL SINTÉTICO'}
+          {t(!animated ? 'HISTORIAL SINTÉTICO' : 'BARRIDO DEMO · HISTORIAL SINTÉTICO')}
         </span>
         {animated && (
           <button className="text-button" aria-pressed={paused} onClick={() => setPaused(!paused)}>
-            {paused ? 'Reanudar gráfica' : 'Pausar gráfica'}
+            {t(paused ? 'Reanudar gráfica' : 'Pausar gráfica')}
           </button>
         )}
       </div>
       <div className="trend-chart">
         <div className="chart-axis">
           <span>
-            {metric.chart.max} {metric.unit}
+            {t(metric.chart.max)} {t(metric.unit)}
           </span>
           <span>
-            {metric.chart.min} {metric.unit}
+            {t(metric.chart.min)} {t(metric.unit)}
           </span>
         </div>
         <div className="chart-drawing">
@@ -75,7 +77,9 @@ function InteractiveTrend({
             viewBox="0 0 600 160"
             preserveAspectRatio="none"
             role="img"
-            aria-label={`Historial de ${metric.label}. ${metric.history.map((sample) => `${sample.time}: ${sample.value}`).join('; ')}`}
+            aria-label={t(
+              `Historial de ${metric.label}. ${metric.history.map((sample) => `${sample.time}: ${sample.value}`).join('; ')}`,
+            )}
           >
             <defs>
               <clipPath id={`${id}-clip`}>
@@ -154,7 +158,10 @@ function InteractiveTrend({
                   className="chart-missing"
                   vectorEffect="non-scaling-stroke"
                 >
-                  <title>{metric.history[i].time}: Sin muestra</title>
+                  <title>
+                    {t(metric.history[i].time)}
+                    {t(': Sin muestra')}
+                  </title>
                 </path>
               ) : (
                 <circle
@@ -166,48 +173,49 @@ function InteractiveTrend({
                   vectorEffect="non-scaling-stroke"
                 >
                   <title>
-                    {metric.history[i].time}: {metric.history[i].value}
+                    {t(metric.history[i].time)}: {t(metric.history[i].value)}
                   </title>
                 </circle>
               ),
             )}
           </svg>
           <div className="chart-times">
-            <span>{metric.chart.start}</span>
-            <span>{metric.chart.end}</span>
+            <span>{t(metric.chart.start)}</span>
+            <span>{t(metric.chart.end)}</span>
           </div>
         </div>
       </div>
       <div
         className="chart-samples"
         role="group"
-        aria-label={`Consultar muestras de ${metric.label}`}
+        aria-label={t(`Consultar muestras de ${metric.label}`)}
       >
         {metric.history.map((sample, i) => (
           <button
             key={sample.at}
-            aria-label={`${sample.time}: ${sample.value}`}
+            aria-label={t(`${sample.time}: ${sample.value}`)}
             aria-pressed={selected === i}
             onClick={() => {
               if (!onSelectSample) setLocalAt(sample.at);
               onSelectSample?.(sample.at);
             }}
           >
-            <span>{sample.time.replace(' UTC', '')}</span>
-            <strong>{sample.missing ? '—' : sample.value}</strong>
+            <span>{t(sample.time.replace(' UTC', ''))}</span>
+            <strong>{t(sample.missing ? '—' : sample.value)}</strong>
           </button>
         ))}
       </div>
       <div className="chart-readout">
         <span>
-          {row?.time} · <strong>{row?.value}</strong>
+          {t(row?.time)} · <strong>{t(row?.value)}</strong>
         </span>
-        <span>{row?.missing ? 'Muestra ausente · sin interpolación' : 'Muestra sintética'}</span>
+        <span>{t(row?.missing ? 'Muestra ausente · sin interpolación' : 'Muestra sintética')}</span>
       </div>
       {animated && (
         <p className="chart-demo-note">
-          El barrido se repite sobre estas muestras; no llegan nuevas lecturas.{' '}
-          {metric.id === 'heartRate' ? 'Tendencia de pulso, no señal ECG.' : ''}
+          {t('El barrido se repite sobre estas muestras; no llegan nuevas lecturas.')}
+          {t(' ')}
+          {t(metric.id === 'heartRate' ? 'Tendencia de pulso, no señal ECG.' : '')}
         </p>
       )}
     </div>

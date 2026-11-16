@@ -1,4 +1,5 @@
 'use client';
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { Component, Suspense, useState, type ReactNode, type RefObject } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
@@ -12,10 +13,11 @@ class Boundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   }
 }
 function Fallback() {
+  const t = useTranslation();
   return (
     <div className="scene-fallback">
-      <h3>La escena 3D no está disponible</h3>
-      <p>Las lecturas, módulos y perfiles siguen disponibles en los paneles HTML.</p>
+      <h3>{t('La escena 3D no está disponible')}</h3>
+      <p>{t('Las lecturas, módulos y perfiles siguen disponibles en los paneles HTML.')}</p>
     </div>
   );
 }
@@ -26,9 +28,10 @@ export function TelemetrySceneFrame({
   label: string;
   children(portal: RefObject<HTMLElement>): ReactNode;
 }) {
+  const t = useTranslation();
   const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
   return (
-    <div className="telemetry-viewport" role="region" aria-label={label}>
+    <div className="telemetry-viewport" role="region" aria-label={t(label)}>
       <div className="scene-overlay" ref={setOverlay} />
       <Boundary>
         {overlay && (
@@ -54,7 +57,7 @@ export function TelemetrySceneFrame({
         )}
       </Boundary>
       <span className="telemetry-instructions">
-        Arrastra para girar · rueda o pellizca para acercar
+        {t('Arrastra para girar · rueda o pellizca para acercar')}
       </span>
     </div>
   );

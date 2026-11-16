@@ -1,6 +1,9 @@
+import type { AppLanguage } from './AppLanguage';
+
 export interface TumiMessage {
   id: number;
   role: 'user' | 'assistant';
+  language?: AppLanguage;
   text: string;
 }
 
@@ -14,11 +17,12 @@ export interface TumiReply {
 export interface TumiScreenContext {
   view: string;
   details: string;
+  language?: AppLanguage;
 }
 
 export class TumiDailyLimitError extends Error {
   constructor() {
-    super('Tumi alcanzó el límite diario de GPT.');
+    super('Nami alcanzó el límite diario de GPT.');
   }
 }
 

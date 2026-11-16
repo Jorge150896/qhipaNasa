@@ -11,11 +11,11 @@ test('elementos señalados se retiran en escritorio, móvil y recarga', async ({
         page.locator('.snapshot-time,.crew-context,.crew-body-display,.app-footer'),
       ).toHaveCount(0);
       const dock = page.getByRole('navigation', { name: 'Navegación principal' });
-      await expect(dock.getByRole('button', { name: 'Abrir chat de Tumi' })).toHaveCount(0);
+      await expect(dock.getByRole('button', { name: 'Abrir chat de Nami' })).toHaveCount(0);
       await expect(
-        page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Tumi' }),
+        page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Nami' }),
       ).toHaveCount(0);
-      await expect(page.getByRole('button', { name: 'Abrir chat de Tumi' })).toHaveCount(0);
+      await expect(page.getByRole('button', { name: 'Abrir chat de Nami' })).toHaveCount(0);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true,
       );

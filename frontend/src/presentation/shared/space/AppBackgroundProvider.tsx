@@ -8,13 +8,13 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from 'react';
-import { createAppBackgroundStorage } from '@/di/createAppBackgroundStorage.client';
+import { createAppPreferenceStorage } from '@/di/createAppPreferenceStorage.client';
 import { appBackgrounds, defaultAppBackground, type AppBackground } from './appBackground';
 
 const storageKey = 'astra.appearance.background.v1';
 
 function createBackgroundStore() {
-  const storage = createAppBackgroundStorage();
+  const storage = createAppPreferenceStorage();
   const listeners = new Set<() => void>();
   let sessionSelection: AppBackground | undefined;
 

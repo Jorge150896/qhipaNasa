@@ -16,12 +16,13 @@ export function getDirectWellbeingMood(message: string): Mood | undefined {
     .replace(/[¡!.\p{Extended_Pictographic}\uFE0F]/gu, '')
     .trim();
   const statement =
-    /^(?:hoy\s+)?(?:me siento|estoy|me va|ando)\s+(?:(?:muy|un poco)\s+)?(.+?)(?:\s+hoy)?$/.exec(
+    /^(?:(?:hoy|today)\s+)?(?:me siento|estoy|me va|ando|i feel|i am|i m|i'm)\s+(?:(?:muy|un poco|very|a bit)\s+)?(.+?)(?:\s+(?:hoy|today))?$/.exec(
       text,
     );
   if (!statement) return;
   const feeling = statement[1];
-  if (/^(?:bien|genial|feliz|alegre|content[oa])$/.test(feeling)) return 'good';
-  if (/^(?:regular|mas o menos|asi asi)$/.test(feeling)) return 'neutral';
-  if (/^(?:triste|mal|desanimad[oa]|decaid[oa])$/.test(feeling)) return 'low';
+  if (/^(?:bien|genial|feliz|alegre|content[oa]|good|well|great|happy)$/.test(feeling))
+    return 'good';
+  if (/^(?:regular|mas o menos|asi asi|okay|ok|so so)$/.test(feeling)) return 'neutral';
+  if (/^(?:triste|mal|desanimad[oa]|decaid[oa]|sad|down|low|bad)$/.test(feeling)) return 'low';
 }

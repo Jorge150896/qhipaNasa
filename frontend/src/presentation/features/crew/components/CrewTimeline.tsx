@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import type { ReactNode } from 'react';
 import { Icon } from '@/ui/Icon';
 import type {
@@ -27,6 +28,7 @@ export function CrewTimeline({
   onOpenModule(origin: CrewModuleOrigin): void;
   onAskTumi?(at: string, compareFrom?: string): void;
 }) {
+  const t = useTranslation();
   return (
     <section
       className="crew-timeline"
@@ -35,7 +37,7 @@ export function CrewTimeline({
       aria-labelledby="crew-timeline-title"
     >
       <div className="crew-timeline-heading">
-        <h3 id="crew-timeline-title">Línea de tiempo</h3>
+        <h3 id="crew-timeline-title">{t('Línea de tiempo')}</h3>
         {canCompare && (
           <button
             type="button"
@@ -44,7 +46,7 @@ export function CrewTimeline({
             aria-expanded={Boolean(comparison)}
             onClick={onToggleComparison}
           >
-            {comparison ? 'Cerrar comparación' : 'Comparar dos muestras'}
+            {t(comparison ? 'Cerrar comparación' : 'Comparar dos muestras')}
           </button>
         )}
       </div>
@@ -58,11 +60,11 @@ export function CrewTimeline({
       ) : (
         <>
           <p className="sub">
-            Elige un momento o una muestra de la gráfica para consultar su contexto.
+            {t('Elige un momento o una muestra de la gráfica para consultar su contexto.')}
           </p>
           <div className="crew-timeline-grid">
             <div>
-              <ul className="crew-timeline-moments" aria-label="Momentos de la tripulación">
+              <ul className="crew-timeline-moments" aria-label={t('Momentos de la tripulación')}>
                 {data.moments.map((moment) => (
                   <li key={moment.id}>
                     <button
@@ -70,18 +72,20 @@ export function CrewTimeline({
                       aria-pressed={data.activeMoment === moment.id}
                       onClick={() => onSelectMoment(moment.id)}
                     >
-                      <time dateTime={moment.at}>{moment.date}</time>
-                      <strong>{moment.title}</strong>
-                      <span>{moment.source}</span>
+                      <time dateTime={moment.at}>{t(moment.date)}</time>
+                      <strong>{t(moment.title)}</strong>
+                      <span>{t(moment.source)}</span>
                     </button>
                   </li>
                 ))}
               </ul>
               {data.status !== 'ready' && (
                 <p className="sub" role="status">
-                  {data.status === 'loading'
-                    ? 'Consultando autorregistros…'
-                    : 'Los autorregistros locales no están disponibles.'}
+                  {t(
+                    data.status === 'loading'
+                      ? 'Consultando autorregistros…'
+                      : 'Los autorregistros locales no están disponibles.',
+                  )}
                 </p>
               )}
             </div>
@@ -92,7 +96,7 @@ export function CrewTimeline({
                   className="button secondary"
                   onClick={() => onAskTumi(data.detail.at)}
                 >
-                  Preguntar a Tumi por esta muestra
+                  {t('Preguntar a Nami por esta muestra')}
                 </button>
               )}
             </TimelineDetail>
@@ -114,50 +118,51 @@ function TimelineDetail({
   children?: ReactNode;
   onOpenModule(origin: CrewModuleOrigin): void;
 }) {
+  const t = useTranslation();
   const { zone } = detail;
   return (
-    <div className="crew-timeline-detail" role="region" aria-label={label} aria-live="polite">
+    <div className="crew-timeline-detail" role="region" aria-label={t(label)} aria-live="polite">
       <p className="crew-timeline-source">
-        {detail.source} · <time dateTime={detail.at}>{detail.date}</time>
+        {t(detail.source)} · <time dateTime={detail.at}>{t(detail.date)}</time>
       </p>
-      <h4>{detail.title}</h4>
-      {detail.value && <p className="crew-timeline-value">{detail.value}</p>}
+      <h4>{t(detail.title)}</h4>
+      {detail.value && <p className="crew-timeline-value">{t(detail.value)}</p>}
       {detail.note && <p className="crew-timeline-note">{detail.note}</p>}
       {(detail.activity || detail.duration || detail.zone) && (
         <dl className="crew-timeline-facts">
           {detail.activity && (
             <div>
-              <dt>Actividad</dt>
-              <dd>{detail.activity}</dd>
+              <dt>{t('Actividad')}</dt>
+              <dd>{t(detail.activity)}</dd>
             </div>
           )}
           {detail.duration && (
             <div>
-              <dt>Duración informada</dt>
-              <dd>{detail.duration}</dd>
+              <dt>{t('Duración informada')}</dt>
+              <dd>{t(detail.duration)}</dd>
             </div>
           )}
           {detail.zone && (
             <div>
-              <dt>Módulo</dt>
-              <dd>{detail.zone.name}</dd>
+              <dt>{t('Módulo')}</dt>
+              <dd>{t(detail.zone.name)}</dd>
             </div>
           )}
         </dl>
       )}
       {detail.readings && (
-        <dl className="crew-module-readings" aria-label="Lecturas ambientales del momento">
+        <dl className="crew-module-readings" aria-label={t('Lecturas ambientales del momento')}>
           {detail.readings.map(({ label, value, unit }) => (
             <div key={label}>
-              <dt>{label}</dt>
+              <dt>{t(label)}</dt>
               <dd>
-                {value} <small>{unit}</small>
+                {t(value)} <small>{t(unit)}</small>
               </dd>
             </div>
           ))}
         </dl>
       )}
-      {detail.contextMessage && <p className="sub">{detail.contextMessage}</p>}
+      {detail.contextMessage && <p className="sub">{t(detail.contextMessage)}</p>}
       {zone && (
         <button
           type="button"
@@ -167,7 +172,7 @@ function TimelineDetail({
           }
         >
           <Icon name="rocket" size={15} />
-          Ubicar módulo en el visor
+          {t('Ubicar módulo en el visor')}
         </button>
       )}
       {children}
@@ -188,24 +193,25 @@ function TimelineComparison({
   onOpenModule(origin: CrewModuleOrigin): void;
   onAskTumi?(at: string, compareFrom: string): void;
 }) {
+  const t = useTranslation();
   const { first, second } = data;
   return (
-    <div className="crew-comparison" role="group" aria-label={`Comparación de ${data.label}`}>
-      <p className="sub">Elige dos horas aquí o selecciona las muestras en la gráfica.</p>
+    <div className="crew-comparison" role="group" aria-label={t(`Comparación de ${data.label}`)}>
+      <p className="sub">{t('Elige dos horas aquí o selecciona las muestras en la gráfica.')}</p>
       <div className="crew-comparison-grid">
         {(['first', 'second'] as const).map((slot) => {
           const other = slot === 'first' ? second : first;
           return (
             <label className="crew-comparison-select" key={slot}>
-              {comparisonLabels[slot]}
+              {t(comparisonLabels[slot])}
               <select
                 value={data[slot]?.at ?? ''}
                 onChange={(event) => onSelectSample(slot, event.target.value)}
               >
-                <option value="">Elige una hora</option>
+                <option value="">{t('Elige una hora')}</option>
                 {data.options.map(({ at, label }) => (
                   <option key={at} value={at} disabled={at === other?.at}>
-                    {label}
+                    {t(label)}
                   </option>
                 ))}
               </select>
@@ -217,7 +223,8 @@ function TimelineComparison({
         <p className="crew-comparison-difference" role="status">
           {data.difference ? (
             <>
-              Diferencia de la segunda respecto a la primera <strong>{data.difference}</strong>
+              {t('Diferencia de la segunda respecto a la primera')}
+              <strong>{t(data.difference)}</strong>
             </>
           ) : (
             'No se puede calcular la diferencia porque falta una lectura.'
@@ -230,7 +237,7 @@ function TimelineComparison({
           className="button secondary"
           onClick={() => onAskTumi(second.at, first.at)}
         >
-          Preguntar a Tumi por la comparación
+          {t('Preguntar a Nami por la comparación')}
         </button>
       )}
       {(first || second) && (
@@ -242,7 +249,7 @@ function TimelineComparison({
                 {detail && (
                   <TimelineDetail
                     detail={detail}
-                    label={comparisonLabels[slot]}
+                    label={t(comparisonLabels[slot])}
                     onOpenModule={onOpenModule}
                   />
                 )}

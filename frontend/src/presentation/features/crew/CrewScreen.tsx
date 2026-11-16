@@ -1,4 +1,5 @@
 'use client';
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useContext, useEffect, useEffectEvent, useMemo, useState } from 'react';
 import { createMonitoringHistory } from '@/di/createMonitoringHistory.client';
 import { CrewActivity } from './components/CrewActivity';
@@ -37,6 +38,7 @@ const crewViewNames: Record<CrewSection, string> = {
 };
 
 export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenProps) {
+  const t = useTranslation();
   const [section, setSection] = useState<CrewSection>('now');
   const assistant = useContext(AssistantActionsContext);
   const loadMonitoringHistory = useMemo(() => createMonitoringHistory(habitatId), [habitatId]);
@@ -143,7 +145,14 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
   });
   useEffect(() => {
     const frame = requestAnimationFrame(() => openEntryAnchor());
-    return () => cancelAnimationFrame(frame);
+    function openAvatarLink() {
+      if (window.location.hash === '#crew-avatar') openEntryAnchor();
+    }
+    window.addEventListener('hashchange', openAvatarLink);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('hashchange', openAvatarLink);
+    };
   }, []);
 
   function renderReadingCard(recordPreview?: CrewHealthRecordPreview) {
@@ -198,7 +207,7 @@ export function CrewScreen({ data, actions, habitatId, onNavigate }: CrewScreenP
                 className="crew-environment-references"
                 aria-labelledby="crew-environment-references"
               >
-                <h2 id="crew-environment-references">Archivo histórico de la ISS</h2>
+                <h2 id="crew-environment-references">{t('Archivo histórico de la ISS')}</h2>
                 <CabinHistoryScreen />
                 <RadLabReference />
               </section>

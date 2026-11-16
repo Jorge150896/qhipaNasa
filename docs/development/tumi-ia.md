@@ -1,26 +1,26 @@
-# Tumi IA: guía de entrega y reutilización
+# Nami IA: guía de entrega y reutilización
 
 Estado de la entrega del 15 de noviembre de 2026. Esta guía reúne el acompañante flotante, sus expresiones, conversación y controles. El detalle de implementación está en el [README de la feature](../../frontend/src/presentation/features/cursor-assistant/README.md); las ejecuciones y capturas están en [verificación](../qa/verification.md).
 
 ## Qué puede hacer
 
-Tumi aparece como una cabeza tecnológica dorada con visor oscuro y rasgos turquesa. Se desplaza de forma moderada por espacios libres, observa el puntero, parpadea, inclina la cabeza y mueve suavemente el tocado. Al pulsarlo abre una conversación cerca de su posición y suspende los recorridos. Puede arrastrarse manualmente a otra zona libre.
+Nami aparece como una cabeza tecnológica dorada con visor oscuro y rasgos turquesa. Se desplaza de forma moderada por espacios libres, observa el puntero, parpadea, inclina la cabeza y mueve suavemente el tocado. Al pulsarlo abre una conversación cerca de su posición y suspende los recorridos. Puede arrastrarse manualmente a otra zona libre.
 
-El acompañante está disponible en portada, explorador y misión. En misión ofrece acceso al chat contextual existente. Solo hay una instancia del acompañante por página. El Tumi del loader y la guía de misión conservan sus funciones; esta entrega no modifica los modelos 3D ni los registros de salud.
+El acompañante está disponible en el explorador y la misión. En misión ofrece acceso al chat contextual existente. Solo hay una instancia del acompañante por página. El Nami del loader y la guía de misión conservan sus funciones; esta entrega no modifica los modelos 3D ni los registros de salud.
 
 ## Controles finales
 
-La cabecera ya no muestra un botón «Tumi» y no se crea otro lanzador fijo al retirarlo. El chat contextual se abre desde la mascota flotante mediante «Abrir chat contextual» o desde una ficha de lectura. Se mantiene el control «Salir de guía» mientras ese modo está activo.
+La cabecera ya no muestra un botón «Nami» y no se crea otro lanzador fijo al retirarlo. El chat contextual se abre desde la mascota flotante mediante «Abrir chat contextual» o desde una ficha de lectura. Se mantiene el control «Salir de guía» mientras ese modo está activo.
 
 | Control                            | Resultado                                                   |
 | ---------------------------------- | ----------------------------------------------------------- |
 | Pulsar o tocar la cabeza           | Abre o cierra la conversación                               |
-| Campo «Mensaje para Tumi» y Enviar | Envía hasta 600 caracteres a la guía local                  |
-| X de la cabecera                   | Cierra la conversación y devuelve el foco a Tumi            |
+| Campo «Mensaje para Nami» y Enviar | Envía hasta 600 caracteres a la guía local                  |
+| X de la cabecera                   | Cierra la conversación y devuelve el foco a Nami            |
 | Escape                             | Cierra la conversación abierta                              |
 | Ojo tachado                        | Oculta el personaje y cierra/cancela la conversación activa |
-| Mostrar Tumi                       | Restaura la mascota                                         |
-| Texto / Audio                     | Elige si Tumi lee sus respuestas en voz alta                |
+| Mostrar Nami                       | Restaura la mascota                                         |
+| Texto / Audio                     | Elige si Nami lee sus respuestas en voz alta                |
 | Escuchar saludo / Detener voz      | Inicia o detiene explícitamente el saludo del navegador     |
 | Abrir chat contextual      | Abre el chat contextual de misión                           |
 
@@ -28,11 +28,11 @@ Se retiraron el botón de pausa manual y la X inferior. El cierre permanece úni
 
 El globo flotante muestra invitaciones ocasionales. Pulsa el lápiz para preguntar, lee la respuesta en el mismo globo y vuelve a escribir en el campo. **Opciones** reúne el audio, la guía y el acceso al chat contextual.
 
-Desde **Opciones** o el chat contextual, **Guía local** hace que Tumi acompañe el mouse y explique los controles al pasar sobre ellos. **Salir de guía** devuelve al acompañante a su modo autónomo. En pantallas de hasta 600 px, Tumi queda fijo abajo a la derecha, encima de la barra de navegación cuando está presente. En táctil, el primer toque muestra la explicación y el segundo activa el control.
+Desde **Opciones** o el chat contextual, **Guía local** hace que Nami acompañe el mouse y explique los controles al pasar sobre ellos. **Salir de guía** devuelve al acompañante a su modo autónomo. En pantallas de hasta 600 px, Nami queda fijo abajo a la derecha, encima de la barra de navegación cuando está presente. En táctil, el primer toque muestra la explicación y el segundo activa el control.
 
-Tumi empieza en **Texto**. En **Audio**, el navegador lee las nuevas respuestas de ambos chats y mantiene la transcripción visible. Cambiar a Texto o cerrar el chat detiene la reproducción. La app abre con el tema oscuro.
+Nami empieza en **Texto**. En **Audio**, el navegador lee las nuevas respuestas de ambos chats y mantiene la transcripción visible. Cambiar a Texto o cerrar el chat detiene la reproducción. La app abre con el tema oscuro.
 
-En **Monitoreo diario**, elegir Bien, Regular o Triste reproduce una respuesta breve de Tumi que invita a contar qué influyó en el ánimo. Durante la lectura, Tumi cambia de expresión y las palabras aparecen debajo del saludo. Cuando la voz del navegador no indica el avance exacto, el texto se revela a un ritmo aproximado. El botón de audio permite detener o repetir la respuesta. Si el navegador no puede reproducirla, aparece «Leer respuesta». En Resultado, Tumi resume la actividad, el momento y las respuestas principales después de que se guarda el chequeo. El resumen se genera en el navegador y omite las notas.
+En **Monitoreo diario**, elegir Bien, Regular o Triste reproduce una respuesta breve de Nami que invita a contar qué influyó en el ánimo. Durante la lectura, Nami cambia de expresión y las palabras aparecen debajo del saludo. Cuando la voz del navegador no indica el avance exacto, el texto se revela a un ritmo aproximado. El botón de audio permite detener o repetir la respuesta. Si el navegador no puede reproducirla, aparece «Leer respuesta». En Resultado, Nami resume la actividad, el momento y las respuestas principales después de que se guarda el chequeo. El resumen se genera en el navegador y omite las notas.
 
 ## Movimiento autónomo
 
@@ -40,11 +40,11 @@ En **Monitoreo diario**, elegir Bien, Regular o Triste reproduce una respuesta b
 - Primera decisión de recorrido a los 9 segundos; siguientes cada 9–20 segundos.
 - Prioriza bordes, mantiene un margen geométrico de 8 px respecto a obstáculos y revisa destino y recorrido.
 - Considera controles, formularios, menús, encabezados, párrafos y elementos marcados con `data-tumi-avoid`.
-- Un lugar sin recorrido libre no se fuerza. Si todo está ocupado, puede quedarse quieto o dejar un acceso compacto «Abrir Tumi».
+- Un lugar sin recorrido libre no se fuerza. Si todo está ocupado, puede quedarse quieto o dejar un acceso compacto «Abrir Nami».
 - El arrastre distingue clic de movimiento con un umbral de 6 px y conserva la ubicación unos 30 segundos, salvo colisión o cambio de tamaño.
 - Los cambios de layout pueden requerir recolocación inmediata para despejar controles; los recorridos libres usan interpolación suave.
 
-El arrastre usa Pointer Events y captura del puntero. Los gestos normales de scroll móvil no hacen que Tumi persiga el dedo. Con movimiento reducido se desactivan viajes y animaciones, conservando interacción manual y conversación. No hay frames continuos mientras reposa; la pestaña oculta detiene los recorridos efectivos. La prevención de obstáculos es geométrica, no una comprensión semántica de toda la interfaz.
+El arrastre usa Pointer Events y captura del puntero. Los gestos normales de scroll móvil no hacen que Nami persiga el dedo. Con movimiento reducido se desactivan viajes y animaciones, conservando interacción manual y conversación. No hay frames continuos mientras reposa; la pestaña oculta detiene los recorridos efectivos. La prevención de obstáculos es geométrica, no una comprensión semántica de toda la interfaz.
 
 ## Expresiones y emociones del texto
 
@@ -61,7 +61,7 @@ El detector local reconoce señales sencillas en español, con acentos/mayúscul
 | Estoy feliz pero también triste | Comprensión, sin asumir una emoción única |
 | ¿Dónde está el mapa?            | Expresión neutral y orientación local     |
 
-El resultado describe señales del texto. No conoce realmente el estado emocional de una persona, no es diagnóstico y puede fallar con ironía, citas, ambigüedad, otros idiomas o negaciones complejas. No se guarda un perfil emocional. Tras enviar, Tumi muestra pensamiento y después la reacción al mensaje; un mensaje posterior sin señales vuelve a neutral.
+El resultado describe señales del texto. No conoce realmente el estado emocional de una persona, no es diagnóstico y puede fallar con ironía, citas, ambigüedad, otros idiomas o negaciones complejas. No se guarda un perfil emocional. Tras enviar, Nami muestra pensamiento y después la reacción al mensaje; un mensaje posterior sin señales vuelve a neutral.
 
 En autonomía, otra temporización cambia el rostro sin reiniciar la ruta: primera variación en 8–12 segundos y siguientes cada 8–15. Evita repetir la expresión anterior y utiliza emociones suaves; con inactividad aparecen cansancio o sueño. No elige tristeza ni enojo al azar. Se suspende al conversar, pausar internamente, hablar, ocultarse, utilizar la guía contextual, ocultar la pestaña o activar movimiento reducido.
 
@@ -71,7 +71,7 @@ El panel mantiene hasta 40 mensajes en memoria durante la visita del componente.
 
 La guía local responde sobre navegación, mapa espacial, lugares de la Tierra, tripulación y monitoreo diario. Los mensajes emocionales reciben reconocimiento orientativo y tranquilo; las preguntas explícitas de navegación conservan prioridad. Las preguntas abiertas fuera del alcance explican que todavía no hay un modelo de IA conectado.
 
-Cerrar, ocultar o desmontar aborta la operación. Un resultado tardío no puede reabrir ni actualizar una conversación cerrada. Un error recuperable conserva la pregunta para volver a enviarla. El saludo con voz requiere una acción explícita y depende de las voces disponibles y de las políticas del navegador; su calidad audible no es idéntica entre dispositivos.
+Cerrar, ocultar o desmontar aborta la operación. Un resultado tardío no puede reabrir ni actualizar una conversación cerrada. Un error recuperable conserva la pregunta para volver a enviarla. Al entrar en Monitoreo diario, Nami lee la pregunta de entrada si el navegador permite la reproducción automática. El botón «Escuchar pregunta» puede iniciarla manualmente. En inglés, Opciones → Nami’s voice permite elegir y guardar otra voz disponible. El español conserva su selección original.
 
 ## Estructura para mantenimiento
 
@@ -91,31 +91,17 @@ Cerrar, ocultar o desmontar aborta la operación. Un resultado tardío no puede 
 | `infrastructure/speech/browserVoice.ts`   | Voz del navegador y cancelación de la locución propia          |
 | `cursor-assistant.css`                    | Movimiento, panel, tamaños y accesibilidad visual              |
 
-`MissionAssistantScreen` monta el acompañante en portada, explorador y misión y lo suspende mientras el chat contextual o la guía están activos. El modo GPT usa el endpoint local de Spring Boot documentado en OpenAPI.
+`MissionAssistantScreen` monta el acompañante en el explorador y la misión y lo suspende mientras el chat contextual o la guía están activos. El modo GPT usa el endpoint local de Spring Boot documentado en OpenAPI.
 
 Ambos chats pueden usar OpenAI mediante `HttpTumiConversation`, que conserva `AbortSignal` y llama a Spring Boot. Cada pantalla aporta un resumen acotado mediante `useTumiViewContext`. En Tripulación se adjuntan los indicadores, el módulo o la muestra y su referencia cuando se seleccionan. El explorador aporta el destino o centro abierto. Las fichas históricas identifican su propia procedencia. El backend añade el catálogo del proyecto y solicita una respuesta breve con una reacción validada. La opción para abrir Fuentes y alcance sigue resolviéndose por una acción local. El diario, los borradores y la transcripción previa quedan fuera de las solicitudes. Consulta el [arranque local](../../backend/README.md#chat-flotante-de-tumi-con-gpt-en-local) y la [activación en GitHub Pages](../../backend/README.md#gpt-en-github-pages). Pages usa la guía local mientras no se configure la URL del backend.
 
 Para incorporar una expresión, ampliar `TumiEmotion`, los rasgos de `TumiTechPortrait` y el mapper correspondiente. Para proteger una zona de la página, añadir `data-tumi-avoid`. No reutilizar el detector como evaluación psicológica ni como regla médica.
 
-## Evolución y recursos conservados
+## Retrato y animación de Nami
 
-1. Se creó el acompañante con la imagen dorada original, separación respecto al cursor, seguimiento suave, mirada direccional, reposo y acceso al chat de misión.
-2. Se ajustaron tamaño, rebotes, tocado, expresión y saludo de voz explícito. El tamaño actual de 75 px reemplaza las solicitudes previas de 10 y 60 px.
-3. Se conservó la imagen original y se generó un PNG transparente para eliminar fondo y halo. El recurso y su procedencia siguen disponibles para reutilización.
-4. La nueva lámina tecnológica y el video dieron paso al retrato SVG actual, con autonomía, arrastre y panel funcional.
-5. Se añadieron reacciones al tono del texto y variación facial autónoma.
-6. Los controles quedaron con ojo tachado para ocultar y X superior para cerrar, sin pausa manual ni X inferior.
+`shared/tumi/TumiTechPortrait.tsx` representa la cabeza, el casco y el visor con geometría vectorial basada en el GIF proporcionado por el usuario. `tumi-portrait.css` anima la flotación, la elevación del casco, la sonrisa y el parpadeo en portada y carga. El acompañante, el chat, el chequeo y la simulación comparten el mismo retrato y sus expresiones contextuales. La guía y el desplazamiento conservan sus controladores de movimiento.
 
-| Recurso                                          | Uso                                                       |
-| ------------------------------------------------ | --------------------------------------------------------- |
-| `public/brand/tumi-cursor-reference.jpeg`        | Referencia dorada inicial aportada por el usuario         |
-| `public/brand/tumi-cursor-clean.png`             | Derivado transparente de la etapa anterior                |
-| `public/brand/tumi-cursor-clean.md`              | Procedencia y prompt de limpieza                          |
-| `components/TumiPortrait.tsx`                    | Presentación anterior conservada; no es el retrato activo |
-| `public/brand/tumi-ia-expression-reference.jpeg` | Lámina tecnológica aportada por el usuario                |
-| `shared/tumi/TumiTechPortrait.tsx`                | Recurso vectorial activo basado en la lámina              |
-
-La interpretación SVG no es una copia idéntica de píxeles ni un modelo 3D. El video original de 4,15 segundos se utilizó como referencia visual; no forma parte del runtime ni se publica con esta entrega. No se asigna una licencia nueva al material aportado por el usuario.
+El SVG se dibuja sobre transparencia y se renderiza a la resolución de la pantalla. La pausa y la preferencia de movimiento reducido se aplican a las capas animadas. La procedencia se registra en `frontend/public/brand/README.md`.
 
 ## Verificación y ejecución
 

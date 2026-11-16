@@ -1,4 +1,5 @@
 'use client';
+import { LocalizedText, useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 
 import dynamic from 'next/dynamic';
 import { AvatarView } from './components/AvatarView';
@@ -12,7 +13,11 @@ const AvatarPreview = dynamic(
   () => import('./AvatarPreview').then((module) => module.AvatarPreview),
   {
     ssr: false,
-    loading: () => <p role="status">Preparando el visor…</p>,
+    loading: () => (
+      <p role="status">
+        <LocalizedText>Preparando el visor…</LocalizedText>
+      </p>
+    ),
   },
 );
 
@@ -25,6 +30,7 @@ export function AvatarScreen({
   crewId: string;
   crewName: string;
 }) {
+  const t = useTranslation();
   const appearance = useAppBackground();
   const model = useAvatarViewModel(crewId, appearance.selectBackground);
   useTumiViewContext(
@@ -44,7 +50,7 @@ export function AvatarScreen({
   return (
     <section id="crew-avatar" aria-labelledby="crew-avatar-title" className={styles.workshop}>
       <h2 id="crew-avatar-title" className={styles.title}>
-        Personalizar astronauta
+        {t('Personalizar astronauta')}
       </h2>
       <AvatarView
         crewName={crewName}

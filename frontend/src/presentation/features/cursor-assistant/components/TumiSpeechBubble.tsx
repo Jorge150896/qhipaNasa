@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { Pencil } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -19,6 +20,7 @@ export function TumiSpeechBubble({
   viewPath: string;
   onOpen(): void;
 }) {
+  const t = useTranslation();
   const bubble = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState<{ text: string; view: string; intro?: boolean }>();
   const view = JSON.stringify([viewPath, introduction]);
@@ -103,8 +105,13 @@ export function TumiSpeechBubble({
       data-introduction={message.intro}
       data-leaving={leaving || undefined}
     >
-      <span role="status">{message.text}</span>
-      <button type="button" aria-label="Escribir a Tumi" title="Escribir a Tumi" onClick={open}>
+      <span role="status">{t(message.text)}</span>
+      <button
+        type="button"
+        aria-label={t('Escribir a Nami')}
+        title={t('Escribir a Nami')}
+        onClick={open}
+      >
         <Pencil size={17} aria-hidden="true" />
       </button>
     </div>

@@ -35,10 +35,6 @@
   font-size: clamp(1.2rem, 2.1vw, 1.65rem);
 }
 
-.signal-check-heading .assistant-robot {
-  flex-shrink: 0;
-}
-
 .signal-check-result {
   display: grid;
   gap: 0.25rem;

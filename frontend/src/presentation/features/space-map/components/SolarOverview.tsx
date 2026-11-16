@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useRef, type RefObject } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html, Line } from '@react-three/drei';
@@ -82,6 +83,7 @@ export function SolarOverview({
   );
 }
 function SunLabel({ portal }: { portal: RefObject<HTMLElement> }) {
+  const t = useTranslation();
   const group = useRef<Group>(null);
   const nav = useSolarNavigation();
   useFrame(() => {
@@ -90,7 +92,7 @@ function SunLabel({ portal }: { portal: RefObject<HTMLElement> }) {
   return (
     <group ref={group}>
       <Html portal={portal} center zIndexRange={[16, 0]} style={{ pointerEvents: 'none' }}>
-        <span className="fleet-solar-label">Sol</span>
+        <span className="fleet-solar-label">{t('Sol')}</span>
       </Html>
     </group>
   );

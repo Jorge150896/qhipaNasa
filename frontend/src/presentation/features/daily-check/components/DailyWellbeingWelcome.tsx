@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useEffect, useId, useState } from 'react';
 import { Flower2, Pause, Play, Volume2 } from 'lucide-react';
 import { TumiTechPortrait, type TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
@@ -5,6 +6,7 @@ import { TumiTechPortrait, type TumiEmotion } from '@/presentation/shared/tumi/T
 const breathSeconds = 4;
 
 function GuidedBreathing() {
+  const t = useTranslation();
   const [startedAt, setStartedAt] = useState<number>();
   const [elapsed, setElapsed] = useState(0);
   const running = startedAt !== undefined;
@@ -20,14 +22,15 @@ function GuidedBreathing() {
   }, [startedAt]);
 
   return (
-    <section className="daily-breathing" aria-label="Respiración guiada">
+    <section className="daily-breathing" aria-label={t('Respiración guiada')}>
       <h3>
-        <Flower2 aria-hidden="true" size={22} /> Respiración guiada
+        <Flower2 aria-hidden="true" size={22} />
+        {t(' Respiración guiada')}
       </h3>
       <div className="daily-breathing-controls" data-phase={running ? phase : undefined}>
         <button
           type="button"
-          aria-label={running ? 'Detener respiración guiada' : 'Iniciar respiración guiada'}
+          aria-label={t(running ? 'Detener respiración guiada' : 'Iniciar respiración guiada')}
           onClick={() => {
             setElapsed(0);
             setStartedAt(running ? undefined : performance.now());
@@ -36,7 +39,7 @@ function GuidedBreathing() {
           {running ? <Pause aria-hidden="true" size={24} /> : <Play aria-hidden="true" size={24} />}
         </button>
         <div>
-          <strong aria-live="polite">{phase}</strong>
+          <strong aria-live="polite">{t(phase)}</strong>
           <span>{breathSeconds - (elapsed % breathSeconds)} s</span>
         </div>
       </div>
@@ -69,6 +72,7 @@ export function DailyWellbeingWelcome({
   audioStatus: string;
   onToggleAudio(): void;
 }) {
+  const t = useTranslation();
   const portraitId = useId();
   return (
     <div className="daily-welcome" data-result={result || undefined}>
@@ -77,8 +81,8 @@ export function DailyWellbeingWelcome({
           <TumiTechPortrait id={portraitId} emotion={emotion} />
         </div>
         <div className="daily-tumi-bubble">
-          <p className="daily-tumi-name">Tumi</p>
-          <h3>{result ? 'Chequeo completo' : `Hola, ${personName.split(' ')[0]}.`}</h3>
+          <p className="daily-tumi-name">Nami</p>
+          <h3>{t(result ? 'Chequeo completo' : `Hola, ${personName.split(' ')[0]}.`)}</h3>
           {spokenWords !== undefined && (
             <p className="daily-tumi-reply daily-tumi-transcript">
               <span className="sr-only">{reply}</span>
@@ -107,13 +111,13 @@ export function DailyWellbeingWelcome({
             ) : (
               <Volume2 aria-hidden="true" size={18} />
             )}
-            {playing ? 'Detener audio' : audioLabel}
+            {t(playing ? 'Detener audio' : audioLabel)}
           </button>
           {audioStatus && (
             <div className="daily-tumi-reply" role="status">
-              <p>{audioStatus}</p>
+              <p>{t(audioStatus)}</p>
               <details>
-                <summary>Leer respuesta</summary>
+                <summary>{t('Leer respuesta')}</summary>
                 <p>{reply}</p>
               </details>
             </div>

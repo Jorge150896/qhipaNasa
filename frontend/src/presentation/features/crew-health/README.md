@@ -1,6 +1,6 @@
 # Registros de salud y fichas de Tripulación
 
-Tripulación conserva Ahora, Historial y Personalización. Se retiraron la pestaña y el panel «Salud por sistemas» y los botones inferiores «Ver corazón», «Ver visión» y «Ver ejercicio». Tampoco se muestra la leyenda del visor ni el pie de página general dentro de Tripulación. Los puntos del astronauta, las lecturas HTML de Pulso, Temperatura, SpO₂ y Respiración y las fichas contextuales siguen disponibles. Monitoreo diario permite añadir observaciones nuevas.
+Tripulación ofrece Ahora e Historial. El enlace directo `#crew-avatar` abre el editor de apariencia. Se retiraron la pestaña y el panel «Salud por sistemas» y los botones inferiores «Ver corazón», «Ver visión» y «Ver ejercicio». Tampoco se muestra la leyenda del visor ni el pie de página general dentro de Tripulación. Los puntos del astronauta, las lecturas HTML de Pulso, Temperatura, SpO₂ y Respiración y las fichas contextuales siguen disponibles. Monitoreo diario permite añadir observaciones nuevas.
 
 Las fichas corporales de Visión y Ejercicio leen el último autorregistro y ofrecen registro e historial. «Ver mis autorregistros» abre Historial y su línea de tiempo. Los registros siguen consultables aunque el modelo 3D no esté disponible. Eliminar los accesos inferiores no introduce botones equivalentes nuevos.
 
@@ -54,7 +54,7 @@ El formulario de Visión ofrece tres actividades ilustradas y una opción para d
 
 «Sincronizar con el visor» abre el hábitat y vincula la muestra seleccionada de la gráfica con el módulo registrado para esa hora. Las muestras sin ubicación se muestran sin marcador de ocupación ni lecturas ambientales. Elegir un módulo manualmente o cambiar de indicador devuelve el control al explorador habitual.
 
-Tripulación ofrece Ahora (explorador y lecturas), Historial (serie, contexto y comparación) y Personalización. La autoevaluación se realiza desde Monitoreo diario. La ficha de una lectura abre Tumi con la persona, el indicador y la instantánea simulada correspondiente.
+Tripulación ofrece Ahora (explorador y lecturas), Historial (serie, contexto y comparación). La autoevaluación se realiza desde Monitoreo diario. La ficha de una lectura abre Nami con la persona, el indicador y la instantánea simulada correspondiente.
 
 En el visor del hábitat, la silueta naranja identifica el módulo donde se registró al tripulante y la marca lila identifica el módulo que se está explorando. Ambos símbolos pueden coincidir y se repiten en los controles HTML. Si una muestra histórica carece de ubicación, el visor no muestra una posición para esa hora.
 

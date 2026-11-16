@@ -40,7 +40,7 @@ class TumiTest {
         byte[] answer = """
             {"status":"completed","output":[
               {"type":"reasoning"},
-              {"type":"message","content":[{"type":"output_text","text":"{\\"text\\":\\"Tumi conectado.\\",\\"reaction\\":\\"focused\\"}"}]}
+              {"type":"message","content":[{"type":"output_text","text":"{\\"text\\":\\"Nami conectada.\\",\\"reaction\\":\\"focused\\"}"}]}
             ]}
             """.getBytes(StandardCharsets.UTF_8);
         exchange.sendResponseHeaders(200, answer.length);
@@ -54,12 +54,13 @@ class TumiTest {
       var context = new TumiScreenContext("Tripulación · Historial",
           "Persona en pantalla: Elena Torres, Comandante (también llamada Lena). SpO₂: 98 % a las 14:32 UTC");
       assertThat(new AskTumi(client).execute(" ¿Cómo está Lena? ", context))
-          .isEqualTo(new TumiReply("Tumi conectado.", "focused"));
+          .isEqualTo(new TumiReply("Nami conectada.", "focused"));
       assertThat(authorization.get()).isEqualTo("Bearer test-key");
       var input = mapper.readTree(requestBody.get().path("input").asText());
       assertThat(input.path("mensaje").asText()).isEqualTo("¿Cómo está Elena?");
       assertThat(input.path("pantalla").path("details").asText()).isEqualTo(context.details());
       assertThat(requestBody.get().path("instructions").asText())
+          .contains("Eres Nami, la asistente virtual y mascota de Qhipa Pacha")
           .contains("comienza por su nombre y su rol o actividad")
           .contains("«Lena» se refiere a Elena Torres")
           .contains("con el ritmo de una conversación de voz")

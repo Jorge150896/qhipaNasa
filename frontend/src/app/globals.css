@@ -45,6 +45,9 @@ body {
   font-size: 14px;
   line-height: 1.55;
 }
+:where(small) {
+  font-size: max(12px, 0.833333em);
+}
 button,
 input,
 select,
@@ -140,7 +143,7 @@ button:hover:not(:disabled) {
 }
 .eyebrow {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1.5px;
   line-height: 1.7;
 }
@@ -171,7 +174,7 @@ button:hover:not(:disabled) {
   background: var(--surface-raised);
   color: var(--accent);
   border-radius: 5px;
-  font-size: 10px;
+  font-size: 12px;
   white-space: nowrap;
 }
 .tiny-badge {
@@ -192,7 +195,7 @@ button:hover:not(:disabled) {
   border-radius: 50%;
   background: var(--surface-raised);
   border: 1px solid var(--line);
-  font-size: 11px;
+  font-size: 12px;
   flex: none;
   color: var(--accent);
 }
@@ -200,7 +203,7 @@ button:hover:not(:disabled) {
   width: 28px;
   height: 28px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 .app-shell {
   position: relative;
@@ -220,7 +223,7 @@ button:hover:not(:disabled) {
 .brand small {
   display: block;
   letter-spacing: 1.2px;
-  font-size: 7px;
+  font-size: 12px;
   color: var(--brand-wordmark-muted);
   font-weight: 400;
 }
@@ -243,7 +246,7 @@ button:hover:not(:disabled) {
   align-items: center;
   gap: 10px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 .breadcrumb > span {
   color: var(--quiet);
@@ -259,7 +262,7 @@ button:hover:not(:disabled) {
   color: var(--muted);
   background: transparent;
   border: 0;
-  font-size: 11px;
+  font-size: 12px;
 }
 .demo-badge .status-dot {
   background: var(--amber);
@@ -308,7 +311,7 @@ button:hover:not(:disabled) {
 }
 .snapshot-time span {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--quiet);
   margin-top: 2px;
 }
@@ -333,7 +336,7 @@ button:hover:not(:disabled) {
   background: var(--field);
   border-radius: 9px;
   text-align: left;
-  font-size: 11px;
+  font-size: 12px;
 }
 .crew-picker button[aria-pressed='true'] {
   background: var(--selection-soft);
@@ -342,7 +345,7 @@ button:hover:not(:disabled) {
 }
 .crew-picker button small {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   color: var(--quiet);
   margin-top: 1px;
 }
@@ -351,7 +354,7 @@ button:hover:not(:disabled) {
   margin-left: 8px;
 }
 .crew-context {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   display: flex;
   gap: 7px;
@@ -378,7 +381,7 @@ button:hover:not(:disabled) {
   color: var(--selection-text);
 }
 .metric-label {
-  font-size: 11px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   gap: 9px;
@@ -399,7 +402,7 @@ button:hover:not(:disabled) {
   margin-top: 10px;
 }
 .metric-number small {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
   letter-spacing: 0;
 }
@@ -408,7 +411,7 @@ button:hover:not(:disabled) {
   align-items: center;
   gap: 7px;
   color: var(--quiet);
-  font-size: 9px;
+  font-size: 12px;
   margin-top: 5px;
 }
 .metric-card.attention .metric-quality {
@@ -451,7 +454,7 @@ button:hover:not(:disabled) {
   min-width: 0;
 }
 .panel-heading .eyebrow {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 1px;
   margin-top: 2px;
 }
@@ -490,7 +493,7 @@ button:hover:not(:disabled) {
   flex-wrap: wrap;
 }
 .scene-panel-header .eyebrow {
-  font-size: 9px;
+  font-size: 12px;
   margin-bottom: 5px;
 }
 .scene-panel-header h3 {
@@ -513,7 +516,7 @@ button:hover:not(:disabled) {
   background: transparent;
   color: var(--muted);
   padding: 6px 9px;
-  font-size: 10px;
+  font-size: 12px;
   min-height: 30px;
 }
 .segmented button[aria-pressed='true'] {
@@ -561,7 +564,7 @@ button:hover:not(:disabled) {
   flex-wrap: wrap;
   padding: 0 20px 16px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
 }
 .scene-caption span:first-child {
   display: flex;
@@ -579,7 +582,7 @@ button:hover:not(:disabled) {
   background: var(--surface-raised);
 }
 .scene-reading .eyebrow {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 1px;
 }
 .scene-reading strong {
@@ -590,7 +593,7 @@ button:hover:not(:disabled) {
   margin-top: 3px;
 }
 .scene-reading small {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   margin-left: 6px;
   color: var(--muted);
@@ -600,7 +603,7 @@ button:hover:not(:disabled) {
   text-align: right;
 }
 .scene-reading p {
-  font-size: 9px;
+  font-size: 12px;
   color: var(--quiet);
   margin-top: 6px;
 }
@@ -624,7 +627,7 @@ button:hover:not(:disabled) {
   align-items: center;
   gap: 8px;
   color: var(--accent);
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
 }
 .starfield {
@@ -648,7 +651,7 @@ button:hover:not(:disabled) {
   background: var(--field);
   color: var(--text);
   padding: 9px 11px;
-  font-size: 11px;
+  font-size: 12px;
 }
 .environment-readings {
   display: grid;
@@ -658,7 +661,7 @@ button:hover:not(:disabled) {
 }
 .environment-readings span {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
 }
 .environment-readings strong {
@@ -670,7 +673,7 @@ button:hover:not(:disabled) {
   font-variant-numeric: tabular-nums;
 }
 .environment-readings small {
-  font-size: 10px;
+  font-size: 12px;
   margin-left: 5px;
   color: var(--quiet);
   letter-spacing: 0;
@@ -682,7 +685,7 @@ button:hover:not(:disabled) {
   gap: 7px;
   align-items: center;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 .copilot-panel {
   border-color: var(--line);
@@ -699,16 +702,16 @@ button:hover:not(:disabled) {
   margin: 17px 0;
 }
 .recommendation .eyebrow {
-  font-size: 8px;
+  font-size: 12px;
   color: var(--accent);
 }
 .recommendation p {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
   margin-top: 6px;
 }
 .copilot-panel details {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   border-top: 1px solid var(--line);
   padding-top: 10px;
@@ -725,7 +728,7 @@ button:hover:not(:disabled) {
   margin: 6px 0;
 }
 .routine-panel > p {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
 }
 .routine-status {
@@ -734,7 +737,7 @@ button:hover:not(:disabled) {
   justify-content: space-between;
   padding: 14px 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 .routine-status strong {
   font-size: 13px;
@@ -750,7 +753,7 @@ button:hover:not(:disabled) {
   border: 1px solid transparent;
   border-radius: 7px;
   padding: 9px 13px;
-  font-size: 11px;
+  font-size: 12px;
   text-decoration: none;
 }
 .button.primary {
@@ -779,7 +782,7 @@ button:hover:not(:disabled) {
   background: transparent;
   color: var(--accent);
   padding: 4px 0;
-  font-size: 10px;
+  font-size: 12px;
 }
 .trend-chart {
   display: flex;
@@ -793,7 +796,7 @@ button:hover:not(:disabled) {
   min-width: 50px;
   padding: 18px 0 40px;
   color: var(--quiet);
-  font-size: 9px;
+  font-size: 12px;
 }
 .chart-drawing {
   flex: 1;
@@ -819,7 +822,7 @@ button:hover:not(:disabled) {
   display: flex;
   justify-content: space-between;
   color: var(--quiet);
-  font-size: 9px;
+  font-size: 12px;
   padding-top: 3px;
 }
 .sensor-tabs {
@@ -830,7 +833,7 @@ button:hover:not(:disabled) {
 }
 .sensor-tabs button {
   padding: 8px 12px;
-  font-size: 11px;
+  font-size: 12px;
   background: var(--field);
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -852,7 +855,7 @@ table {
 }
 th {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   padding: 12px;
   border-bottom: 1px solid var(--line);
@@ -868,7 +871,7 @@ tbody tr:last-child td {
   border-top: 1px solid var(--line-soft);
   padding-top: 14px;
   margin-top: 18px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--quiet);
 }
 .journal-layout {
@@ -887,7 +890,7 @@ tbody tr:last-child td {
   align-items: center;
 }
 .form-intro p {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
   margin-top: 5px;
 }
@@ -920,7 +923,7 @@ tbody tr:last-child td {
   color: var(--muted);
 }
 .field-hint {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--quiet);
 }
 .journal-form fieldset {
@@ -956,7 +959,7 @@ tbody tr:last-child td {
   accent-color: var(--accent);
 }
 .optional {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--quiet);
 }
 .form-footer {
@@ -972,7 +975,7 @@ tbody tr:last-child td {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 9px;
+  font-size: 12px;
   color: var(--muted);
 }
 .check-list article {
@@ -994,7 +997,7 @@ tbody tr:last-child td {
   font-weight: 500;
 }
 .check-list .sub {
-  font-size: 10px;
+  font-size: 12px;
   margin-top: 4px;
 }
 dl {
@@ -1003,7 +1006,7 @@ dl {
   margin: 16px 0 0;
 }
 dt {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--quiet);
 }
 dd {
@@ -1040,7 +1043,7 @@ dd {
   flex-wrap: wrap;
 }
 .section-summary p {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
 }
 .observation-list {
@@ -1060,7 +1063,7 @@ dd {
   margin: 25px 0;
 }
 .evidence-grid h4 {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.3px;
 }
 .evidence-grid ul {
@@ -1081,7 +1084,7 @@ dd {
   flex-wrap: wrap;
 }
 .panel-footer .sub {
-  font-size: 10px;
+  font-size: 12px;
 }
 .source-list {
   display: grid;
@@ -1104,7 +1107,7 @@ dd {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: 12px;
   margin-top: 12px;
 }
 .zone-cards {
@@ -1133,7 +1136,7 @@ dd {
   margin: 8px 0 15px;
 }
 .zone-card > span {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--accent);
 }
 .app-footer {
@@ -1143,7 +1146,7 @@ dd {
   flex-wrap: wrap;
   padding: 16px 30px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
 }
 .toast {
   margin: 20px 30px 0;
@@ -1225,7 +1228,7 @@ dd {
     padding: 14px;
   }
   .metric-label {
-    font-size: 10px;
+    font-size: 12px;
   }
   .metric-number {
     font-size: 27px;
@@ -1240,7 +1243,7 @@ dd {
     font-size: 30px;
   }
   .snapshot-time {
-    font-size: 11px;
+    font-size: 12px;
   }
   .journal-layout {
     grid-template-columns: 1fr;
@@ -1296,14 +1299,14 @@ dd {
     grid-template-columns: 1fr;
   }
   .metric-label {
-    font-size: 10px;
+    font-size: 12px;
     gap: 6px;
   }
   .metric-card {
     padding: 14px 12px;
   }
   .metric-quality {
-    font-size: 8px;
+    font-size: 12px;
   }
   .evidence-grid {
     gap: 20px;
@@ -1318,7 +1321,7 @@ dd {
     gap: 8px;
   }
   .breadcrumb {
-    font-size: 9px;
+    font-size: 12px;
     gap: 6px;
   }
   .topbar-status .avatar {
@@ -1326,7 +1329,7 @@ dd {
   }
   .demo-badge {
     padding: 0;
-    font-size: 9px;
+    font-size: 12px;
   }
   .mission-page {
     padding: 24px 16px;
@@ -1340,11 +1343,11 @@ dd {
     margin: 8px 0;
   }
   .page-description {
-    font-size: 11px;
+    font-size: 12px;
     max-width: 300px;
   }
   .eyebrow {
-    font-size: 8px;
+    font-size: 12px;
   }
   .crew-picker {
     gap: 5px;
@@ -1356,7 +1359,7 @@ dd {
     min-width: 80px;
     gap: 6px;
     align-items: center;
-    font-size: 10px;
+    font-size: 12px;
   }
   .crew-picker button small,
   .crew-picker button > svg {
@@ -1368,10 +1371,10 @@ dd {
   .crew-picker .avatar {
     width: 25px;
     height: 25px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .crew-context {
-    font-size: 9px;
+    font-size: 12px;
   }
   .metric-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1384,10 +1387,10 @@ dd {
     font-size: 29px;
   }
   .metric-label {
-    font-size: 11px;
+    font-size: 12px;
   }
   .metric-quality {
-    font-size: 9px;
+    font-size: 12px;
   }
   .dashboard-grid,
   .main-column {
@@ -1401,7 +1404,7 @@ dd {
     height: 365px;
   }
   .scene-caption {
-    font-size: 8px;
+    font-size: 12px;
   }
   .scene-caption > span:last-child {
     display: none;
@@ -1413,10 +1416,10 @@ dd {
     font-size: 12px;
   }
   .scene-panel-header .eyebrow {
-    font-size: 8px;
+    font-size: 12px;
   }
   .segmented button {
-    font-size: 9px;
+    font-size: 12px;
     padding: 6px;
   }
   .segmented svg {
@@ -1426,7 +1429,7 @@ dd {
     text-align: left;
   }
   .scene-reading .eyebrow {
-    font-size: 8px;
+    font-size: 12px;
   }
   .scene-reading strong {
     font-size: 25px;
@@ -1469,11 +1472,11 @@ dd {
   .app-footer {
     padding: 16px;
     line-height: 1.8;
-    font-size: 9px;
+    font-size: 12px;
   }
   .toast {
     margin: 16px 16px 0;
-    font-size: 11px;
+    font-size: 12px;
   }
   .evidence-grid {
     margin: 20px 0;
@@ -1486,13 +1489,13 @@ dd {
   .table-scroll th {
     padding-left: 8px;
     padding-right: 8px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .table-scroll .badge {
-    font-size: 9px;
+    font-size: 12px;
   }
   .section-summary p {
-    font-size: 10px;
+    font-size: 12px;
   }
   .journal-layout {
     gap: 16px;
@@ -1502,11 +1505,11 @@ dd {
     height: 4px;
   }
   .chart-axis {
-    font-size: 8px;
+    font-size: 12px;
     min-width: 44px;
   }
   .chart-times {
-    font-size: 8px;
+    font-size: 12px;
   }
   .source-list p {
     font-size: 12px;
@@ -1555,12 +1558,12 @@ dd {
   gap: 10px;
 }
 .telemetry-mode {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 1px;
   color: var(--accent);
 }
 .telemetry-toolbar .text-button {
-  font-size: 10px;
+  font-size: 12px;
 }
 .telemetry-chart .trend-chart {
   margin-top: 12px;
@@ -1607,11 +1610,11 @@ dd {
 }
 .chart-samples button span {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   margin-bottom: 6px;
 }
 .chart-samples button strong {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   overflow-wrap: anywhere;
 }
@@ -1622,7 +1625,7 @@ dd {
 }
 .chart-readout {
   margin-top: 12px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--accent);
 }
 .chart-readout strong {
@@ -1630,7 +1633,7 @@ dd {
   font-weight: 500;
 }
 .telemetry-chart .chart-demo-note {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.7;
   color: var(--accent);
   margin: 10px 0 0;
@@ -1660,7 +1663,7 @@ dd {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
   .telemetry-mode {
-    font-size: 8px;
+    font-size: 12px;
   }
 }
 
@@ -1691,4 +1694,32 @@ ul.source-list {
 
 .source-list h3 a svg {
   vertical-align: middle;
+}
+
+.app-language-select {
+  min-height: 36px;
+  max-width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 12px;
+}
+
+.tumi-voice-select {
+  display: grid;
+  gap: 0.375rem;
+  min-width: 0;
+  font-size: 0.875rem;
+}
+
+.tumi-voice-select select {
+  width: 100%;
+  min-height: 2.75rem;
+  color: inherit;
+  background: var(--panel, #221433);
+  border: 1px solid currentColor;
+  border-radius: 0.6rem;
+  padding-inline: 0.5rem;
 }

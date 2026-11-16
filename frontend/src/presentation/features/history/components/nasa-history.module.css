@@ -57,7 +57,7 @@
 .chartHeading small,
 .detailContext {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .explorer {
@@ -108,7 +108,7 @@
 .phaseGroup h5 {
   margin: 0 0 14px;
   color: var(--selection-text);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -163,13 +163,13 @@
   position: absolute;
   inset: auto 50% calc(100% + 3px) auto;
   transform: translateX(50%);
-  font-size: clamp(9px, 1vw, 11px);
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .phase {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   white-space: nowrap;
 }

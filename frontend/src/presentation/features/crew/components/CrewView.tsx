@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import type { ReactNode } from 'react';
 import { Icon } from '@/ui/Icon';
 import { SensorTabs } from '../../../shared/mission/SensorTabs';
@@ -33,16 +34,16 @@ export function CrewView({
   onChangeSection(section: CrewSection): void;
   onOpenHabitat(): void;
 }) {
+  const t = useTranslation();
   const { data, habitatLabel, scene, mode, onModeChange } = dashboard;
   return (
     <>
       <div className="crew-view-controls">
-        <nav className="crew-section-links" aria-label="Secciones de Tripulación">
+        <nav className="crew-section-links" aria-label={t('Secciones de Tripulación')}>
           {(
             [
               ['now', 'Ahora'],
               ['history', 'Historial'],
-              ['avatar', 'Personalización'],
             ] as const
           ).map(([id, label]) => (
             <button
@@ -51,11 +52,11 @@ export function CrewView({
               key={id}
               id={id === 'history' ? 'assistant-target-history' : undefined}
               data-assistant-control={id === 'history' ? undefined : `crew-${id}`}
-              aria-controls={`crew-${id === 'avatar' ? 'avatar-panel' : id}`}
+              aria-controls={`crew-${id}`}
               aria-pressed={section === id}
               onClick={() => onChangeSection(id)}
             >
-              {label}
+              {t(label)}
             </button>
           ))}
         </nav>
@@ -63,7 +64,7 @@ export function CrewView({
           <div
             className="segmented crew-explorer-switch"
             role="group"
-            aria-label="Vista del explorador"
+            aria-label={t('Vista del explorador')}
           >
             <button
               type="button"
@@ -73,7 +74,7 @@ export function CrewView({
               onClick={() => onModeChange('crew')}
             >
               <Icon name="users" size={14} />
-              Astronauta
+              {t('Astronauta')}
             </button>
             <button
               type="button"
@@ -83,7 +84,7 @@ export function CrewView({
               onClick={() => onModeChange('ship')}
             >
               <Icon name="rocket" size={14} />
-              {habitatLabel}
+              {t(habitatLabel)}
             </button>
           </div>
         )}
@@ -92,7 +93,7 @@ export function CrewView({
         hidden={section !== 'now'}
         id="crew-now"
         className="crew-now"
-        aria-label="Estado de la tripulación"
+        aria-label={t('Estado de la tripulación')}
         tabIndex={-1}
       >
         {mode === 'crew' && (
@@ -101,7 +102,8 @@ export function CrewView({
             data-assistant-control="crew-module"
             onClick={onOpenHabitat}
           >
-            Ver módulo · {data.selected.location} <Icon name="arrow" size={14} />
+            {t('Ver módulo · ')}
+            {t(data.selected.location)} <Icon name="arrow" size={14} />
           </button>
         )}
         <MissionExplorerPanel
@@ -122,18 +124,18 @@ export function CrewView({
         aria-labelledby="crew-history-title"
       >
         <div className="panel-heading">
-          <h2 id="crew-history-title">Historial y contexto</h2>
+          <h2 id="crew-history-title">{t('Historial y contexto')}</h2>
           <a className="text-button" href="#nasa-history">
-            Ver referencias científicas de NASA
+            {t('Ver referencias científicas de NASA')}
             <Icon name="arrow" size={14} />
           </a>
         </div>
         {monthlyWellbeing}
-        <section className="crew-chart-panel" aria-label="Tendencia de telemetría">
+        <section className="crew-chart-panel" aria-label={t('Tendencia de telemetría')}>
           <div className="panel-heading">
             <div>
-              <p className="eyebrow">HISTORIAL SINTÉTICO</p>
-              <h3>{telemetryMetric?.label ?? 'Lecturas de sensores'}</h3>
+              <p className="eyebrow">{t('HISTORIAL SINTÉTICO')}</p>
+              <h3>{t(telemetryMetric?.label ?? 'Lecturas de sensores')}</h3>
             </div>
             {telemetryMetric && (
               <div className="crew-sync-actions">
@@ -144,12 +146,12 @@ export function CrewView({
                   onClick={onToggleSynchronization}
                 >
                   <Icon name="orbit" size={15} />
-                  Sincronizar con el visor
+                  {t('Sincronizar con el visor')}
                 </button>
                 <span
                   className={`badge ${telemetryMetric.qualityTone === 'attention' ? 'amber' : ''}`}
                 >
-                  {telemetryMetric.quality}
+                  {t(telemetryMetric.quality)}
                 </span>
               </div>
             )}
@@ -168,22 +170,24 @@ export function CrewView({
             />
           )}
           {telemetryMetric && (
-            <p className="sub">Los espacios en la gráfica indican muestras ausentes.</p>
+            <p className="sub">{t('Los espacios en la gráfica indican muestras ausentes.')}</p>
           )}
           {synchronizedMoment && (
             <p className="crew-sync-status" role="status">
-              {synchronizedMoment.date} · {synchronizedMoment.activity ?? 'Actividad sin registrar'}{' '}
-              · {synchronizedMoment.zone?.name ?? 'Ubicación sin registrar'}
+              {t(synchronizedMoment.date)} ·{' '}
+              {t(synchronizedMoment.activity ?? 'Actividad sin registrar')}
+              {t(' ')}· {t(synchronizedMoment.zone?.name ?? 'Ubicación sin registrar')}
               {' · '}
               <button type="button" className="text-button" onClick={() => onChangeSection('now')}>
-                Ver en el visor
+                {t('Ver en el visor')}
               </button>
             </p>
           )}
           {!telemetryMetric && (
             <p className="sub">
-              Consulta los autorregistros en la línea de tiempo. Elige un sensor para volver a sus
-              lecturas.
+              {t(
+                'Consulta los autorregistros en la línea de tiempo. Elige un sensor para volver a sus lecturas.',
+              )}
             </p>
           )}
         </section>

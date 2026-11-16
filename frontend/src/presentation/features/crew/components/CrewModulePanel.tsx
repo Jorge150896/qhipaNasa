@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { Icon } from '@/ui/Icon';
 import type { CrewModuleData, CrewModuleOrigin } from '../types';
 
@@ -8,17 +9,22 @@ const originLabels = {
 } as const;
 
 export function CrewModuleOriginBanner({ origin }: { origin: CrewModuleOrigin }) {
+  const t = useTranslation();
   return (
-    <div className="crew-module-origin" role="region" aria-label="Origen en la línea de tiempo">
+    <div
+      className="crew-module-origin"
+      role="region"
+      aria-label={t('Origen en la línea de tiempo')}
+    >
       <Icon name="clock" size={18} />
       <div>
         <p>
-          {originLabels[origin.kind]} · {origin.date}
+          {t(originLabels[origin.kind])} · {t(origin.date)}
         </p>
-        <strong>{origin.title}</strong>
+        <strong>{t(origin.title)}</strong>
         <p>
-          {origin.kind === 'record' ? 'Módulo reportado' : 'Módulo de ese momento'} ·{' '}
-          {origin.zone.name}
+          {t(origin.kind === 'record' ? 'Módulo reportado' : 'Módulo de ese momento')} ·{t(' ')}
+          {t(origin.zone.name)}
         </p>
       </div>
     </div>
@@ -26,15 +32,16 @@ export function CrewModuleOriginBanner({ origin }: { origin: CrewModuleOrigin })
 }
 
 export function CrewModuleLegend() {
+  const t = useTranslation();
   return (
-    <ul className="crew-module-legend" aria-label="Leyenda del visor">
+    <ul className="crew-module-legend" aria-label={t('Leyenda del visor')}>
       <li>
         <Icon name="users" size={16} />
-        <span id="crew-location-legend">Ubicación del tripulante</span>
+        <span id="crew-location-legend">{t('Ubicación del tripulante')}</span>
       </li>
       <li>
         <Icon name="check" size={16} />
-        <span>Módulo explorado</span>
+        <span>{t('Módulo explorado')}</span>
       </li>
     </ul>
   );
@@ -51,28 +58,31 @@ export function CrewModulePanel({
   onOpenOccupant(id: string): void;
   onOpenTimeline(): void;
 }) {
+  const t = useTranslation();
   return (
-    <aside className="crew-module-panel" aria-label="Contexto del módulo">
+    <aside className="crew-module-panel" aria-label={t('Contexto del módulo')}>
       {data.synchronizedMoment ? (
         <div className="crew-sync-status" role="status">
-          <strong>{data.synchronizedMoment.date}</strong>
+          <strong>{t(data.synchronizedMoment.date)}</strong>
           <p>
-            {data.synchronizedMoment.title} · {data.synchronizedMoment.value}
+            {t(data.synchronizedMoment.title)} · {t(data.synchronizedMoment.value)}
           </p>
           <p>
-            {data.synchronizedMoment.zone
-              ? `${data.synchronizedMoment.activity ?? 'Actividad sin registrar'} · ${data.synchronizedMoment.zone.name}`
-              : 'No hay ubicación ni lecturas ambientales registradas para esta hora.'}
+            {t(
+              data.synchronizedMoment.zone
+                ? `${data.synchronizedMoment.activity ?? 'Actividad sin registrar'} · ${data.synchronizedMoment.zone.name}`
+                : 'No hay ubicación ni lecturas ambientales registradas para esta hora.',
+            )}
           </p>
         </div>
       ) : (
         <div className="crew-module-location">
           <Icon name="users" size={19} />
           <div>
-            <p>Ubicación del tripulante</p>
-            <strong>{data.crewName}</strong>
+            <p>{t('Ubicación del tripulante')}</p>
+            <strong>{t(data.crewName)}</strong>
             <p>
-              {data.crewLocation} · {data.activity}
+              {t(data.crewLocation)} · {t(data.activity)}
             </p>
           </div>
           {!data.crewInSelectedModule && (
@@ -81,13 +91,14 @@ export function CrewModulePanel({
               type="button"
               onClick={() => onSelectModule(data.occupiedId)}
             >
-              Ir a su módulo <Icon name="arrow" size={14} />
+              {t('Ir a su módulo')}
+              <Icon name="arrow" size={14} />
             </button>
           )}
         </div>
       )}
 
-      <div className="crew-module-picker" role="group" aria-label="Módulos disponibles">
+      <div className="crew-module-picker" role="group" aria-label={t('Módulos disponibles')}>
         {data.zones.map((zone) => {
           const occupied = zone.id === data.occupiedId;
           const selected =
@@ -98,14 +109,14 @@ export function CrewModulePanel({
               className="button secondary"
               key={zone.id}
               type="button"
-              aria-label={`Ver ${zone.name}`}
+              aria-label={t(`Ver ${zone.name}`)}
               aria-describedby={occupied ? 'crew-location-legend' : undefined}
               aria-pressed={selected}
               data-crew-location={occupied || undefined}
               onClick={() => onSelectModule(zone.id)}
             >
-              {zone.code && <span aria-hidden="true">{zone.code}</span>}
-              {zone.shortName}
+              {zone.code && <span aria-hidden="true">{t(zone.code)}</span>}
+              {t(zone.shortName)}
               {occupied && <Icon name="users" size={14} className="crew-location-icon" />}
               {selected && <Icon name="check" size={14} className="crew-selection-icon" />}
             </button>
@@ -118,24 +129,28 @@ export function CrewModulePanel({
           <>
             <p className="crew-module-selection-label">
               <Icon name="check" size={14} />
-              Módulo explorado
+              {t('Módulo explorado')}
             </p>
-            <h3>{data.selected.name}</h3>
-            <p className="crew-module-description">{data.selected.description}</p>
-            <p className="crew-module-time">Instantánea de misión simulada · {data.timestamp}</p>
+            <h3>{t(data.selected.name)}</h3>
+            <p className="crew-module-description">{t(data.selected.description)}</p>
+            <p className="crew-module-time">
+              {t('Instantánea de misión simulada · ')}
+              {t(data.timestamp)}
+            </p>
             <dl className="crew-module-readings">
               {data.selected.readings.map((reading) => (
                 <div key={reading.label}>
-                  <dt>{reading.label}</dt>
+                  <dt>{t(reading.label)}</dt>
                   <dd>
-                    {reading.value} <small>{reading.unit}</small>
+                    {t(reading.value)} <small>{t(reading.unit)}</small>
                   </dd>
                 </div>
               ))}
             </dl>
             <p className="crew-module-occupants">
-              <Icon name="users" size={14} /> <strong>Ocupantes</strong>{' '}
-              {!data.occupants.length && data.selected.occupants}
+              <Icon name="users" size={14} /> <strong>{t('Ocupantes')}</strong>
+              {t(' ')}
+              {t(!data.occupants.length && data.selected.occupants)}
             </p>
             {data.occupants.length > 0 && (
               <ul className="crew-module-occupant-list">
@@ -146,9 +161,9 @@ export function CrewModulePanel({
                       className="text-button"
                       onClick={() => onOpenOccupant(person.id)}
                     >
-                      {person.name} <Icon name="arrow" size={14} />
+                      {t(person.name)} <Icon name="arrow" size={14} />
                     </button>
-                    <span>{person.activity}</span>
+                    <span>{t(person.activity)}</span>
                   </li>
                 ))}
               </ul>
@@ -156,7 +171,7 @@ export function CrewModulePanel({
           </>
         )}
         <button className="text-button" type="button" onClick={onOpenTimeline}>
-          Volver a la línea de tiempo
+          {t('Volver a la línea de tiempo')}
         </button>
       </div>
     </aside>

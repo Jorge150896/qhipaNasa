@@ -2,7 +2,7 @@
 
 `/loading-preview` monta Screen → useLoadingPreviewViewModel → View con pausa/reanudación local y regreso a portada. Es una demostración permanente de la animación, identificada como vista previa y con `aria-busy=false`.
 
-La animación compartida reproduce el video local `public/brand/tumi-loading-spin.mp4` (308 × 308, 4,15 s), enviado por el usuario el 15 de noviembre de 2026. Conserva sus giros y personaje; el fondo se elimina por fotograma en Canvas con una máscara conectada a los bordes, suavizado y descontaminación del contorno; reemplaza la cabeza con salto y el spinner anterior. No requiere recursos remotos ni nuevas dependencias. `TumiLoadingAnimation` controla reproducción en bucle, sin sonido y dentro de la página, pausa/reanudación y suspensión al ocultar la pestaña. Con movimiento reducido muestra el fotograma local `tumi-loading-spin-poster.png` con el mismo recorte transparente y pausa el video. Si el navegador impide reproducir, queda visible el poster. Los textos de estado y las variantes de contenido/pantalla completa se conservan.
+La carga usa el retrato vectorial transparente compartido de Nami. La vista previa permite pausar el gesto de elevación del casco y, con movimiento reducido, conserva una sonrisa estática. La carga de contenido y la carga a pantalla completa comparten el personaje.
 
 Integración actual: `TumiLoader` tiene variantes `fullscreen` y `content` (por defecto). La pantalla completa solo la activa «Iniciar mi misión» desde la portada, con mínimo de tres segundos y limpieza al salir. `LandingScreen` navega cuando su ViewModel indica que la introducción terminó. Misión y mapa ya no agregan esa espera al cargar sus datos.
 

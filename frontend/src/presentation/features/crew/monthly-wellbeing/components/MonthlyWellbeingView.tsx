@@ -1,13 +1,15 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { Icon } from '@/ui/Icon';
 import type { MonthlyWellbeingViewModel } from '../types';
 
 function Values({ items }: { items: { label: string; value: string }[] }) {
+  const t = useTranslation();
   return (
     <dl className="monthly-wellbeing-values">
       {items.map(({ label, value }) => (
         <div key={label}>
-          <dt>{label}</dt>
-          <dd>{value}</dd>
+          <dt>{t(label)}</dt>
+          <dd>{t(value)}</dd>
         </div>
       ))}
     </dl>
@@ -21,28 +23,29 @@ export function MonthlyWellbeingView({
   model: MonthlyWellbeingViewModel;
   onAskTumi?(): void;
 }) {
+  const t = useTranslation();
   const { dayNumber, selectedMetric, points } = model;
   const showMood = selectedMetric.id === 'mood';
   return (
     <section className="monthly-wellbeing" aria-labelledby="monthly-wellbeing-title">
       <header className="monthly-wellbeing-header">
         <div>
-          <p className="eyebrow">Odyssey 01 · Datos sintéticos</p>
-          <h3 id="monthly-wellbeing-title">Seguimiento de 30 días</h3>
+          <p className="eyebrow">{t('Odyssey 01 · Datos sintéticos')}</p>
+          <h3 id="monthly-wellbeing-title">{t('Seguimiento de 30 días')}</h3>
           <p>
-            {model.reportName} · {model.period}
+            {t(model.reportName)} · {t(model.period)}
           </p>
         </div>
-        <span className="badge">{model.trajectory}</span>
+        <span className="badge">{t(model.trajectory)}</span>
       </header>
       <div>
-        <h4>Primera y última semana</h4>
+        <h4>{t('Primera y última semana')}</h4>
         <Values items={model.summary} />
       </div>
       <div className="monthly-wellbeing-trend">
         <div className="monthly-wellbeing-trend-header">
           <label>
-            Indicador
+            {t('Indicador')}
             <select
               value={selectedMetric.id}
               onChange={(event) => {
@@ -52,27 +55,27 @@ export function MonthlyWellbeingView({
             >
               {model.metricOptions.map(({ id, label }) => (
                 <option key={id} value={id}>
-                  {label}
+                  {t(label)}
                 </option>
               ))}
             </select>
           </label>
           <output aria-live="polite">
-            {model.dayLabel} · {model.selectedValue}
+            {t(model.dayLabel)} · {t(model.selectedValue)}
           </output>
         </div>
         <div className="monthly-wellbeing-plot" aria-hidden="true">
           <div className="monthly-wellbeing-scale">
             {showMood ? (
               <>
-                <span>Bien</span>
-                <span>Regular</span>
-                <span>Bajo</span>
+                <span>{t('Bien')}</span>
+                <span>{t('Regular')}</span>
+                <span>{t('Bajo')}</span>
               </>
             ) : (
               <>
                 <span>
-                  {selectedMetric.max} {selectedMetric.unit}
+                  {t(selectedMetric.max)} {t(selectedMetric.unit)}
                 </span>
                 <span>0</span>
               </>
@@ -104,27 +107,27 @@ export function MonthlyWellbeingView({
           <button
             type="button"
             className="button secondary"
-            aria-label="Día anterior"
+            aria-label={t('Día anterior')}
             disabled={dayNumber === 1}
             onClick={() => model.setDay(dayNumber - 1)}
           >
             <Icon name="chevron" className="monthly-wellbeing-back" />
           </button>
           <label>
-            <span className="sr-only">Día de la simulación</span>
+            <span className="sr-only">{t('Día de la simulación')}</span>
             <input
               type="range"
               min={1}
               max={model.length}
               value={dayNumber}
-              aria-valuetext={model.dayLabel}
+              aria-valuetext={t(model.dayLabel)}
               onChange={(event) => model.setDay(Number(event.target.value))}
             />
           </label>
           <button
             type="button"
             className="button secondary"
-            aria-label="Día siguiente"
+            aria-label={t('Día siguiente')}
             disabled={dayNumber === model.length}
             onClick={() => model.setDay(dayNumber + 1)}
           >
@@ -132,40 +135,45 @@ export function MonthlyWellbeingView({
           </button>
         </div>
         <div className="monthly-wellbeing-dates" aria-hidden="true">
-          <span>Día 1</span>
-          <span>Día {model.length}</span>
+          <span>{t('Día 1')}</span>
+          <span>
+            {t('Día ')}
+            {model.length}
+          </span>
         </div>
       </div>
       <div className="monthly-wellbeing-day">
         <header className="monthly-wellbeing-header">
-          <h4>{model.dayLabel}</h4>
+          <h4>{t(model.dayLabel)}</h4>
           {onAskTumi && (
             <button type="button" className="button secondary" onClick={onAskTumi}>
-              <Icon name="sparkles" /> Preguntar a Tumi por este día
+              <Icon name="sparkles" />
+              {t(' Preguntar a Nami por este día')}
             </button>
           )}
         </header>
         <div className="monthly-wellbeing-day-grid">
           <div>
-            <h5>Lo que reportó</h5>
-            <p className="sub">Chequeo de las 08:00 UTC</p>
+            <h5>{t('Lo que reportó')}</h5>
+            <p className="sub">{t('Chequeo de las 08:00 UTC')}</p>
             <Values items={model.questions} />
-            {model.note && <p className="monthly-wellbeing-note">{model.note}</p>}
+            {model.note && <p className="monthly-wellbeing-note">{t(model.note)}</p>}
           </div>
           <div>
-            <h5>Signos vitales en reposo</h5>
-            <p className="sub">Lecturas de las 07:45 UTC</p>
+            <h5>{t('Signos vitales en reposo')}</h5>
+            <p className="sub">{t('Lecturas de las 07:45 UTC')}</p>
             <Values items={model.readings} />
-            <h5>Cabina compartida</h5>
-            <p className="sub">Noche previa · 23:30–07:30 UTC</p>
+            <h5>{t('Cabina compartida')}</h5>
+            <p className="sub">{t('Noche previa · 23:30–07:30 UTC')}</p>
             <Values items={model.cabin} />
-            <p className="sub">{model.event}</p>
+            <p className="sub">{t(model.event)}</p>
           </div>
         </div>
       </div>
       <p className="sub">
-        El ánimo, el aislamiento y el confinamiento provienen de respuestas simuladas. La
-        coincidencia con el ambiente o los signos vitales permite explorar hipótesis.
+        {t(
+          'El ánimo, el aislamiento y el confinamiento provienen de respuestas simuladas. La coincidencia con el ambiente o los signos vitales permite explorar hipótesis.',
+        )}
       </p>
     </section>
   );

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 interface ActivitySummary {
   id: string;
   date: string;
@@ -27,10 +28,11 @@ export function CrewActivity({
   incomplete: boolean;
   onOpen(entry: SavedEntry): void;
 }) {
+  const t = useTranslation();
   return (
     <section className="panel crew-activity" aria-labelledby="crew-activity-title">
-      <h3 id="crew-activity-title">Actividad guardada</h3>
-      {incomplete && <p className="sub">Algunos registros aún no están disponibles.</p>}
+      <h3 id="crew-activity-title">{t('Actividad guardada')}</h3>
+      {incomplete && <p className="sub">{t('Algunos registros aún no están disponibles.')}</p>}
       {entries.length ? (
         <ul className="crew-activity-list">
           {entries.map((entry) => (
@@ -38,22 +40,22 @@ export function CrewActivity({
               {entry.kind === 'monitoring' ? (
                 <details id={`session-${encodeURIComponent(entry.id)}`}>
                   <summary>
-                    {entry.title} · {entry.detail} · {entry.date}
+                    {t(entry.title)} · {t(entry.detail)} · {t(entry.date)}
                   </summary>
-                  <p>{entry.context}</p>
+                  <p>{t(entry.context)}</p>
                   {entry.note && <p>{entry.note}</p>}
                   <ul>
                     {entry.readings.map((reading) => (
-                      <li key={reading}>{reading}</li>
+                      <li key={reading}>{t(reading)}</li>
                     ))}
                   </ul>
                 </details>
               ) : entry.kind === 'check' ? (
                 <details id={`check-${encodeURIComponent(entry.id)}`}>
                   <summary>
-                    {entry.title} · {entry.detail} · {entry.date}
+                    {t(entry.title)} · {t(entry.detail)} · {t(entry.date)}
                   </summary>
-                  {entry.check.contextLabel && <p>{entry.check.contextLabel}</p>}
+                  {entry.check.contextLabel && <p>{t(entry.check.contextLabel)}</p>}
                   <dl className="daily-check-summary">
                     {[
                       { label: 'Sueño', value: entry.check.sleep },
@@ -62,15 +64,15 @@ export function CrewActivity({
                       ...entry.check.details,
                     ].map(({ label, value }) => (
                       <div key={label}>
-                        <dt>{label}</dt>
-                        <dd>{value}</dd>
+                        <dt>{t(label)}</dt>
+                        <dd>{t(value)}</dd>
                       </div>
                     ))}
                   </dl>
                   {entry.check.note && <p>{entry.check.note}</p>}
                   {entry.check.savedAttachment && (
                     <details>
-                      <summary>Ver datos adjuntos del chequeo</summary>
+                      <summary>{t('Ver datos adjuntos del chequeo')}</summary>
                       <CheckAttachments data={entry.check.savedAttachment} />
                     </details>
                   )}
@@ -78,10 +80,10 @@ export function CrewActivity({
               ) : (
                 <>
                   <button type="button" className="text-button" onClick={() => onOpen(entry)}>
-                    {entry.title}
+                    {t(entry.title)}
                   </button>
                   <span>
-                    {entry.detail} · {entry.date}
+                    {t(entry.detail)} · {t(entry.date)}
                   </span>
                 </>
               )}
@@ -90,7 +92,7 @@ export function CrewActivity({
         </ul>
       ) : (
         !incomplete && (
-          <p className="sub">Los registros de esta persona aparecerán aquí al guardarlos.</p>
+          <p className="sub">{t('Los registros de esta persona aparecerán aquí al guardarlos.')}</p>
         )
       )}
     </section>

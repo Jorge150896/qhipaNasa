@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('Tripulación muestra el mes de cada persona y Tumi explica el día seleccionado', async ({
+test('Tripulación muestra el mes de cada persona y Nami explica el día seleccionado', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 1000 });
@@ -16,21 +16,21 @@ test('Tripulación muestra el mes de cada persona y Tumi explica el día selecci
   await day.fill('23');
   await expect(report.getByRole('heading', { name: /Día 23/ })).toBeVisible();
   await expect(report.getByText('Sin muestra', { exact: true })).toBeVisible();
-  await report.getByRole('button', { name: 'Preguntar a Tumi por este día' }).click();
-  const chat = page.getByRole('region', { name: 'Tumi', exact: true });
+  await report.getByRole('button', { name: 'Preguntar a Nami por este día' }).click();
+  const chat = page.getByRole('region', { name: 'Nami', exact: true });
   await expect(chat.getByRole('log')).toContainText('pidió hablar en privado esta semana');
   await expect(chat.getByRole('log')).toContainText('ánimo regular');
   await chat.getByRole('button', { name: 'Ocultar chat' }).click();
 
   await day.fill('30');
-  await report.getByRole('button', { name: 'Preguntar a Tumi por este día' }).click();
+  await report.getByRole('button', { name: 'Preguntar a Nami por este día' }).click();
   await expect(chat.getByRole('log')).toContainText('el ánimo podría seguir bajo');
   await expect(chat.getByRole('log')).toContainText('6 de los últimos 7 días');
   await expect(chat.getByRole('log')).toContainText('reservar un momento con el equipo de apoyo');
   await chat.getByRole('button', { name: 'Ocultar chat' }).click();
 
   await day.fill('3');
-  await report.getByRole('button', { name: 'Preguntar a Tumi por este día' }).click();
+  await report.getByRole('button', { name: 'Preguntar a Nami por este día' }).click();
   await expect(chat.getByRole('log')).toContainText('todavía estamos conociendo la rutina');
   await chat.getByRole('button', { name: 'Ocultar chat' }).click();
 
@@ -43,7 +43,7 @@ test('Tripulación muestra el mes de cada persona y Tumi explica el día selecci
   await page.getByRole('button', { name: /Mateo Silva/ }).click();
   await expect(report).toContainText('Rutina estable');
   await expect(day).toHaveValue('30');
-  await report.getByRole('button', { name: 'Preguntar a Tumi por este día' }).click();
+  await report.getByRole('button', { name: 'Preguntar a Nami por este día' }).click();
   await expect(chat.getByRole('log')).toContainText('es posible que siga teniendo buenos días');
   await chat.getByRole('button', { name: 'Ocultar chat' }).click();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);

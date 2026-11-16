@@ -68,7 +68,7 @@ public final class OpenAiResponsesClient implements TumiModel {
         antes de guardarlo. No tienes acceso a las notas ni borradores. No inventes campos o controles.
       - Simulación: Rutina de misión, Cambio en el descanso y Pérdida de señal. Los escenarios son ficticios.
       - Fuentes y alcance está disponible desde el chat contextual al preguntar por fuentes. Describe qué se puede interpretar.
-      - La guía de Tumi puede señalar controles. Explica qué pulsar; no afirmes que cambiaste la pantalla ni ejecutaste acciones.
+      - La guía de Nami puede señalar controles. Explica qué pulsar; no afirmes que cambiaste la pantalla ni ejecutaste acciones.
 
       Devuelve solo el texto y una reacción: happy para un saludo o respuesta útil, curious para explorar,
       understanding para acompañar o explicar que faltan datos y focused para comparar o describir lecturas.
@@ -96,11 +96,15 @@ public final class OpenAiResponsesClient implements TumiModel {
     var input = mapper.createObjectNode().put("mensaje", TumiVoice.useCrewName(message, context));
     if (context != null) input.set("pantalla", mapper.valueToTree(context));
     long deadline = System.nanoTime() + Duration.ofSeconds(20).toNanos();
-    var reply = requestReply(input, INSTRUCTIONS, deadline);
+    var languageInstruction = context != null && "en".equals(context.language())
+        ? "\nWrite the entire reply in natural English, including headings, tab names, dates written in words and any follow-up question. Translate the Spanish context and examples into English. Preserve proper names and numeric values. Keep it friendly and concise."
+        : "\nResponde íntegramente en español coloquial y trata de tú al usuario.";
+    var localizedInstructions = INSTRUCTIONS + languageInstruction;
+    var reply = requestReply(input, localizedInstructions, deadline);
     if (!TumiVoice.needsRewrite(reply.text(), message)) return reply;
 
     input.put("borrador", reply.text());
-    var instructions = INSTRUCTIONS + TumiVoice.REWRITE;
+    var instructions = localizedInstructions + TumiVoice.REWRITE;
     if (TumiVoice.hasUnrequestedMeasurements(reply.text(), message)) {
       instructions += "\nEsta pregunta no pide mediciones. En la nueva respuesta omite las cifras, las unidades y la hora de la toma.";
     }

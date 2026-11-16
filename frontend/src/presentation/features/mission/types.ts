@@ -97,7 +97,6 @@ export interface MissionData {
   }[];
   todayCheck: boolean;
   checkAttachment?: DailyCheckAttachment;
-  dailyCheckDraft?: CheckFormValues;
   analysis: { summary: string; recommendation: string; evidence: string[] };
 }
 export interface CheckFormValues {

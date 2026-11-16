@@ -73,7 +73,7 @@ Las skills se informan mediante este documento común y sus referencias cruzadas
 
 ## Implementación de frontend
 
-Tumi IA usa un puerto cancelable `domain/assistant/TumiConversation`. Los dos chats pueden enviar el mensaje y un resumen de la vista al módulo `tumi` de Spring Boot, que llama a OpenAI Responses con una clave del servidor. GitHub Pages usa el adaptador local hasta que su exportación reciba la URL HTTPS del backend. El modo público del servidor restringe el origen del navegador y limita las consultas por instancia. La UI acepta una reacción del catálogo de Tumi y conserva sus reacciones locales al tono del mensaje. [Guía de Tumi IA](../development/tumi-ia.md)
+Nami usa un puerto cancelable `domain/assistant/TumiConversation`. Los dos chats pueden enviar el mensaje y un resumen de la vista al módulo `tumi` de Spring Boot, que llama a OpenAI Responses con una clave del servidor. GitHub Pages usa el adaptador local hasta que su exportación reciba la URL HTTPS del backend. El modo público del servidor restringe el origen del navegador y limita las consultas por instancia. La UI acepta una reacción del catálogo de Nami y conserva sus reacciones locales al tono del mensaje. [Guía de Nami](../development/tumi-ia.md)
 
 Los contratos de reutilización de los componentes visuales compartidos están en `docs/development/reusable-3d.md`. `StationModel` reside ahora en `presentation/shared/scene` y no depende de la feature de mapa. `PlanetSurface`, `ShuttleExteriorModel` y `SpaceBackdrop` mantienen el mismo límite visual, sin repositorios ni navegación. El resumen de cambios de Tierra y explorador está en `docs/development/earth-and-explorer-delivery.md`.
 
@@ -95,7 +95,7 @@ Las secciones del menú tienen features de presentación independientes: `space-
 
 La portada `/` es la feature `landing`, independiente del flujo de misión. Screen traduce navegación; `useLandingViewModel` posee estado visual de movimiento/pausa/logo; View representa el hero y las capas decorativas. Las rutas de misión y sus providers permanecen intactos. Las ilustraciones se sirven localmente desde `public/backgrounds/` y `public/brand/`.
 
-La carga del Tumi es UI compartida en `presentation/shared/loading`, con variantes explícitas `fullscreen` y `content`. La introducción de 3000 ms se inicia únicamente desde el CTA de portada y su ViewModel. El provider de misión conserva la carga real sin retrasos visuales. Los Screens coordinan la navegación con `useTransition` y muestran espera dentro del contenido, preservando el shell. `/loading-preview` es una herramienta de revisión permanente.
+La carga de Nami es UI compartida en `presentation/shared/loading`, con variantes explícitas `fullscreen` y `content`. La introducción de 3000 ms se inicia únicamente desde el CTA de portada y su ViewModel. El provider de misión conserva la carga real sin retrasos visuales. Los Screens coordinan la navegación con `useTransition` y muestran espera dentro del contenido, preservando el shell. `/loading-preview` es una herramienta de revisión permanente.
 
 Las muestras sintéticas pueden incluir `Sample.measurement`, un contrato cuantitativo portable definido en `domain/measurements/HealthMeasurement.ts`. Los adaptadores lo construyen y presentación prepara su trazabilidad en Historial. La fuente de signos vitales personales todavía no está seleccionada; el contrato interno no los conecta a NASA. La integración ambiental RadLab tiene un contrato separado. Ver `docs/development/measurement-contract.md`.
 

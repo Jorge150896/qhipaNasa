@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import type { CSSProperties } from 'react';
 import type { LaunchSiteData } from '../types';
 
@@ -22,6 +23,7 @@ export function LaunchPointCard({
   active: boolean;
   onSelect(id: string): void;
 }) {
+  const t = useTranslation();
   const [x, y] = offsets[site.id] ?? [60, 0];
   return (
     <div
@@ -32,7 +34,7 @@ export function LaunchPointCard({
         className={`launch-point-dot ${site.kind === 'launch-site' ? '' : 'is-center'}`}
         aria-hidden="true"
       >
-        {site.symbol}
+        {t(site.symbol)}
       </span>
       <svg className="launch-point-leader" aria-hidden="true">
         <line x1="0" y1="0" x2={x + (x < 0 ? 160 : 0)} y2={y + 24} />
@@ -41,7 +43,9 @@ export function LaunchPointCard({
         className="launch-point-card"
         aria-pressed={active}
         aria-controls="launch-place-card"
-        aria-label={`${site.kind === 'launch-site' ? 'Seleccionar punto de despegue' : 'Seleccionar sede NASA'} ${site.name}`}
+        aria-label={t(
+          `${site.kind === 'launch-site' ? 'Seleccionar punto de despegue' : 'Seleccionar sede NASA'} ${site.name}`,
+        )}
         onClick={() => onSelect(site.id)}
       >
         <strong>{site.fullName}</strong>

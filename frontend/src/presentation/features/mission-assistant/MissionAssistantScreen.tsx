@@ -1,4 +1,10 @@
 'use client';
+import { useAppLanguage, useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
+import {
+  languageChangeConfirmation,
+  requestedAppLanguage,
+  speechLanguage,
+} from '@/domain/assistant/AppLanguage';
 
 import {
   useCallback,
@@ -24,7 +30,7 @@ import { useMissionAssistantViewModel } from './useMissionAssistantViewModel';
 import { MissionAssistantView } from './components/MissionAssistantView';
 import { captureMetricContext, getControlTip, tryAnswerMissionQuestion } from './explainMission';
 import { AssistantCoachmark } from './components/AssistantCoachmark';
-import { AssistantRobot } from './components/AssistantRobot';
+import { TumiAvatar } from '@/presentation/shared/tumi/TumiAvatar';
 import './mission-assistant.css';
 import { CursorAssistantScreen } from '../cursor-assistant/CursorAssistantScreen';
 import { mapTumiContext } from './mapTumiContext';
@@ -38,16 +44,16 @@ interface Point {
 export function MissionAssistantScreen({
   data,
   explorer = false,
-  landing = false,
   habitatId = 'odyssey',
   children,
 }: {
   data: MissionData | null;
   explorer?: boolean;
-  landing?: boolean;
   habitatId?: string;
   children: ReactNode;
 }) {
+  const t = useTranslation();
+  const { language, selectLanguage } = useAppLanguage();
   const pathname = usePathname();
   const router = useRouter();
   const views = useRef(
@@ -112,7 +118,7 @@ export function MissionAssistantScreen({
   function getContext(reading?: ReturnType<typeof captureMetricContext>) {
     const currentViews = visibleViews();
     const mainView = currentViews[0]?.context.view;
-    return mapTumiContext(
+    const context = mapTumiContext(
       pathname,
       data,
       mainView
@@ -126,20 +132,37 @@ export function MissionAssistantScreen({
         : undefined,
       reading,
     );
+    return { ...context, language };
   }
   function getViewAnswer(question: string) {
     return visibleViews()
       .find((entry) => entry.localAnswer)
       ?.localAnswer?.(question);
   }
-  const audio = useTumiReplyAudio(speakInBrowser, pathname);
+  const audio = useTumiReplyAudio(
+    (text, callbacks) => speakInBrowser(text, callbacks, speechLanguage(language)),
+    pathname,
+  );
+  function changeLanguageFromQuestion(question: string) {
+    const requested = requestedAppLanguage(question);
+    if (!requested) return;
+    selectLanguage(requested);
+    return languageChangeConfirmation(requested);
+  }
   const model = useMissionAssistantViewModel(
     data,
-    startLocalDictation,
+    (callbacks) =>
+      startLocalDictation(
+        callbacks,
+        t('Puedes responder en la pantalla.'),
+        speechLanguage(language),
+      )?.cancel,
     explorer,
     tumiUsesOpenAi ? { conversation: tumiConversation, getContext, pathname } : undefined,
     getViewAnswer,
     audio,
+    changeLanguageFromQuestion,
+    language,
   );
   const [following, setFollowing] = useState(false);
   const mobile = useSyncExternalStore(subscribeToTumiViewport, isTumiMobile, () => false);
@@ -260,6 +283,7 @@ export function MissionAssistantScreen({
       {children}
       <CursorAssistantScreen
         getContext={getContext}
+        changeLanguageFromQuestion={changeLanguageFromQuestion}
         viewIntroduction={viewIntroduction}
         viewPath={pathname}
         getLocalReply={
@@ -269,7 +293,7 @@ export function MissionAssistantScreen({
                 getViewAnswer(question) ?? tryAnswerMissionQuestion(question, data)?.text
         }
         audio={audio}
-        onOpenChat={landing ? undefined : open}
+        onOpenChat={open}
         following={following}
         onChangeMode={changeGuideMode}
         suspended={model.open || (following && !mobile) || Boolean(targetId)}
@@ -283,10 +307,8 @@ export function MissionAssistantScreen({
           audioStatus={audio.status}
           onStopAudio={audio.stop}
           explorer={explorer}
-          landing={landing}
           onGuide={guideTo}
           onOpenSources={openSources}
-          onOpen={open}
           onClose={model.hide}
           following={following}
           onChangeMode={changeGuideMode}
@@ -314,10 +336,15 @@ export function MissionAssistantScreen({
             } as CSSProperties
           }
         >
-          <button ref={marker} type="button" aria-label="Volver al chat de Tumi" onClick={open}>
-            <AssistantRobot />
+          <button
+            ref={marker}
+            type="button"
+            aria-label={t('Volver al chat de Nami')}
+            onClick={open}
+          >
+            <TumiAvatar />
           </button>
-          <p role="status">{guide?.explanation}</p>
+          <p role="status">{t(guide?.explanation)}</p>
         </div>
       )}
     </AssistantActionsContext>

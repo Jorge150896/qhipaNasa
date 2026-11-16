@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useMemo, useState } from 'react';
 import { createSignalCheckDependencies } from '@/di/createSignalCheckDependencies.client';
 import type { MetricData } from '../mission/types';
@@ -16,6 +17,7 @@ export function SignalCheckScreen({
   metric: MetricData;
   onEvidence(id: MetricData['id']): void;
 }) {
+  const t = useTranslation();
   const dependencies = useMemo(() => createSignalCheckDependencies(), []);
   const model = useSignalCheckViewModel(
     dependencies.capture,
@@ -43,7 +45,7 @@ export function SignalCheckScreen({
           className="signal-check-scene"
           onToggle={(event) => setShowSensor(event.currentTarget.open)}
         >
-          <summary>Ubicar el sensor en 3D</summary>
+          <summary>{t('Ubicar el sensor en 3D')}</summary>
           {showSensor && (
             <MissionSceneSlot
               mode="crew"

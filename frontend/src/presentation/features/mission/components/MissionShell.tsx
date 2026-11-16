@@ -1,3 +1,5 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
+import { LanguageSelect } from '@/presentation/shared/language/LanguageSelect';
 import { useId, type ReactNode } from 'react';
 import { navigation } from '../constants';
 import type { MissionSection } from '../types';
@@ -20,6 +22,7 @@ export function MissionShell({
   onNavigate(section: MissionSection): void;
   children: ReactNode;
 }) {
+  const t = useTranslation();
   const brandPortraitId = useId();
   return (
     <div
@@ -29,7 +32,7 @@ export function MissionShell({
     >
       <SpaceBackground />
       <a className="skip-link" href="#mission-content">
-        Ir al contenido
+        {t('Ir al contenido')}
       </a>
       <div className="workspace">
         <header className="topbar">
@@ -41,29 +44,32 @@ export function MissionShell({
               <div className="brand-name">
                 QHIPA <strong>PACHA</strong>
               </div>
-              <small>BIENESTAR SIN FRONTERAS</small>
+              <small>{t('BIENESTAR SIN FRONTERAS')}</small>
             </div>
           </div>
 
           <div className="breadcrumb">
-            {missionName} <Icon name="chevron" size={13} />
+            {t(missionName)} <Icon name="chevron" size={13} />
             <span>
-              {section === 'earth'
-                ? 'Centros en Tierra'
-                : section === 'explorer'
-                  ? 'Explorador espacial'
-                  : section === 'sources'
-                    ? 'Fuentes y alcance'
-                    : navigation.find((item) => item.id === section)?.label}
+              {t(
+                section === 'earth'
+                  ? 'Centros en Tierra'
+                  : section === 'explorer'
+                    ? 'Explorador espacial'
+                    : section === 'sources'
+                      ? 'Fuentes y alcance'
+                      : navigation.find((item) => item.id === section)?.label,
+              )}
             </span>
           </div>
           <div className="topbar-status">
             {section !== 'earth' && (
               <span className="demo-badge">
                 <span className="status-dot" />
-                {section === 'explorer' ? 'Simulación y archivo histórico' : 'Datos simulados'}
+                {t(section === 'explorer' ? 'Simulación y archivo histórico' : 'Datos simulados')}
               </span>
             )}
+            <LanguageSelect />
             <span className="avatar small">MC</span>
           </div>
         </header>

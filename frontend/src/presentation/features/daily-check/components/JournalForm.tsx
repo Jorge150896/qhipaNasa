@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useEffect, useRef, type FormEvent } from 'react';
 import { CheckAttachments } from './CheckAttachments';
 import { Frown, Meh, Smile } from 'lucide-react';
@@ -22,6 +23,7 @@ export function JournalForm({
   model: DailyCheckViewModel;
   guide: DailyCheckGuideViewModel;
 }) {
+  const t = useTranslation();
   const { step, values } = model;
   const heading = useRef<HTMLHeadingElement>(null);
   const lastStep = useRef(step);
@@ -66,14 +68,14 @@ export function JournalForm({
           className="text-button daily-check-change-mode"
           onClick={guide.chooseMode}
         >
-          Cambiar modo de registro
+          {t('Cambiar modo de registro')}
         </button>
       )}
       {step < 2 && (
         <>
           {tumi}
           <fieldset className="daily-mood">
-            <legend>¿Cómo describirías tu ánimo?</legend>
+            <legend>{t('¿Cómo describirías tu ánimo?')}</legend>
             <div className="daily-mood-options">
               {(['good', 'neutral', 'low'] as const).map((mood) => {
                 const MoodIcon = moodIcons[mood];
@@ -86,20 +88,20 @@ export function JournalForm({
                       onChange={() => model.selectMood(mood)}
                     />
                     <MoodIcon aria-hidden="true" size={23} />
-                    {mood === 'low' ? 'Triste' : model.moods[mood]}
+                    {t(mood === 'low' ? 'Triste' : model.moods[mood])}
                   </label>
                 );
               })}
             </div>
             {values.mood && (
               <button type="button" className="text-button" onClick={() => model.selectMood()}>
-                Quitar respuesta de ánimo
+                {t('Quitar respuesta de ánimo')}
               </button>
             )}
           </fieldset>
         </>
       )}
-      <ol className="daily-check-progress" aria-label="Progreso del chequeo">
+      <ol className="daily-check-progress" aria-label={t('Progreso del chequeo')}>
         {steps.map((name, index) => (
           <li
             key={name}
@@ -109,17 +111,17 @@ export function JournalForm({
             <span aria-hidden="true">
               {index < step ? <Icon name="check" size={13} /> : index + 1}
             </span>
-            {name}
+            {t(name)}
           </li>
         ))}
       </ol>
       <h4 ref={heading} tabIndex={-1}>
-        {steps[step]}
+        {t(steps[step])}
       </h4>
       {step === 0 && (
         <>
           <fieldset>
-            <legend>¿Qué actividad quieres registrar?</legend>
+            <legend>{t('¿Qué actividad quieres registrar?')}</legend>
             <div className="daily-activity-options">
               {model.activities.map(({ id, label, icon }) => (
                 <label key={id} data-selected={model.activity === id}>
@@ -130,13 +132,13 @@ export function JournalForm({
                     onChange={() => model.selectActivity(id)}
                   />
                   <Icon name={icon} size={20} />
-                  {label}
+                  {t(label)}
                 </label>
               ))}
             </div>
           </fieldset>
           <fieldset>
-            <legend>Momento del chequeo</legend>
+            <legend>{t('Momento del chequeo')}</legend>
             <div className="daily-moment-options">
               {model.moments.map(({ id, label }) => (
                 <label key={id} data-selected={model.moment === id}>
@@ -146,7 +148,7 @@ export function JournalForm({
                     checked={model.moment === id}
                     onChange={() => model.selectMoment(id)}
                   />
-                  {label}
+                  {t(label)}
                 </label>
               ))}
             </div>
@@ -156,40 +158,40 @@ export function JournalForm({
       {step === 1 && (
         <>
           <fieldset>
-            <legend>Bienestar general</legend>
+            <legend>{t('Bienestar general')}</legend>
             <div className="form-grid">
               <label>
-                Horas de sueño
+                {t('Horas de sueño')}
                 <input
-                  aria-label="Horas de sueño"
+                  aria-label={t('Horas de sueño')}
                   type="number"
                   min="0"
                   max="24"
                   step="0.1"
                   required
-                  placeholder="Ej. 7,5"
+                  placeholder={t('Ej. 7,5')}
                   value={values.sleep}
                   onChange={(event) => model.setValues({ ...values, sleep: event.target.value })}
                 />
               </label>
               <label>
-                Fatiga percibida
+                {t('Fatiga percibida')}
                 <select
                   value={values.fatigue}
                   onChange={(event) => model.setValues({ ...values, fatigue: event.target.value })}
                 >
-                  <option value="">Sin responder</option>
-                  <option value="1">1 · Muy poca</option>
-                  <option value="2">2 · Poca</option>
-                  <option value="3">3 · Moderada</option>
-                  <option value="4">4 · Alta</option>
-                  <option value="5">5 · Muy alta</option>
+                  <option value="">{t('Sin responder')}</option>
+                  <option value="1">{t('1 · Muy poca')}</option>
+                  <option value="2">{t('2 · Poca')}</option>
+                  <option value="3">{t('3 · Moderada')}</option>
+                  <option value="4">{t('4 · Alta')}</option>
+                  <option value="5">{t('5 · Muy alta')}</option>
                 </select>
               </label>
             </div>
           </fieldset>
           <fieldset>
-            <legend>¿Hiciste ejercicio hoy?</legend>
+            <legend>{t('¿Hiciste ejercicio hoy?')}</legend>
             <div className="mood-options">
               {[
                 { label: 'Sí', value: true },
@@ -203,13 +205,13 @@ export function JournalForm({
                     checked={values.exerciseDone === value}
                     onChange={() => model.setValues({ ...values, exerciseDone: value })}
                   />
-                  {label}
+                  {t(label)}
                 </label>
               ))}
             </div>
           </fieldset>
           <label>
-            Región con molestias (opcional)
+            {t('Región con molestias (opcional)')}
             <select
               value={model.region}
               onChange={(event) => {
@@ -217,16 +219,16 @@ export function JournalForm({
                 model.setRegion(selected?.id ?? '');
               }}
             >
-              <option value="">Sin informar</option>
+              <option value="">{t('Sin informar')}</option>
               {model.regions.map(({ id, label }) => (
                 <option key={id} value={id}>
-                  {label}
+                  {t(label)}
                 </option>
               ))}
             </select>
           </label>
           <label>
-            Área de salud que quieres comentar (opcional)
+            {t('Área de salud que quieres comentar (opcional)')}
             <select
               value={model.healthArea}
               onChange={(event) =>
@@ -235,17 +237,17 @@ export function JournalForm({
                 )
               }
             >
-              <option value="">Sin indicar</option>
+              <option value="">{t('Sin indicar')}</option>
               {model.healthAreas.map(({ id, label }) => (
                 <option key={id} value={id}>
-                  {label}
+                  {t(label)}
                 </option>
               ))}
             </select>
           </label>
           {model.healthArea && (
             <label>
-              Estado reportado
+              {t('Estado reportado')}
               <select
                 value={model.healthReport?.reportedState ?? ''}
                 onChange={(event) =>
@@ -254,10 +256,10 @@ export function JournalForm({
                   )
                 }
               >
-                <option value="">Sin responder</option>
+                <option value="">{t('Sin responder')}</option>
                 {model.reportedStates.map((id) => (
                   <option key={id} value={id}>
-                    {model.reportedStateLabels[id]}
+                    {t(model.reportedStateLabels[id])}
                   </option>
                 ))}
               </select>
@@ -265,7 +267,7 @@ export function JournalForm({
           )}
           {model.healthArea === 'vision' && model.healthReport?.reportedState === 'change' && (
             <label>
-              ¿En qué actividad visual notaste el cambio? (opcional)
+              {t('¿En qué actividad visual notaste el cambio? (opcional)')}
               <select
                 value={model.healthReport.visionActivityId ?? ''}
                 onChange={(event) =>
@@ -274,40 +276,43 @@ export function JournalForm({
                   )
                 }
               >
-                <option value="">Sin indicar</option>
+                <option value="">{t('Sin indicar')}</option>
                 {model.visionActivities.map(({ id, label }) => (
                   <option key={id} value={id}>
-                    {label}
+                    {t(label)}
                   </option>
                 ))}
               </select>
             </label>
           )}
           <fieldset>
-            <legend>Datos de la actividad (opcionales)</legend>
+            <legend>{t('Datos de la actividad (opcionales)')}</legend>
             <div className="form-grid">
               {model.measurementsForm.map((field) => (
                 <label key={field.key}>
-                  {field.label}
-                  {field.unit ? ` (${field.unit})` : ''}
+                  {t(field.label)}
+                  {t(field.unit ? ` (${field.unit})` : '')}
                   <input
                     type="number"
                     min={0}
                     max={field.max}
                     step={field.integer ? 1 : 'any'}
-                    placeholder="Sin registrar"
+                    placeholder={t('Sin registrar')}
                     value={field.value}
                     onChange={(event) => model.setMeasurement(field.key, event.target.value)}
                   />
                   {field.max !== undefined && (
-                    <span className="field-hint">Escala de demostración de 0 a {field.max}</span>
+                    <span className="field-hint">
+                      {t('Escala de demostración de 0 a ')}
+                      {field.max}
+                    </span>
                   )}
                 </label>
               ))}
             </div>
           </fieldset>
           <label>
-            Nota (opcional)
+            {t('Nota (opcional)')}
             <textarea
               rows={3}
               maxLength={400}
@@ -319,32 +324,35 @@ export function JournalForm({
       )}
       {step === 2 && (
         <>
-          <p className="sub">{personName} · Un chequeo por persona y día UTC.</p>
+          <p className="sub">
+            {t(personName)}
+            {t(' · Un chequeo por persona y día UTC.')}
+          </p>
           {updating && (
             <p className="daily-check-notice">
-              Ya existe un chequeo para este día UTC. Guardar actualizará ese registro.
+              {t('Ya existe un chequeo para este día UTC. Guardar actualizará ese registro.')}
             </p>
           )}
-          <h5>Tus respuestas</h5>
+          <h5>{t('Tus respuestas')}</h5>
           <dl className="daily-check-summary">
             {model.review.map(({ label, value }) => (
               <div key={label}>
-                <dt>{label}</dt>
-                <dd>{value}</dd>
+                <dt>{t(label)}</dt>
+                <dd>{label === 'Nota' && values.note.trim() ? value : t(value)}</dd>
               </div>
             ))}
           </dl>
-          <section aria-label="Datos adjuntos">
-            <h5>Datos adjuntos</h5>
+          <section aria-label={t('Datos adjuntos')}>
+            <h5>{t('Datos adjuntos')}</h5>
             {model.attachment ? (
               <CheckAttachments data={model.attachment} />
             ) : (
-              <p>Sin datos adjuntos disponibles.</p>
+              <p>{t('Sin datos adjuntos disponibles.')}</p>
             )}
           </section>
           {model.failed && (
             <p className="daily-check-notice" role="alert">
-              El borrador sigue disponible. Revisa los datos o vuelve a intentar el guardado.
+              {t('El borrador sigue disponible. Revisa los datos o vuelve a intentar el guardado.')}
             </p>
           )}
         </>
@@ -354,9 +362,9 @@ export function JournalForm({
           {tumi}
           <div className="daily-check-result">
             <Icon name="checked" size={25} />
-            <strong>Chequeo guardado</strong>
+            <strong>{t('Chequeo guardado')}</strong>
             <button type="button" className="button secondary" onClick={guide.edit}>
-              Editar chequeo del día
+              {t('Editar chequeo del día')}
             </button>
           </div>
         </>
@@ -369,7 +377,7 @@ export function JournalForm({
               disabled={saving}
               onClick={model.back}
             >
-              {step === 2 ? 'Corregir respuestas' : 'Volver al contexto'}
+              {t(step === 2 ? 'Corregir respuestas' : 'Volver al contexto')}
             </button>
           )}
           <button
@@ -385,15 +393,17 @@ export function JournalForm({
             data-assistant-control={step === 0 ? 'check-context' : undefined}
             type="submit"
           >
-            {saving
-              ? 'Guardando…'
-              : step === 0
-                ? 'Continuar a autoevaluación'
-                : step === 1
-                  ? 'Revisar chequeo'
-                  : model.failed
-                    ? 'Reintentar guardado'
-                    : 'Guardar chequeo'}
+            {t(
+              saving
+                ? 'Guardando…'
+                : step === 0
+                  ? 'Continuar a autoevaluación'
+                  : step === 1
+                    ? 'Revisar chequeo'
+                    : model.failed
+                      ? 'Reintentar guardado'
+                      : 'Guardar chequeo',
+            )}
           </button>
         </div>
       )}

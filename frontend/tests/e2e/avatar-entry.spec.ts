@@ -1,25 +1,18 @@
 import { expect, test } from '@playwright/test';
 
-test('el acceso directo a Personalización muestra el editor abierto al entrar y recargar', async ({
+test('el editor abre por enlace directo y no ofrece una pestaña de Personalización', async ({
   page,
 }) => {
   await page.goto('/mission/crew#crew-avatar');
   const editor = page.getByRole('region', { name: 'Personalizar astronauta' });
   const tabs = page.getByRole('navigation', { name: 'Secciones de Tripulación' });
-  const customize = tabs.getByRole('button', { name: 'Personalización' });
-
-  await expect(customize).toHaveAttribute('aria-pressed', 'true');
+  await expect(tabs.getByRole('button', { name: 'Personalización' })).toHaveCount(0);
   await expect(editor.getByRole('button', { name: 'Restablecer' })).toBeVisible();
   await expect(page.getByRole('group', { name: 'Modelo corporal' })).toHaveCount(0);
 
   await editor.getByRole('button', { name: 'Baliza flotante' }).click();
   await tabs.getByRole('button', { name: 'Ahora' }).click();
   await expect(editor).toHaveCount(0);
-  await customize.click();
-  await expect(editor.getByRole('button', { name: 'Baliza flotante' })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
   await page.reload();
   await expect(editor.getByRole('button', { name: 'Restablecer' })).toBeVisible();
 });

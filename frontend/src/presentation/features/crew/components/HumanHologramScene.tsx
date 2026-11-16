@@ -1,4 +1,5 @@
 'use client';
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { publicAsset } from '@/presentation/shared/publicAsset';
 import type { HologramAppearance } from '../hologramTypes';
 import { Html, Line, useGLTF } from '@react-three/drei';
@@ -63,6 +64,7 @@ function HumanBody({
   onSelect,
   portal,
 }: HologramProps & { portal: RefObject<HTMLElement> }) {
+  const t = useTranslation();
   const gltf = useGLTF(
     appearance === 'neutral'
       ? publicAsset('/models/human-hologram.glb')
@@ -168,11 +170,11 @@ function HumanBody({
           <div
             className={`body-readout ${selected === metric.id ? 'is-selected' : ''} ${metric.qualityTone}`}
           >
-            <span>{metric.shortLabel}</span>
+            <span>{t(metric.shortLabel)}</span>
             <strong>
-              {metric.value} <small>{metric.unit}</small>
+              {t(metric.value)} <small>{t(metric.unit)}</small>
             </strong>
-            <small>{metric.quality}</small>
+            <small>{t(metric.quality)}</small>
           </div>
         </Html>
       ))}
@@ -180,8 +182,9 @@ function HumanBody({
   );
 }
 export default function HumanHologramScene(props: HologramProps) {
+  const t = useTranslation();
   return (
-    <TelemetrySceneFrame label={`Holograma humano 3D de ${props.name}`}>
+    <TelemetrySceneFrame label={t(`Holograma humano 3D de ${props.name}`)}>
       {(portal) => <HumanBody {...props} portal={portal} />}
     </TelemetrySceneFrame>
   );

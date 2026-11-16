@@ -1,6 +1,6 @@
 # Personalización del astronauta
 
-La pestaña Personalización de Tripulación muestra el editor abierto. El visor se monta al entrar en la pestaña y se libera al salir. Los accesorios, las herramientas y los colores del traje se recuerdan por tripulante mientras la pantalla está montada. El visor de salud tiene su propia escena.
+El enlace directo `#crew-avatar` de Tripulación abre el editor. El visor se monta al abrir el editor y se libera al salir. Los accesorios, las herramientas y los colores del traje se recuerdan por tripulante mientras la pantalla está montada. El visor de salud tiene su propia escena.
 
 Cada accesorio del catálogo declara identificador, nombre, archivo GLB y socket. Los sockets de accesorio flotante, pecho, mano y espalda usan coordenadas locales del astronauta en el sistema de Three.js, con +Y arriba y +Z hacia el frente. Los orígenes de los accesorios se colocan en su punto de montaje. Las herramientas apuntan hacia −Y desde la empuñadura. Para incorporar una pieza compatible, añade su GLB a `frontend/public/models/avatar/` y registra su archivo y socket en el catálogo.
 

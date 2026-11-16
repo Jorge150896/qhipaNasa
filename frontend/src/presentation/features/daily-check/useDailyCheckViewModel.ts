@@ -1,3 +1,4 @@
+import { useAppLanguage, useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import type { TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
 import { tumiWellbeingReplies } from '@/domain/assistant/tumiWellbeing';
 import type { TumiReplyAudio } from '@/presentation/shared/tumi/useTumiReplyAudio';
@@ -38,7 +39,6 @@ const tumiExpressions = {
   low: ['worried', 'understanding', 'neutral'],
 } satisfies Record<string, TumiEmotion[]>;
 const greeting = 'Estoy aquí para escucharte. ¿Cómo te sientes hoy?';
-const spokenNumber = new Intl.NumberFormat('es');
 const spokenMoments = {
   before: 'antes de la actividad',
   after: 'después de la actividad',
@@ -50,16 +50,30 @@ function describeSavedCheck(
   values: CheckFormValues,
   activity: DailyActivity,
   moment: DailyMoment,
+  english: boolean,
+  t: ReturnType<typeof useTranslation>,
 ) {
-  const mood = values.mood ? ` y ánimo ${moods[values.mood].toLowerCase()}` : '';
-  const exercise = values.exerciseDone === true ? ' También anotaste que hiciste ejercicio.' : '';
-  const closing =
+  const sleep = new Intl.NumberFormat(english ? 'en-US' : 'es').format(Number(values.sleep));
+  const activityLabel = t(activities[activity].label).toLowerCase();
+  const momentLabel = t(spokenMoments[moment]);
+  const closing = t(
     values.mood === 'low'
       ? 'Gracias por contarme cómo te sentiste. Podemos ir con calma.'
       : values.mood === 'good'
         ? 'Qué gusto acompañarte. Si mañana quieres volver, aquí estaré.'
-        : 'Gracias por tomarte este momento para ti.';
-  return `Listo, ${name}. Guardé tu chequeo de ${activities[activity].label.toLowerCase()} ${spokenMoments[moment]}. Registraste ${spokenNumber.format(Number(values.sleep))} horas de sueño${mood}.${exercise} ${closing}`;
+        : 'Gracias por tomarte este momento para ti.',
+  );
+  const mood = values.mood
+    ? english
+      ? ` You described your mood as ${t(moods[values.mood]).toLowerCase()}.`
+      : ` Describiste tu ánimo como ${moods[values.mood].toLowerCase()}.`
+    : '';
+  const exercise =
+    values.exerciseDone === true ? ` ${t('También anotaste que hiciste ejercicio.')}` : '';
+  const summary = english
+    ? `All set, ${name}. I saved your check-in for ${activityLabel} ${momentLabel}. You logged ${sleep} hours of sleep.`
+    : `Listo, ${name}. Guardé tu chequeo de ${activityLabel} ${momentLabel}. Registraste ${sleep} horas de sueño.`;
+  return `${summary}${mood}${exercise} ${closing}`;
 }
 
 const empty: CheckFormValues = { sleep: '', fatigue: '', note: '' };
@@ -69,7 +83,13 @@ export function useDailyCheckViewModel(
   audio: Pick<TumiReplyAudio, 'play' | 'playing' | 'spokenWords' | 'status' | 'stop'>,
 ) {
   const [step, setStep] = useState(0);
-  const [savedReply, setSavedReply] = useState('');
+  const { language } = useAppLanguage();
+  const t = useTranslation();
+  const [savedCheck, setSavedCheck] = useState<{
+    values: CheckFormValues;
+    activity: DailyActivity;
+    moment: DailyMoment;
+  }>();
   const sessionActive = useRef(false);
   useEffect(() => {
     sessionActive.current = true;
@@ -77,28 +97,13 @@ export function useDailyCheckViewModel(
       sessionActive.current = false;
     };
   }, []);
-  const [activity, setActivity] = useState<DailyActivity | undefined>(
-    data.dailyCheckDraft?.context?.activity,
-  );
-  const [moment, setMoment] = useState<DailyMoment | undefined>(
-    data.dailyCheckDraft?.context?.moment,
-  );
-  const [values, setValues] = useState(data.dailyCheckDraft ?? empty);
-  const [measurements, setMeasurements] = useState<Partial<Record<ActivityField, string>>>(() =>
-    Object.fromEntries(
-      Object.entries(data.dailyCheckDraft?.context?.measurements ?? {}).map(([key, value]) => [
-        key,
-        String(value),
-      ]),
-    ),
-  );
-  const [region, setRegion] = useState<DiscomfortRegion | ''>(
-    data.dailyCheckDraft?.discomfortRegion ?? '',
-  );
-  const [healthArea, setHealthArea] = useState<HealthSystemId | ''>(
-    data.dailyCheckDraft?.healthReport?.systemId ?? '',
-  );
-  const [attachment] = useState(data.dailyCheckDraft?.attachment ?? data.checkAttachment);
+  const [activity, setActivity] = useState<DailyActivity>();
+  const [moment, setMoment] = useState<DailyMoment>();
+  const [values, setValues] = useState(empty);
+  const [measurements, setMeasurements] = useState<Partial<Record<ActivityField, string>>>({});
+  const [region, setRegion] = useState<DiscomfortRegion | ''>('');
+  const [healthArea, setHealthArea] = useState<HealthSystemId | ''>('');
+  const [attachment] = useState(data.checkAttachment);
   const [failed, setFailed] = useState(false);
   const pending = useRef(false);
 
@@ -132,8 +137,18 @@ export function useDailyCheckViewModel(
   const healthReport =
     values.healthReport?.systemId === healthArea ? values.healthReport : undefined;
 
+  const firstName = data.selected.name.split(' ')[0];
   const tumiReply =
-    step === 3 ? savedReply : values.mood ? tumiWellbeingReplies[values.mood] : greeting;
+    step === 3 && savedCheck
+      ? describeSavedCheck(
+          firstName,
+          savedCheck.values,
+          savedCheck.activity,
+          savedCheck.moment,
+          language === 'en',
+          t,
+        )
+      : t(values.mood ? tumiWellbeingReplies[values.mood] : greeting);
   const tumiWords = tumiReply.split(/\s+/);
   const speaking = audio.playing && audio.spokenWords !== undefined;
   const expressions =
@@ -173,7 +188,7 @@ export function useDailyCheckViewModel(
       else audio.stop();
     },
     measurementsForm,
-    attachment: mapDailyCheckAttachment(attachment),
+    attachment: mapDailyCheckAttachment(attachment, language),
     healthArea,
     healthAreas: healthSystems.map(({ id, shortLabel }) => ({ id, label: shortLabel })),
     healthReport,
@@ -277,12 +292,14 @@ export function useDailyCheckViewModel(
       if (!sessionActive.current || !saved) return;
 
       const summary = describeSavedCheck(
-        data.selected.name.split(' ')[0],
+        firstName,
         values,
         context.activity,
         context.moment,
+        language === 'en',
+        t,
       );
-      setSavedReply(summary);
+      setSavedCheck({ values, activity: context.activity, moment: context.moment });
       setStep(3);
       if (speakSummary) audio.play(summary, { transcript: true });
     },

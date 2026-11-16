@@ -1,6 +1,6 @@
 # Tema visual de Qhipa Pacha
 
-Monitoreo diario usa una atmósfera violeta propia, con Tumi, controles de ánimo y una respiración opcional de cuatro segundos por fase. El mensaje rápido abre el chat de misión. La respiración respeta la preferencia de movimiento reducido. El resto de las pantallas sigue el tema seleccionado en Tumi.
+Monitoreo diario usa una atmósfera violeta propia, con Nami, controles de ánimo y una respiración opcional de cuatro segundos por fase. El mensaje rápido abre el chat de misión. La respiración respeta la preferencia de movimiento reducido. El resto de las pantallas sigue el tema seleccionado en Nami.
 
 Los anclajes de marca viven en `frontend/src/app/globals.css`: naranja `#FB5607`, morado `#8338EC`, carbón `#212529` y claro `#E9ECEF`. La portada consume los mismos tokens mediante sus alias `--qhipa-*`.
 
@@ -21,6 +21,6 @@ En Tripulación, el Canvas del explorador corporal es transparente y deja ver el
 
 El visor corporal encuadra el volumen completo del traje y limita el acercamiento según el tamaño del área visible. Al seleccionar una región, una luz localizada marca la superficie y vuelve a una intensidad baja. Con movimiento reducido, la luz se mantiene fija.
 
-La aplicación abre en tema claro. En Tumi → Tema se elige Claro u Oscuro. La preferencia se conserva en este navegador y se aplica antes de la hidratación. La portada, el explorador y las secciones de misión comparten las superficies lavanda, los acentos naranja y la navegación del tema. El cielo de los visores 3D y sus marcadores conservan su iluminación y contraste. En Monitoreo diario el saludo y el ánimo aparecen primero, con lecturas al lado en escritorio y debajo en móvil.
+La aplicación abre en tema claro. En Nami → Tema se elige Claro u Oscuro. La preferencia se conserva en este navegador y se aplica antes de la hidratación. La portada, el explorador y las secciones de misión comparten las superficies lavanda, los acentos naranja y la navegación del tema. El cielo de los visores 3D y sus marcadores conservan su iluminación y contraste. En Monitoreo diario el saludo y el ánimo aparecen primero, con lecturas al lado en escritorio y debajo en móvil.
 
-El tema oscuro usa fondos ciruela, superficies violetas y un contorno lavanda para las selecciones. En el chat de Tumi, la ilustración de bienvenida y el globo de conversación comparten esa paleta. El naranja identifica las acciones principales de la misión y Tumi conserva su acabado dorado.
+El tema oscuro usa fondos ciruela, superficies violetas y un contorno lavanda para las selecciones. En el chat de Nami, la ilustración de bienvenida y el globo de conversación comparten esa paleta. El naranja identifica las acciones principales de la misión y Nami conserva su acabado dorado.

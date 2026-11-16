@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { Html } from '@react-three/drei';
 import { useEffect, useMemo, type RefObject } from 'react';
 import { CanvasTexture, Shape, SplineCurve, SRGBColorSpace, Vector2 } from 'three';
@@ -51,6 +52,7 @@ export function ShuttleExteriorModel({
   portal: RefObject<HTMLElement>;
   showZones?: boolean;
 }) {
+  const t = useTranslation();
   const texture = useMemo(() => makeHullTexture(), []);
   useEffect(() => () => texture?.dispose(), [texture]);
   const shapes = useMemo(() => [makeWing(-1), makeWing(1)], []);
@@ -187,11 +189,11 @@ export function ShuttleExteriorModel({
             <button
               type="button"
               className="scene-hotspot"
-              aria-label={`Seleccionar zona ${zone.text}`}
+              aria-label={t(`Seleccionar zona ${zone.text}`)}
               aria-pressed={selectedZone === zone.id}
               onClick={() => onSelectZone(zone.id)}
             >
-              {zone.text}
+              {t(zone.text)}
             </button>
           </Html>
         ))}

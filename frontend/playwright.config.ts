@@ -10,6 +10,15 @@ export default defineConfig({
     ...devices['Desktop Chrome'],
     channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome',
     viewport: { width: 1440, height: 1100 },
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: `http://127.0.0.1:${port}`,
+          localStorage: [{ name: 'astra.language.v1', value: 'es' }],
+        },
+      ],
+    },
     launchOptions: { args: ['--use-angle=swiftshader', '--enable-webgl'] },
     trace: 'retain-on-failure',
   },

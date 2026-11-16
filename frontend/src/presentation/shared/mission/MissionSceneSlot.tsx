@@ -1,4 +1,5 @@
 'use client';
+import { LocalizedText } from '@/presentation/shared/language/AppLanguageProvider';
 import dynamic from 'next/dynamic';
 import type { ComponentProps } from 'react';
 import type Scene from '../scene/MissionScene';
@@ -8,7 +9,7 @@ const MissionScene = dynamic(() => import('../scene/MissionScene'), {
   loading: () => (
     <div className="scene-viewport scene-fallback">
       <Icon name="loader" className="spin" />
-      Preparando visor 3D…
+      <LocalizedText>Preparando visor 3D…</LocalizedText>
     </div>
   ),
 });

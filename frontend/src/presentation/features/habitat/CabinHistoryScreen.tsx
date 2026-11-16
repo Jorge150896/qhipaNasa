@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useState } from 'react';
 import { createCabinHistoryDependencies } from '@/di/createCabinHistoryDependencies';
 import { useCabinHistoryViewModel } from './useCabinHistoryViewModel';
@@ -7,6 +8,7 @@ import { useTumiViewContext } from '../mission-assistant/useTumiViewContext';
 const { archive } = createCabinHistoryDependencies();
 
 export function CabinHistoryScreen() {
+  const t = useTranslation();
   const [open, setOpen] = useState(false);
   const { data, onSeek, onTogglePlayback } = useCabinHistoryViewModel(archive, open);
   useTumiViewContext(
@@ -26,7 +28,7 @@ export function CabinHistoryScreen() {
         if (!next) onSeek(data.index);
       }}
     >
-      <summary>Ver historial de la ISS</summary>
+      <summary>{t('Ver historial de la ISS')}</summary>
       <CabinHistoryView data={data} onSeek={onSeek} onTogglePlayback={onTogglePlayback} />
     </details>
   );

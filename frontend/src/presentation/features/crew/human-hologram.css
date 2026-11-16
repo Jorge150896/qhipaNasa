@@ -46,7 +46,7 @@
   left: 12px;
   right: 12px;
   color: #a5c5d1;
-  font-size: 11px;
+  font-size: 12px;
   pointer-events: none;
   text-align: center;
 }
@@ -60,7 +60,7 @@
   display: grid;
   gap: 3px;
   color: #e6edf5;
-  font-size: 11px;
+  font-size: 12px;
 }
 .human-hologram-shell .body-readout strong {
   color: #8ce0da;
@@ -68,7 +68,7 @@
   white-space: nowrap;
 }
 .human-hologram-shell .body-readout small {
-  font-size: 9px;
+  font-size: 12px;
   color: #a5c5d1;
 }
 .human-hologram-shell .body-readout.is-selected {
@@ -85,7 +85,7 @@
   .human-hologram-shell .body-readout {
     width: 85px;
     padding: 6px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .human-hologram-shell .body-readout strong {
     font-size: 18px;

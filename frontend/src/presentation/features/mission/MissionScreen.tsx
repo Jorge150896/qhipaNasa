@@ -1,4 +1,5 @@
 'use client';
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@/ui/Icon';
@@ -16,6 +17,7 @@ export function MissionScreen({
   section: MissionSection;
   habitatId?: string;
 }) {
+  const t = useTranslation();
   const router = useRouter();
   const [navigationPending, startNavigation] = useTransition();
   const { data, loading, error, message, saving, actions } = useMissionWorkspace();
@@ -47,23 +49,23 @@ export function MissionScreen({
         >
           <Icon name={message.error ? 'alert' : 'checked'} />
           <p>{message.text}</p>
-          <button aria-label="Cerrar mensaje" onClick={actions.dismissMessage}>
+          <button aria-label={t('Cerrar mensaje')} onClick={actions.dismissMessage}>
             <Icon name="close" size={16} />
           </button>
         </div>
       )}
       {loading || navigationPending ? (
         <TumiLoader
-          title="Preparando la misión"
-          description="Cargando el escenario y el registro de demostración."
+          title={t('Preparando la misión')}
+          description={t('Cargando el escenario y el registro de demostración.')}
         />
       ) : error || !data ? (
         <div className="loading-state" role="alert">
           <Icon name="alert" size={38} />
-          <h1>No pudimos abrir la misión</h1>
-          <p>{error}</p>
+          <h1>{t('No pudimos abrir la misión')}</h1>
+          <p>{t(error)}</p>
           <button className="button primary" onClick={actions.retry}>
-            Volver a intentar
+            {t('Volver a intentar')}
           </button>
         </div>
       ) : (

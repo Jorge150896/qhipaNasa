@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import type { ExplorerPanel } from '../types';
 
 export function ExplorerTabs({
@@ -7,13 +8,14 @@ export function ExplorerTabs({
   active: ExplorerPanel;
   onSelect(panel: ExplorerPanel): void;
 }) {
+  const t = useTranslation();
   const tabs = [
     { id: 'network', label: 'Mapa espacial' },
     { id: 'mars', label: 'Mapa de Marte' },
     { id: 'earth', label: 'Centros en Tierra' },
   ] as const;
   return (
-    <div className="explorer-tabs" role="tablist" aria-label="Vistas del explorador">
+    <div className="explorer-tabs" role="tablist" aria-label={t('Vistas del explorador')}>
       {tabs.map((tab, index) => (
         <button
           key={tab.id}
@@ -37,7 +39,7 @@ export function ExplorerTabs({
             onSelect(tabs[next].id);
           }}
         >
-          {tab.label}
+          {t(tab.label)}
         </button>
       ))}
     </div>

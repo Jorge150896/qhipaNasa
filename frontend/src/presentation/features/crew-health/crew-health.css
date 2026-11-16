@@ -25,7 +25,7 @@
   margin: 0;
 }
 .health-heading .eyebrow {
-  font-size: 9px;
+  font-size: 12px;
 }
 .health-heading > .badge {
   white-space: nowrap;
@@ -52,7 +52,7 @@
   border-radius: 8px;
   background: var(--field);
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
 }
 .health-system-picker button[aria-pressed='true'] {
@@ -105,7 +105,7 @@
 }
 .health-title .eyebrow {
   margin: 0;
-  font-size: 9px;
+  font-size: 12px;
 }
 .health-explanation {
   border-left: 2px solid #db8757;
@@ -136,7 +136,7 @@
 .health-next-state span,
 .health-next-state small {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 .health-next-state strong {
   font-size: 14px;
@@ -190,7 +190,7 @@
   font-weight: 500;
 }
 .health-metrics strong small {
-  font-size: 10px;
+  font-size: 12px;
   margin-left: 6px;
   color: var(--muted);
 }
@@ -198,12 +198,12 @@
   margin: 15px 0;
 }
 .health-workspace dt {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   margin-bottom: 5px;
 }
 .health-workspace dd {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.7;
   color: var(--accent);
   margin: 0;
@@ -215,11 +215,11 @@
   gap: 16px;
 }
 .health-metrics article > p {
-  font-size: 10px;
+  font-size: 12px;
   margin: 9px 0;
 }
 .health-workspace .text-button {
-  font-size: 11px;
+  font-size: 12px;
 }
 .health-limits {
   margin: 18px 0;
@@ -229,12 +229,12 @@
   padding: 0 15px 14px;
 }
 .health-limits p {
-  font-size: 11px;
+  font-size: 12px;
   margin: 7px 0;
 }
 .health-limits small,
 .health-empty small {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   line-height: 1.7;
 }
@@ -260,20 +260,20 @@
   border-bottom: 1px solid var(--line);
 }
 .health-context dt {
-  font-size: 10px;
+  font-size: 12px;
 }
 .health-context dd {
-  font-size: 11px;
+  font-size: 12px;
 }
 .health-followup > small {
   display: block;
   color: var(--accent);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.7;
 }
 .health-followup .button {
   margin: 15px 0;
-  font-size: 11px;
+  font-size: 12px;
 }
 .health-followup h3 {
   font-size: 15px;
@@ -290,11 +290,11 @@
 .health-analysis summary {
   cursor: pointer;
   color: var(--accent);
-  font-size: 11px;
+  font-size: 12px;
 }
 .health-workspace ul {
   padding-left: 18px;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
   color: var(--accent);
 }
@@ -302,7 +302,7 @@
   margin-bottom: 8px;
 }
 .health-entry-form > p {
-  font-size: 11px;
+  font-size: 12px;
 }
 .health-entry-form > h4 {
   margin-top: 0;
@@ -312,7 +312,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
   margin-bottom: 16px;
 }
@@ -355,12 +355,12 @@
 }
 .health-history strong {
   color: var(--accent);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
 }
 .health-history time {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 .health-history p {
   white-space: pre-wrap;
@@ -369,7 +369,7 @@
 }
 .health-history small {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 .health-notice {
   padding: 14px 17px;
@@ -409,12 +409,12 @@
   display: flex;
   gap: 6px;
   align-items: center;
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
 }
 .health-body-hotspot {
   padding: 7px 10px;
-  font-size: 10px;
+  font-size: 12px;
   border-color: #db8757;
 }
 #crew-body {
@@ -466,7 +466,7 @@
     flex-direction: column;
     padding: 11px 5px;
     gap: 6px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .health-side-column {
     grid-template-columns: 1fr;
@@ -528,7 +528,7 @@
   gap: 12px;
 }
 .health-visual-toolbar > span {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 1px;
   color: var(--accent);
 }
@@ -538,7 +538,7 @@
   display: block;
 }
 .health-visual svg text {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1px;
   text-anchor: middle;
   fill: #edc1a8;
@@ -637,14 +637,14 @@
   color: var(--accent);
   background: var(--field);
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
 }
 .health-visual-steps button span {
   display: block;
   margin-bottom: 5px;
   color: var(--accent);
-  font-size: 9px;
+  font-size: 12px;
 }
 .health-visual-steps button[aria-pressed='true'] {
   border-color: var(--selection-border);
@@ -658,13 +658,13 @@
 }
 .health-visual > small {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.7;
   color: var(--muted);
 }
 .health-limits summary {
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--accent);
   margin-top: 12px;
 }
@@ -731,7 +731,7 @@
     line-height: 1.7;
   }
   .health-visual-steps button {
-    font-size: 10px;
+    font-size: 12px;
     padding: 9px 4px;
   }
 }
@@ -779,7 +779,7 @@
 .crew-vision-guide small {
   display: block;
   margin-top: 5px;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.35;
 }
 
@@ -853,7 +853,7 @@
 
 .health-vision-field legend span {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
 }
 

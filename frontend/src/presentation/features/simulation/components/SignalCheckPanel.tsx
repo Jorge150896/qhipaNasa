@@ -1,5 +1,6 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import type { ReactNode } from 'react';
-import { AssistantRobot } from '../../mission-assistant/components/AssistantRobot';
+import { TumiAvatar } from '@/presentation/shared/tumi/TumiAvatar';
 import { TrendChart } from '../../../shared/mission/TrendChart';
 import type { MetricData } from '../../mission/types';
 import type { SignalCheckState } from '../types';
@@ -19,6 +20,7 @@ export function SignalCheckPanel({
   onRepeat(): void;
   onEvidence(): void;
 }) {
+  const t = useTranslation();
   const title =
     missingCount > 1
       ? `Faltan ${missingCount} lecturas de ${metric.shortLabel}`
@@ -27,13 +29,13 @@ export function SignalCheckPanel({
     <section className="panel signal-check" aria-labelledby="signal-check-title">
       <div className="signal-check-content">
         <div className="signal-check-heading">
-          <AssistantRobot />
+          <TumiAvatar />
           <div>
-            <p className="eyebrow">TUMI · DEMOSTRACIÓN SIMULADA</p>
-            <h2 id="signal-check-title">{title}</h2>
+            <p className="eyebrow">{t('NAMI · DEMOSTRACIÓN SIMULADA')}</p>
+            <h2 id="signal-check-title">{t(title)}</h2>
           </div>
         </div>
-        <p>{metric.lastReading}</p>
+        <p>{t(metric.lastReading)}</p>
         <div className="signal-check-actions">
           <button
             type="button"
@@ -41,23 +43,26 @@ export function SignalCheckPanel({
             disabled={state.kind === 'running'}
             onClick={onRepeat}
           >
-            {state.kind === 'running' ? 'Capturando…' : 'Repetir medición simulada'}
+            {t(state.kind === 'running' ? 'Capturando…' : 'Repetir medición simulada')}
           </button>
           <button type="button" className="text-button" onClick={onEvidence}>
-            Ver evidencia
+            {t('Ver evidencia')}
           </button>
         </div>
         {state.kind === 'available' && (
           <div className="signal-check-result" role="status">
-            <strong>Nueva lectura simulada · {state.value}</strong>
-            <span>{state.time}</span>
+            <strong>
+              {t('Nueva lectura simulada · ')}
+              {t(state.value)}
+            </strong>
+            <span>{t(state.time)}</span>
           </div>
         )}
         {state.kind === 'missing' && (
-          <p role="status">La captura sigue sin una lectura disponible.</p>
+          <p role="status">{t('La captura sigue sin una lectura disponible.')}</p>
         )}
         {state.kind === 'error' && (
-          <p role="alert">No se completó la captura. Puedes reintentar.</p>
+          <p role="alert">{t('No se completó la captura. Puedes reintentar.')}</p>
         )}
       </div>
       <div className="signal-check-visuals">

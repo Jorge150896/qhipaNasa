@@ -6,7 +6,7 @@ import {
   openSavedDailyChecks,
 } from './daily-check-helpers';
 
-test('Tumi abre Fuentes fuera del menú y enlaza el estudio desde el mismo hábitat', async ({
+test('Nami abre Fuentes fuera del menú y enlaza el estudio desde el mismo hábitat', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -14,7 +14,7 @@ test('Tumi abre Fuentes fuera del menú y enlaza el estudio desde el mismo hábi
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });
   await expect(nav.getByRole('button', { name: 'Fuentes y alcance' })).toHaveCount(0);
   await openTumiChat(page);
-  const chat = page.getByRole('region', { name: 'Tumi' });
+  const chat = page.getByRole('region', { name: 'Nami' });
   await chat.getByRole('textbox').fill('¿De dónde vienen los datos?');
   await chat.getByRole('button', { name: 'Enviar' }).click();
   await chat.getByRole('button', { name: 'Ver Fuentes y alcance' }).click();
@@ -35,7 +35,7 @@ test('Tumi abre Fuentes fuera del menú y enlaza el estudio desde el mismo hábi
   await expect(page.getByRole('region', { name: 'Historial real de Inspiration4' })).toBeVisible();
 });
 
-test('de una lectura de respiración al módulo, Tumi y el autorregistro', async ({ page }) => {
+test('de una lectura de respiración al módulo, Nami y el autorregistro', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/mission/crew');
@@ -55,8 +55,8 @@ test('de una lectura de respiración al módulo, Tumi y el autorregistro', async
     .getByRole('group', { name: 'Lecturas de la instantánea' })
     .getByRole('button', { name: 'Respiración', exact: true })
     .click();
-  await reading.getByRole('button', { name: 'Preguntar a Tumi por esta lectura' }).click();
-  const chat = page.getByRole('region', { name: 'Tumi' });
+  await reading.getByRole('button', { name: 'Preguntar a Nami por esta lectura' }).click();
+  const chat = page.getByRole('region', { name: 'Nami' });
   await chat.getByRole('button', { name: '¿Qué significa este dato?' }).click();
   await expect(chat.getByRole('log')).toContainText(/frecuencia respiratoria de Elena Torres/i);
   await chat.getByRole('button', { name: 'Ocultar chat' }).click();

@@ -1,4 +1,5 @@
 'use client';
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 
 import { useState } from 'react';
 import { Icon } from '@/ui/Icon';
@@ -18,23 +19,24 @@ export function CrewHologramDetails({
   onOpenHistory(): void;
   onOpenTelemetryHistory(): void;
 }) {
+  const t = useTranslation();
   const [open, setOpen] = useState(false);
   const { reading } = data;
 
   return (
     <details className="crew-hologram-more" onToggle={(event) => setOpen(event.currentTarget.open)}>
-      <summary>Ver detalles</summary>
-      <p>{data.explanation}</p>
+      <summary>{t('Ver detalles')}</summary>
+      <p>{t(data.explanation)}</p>
       {data.recordKind === 'vision' && <VisionObservationGuide />}
       {open && sessions && <ExerciseSessionHistory sessions={sessions} />}
-      {!reading && <p>{data.detail}</p>}
+      {!reading && <p>{t(data.detail)}</p>}
       {reading && (
         <p className="crew-hologram-detail">
-          {data.activity} · {data.context} · {data.contextTime}
+          {t(data.activity)} · {t(data.context)} · {t(data.contextTime)}
         </p>
       )}
       <p className="crew-hologram-detail">
-        {reading ? 'Telemetría simulada' : 'Autorregistro de demostración'}
+        {t(reading ? 'Telemetría simulada' : 'Autorregistro de demostración')}
       </p>
       <button
         className="text-button"
@@ -42,7 +44,7 @@ export function CrewHologramDetails({
         onClick={reading ? onOpenTelemetryHistory : onOpenHistory}
       >
         <Icon name="clock" size={15} />
-        {reading ? 'Ver historial de mediciones' : 'Ver mis autorregistros'}
+        {t(reading ? 'Ver historial de mediciones' : 'Ver mis autorregistros')}
       </button>
     </details>
   );

@@ -27,10 +27,6 @@ export const guideControls = [
 ] as const;
 
 export const actionTips = {
-  'start-mission': {
-    label: 'Iniciar mi misión',
-    text: 'Abre el panel de la tripulación para consultar sus lecturas y actividades.',
-  },
   'explorer-mars': {
     label: 'Mapa de Marte',
     text: 'Acércate a Marte y consulta la Base Ares y su tripulación.',

@@ -1,7 +1,9 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useEffect, useState } from 'react';
 import type { LaunchSiteData } from '../types';
 
 export function LaunchVideo({ site }: { site: LaunchSiteData }) {
+  const t = useTranslation();
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
@@ -12,18 +14,18 @@ export function LaunchVideo({ site }: { site: LaunchSiteData }) {
   return (
     <section className="launch-video" aria-label={`Video de despegue · ${site.fullName}`}>
       <header className="launch-video-heading">
-        <p className="eyebrow">VIDEO DE DESPEGUE · ARCHIVO HISTÓRICO</p>
-        <h3>{site.mission}</h3>
-        <p>{site.date}</p>
+        <p className="eyebrow">{t('VIDEO DE DESPEGUE · ARCHIVO HISTÓRICO')}</p>
+        <h3>{t(site.mission)}</h3>
+        <p>{t(site.date)}</p>
         <p>
-          <strong>Despegue desde:</strong> {site.videoLocation}
+          <strong>{t('Despegue desde:')}</strong> {t(site.videoLocation)}
         </p>
       </header>
       {status !== 'error' && (
         <iframe
           key={attempt}
           src={site.embedUrl}
-          title={`Video del lanzamiento de ${site.mission} desde ${site.videoLocation}`}
+          title={t(`Video del lanzamiento de ${site.mission} desde ${site.videoLocation}`)}
           allow="encrypted-media; fullscreen; picture-in-picture"
           allowFullScreen
           referrerPolicy="strict-origin-when-cross-origin"
@@ -31,10 +33,14 @@ export function LaunchVideo({ site }: { site: LaunchSiteData }) {
           onError={() => setStatus('error')}
         />
       )}
-      {status === 'loading' && <p role="status">Cargando reproductor externo…</p>}
+      {status === 'loading' && <p role="status">{t('Cargando reproductor externo…')}</p>}
       {status === 'error' && (
         <div role="alert">
-          <p>No se pudo cargar el reproductor. Puedes reintentar o abrir el video en su fuente.</p>
+          <p>
+            {t(
+              'No se pudo cargar el reproductor. Puedes reintentar o abrir el video en su fuente.',
+            )}
+          </p>
           <button
             className="button secondary"
             onClick={() => {
@@ -42,20 +48,25 @@ export function LaunchVideo({ site }: { site: LaunchSiteData }) {
               setAttempt((value) => value + 1);
             }}
           >
-            Reintentar video
+            {t('Reintentar video')}
           </button>
         </div>
       )}
-      <p>Video: {site.credit}. Reproducción manual en YouTube; requiere conexión.</p>
       <p>
-        Si el proveedor bloquea la reproducción,{' '}
+        {t('Video: ')}
+        {t(site.credit)}
+        {t('. Reproducción manual en YouTube; requiere conexión.')}
+      </p>
+      <p>
+        {t('Si el proveedor bloquea la reproducción,')}
+        {t(' ')}
         <a href={site.watchUrl} target="_blank" rel="noreferrer">
-          abrir video original ↗
+          {t('abrir video original ↗')}
         </a>
         .
       </p>
       <a href={site.sourceUrl} target="_blank" rel="noreferrer">
-        Consultar la misión en su fuente oficial ↗
+        {t('Consultar la misión en su fuente oficial ↗')}
       </a>
     </section>
   );

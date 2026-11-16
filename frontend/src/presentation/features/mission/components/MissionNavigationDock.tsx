@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { Icon, type IconName } from '@/ui/Icon';
 import { useEffect, useRef } from 'react';
 import { navigation } from '../constants';
@@ -15,6 +16,7 @@ export function MissionNavigationDock({
   onOpenExplorer?(): void;
   onNavigate(section: MissionSection): void;
 }) {
+  const t = useTranslation();
   const mapActive = section === 'explorer' || section === 'earth';
   const dock = useRef<HTMLElement>(null);
 
@@ -48,13 +50,13 @@ export function MissionNavigationDock({
         onClick={() => onNavigate(item.id)}
       >
         <Icon name={item.icon as IconName} size={24} />
-        <span>{item.label}</span>
+        <span>{t(item.label)}</span>
       </button>
     );
   }
 
   return (
-    <nav ref={dock} className={styles.dock} aria-label="Navegación principal">
+    <nav ref={dock} className={styles.dock} aria-label={t('Navegación principal')}>
       <div className={styles.track}>
         {navigation.filter((item) => primarySections.has(item.id)).map(sectionButton)}
         {onOpenExplorer && (
@@ -66,7 +68,7 @@ export function MissionNavigationDock({
             onClick={onOpenExplorer}
           >
             <Icon name="dashboard" size={24} />
-            <span>Mapa espacial</span>
+            <span>{t('Mapa espacial')}</span>
           </button>
         )}
         {navigation.filter((item) => item.id === 'simulation').map(sectionButton)}

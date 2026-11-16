@@ -1,4 +1,5 @@
 'use client';
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 
 import { Component, type ReactNode } from 'react';
 import { Canvas } from '@react-three/fiber';
@@ -112,10 +113,11 @@ function ResistanceStation() {
 }
 
 function PreviewFallback() {
+  const t = useTranslation();
   return (
     <div className="crew-equipment-fallback">
       <Icon name="activity" size={23} />
-      Vista 3D no disponible
+      {t('Vista 3D no disponible')}
     </div>
   );
 }
@@ -131,6 +133,7 @@ class PreviewBoundary extends Component<{ children: ReactNode }, { failed: boole
 }
 
 export default function ExerciseEquipmentScene({ equipment }: { equipment: ExerciseEquipment }) {
+  const t = useTranslation();
   return (
     <figure className="crew-equipment">
       <div className="crew-equipment-scene" aria-hidden="true">
@@ -150,8 +153,8 @@ export default function ExerciseEquipmentScene({ equipment }: { equipment: Exerc
         </PreviewBoundary>
       </div>
       <figcaption>
-        <strong>{equipment.label}</strong>
-        <small>Modelo ilustrativo</small>
+        <strong>{t(equipment.label)}</strong>
+        <small>{t('Modelo ilustrativo')}</small>
       </figcaption>
     </figure>
   );

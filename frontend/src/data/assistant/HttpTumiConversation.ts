@@ -1,3 +1,4 @@
+import { isSpanishAssistantText } from '@/domain/assistant/isSpanishAssistantText';
 import {
   TumiDailyLimitError,
   tumiReactions,
@@ -21,7 +22,7 @@ export class HttpTumiConversation implements TumiConversation {
       signal,
     });
     if (response.status === 429) throw new TumiDailyLimitError();
-    if (!response.ok) throw new Error('Tumi no está disponible.');
+    if (!response.ok) throw new Error('Nami no está disponible.');
     const body: unknown = await response.json();
     if (
       typeof body !== 'object' ||
@@ -30,10 +31,13 @@ export class HttpTumiConversation implements TumiConversation {
       typeof body.text !== 'string' ||
       !body.text.trim()
     ) {
-      throw new Error('Tumi recibió una respuesta vacía.');
+      throw new Error('Nami recibió una respuesta vacía.');
+    }
+    if (context?.language === 'en' && isSpanishAssistantText(body.text)) {
+      throw new Error('Nami returned a reply in the wrong language.');
     }
     const reaction =
       'reaction' in body ? tumiReactions.find((item) => item === body.reaction) : undefined;
-    return { text: body.text, reaction };
+    return { text: body.text.replace(/\bTumi\b/gi, 'Nami'), reaction };
   }
 }

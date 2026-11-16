@@ -11,7 +11,7 @@ public final class TumiDailyQuota {
   private int used;
 
   public TumiDailyQuota(Clock clock, int limit) {
-    if (limit < 1) throw new IllegalArgumentException("Tumi's daily request limit must be positive");
+    if (limit < 1) throw new IllegalArgumentException("Nami's daily request limit must be positive");
     this.clock = clock;
     this.limit = limit;
   }

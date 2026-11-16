@@ -1,3 +1,4 @@
+import type { AppLanguage } from '@/domain/assistant/AppLanguage';
 import type { LoadSpaceExplorer } from '@/domain/usecases/LoadSpaceExplorer';
 import type { DestinationKey, ExplorerData, HabitatData } from './types';
 const destinations: { id: DestinationKey; name: string; category: string; subtitle: string }[] = [
@@ -24,6 +25,7 @@ const destinations: { id: DestinationKey; name: string; category: string; subtit
 ];
 export function mapExplorerPresentation(
   result: Awaited<ReturnType<LoadSpaceExplorer['execute']>>,
+  language: AppLanguage = 'es',
 ): ExplorerData {
   const habitats = result.habitats.map((habitat) => {
     const pendingChecks = habitat.crew.filter((person) => person.checkDone === false).length;
@@ -33,10 +35,11 @@ export function mapExplorerPresentation(
       location: habitat.location,
       description: habitat.description,
       timestamp:
-        new Intl.DateTimeFormat('es-PE', {
+        new Intl.DateTimeFormat(language === 'en' ? 'en-US' : 'es-PE', {
           dateStyle: 'medium',
           timeStyle: 'short',
           timeZone: 'UTC',
+          hourCycle: 'h23',
         }).format(new Date(habitat.capturedAt)) + ' UTC',
       scenario: {
         baseline: 'Rutina de misión',

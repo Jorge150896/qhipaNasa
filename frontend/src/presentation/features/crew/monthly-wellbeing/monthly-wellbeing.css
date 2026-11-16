@@ -95,7 +95,7 @@
   flex-direction: column;
   justify-content: space-between;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 .monthly-wellbeing-bars {
   flex: 1;
@@ -152,7 +152,7 @@
   display: flex;
   justify-content: space-between;
   padding-inline: 50px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
 }
 

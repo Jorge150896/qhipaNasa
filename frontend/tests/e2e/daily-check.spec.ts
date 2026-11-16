@@ -2,6 +2,211 @@ import { expect, test } from '@playwright/test';
 import { openSavedDailyChecks } from './daily-check-helpers';
 import { openTumiChat } from './tumi-chat-helpers';
 
+test('Hacerlo con Nami escucha tras cada pregunta y entiende frases hasta la revisión', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    let firstQuestion = true;
+    Object.defineProperty(window, 'speechSynthesis', {
+      value: {
+        speaking: false,
+        pending: false,
+        getVoices: () => [],
+        speak(utterance: SpeechSynthesisUtterance) {
+          utterance.dispatchEvent(new Event('start'));
+          const finish = () => utterance.dispatchEvent(new Event('end'));
+          if (firstQuestion && utterance.text.includes('¿cómo te sientes hoy?')) {
+            firstQuestion = false;
+            document.addEventListener('test-finish-tumi-question', finish, { once: true });
+          } else queueMicrotask(finish);
+        },
+        cancel() {},
+      },
+    });
+    const answers = [
+      'Estoy bien y triste',
+      'Me siento algo regular',
+      'Hoy hice ejercicio',
+      'Después de entrenar',
+      'Por mis cinco horas',
+      'Sentí cansancio moderado',
+      'Sí, hoy hice ejercicio',
+      'Me duelen las manos',
+      'Quiero hablar de la vista',
+      'Noté un cambio',
+      'Al leer de cerca',
+      'Treinta y cinco minutos',
+      'sí 7 de 10',
+      'Quiero anotar que terminé el entrenamiento',
+    ];
+    Object.defineProperty(window, 'SpeechRecognition', {
+      configurable: true,
+      value: class {
+        processLocally = false;
+        onresult?: (event: { results: { transcript: string }[][] }) => void;
+        onend?: () => void;
+        start() {
+          if (!this.processLocally) throw new Error('El dictado debe ser local');
+          const root = document.documentElement;
+          root.dataset.guideMicStarted = 'true';
+          queueMicrotask(() => {
+            const transcript = answers.shift() ?? '';
+            this.onresult?.({ results: [[{ transcript }]] });
+            if (!transcript || transcript === 'Estoy bien y triste') this.onend?.();
+          });
+        }
+        stop() {
+          this.onend?.();
+        }
+        abort() {}
+      },
+    });
+  });
+  await page.goto('/mission/journal');
+  await expect(page.locator('html')).not.toHaveAttribute('data-guide-mic-started', 'true');
+  await page.getByRole('button', { name: 'Hacerlo con Nami' }).click();
+  const guide = page.locator('.daily-guide');
+  await expect(guide.getByRole('button', { name: 'Nami está hablando' })).toBeDisabled();
+  await expect(page.locator('html')).not.toHaveAttribute('data-guide-mic-started', 'true');
+  await page.evaluate(() => document.dispatchEvent(new Event('test-finish-tumi-question')));
+  const accept = guide.getByRole('button', { name: 'Usar esta respuesta', exact: true });
+  await expect(accept).toHaveCount(0);
+  await expect(guide.getByText(/Oí «Estoy bien y triste»/)).toBeVisible();
+  await guide.getByRole('button', { name: 'Reintentar micrófono', exact: true }).click();
+  await expect(guide.getByRole('button', { name: 'Regular', exact: true })).toHaveAttribute(
+    'data-selected',
+    'true',
+  );
+  await expect(guide.getByRole('heading')).toContainText('alguna nota', { timeout: 25_000 });
+  await accept.click();
+  await expect(page.getByRole('button', { name: 'Guardar chequeo', exact: true })).toBeVisible();
+  await expect(page.getByText('35 min', { exact: true })).toBeVisible();
+  await expect(page.getByText('7 / 10', { exact: true })).toBeVisible();
+  await expect(page.getByText('5 h', { exact: true })).toBeVisible();
+  await expect(page.getByText('Leer de cerca', { exact: true })).toBeVisible();
+});
+
+test('Nami muestra lo que oye y conserva la frase al terminar de hablar en inglés', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    let installed = false;
+    Object.defineProperty(window, 'SpeechRecognition', {
+      configurable: true,
+      value: class {
+        static async available(options: { langs: string[]; processLocally: boolean }) {
+          if (options.langs[0] !== 'en-US' || !options.processLocally) return 'unavailable';
+          return installed ? 'available' : 'downloadable';
+        }
+        static async install() {
+          installed = true;
+          return true;
+        }
+        lang = '';
+        processLocally = false;
+        interimResults = false;
+        onaudiostart?: () => void;
+        onaudioend?: () => void;
+        onresult?: (event: {
+          results: ({ transcript: string }[] & { isFinal?: boolean })[];
+        }) => void;
+        onend?: () => void;
+        start() {
+          if (this.lang !== 'en-US' || !this.processLocally) throw new Error('Dictado incorrecto');
+          this.onaudiostart?.();
+          if (this.interimResults)
+            this.onresult?.({
+              results: [
+                Object.assign([{ transcript: 'I feel good' }], { isFinal: true }),
+                Object.assign([{ transcript: 'but' }], { isFinal: false }),
+              ],
+            });
+        }
+        stop() {
+          this.onaudioend?.();
+          queueMicrotask(() => {
+            this.onresult?.({
+              results: [
+                Object.assign([{ transcript: 'I feel a little sad today' }], { isFinal: true }),
+              ],
+            });
+            this.onend?.();
+          });
+        }
+        abort() {}
+      },
+    });
+  });
+  await page.goto('/mission/journal');
+  await page.getByRole('button', { name: 'Hacerlo con Nami' }).click();
+  const guide = page.locator('.daily-guide');
+  const mic = guide.getByRole('button', { name: 'Reintentar micrófono', exact: true });
+  const wave = guide.locator('.daily-guide-mic-wave');
+  await guide.getByLabel('Idioma del micrófono').selectOption('en-US');
+  await expect(guide.getByText(/El paquete está listo/)).toBeVisible();
+  await expect(wave).toHaveCount(0);
+  await mic.click();
+  await expect(wave).toBeVisible();
+  await expect(guide.getByText(/Te escucho/)).toBeVisible();
+  await expect(guide.getByText('Te oigo decir «I feel good but»')).toBeVisible();
+  await expect(guide.getByText('Entendí: Bien')).toHaveCount(0);
+  await expect(guide.getByRole('button', { name: 'Usar esta respuesta' })).toHaveCount(0);
+  await guide.getByRole('button', { name: 'Terminar de hablar' }).click();
+  await expect(wave).toHaveCount(0);
+  await expect(guide.getByRole('heading')).toContainText('actividad');
+});
+
+test('Nami distingue el silencio y permite revisar una transcripción provisional', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    let attempts = 0;
+    Object.defineProperty(window, 'SpeechRecognition', {
+      configurable: true,
+      value: class {
+        continuous = false;
+        processLocally = false;
+        onaudiostart?: () => void;
+        onresult?: (event: { results: { transcript: string }[][] }) => void;
+        onend?: () => void;
+        start() {
+          if (!this.continuous || !this.processLocally) throw new Error('Dictado incorrecto');
+          this.onaudiostart?.();
+          if (attempts++ > 0)
+            this.onresult?.({
+              results: [
+                Object.assign([{ transcript: 'Hoy me siento un poco triste' }], { isFinal: false }),
+              ],
+            });
+        }
+        stop() {
+          if (attempts > 1) this.onend?.();
+        }
+        abort() {}
+      },
+    });
+  });
+  await page.goto('/mission/journal');
+  await page.getByRole('button', { name: 'Hacerlo con Nami' }).click();
+  const guide = page.locator('.daily-guide');
+  const mic = guide.getByRole('button', { name: 'Reintentar micrófono', exact: true });
+  const finish = guide.getByRole('button', { name: 'Terminar de hablar', exact: true });
+  const field = guide.getByRole('textbox', { name: 'Escribe o usa el dictado del teclado' });
+  await finish.click();
+  await expect(guide.getByText(/El micrófono se abrió, pero no recibí palabras/)).toBeVisible();
+  await expect(field).toBeEditable();
+  await mic.click();
+  await finish.click();
+  await expect(guide.getByText('Opción para revisar: Triste')).toBeVisible();
+  await expect(field).toHaveValue('Hoy me siento un poco triste');
+  await field.fill('Me siento bien');
+  await expect(guide.getByText('Entendí: Bien')).toBeVisible();
+  await guide.getByRole('button', { name: 'Usar esta respuesta' }).click();
+  await expect(guide.getByRole('heading')).toContainText('actividad');
+});
+
 test('chequeo por actividad en móvil con reintento, actualización y registros anteriores', async ({
   page,
 }) => {
@@ -86,7 +291,10 @@ test('chequeo por actividad en móvil con reintento, actualización y registros 
   await form.getByRole('button', { name: 'Guardar chequeo' }).click();
   await expect(form.getByRole('alert')).toContainText('El borrador sigue disponible');
   await expect(form.getByText('Chequeo guardado', { exact: true })).toHaveCount(0);
-  await expect(page.locator('html')).not.toHaveAttribute('data-saved-check-speech', /.+/);
+  await expect(page.locator('html')).not.toHaveAttribute(
+    'data-saved-check-speech',
+    /Guardé tu chequeo/,
+  );
   await page.evaluate(() => {
     delete document.documentElement.dataset.failCheck;
   });
@@ -117,8 +325,18 @@ test('chequeo por actividad en móvil con reintento, actualización y registros 
     .getByRole('button', { name: 'Monitoreo diario', exact: true })
     .click();
   await page.getByRole('button', { name: 'Llenar a mano' }).click();
-  await expect(form.getByRole('radio', { name: 'Recorrido de superficie' })).toBeChecked();
+  await expect(form.getByRole('radio', { name: 'Recorrido de superficie' })).not.toBeChecked();
+  await expect(
+    form.getByRole('radio', { name: 'Incidencia durante la actividad' }),
+  ).not.toBeChecked();
+  await form.getByRole('radio', { name: 'Recorrido de superficie' }).check();
+  await form.getByRole('radio', { name: 'Incidencia durante la actividad' }).check();
   await form.getByRole('button', { name: 'Continuar a autoevaluación' }).click();
+  await expect(form.getByRole('spinbutton', { name: 'Horas de sueño' })).toHaveValue('');
+  await expect(form.getByLabel('Nota (opcional)')).toHaveValue('');
+  await expect(form.getByLabel('Región con molestias (opcional)')).toHaveValue('');
+  await expect(form.getByRole('spinbutton', { name: /Distancia/ })).toHaveValue('');
+  await form.getByRole('spinbutton', { name: 'Horas de sueño' }).fill('8');
   await form.getByRole('spinbutton', { name: /Distancia/ }).fill('1.5');
   await form.getByRole('button', { name: 'Revisar chequeo' }).click();
   await expect(form).toContainText('actualizará ese registro');
@@ -130,8 +348,8 @@ test('chequeo por actividad en móvil con reintento, actualización y registros 
   ).toMatchObject({
     checks: [
       {
-        discomfortRegion: 'hands',
-        exerciseDone: false,
+        sleepHours: 8,
+        note: '',
         attachment: {
           source: 'synthetic',
           capturedAt: '2026-11-08T14:32:00Z',
@@ -149,7 +367,7 @@ test('chequeo por actividad en móvil con reintento, actualización y registros 
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
-test('Tumi responde al ánimo y Monitoreo diario conserva el borrador al abrir su chat', async ({
+test('Nami responde al ánimo y Monitoreo diario conserva el borrador al abrir su chat', async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -241,9 +459,9 @@ test('Monitoreo diario guía la respiración y el chat flotante no avanza el for
   await breathing.getByRole('button', { name: 'Detener respiración guiada' }).click();
   await expect(breathing).toContainText('4 s');
 
-  await expect(page.getByRole('textbox', { name: 'Mensaje para Tumi' })).toHaveCount(0);
+  await expect(page.getByRole('textbox', { name: 'Mensaje para Nami' })).toHaveCount(0);
   await openTumiChat(page);
-  const chat = page.getByRole('region', { name: 'Tumi', exact: true });
+  const chat = page.getByRole('region', { name: 'Nami', exact: true });
   await chat.getByRole('textbox').fill('¿De dónde vienen los datos?');
   await chat.getByRole('button', { name: 'Enviar' }).click();
   await expect(chat.getByRole('button', { name: 'Ver Fuentes y alcance' })).toBeVisible();
@@ -254,7 +472,7 @@ test('Monitoreo diario guía la respiración y el chat flotante no avanza el for
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
-test('Tumi anima sus expresiones y revela las palabras al ritmo del audio', async ({ page }) => {
+test('Nami anima sus expresiones y revela las palabras al ritmo del audio', async ({ page }) => {
   await page.addInitScript(() => {
     let speech: SpeechSynthesisUtterance | undefined;
     Object.defineProperty(window, 'speechSynthesis', {
@@ -319,7 +537,7 @@ test('Tumi anima sus expresiones y revela las palabras al ritmo del audio', asyn
   await expect(transcript).toHaveCount(0);
 });
 
-test('Tumi guía el chequeo pregunta por pregunta y resume las respuestas guardadas', async ({
+test('Nami guía el chequeo pregunta por pregunta y resume las respuestas guardadas', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -340,7 +558,7 @@ test('Tumi guía el chequeo pregunta por pregunta y resume las respuestas guarda
   });
   await page.goto('/mission/journal');
   await expect(page.getByRole('heading', { name: /llenar tu chequeo a mano/ })).toBeVisible();
-  await page.getByRole('button', { name: 'Hacerlo con Tumi' }).click();
+  await page.getByRole('button', { name: 'Hacerlo con Nami' }).click();
   const guide = page.locator('.daily-guide');
   const speak = page.locator('html');
   await expect(speak).toHaveAttribute('data-guide-speech', /cómo te sientes hoy/);
@@ -387,5 +605,20 @@ test('Tumi guía el chequeo pregunta por pregunta y resume las respuestas guarda
   await expect(page.locator('.daily-tumi-bubble')).toContainText('7,5 horas de sueño');
   await expect(page.locator('.daily-tumi-bubble')).toContainText('Qué gusto acompañarte');
   await expect(speak).toHaveAttribute('data-guide-speech', /Guardé tu chequeo de ejercicio/);
+  await page.getByRole('button', { name: 'Editar chequeo del día' }).click();
+  await expect(guide.getByRole('button', { name: 'Bien', exact: true })).toHaveAttribute(
+    'data-selected',
+    'true',
+  );
+  await page.reload();
+  await page.getByRole('button', { name: 'Hacerlo con Nami' }).click();
+  await expect(guide.getByRole('button', { name: 'Bien', exact: true })).not.toHaveAttribute(
+    'data-selected',
+    'true',
+  );
+  await choose('Regular');
+  await choose('Ejercicio');
+  await choose('Después');
+  await expect(sleep).toHaveValue('');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });

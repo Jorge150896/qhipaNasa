@@ -1,13 +1,7 @@
+import type { AppLanguage } from '@/domain/assistant/AppLanguage';
 import type { DailyCheckAttachment } from '@/domain/mission/dailyCheckAttachment';
 import { metricLabels } from '../mission/constants';
 
-const date = new Intl.DateTimeFormat('es-PE', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  hourCycle: 'h23',
-  timeZone: 'UTC',
-});
-const number = new Intl.NumberFormat('es-PE', { maximumFractionDigits: 2 });
 const gravity = {
   microgravity: 'Microgravedad de referencia',
   lunar: 'Gravedad parcial lunar de referencia',
@@ -19,9 +13,20 @@ const quality = {
   missing: 'Sin lectura en el escenario',
 };
 
-export function mapDailyCheckAttachment(attachment?: DailyCheckAttachment) {
+export function mapDailyCheckAttachment(
+  attachment?: DailyCheckAttachment,
+  language: AppLanguage = 'es',
+) {
   if (!attachment) return;
   const { zone } = attachment;
+  const locale = language === 'en' ? 'en-US' : 'es-PE';
+  const date = new Intl.DateTimeFormat(locale, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    hourCycle: 'h23',
+    timeZone: 'UTC',
+  });
+  const number = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
   return {
     timestamp: `${date.format(new Date(attachment.capturedAt))} UTC`,
     environment: [

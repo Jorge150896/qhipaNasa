@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
@@ -65,6 +66,7 @@ function ReferenceBody({
   portal: RefObject<HTMLElement>;
   showLabels: boolean;
 }) {
+  const t = useTranslation();
   const texture = useMemo(() => makeSurface(planet), [planet]);
   const spin = useRef<Group>(null);
   const body = useRef<Group>(null);
@@ -108,8 +110,11 @@ function ReferenceBody({
           style={{ pointerEvents: 'none' }}
         >
           <span className="fleet-planet-reference-label">
-            {planet.name}
-            <small>{solarOrbits[planet.id].radiusAU} UA</small>
+            {t(planet.name)}
+            <small>
+              {t(solarOrbits[planet.id].radiusAU)}
+              {t(' UA')}
+            </small>
           </span>
         </Html>
       )}

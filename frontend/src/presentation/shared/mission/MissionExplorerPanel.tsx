@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import type { ReactNode } from 'react';
 import { Icon } from '@/ui/Icon';
 import type { MetricData } from '../../features/mission/types';
@@ -20,19 +21,20 @@ export function MissionExplorerPanel({
   scene,
   mode,
 }: Props) {
+  const t = useTranslation();
   return (
     <section
       id={anchorId}
       tabIndex={anchorId ? -1 : undefined}
       className="scene-panel"
-      aria-label="Explorador tridimensional"
+      aria-label={t('Explorador tridimensional')}
     >
       <div className="scene-panel-header">
         <div>
           <p className="eyebrow">
-            {mode === 'crew' ? 'EXPLORADOR CORPORAL' : 'EXPLORADOR DE HÁBITAT'}
+            {t(mode === 'crew' ? 'EXPLORADOR CORPORAL' : 'EXPLORADOR DE HÁBITAT')}
           </p>
-          <h3>{mode === 'crew' ? crewName : zoneName}</h3>
+          <h3>{t(mode === 'crew' ? crewName : zoneName)}</h3>
         </div>
       </div>
       {scene}
@@ -40,25 +42,25 @@ export function MissionExplorerPanel({
         <div className="scene-caption">
           <span>
             <Icon name="orbit" size={14} />
-            Arrastra para girar · Rueda para acercar
+            {t('Arrastra para girar · Rueda para acercar')}
           </span>
-          <span>Modelo visual de referencia</span>
+          <span>{t('Modelo visual de referencia')}</span>
         </div>
       )}
       {metric && (
         <div className="scene-reading">
           <div>
-            <span className="eyebrow">{metric.label}</span>
+            <span className="eyebrow">{t(metric.label)}</span>
             <strong>
-              {metric.value}
-              <small>{metric.unit}</small>
+              {t(metric.value)}
+              <small>{t(metric.unit)}</small>
             </strong>
           </div>
           <div>
             <span className={`badge ${metric.qualityTone === 'attention' ? 'amber' : ''}`}>
-              {metric.quality}
+              {t(metric.quality)}
             </span>
-            <p>{metric.lastReading}</p>
+            <p>{t(metric.lastReading)}</p>
           </div>
         </div>
       )}

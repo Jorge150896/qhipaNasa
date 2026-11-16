@@ -8,13 +8,23 @@ it('envía la muestra elegida sin atribuirle la ubicación actual ni incluir not
   const snapshot = await new SimulatedMissionRepository().load('baseline');
   const mission = mapMissionPresentation(
     snapshot,
-    { checks: [], reviewedObservationIds: [] },
+    {
+      checks: [
+        {
+          id: 'elena:2026-11-08',
+          crewId: 'elena',
+          recordedAt: '2026-11-08T14:00:00Z',
+          sleepHours: 7,
+          note: 'Nota privada fuera de contexto',
+        },
+      ],
+      reviewedObservationIds: [],
+    },
     'elena',
     'respiration',
     'habitat',
     '2026-11-08',
   );
-  mission.dailyCheckDraft = { sleep: '', fatigue: '', note: 'Nota privada fuera de contexto' };
   const sample = mission.metric.history[1];
   const reading = captureMetricContext('metric-respiration', mission, { at: sample.at });
   const context = mapTumiContext(

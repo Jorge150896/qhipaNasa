@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import {
   Component,
   useCallback,
@@ -16,9 +17,10 @@ import { globePosition } from './globeCoordinates';
 import { LaunchPointCard } from './LaunchPointCard';
 
 function Fallback() {
+  const t = useTranslation();
   return (
     <p className="launch-fallback" role="status">
-      El globo 3D no está disponible. Usa la lista de sitios para explorar los videos.
+      {t('El globo 3D no está disponible. Usa la lista de sitios para explorar los videos.')}
     </p>
   );
 }
@@ -90,6 +92,7 @@ export default function LaunchGlobe({
   selected: LaunchSiteData | null;
   onSelect(id: string): void;
 }) {
+  const t = useTranslation();
   const [portal, setPortal] = useState<HTMLDivElement | null>(null);
   const [surface, setSurface] = useState<'loading' | 'ready' | 'error'>('loading');
 
@@ -135,7 +138,9 @@ export default function LaunchGlobe({
       </GlobeBoundary>
       {surface === 'error' && (
         <p className="launch-texture-warning" role="status">
-          La textura terrestre no se pudo cargar. Las coordenadas y la lista siguen disponibles.
+          {t(
+            'La textura terrestre no se pudo cargar. Las coordenadas y la lista siguen disponibles.',
+          )}
         </p>
       )}
     </>

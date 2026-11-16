@@ -1,4 +1,4 @@
-/** Matte for the pale blue backdrop of the local Tumi video. Interior highlights stay intact. */
+/** Matte for the pale blue backdrop of the local Nami video. Interior highlights stay intact. */
 export function removeLoadingBackdrop(pixels: Uint8ClampedArray, width: number, height: number) {
   const count = width * height;
   const background = new Uint8Array(count);

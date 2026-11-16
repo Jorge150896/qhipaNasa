@@ -19,7 +19,8 @@ public final class AskTumi {
     }
     if (context != null && (context.view() == null || context.view().isBlank()
         || context.view().length() > 100 || context.details() == null
-        || context.details().length() > 6000)) {
+        || context.details().length() > 6000
+        || (context.language() != null && !("en".equals(context.language()) || "es".equals(context.language()))))) {
       throw new InvalidMessage();
     }
     return model.reply(message.strip(), context);

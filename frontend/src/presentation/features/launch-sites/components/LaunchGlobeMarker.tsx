@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useRef } from 'react';
 import type { LaunchSiteData } from '../types';
 
@@ -16,6 +17,7 @@ export function LaunchGlobeMarker({
   onClose(): void;
   onSelect(id: string): void;
 }) {
+  const t = useTranslation();
   const trigger = useRef<HTMLButtonElement>(null);
   const place = places.find((item) => item.id === selected?.id) ?? places[0];
   const grouped = places.length > 1;
@@ -35,24 +37,26 @@ export function LaunchGlobeMarker({
       <button
         ref={trigger}
         className={`launch-marker ${active ? 'is-selected' : ''} ${place.kind === 'launch-site' ? '' : 'is-center'}`}
-        aria-label={
+        aria-label={t(
           grouped
             ? `Explorar lugares cercanos: ${places.map((item) => item.name).join(', ')}`
-            : `${place.kind === 'launch-site' ? 'Seleccionar punto de despegue' : 'Seleccionar sede NASA'} ${place.name}`
-        }
+            : `${place.kind === 'launch-site' ? 'Seleccionar punto de despegue' : 'Seleccionar sede NASA'} ${place.name}`,
+        )}
         aria-pressed={active}
         aria-expanded={grouped ? expanded : undefined}
         aria-controls={grouped ? groupId : 'launch-place-card'}
-        title={place.fullName}
+        title={t(place.fullName)}
         onClick={() => (grouped ? onToggle() : onSelect(place.id))}
       >
-        <span aria-hidden="true">{grouped ? places.length : place.symbol}</span>
+        <span aria-hidden="true">{t(grouped ? places.length : place.symbol)}</span>
         <small>
-          {active
-            ? place.fullName
-            : grouped
-              ? places.map((item) => item.name).join(' / ')
-              : place.fullName}
+          {t(
+            active
+              ? place.fullName
+              : grouped
+                ? places.map((item) => item.name).join(' / ')
+                : place.fullName,
+          )}
         </small>
       </button>
       {grouped && expanded && (
@@ -60,9 +64,9 @@ export function LaunchGlobeMarker({
           id={groupId}
           className="launch-cluster-menu"
           role="group"
-          aria-label="Elegir lugar cercano"
+          aria-label={t('Elegir lugar cercano')}
         >
-          <p>Lugares cercanos · Elige una ubicación</p>
+          <p>{t('Lugares cercanos · Elige una ubicación')}</p>
           {places.map((item) => (
             <button
               key={item.id}
@@ -72,9 +76,12 @@ export function LaunchGlobeMarker({
                 onSelect(item.id);
               }}
             >
-              <span aria-hidden="true">{item.symbol}</span> {item.fullName}
-              <small>{item.category}</small>
-              <small>▶ Video de despegue: {item.mission}</small>
+              <span aria-hidden="true">{t(item.symbol)}</span> {t(item.fullName)}
+              <small>{t(item.category)}</small>
+              <small>
+                {t('▶ Video de despegue: ')}
+                {t(item.mission)}
+              </small>
             </button>
           ))}
           <button
@@ -83,7 +90,7 @@ export function LaunchGlobeMarker({
               trigger.current?.focus();
             }}
           >
-            Cerrar lugares cercanos
+            {t('Cerrar lugares cercanos')}
           </button>
         </div>
       )}

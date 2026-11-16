@@ -105,7 +105,7 @@
     padding: 6px;
   }
   .launch-point-card strong {
-    font-size: 10px;
+    font-size: 12px;
   }
   .launch-point-leader {
     transform: scale(0.6);
@@ -246,7 +246,7 @@
   background: #fb5607;
   color: #212529;
   box-shadow: 0 0 0 5px #fb56072b;
-  font-size: 0.65rem;
+  font-size: max(12px, 0.65rem);
   font-weight: 800;
 }
 .launch-marker small {
@@ -260,7 +260,7 @@
   border: 1px solid #ffffff55;
   border-radius: 5px;
   padding: 0.25rem 0.4rem;
-  font-size: 0.65rem;
+  font-size: max(12px, 0.65rem);
   width: max-content;
   max-width: 190px;
   line-height: 1.4;
@@ -307,7 +307,7 @@
   left: 0;
 }
 .launch-cluster-menu > p {
-  font-size: 0.7rem;
+  font-size: max(12px, 0.7rem);
   line-height: 1.6;
   margin: 0 0 0.5rem;
 }
@@ -399,7 +399,7 @@
   border-radius: 8px 8px 0 0;
   background: var(--selection-soft);
   color: var(--text);
-  font-size: 10px;
+  font-size: 12px;
   cursor: pointer;
 }
 .earth-overview,

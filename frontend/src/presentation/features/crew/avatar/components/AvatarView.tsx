@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import type { ReactNode } from 'react';
 import { Crosshair, Orbit, RotateCcw } from 'lucide-react';
 import { appBackgrounds, type AppBackground } from '@/presentation/shared/space/appBackground';
@@ -32,15 +33,20 @@ export function AvatarView({
   onSelect<K extends keyof AvatarSelection>(slot: K, value: AvatarSelection[K]): void;
   onReset(): void;
 }) {
+  const t = useTranslation();
   return (
     <div className={styles.console}>
       <header className={styles.header}>
         <div className={styles.identity}>
           <Crosshair size={19} aria-hidden="true" />
-          <h3>Equipo de {crewName}</h3>
+          <h3>
+            {t('Equipo de ')}
+            {t(crewName)}
+          </h3>
         </div>
         <button type="button" className={styles.reset} onClick={onReset}>
-          <RotateCcw size={14} aria-hidden="true" /> Restablecer
+          <RotateCcw size={14} aria-hidden="true" />
+          {t(' Restablecer')}
         </button>
       </header>
       <div className={styles.layout}>
@@ -49,19 +55,20 @@ export function AvatarView({
             {preview}
           </div>
           <figcaption>
-            <Orbit size={15} aria-hidden="true" /> Arrastra para girar · Desplaza para acercar
+            <Orbit size={15} aria-hidden="true" />
+            {t(' Arrastra para girar · Desplaza para acercar')}
           </figcaption>
         </figure>
         <div className={styles.equipment}>
           <fieldset>
-            <legend>Accesorios</legend>
+            <legend>{t('Accesorios')}</legend>
             <div className={styles.choices}>
               <button
                 type="button"
                 aria-pressed={selection.decoration === ''}
                 onClick={() => onSelect('decoration', '')}
               >
-                Sin accesorio
+                {t('Sin accesorio')}
               </button>
               {partOptions.decoration.map((part) => (
                 <button
@@ -70,20 +77,20 @@ export function AvatarView({
                   aria-pressed={selection.decoration === part.id}
                   onClick={() => onSelect('decoration', part.id)}
                 >
-                  {part.label}
+                  {t(part.label)}
                 </button>
               ))}
             </div>
           </fieldset>
           <fieldset>
-            <legend>Herramientas</legend>
+            <legend>{t('Herramientas')}</legend>
             <div className={styles.choices}>
               <button
                 type="button"
                 aria-pressed={selection.tool === ''}
                 onClick={() => onSelect('tool', '')}
               >
-                Manos libres
+                {t('Manos libres')}
               </button>
               {partOptions.tool.map((part) => (
                 <button
@@ -92,7 +99,7 @@ export function AvatarView({
                   aria-pressed={selection.tool === part.id}
                   onClick={() => onSelect('tool', part.id)}
                 >
-                  {part.label}
+                  {t(part.label)}
                 </button>
               ))}
             </div>
@@ -100,11 +107,11 @@ export function AvatarView({
         </div>
         <div className={styles.environment}>
           <fieldset>
-            <legend>Colores del traje</legend>
+            <legend>{t('Colores del traje')}</legend>
             {finishes.map(({ id, label }) => (
               <div key={id} className={styles.finish}>
-                <span>{label}</span>
-                <div role="group" aria-label={label} className={styles.choices}>
+                <span>{t(label)}</span>
+                <div role="group" aria-label={t(label)} className={styles.choices}>
                   {colors.map(({ id: color, name }) => (
                     <button
                       type="button"
@@ -116,7 +123,7 @@ export function AvatarView({
                         className={styles.swatch}
                         style={{ background: avatarPalette[color] }}
                       />
-                      {name}
+                      {t(name)}
                     </button>
                   ))}
                 </div>
@@ -124,7 +131,7 @@ export function AvatarView({
             ))}
           </fieldset>
           <fieldset>
-            <legend>Fondo de la app</legend>
+            <legend>{t('Fondo de la app')}</legend>
             <div className={styles.choices}>
               {appBackgrounds.map(({ id, label }) => (
                 <button
@@ -138,7 +145,7 @@ export function AvatarView({
                     className={styles.backgroundSample}
                     data-background={id}
                   />
-                  {label}
+                  {t(label)}
                 </button>
               ))}
             </div>

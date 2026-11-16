@@ -1,4 +1,5 @@
 'use client';
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import {
   Component,
   Suspense,
@@ -45,15 +46,20 @@ interface Props {
   onSelectZone(id: string): void;
 }
 function SceneFallback({ onRetry }: { onRetry?(): void }) {
+  const t = useTranslation();
   return (
     <div className="scene-fallback">
       <Icon name="orbit" size={40} />
-      <h3>El visor 3D no está disponible</h3>
-      <p>Puedes seguir explorando los indicadores y el entorno con los controles de la pantalla.</p>
+      <h3>{t('El visor 3D no está disponible')}</h3>
+      <p>
+        {t(
+          'Puedes seguir explorando los indicadores y el entorno con los controles de la pantalla.',
+        )}
+      </p>
       {onRetry && (
         <button className="button secondary" onClick={onRetry}>
           <Icon name="refresh" />
-          Reintentar visor
+          {t('Reintentar visor')}
         </button>
       )}
     </div>
@@ -86,6 +92,7 @@ function FitWideModel({ aspectLimit }: { aspectLimit: number }) {
 }
 
 export default function MissionScene(props: Props) {
+  const t = useTranslation();
   const [attempt, setAttempt] = useState(0);
   const [fullBodyDistance, setFullBodyDistance] = useState(4.5);
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
@@ -124,25 +131,25 @@ export default function MissionScene(props: Props) {
   return (
     <div
       className="scene-viewport"
-      aria-label={props.mode === 'crew' ? 'Astronauta 3D interactivo' : 'Hábitat 3D conceptual'}
+      aria-label={t(props.mode === 'crew' ? 'Astronauta 3D interactivo' : 'Hábitat 3D conceptual')}
     >
       {!props.transparentBackground && <div className="starfield" aria-hidden="true" />}
       <div className="scene-overlay" ref={setOverlay} />
       {props.showModuleCamera && cameraReady && (
-        <div className="crew-camera-controls" role="group" aria-label="Encuadre del visor">
+        <div className="crew-camera-controls" role="group" aria-label={t('Encuadre del visor')}>
           <button
             className="button secondary"
             type="button"
             onClick={() => requestCamera('module')}
           >
-            Acercar al módulo
+            {t('Acercar al módulo')}
           </button>
           <button
             className="button secondary"
             type="button"
             onClick={() => requestCamera('overview')}
           >
-            {fullViewLabel}
+            {t(fullViewLabel)}
           </button>
         </div>
       )}
@@ -191,7 +198,7 @@ export default function MissionScene(props: Props) {
                 <Html portal={{ current: overlay }} center>
                   <span className="scene-loading">
                     <Icon name="loader" className="spin" />
-                    Cargando modelo local…
+                    {t('Cargando modelo local…')}
                   </span>
                 </Html>
               }

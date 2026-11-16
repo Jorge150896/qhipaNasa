@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { ShuttleExteriorModel } from './ShuttleExteriorModel';
 import { useMemo, type RefObject } from 'react';
 import { Shape } from 'three';
@@ -27,6 +28,7 @@ export function ShuttleModel({
   showZones?: boolean;
   modules?: HabitatModuleMarkers;
 }) {
+  const t = useTranslation();
   const shapes = useMemo(() => [makeWing(-1), makeWing(1)], []);
   const fin = useMemo(() => {
     const shape = new Shape();
@@ -82,13 +84,15 @@ export function ShuttleModel({
           metalness={modules ? 0.63 : material.metalness}
         />
       </mesh>
-      {!modules &&
-        [-1, 1].map((sign) => (
-          <mesh key={sign} position={[sign * 0.24, 0.62, -2.04]}>
-            <boxGeometry args={[0.36, 0.13, 0.42]} />
-            <meshStandardMaterial color="#0c273e" metalness={0.85} roughness={0.15} />
-          </mesh>
-        ))}
+      {t(
+        !modules &&
+          [-1, 1].map((sign) => (
+            <mesh key={sign} position={[sign * 0.24, 0.62, -2.04]}>
+              <boxGeometry args={[0.36, 0.13, 0.42]} />
+              <meshStandardMaterial color="#0c273e" metalness={0.85} roughness={0.15} />
+            </mesh>
+          )),
+      )}
       {shapes.map((shape, i) => (
         <group key={i} position-z={modules ? 0.55 : 0} scale-z={modules ? 1.28 : 1}>
           <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, modules ? -0.63 : -0.28, 0]}>
@@ -154,23 +158,25 @@ export function ShuttleModel({
           <meshStandardMaterial color="#8c9eaf" />
         </mesh>
       ))}
-      {showZones &&
-        !modules &&
-        [
-          { id: 'habitat', text: '01', position: [-0.7, 0.9, -1.4] },
-          { id: 'exercise', text: '02', position: [1.6, 0.7, 0.6] },
-          { id: 'laboratory', text: '03', position: [-0.5, 0.9, 1.5] },
-        ].map((zone) => (
-          <HabitatZoneMarker
-            key={zone.id}
-            id={zone.id}
-            code={zone.text}
-            position={zone.position as [number, number, number]}
-            selectedZone={selectedZone}
-            onSelectZone={onSelectZone}
-            portal={portal}
-          />
-        ))}
+      {t(
+        showZones &&
+          !modules &&
+          [
+            { id: 'habitat', text: '01', position: [-0.7, 0.9, -1.4] },
+            { id: 'exercise', text: '02', position: [1.6, 0.7, 0.6] },
+            { id: 'laboratory', text: '03', position: [-0.5, 0.9, 1.5] },
+          ].map((zone) => (
+            <HabitatZoneMarker
+              key={zone.id}
+              id={zone.id}
+              code={zone.text}
+              position={zone.position as [number, number, number]}
+              selectedZone={selectedZone}
+              onSelectZone={onSelectZone}
+              portal={portal}
+            />
+          )),
+      )}
     </group>
   );
 }

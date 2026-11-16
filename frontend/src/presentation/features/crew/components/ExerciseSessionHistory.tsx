@@ -1,4 +1,5 @@
 'use client';
+import { LocalizedText, useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
@@ -6,10 +7,15 @@ import type { ExerciseSessionPreview } from '../../crew-health/types';
 
 const EquipmentScene = dynamic(() => import('./ExerciseEquipmentScene'), {
   ssr: false,
-  loading: () => <p className="crew-hologram-detail">Cargando equipo 3D…</p>,
+  loading: () => (
+    <p className="crew-hologram-detail">
+      <LocalizedText>Cargando equipo 3D…</LocalizedText>
+    </p>
+  ),
 });
 
 export function ExerciseSessionHistory({ sessions }: { sessions: ExerciseSessionPreview[] }) {
+  const t = useTranslation();
   const [selectedId, selectSession] = useState<string>();
   const measured = sessions.filter(({ entry }) => entry.minutes !== null);
   const showChart = measured.length > 1;
@@ -22,8 +28,8 @@ export function ExerciseSessionHistory({ sessions }: { sessions: ExerciseSession
   return (
     <>
       {showChart && (
-        <div className="crew-exercise-history" role="group" aria-label="Minutos por sesión">
-          <h4>Minutos por sesión</h4>
+        <div className="crew-exercise-history" role="group" aria-label={t('Minutos por sesión')}>
+          <h4>{t('Minutos por sesión')}</h4>
           <div className="crew-exercise-bars">
             {measured
               .slice()
@@ -32,24 +38,24 @@ export function ExerciseSessionHistory({ sessions }: { sessions: ExerciseSession
                 <button
                   type="button"
                   key={entry.id}
-                  aria-label={`${entry.activity} · ${entry.date} · ${entry.duration}`}
+                  aria-label={t(`${entry.activity} · ${entry.date} · ${entry.duration}`)}
                   aria-pressed={selected.entry.id === entry.id}
                   onClick={() => selectSession(entry.id)}
                 >
-                  <span>{entry.minutes}</span>
+                  <span>{t(entry.minutes)}</span>
                   <span className="crew-exercise-bar-track" aria-hidden="true">
                     <span style={{ height: `${((entry.minutes ?? 0) / max) * 100}%` }} />
                   </span>
-                  <small>{entry.dayLabel}</small>
+                  <small>{t(entry.dayLabel)}</small>
                 </button>
               ))}
           </div>
           <p>
             <strong>
-              {selected.entry.activity} · {selected.entry.duration}
+              {t(selected.entry.activity)} · {t(selected.entry.duration)}
             </strong>
           </p>
-          <p className="crew-hologram-detail">{selected.entry.date}</p>
+          <p className="crew-hologram-detail">{t(selected.entry.date)}</p>
           {selected.entry.note && <p>{selected.entry.note}</p>}
         </div>
       )}

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import Link from 'next/link';
 import { Icon } from '@/ui/Icon';
 import { Panel } from '@/ui/Panel';
@@ -36,74 +37,79 @@ const research = [
 ];
 
 export function SourcesView({ nasaHistoryHref }: { nasaHistoryHref: string }) {
+  const t = useTranslation();
   return (
     <>
-      <Panel label="Origen de los datos">
+      <Panel label={t('Origen de los datos')}>
         <div className="panel-heading">
           <Icon name="book" />
-          <h2>Origen de los datos</h2>
+          <h2>{t('Origen de los datos')}</h2>
         </div>
         <div className="source-list">
           <article>
-            <span className="badge">Consumidor configurable</span>
-            <h3>Sesiones de monitoreo asistido</h3>
+            <span className="badge">{t('Consumidor configurable')}</span>
+            <h3>{t('Sesiones de monitoreo asistido')}</h3>
             <p>
-              Las lecturas de demostración son sintéticas. El modo API requiere una URL y un sujeto
-              configurados. Los indicadores no determinan diagnóstico ni aptitud.
+              {t(
+                'Las lecturas de demostración son sintéticas. El modo API requiere una URL y un sujeto configurados. Los indicadores no determinan diagnóstico ni aptitud.',
+              )}
             </p>
           </article>
           <article>
-            <span className="badge">Datos históricos reales</span>
+            <span className="badge">{t('Datos históricos reales')}</span>
             <h3>Inspiration4 · OSD-575</h3>
             <p>
-              Historial muestra medianas por fase de glucosa, sodio y potasio de cuatro
-              participantes del estudio de Inspiration4, publicado en NASA Open Science Data
-              Repository. Es una referencia de laboratorio independiente de las lecturas de Odyssey
-              01.
+              {t(
+                'Historial muestra medianas por fase de glucosa, sodio y potasio de cuatro participantes del estudio de Inspiration4, publicado en NASA Open Science Data Repository. Es una referencia de laboratorio independiente de las lecturas de Odyssey 01.',
+              )}
             </p>
             <p>DOI 10.26030/mc5d-p710 · CC0 1.0</p>
             <p>
               <Link href={nasaHistoryHref}>
-                Ver datos de Inspiration4 en Historial <Icon name="arrow" size={14} />
+                {t('Ver datos de Inspiration4 en Historial')}
+                <Icon name="arrow" size={14} />
               </Link>
             </p>
             <a href="https://osdr.nasa.gov/bio/repo/data/studies/OSD-575">
-              Abrir el estudio OSD-575 <Icon name="arrow" size={14} />
+              {t('Abrir el estudio OSD-575')}
+              <Icon name="arrow" size={14} />
             </a>
           </article>
           <article>
-            <span className="badge">Archivo NASA</span>
-            <h3>Radiación histórica de NASA RadLab</h3>
+            <span className="badge">{t('Archivo NASA')}</span>
+            <h3>{t('Radiación histórica de NASA RadLab')}</h3>
             <p>
-              En Entorno puedes consultar la radiación ambiental de DosTel1 en Columbus y el
-              historial de cabina de la ISS. El mapa de Marte muestra una lectura exterior de
-              Curiosity en el cráter Gale.
+              {t(
+                'En Entorno puedes consultar la radiación ambiental de DosTel1 en Columbus y el historial de cabina de la ISS. El mapa de Marte muestra una lectura exterior de Curiosity en el cráter Gale.',
+              )}
             </p>
           </article>
           <article>
-            <span className="badge">Datos simulados</span>
-            <h3>Lecturas de la misión</h3>
+            <span className="badge">{t('Datos simulados')}</span>
+            <h3>{t('Lecturas de la misión')}</h3>
             <p>
-              El escenario genera el pulso, la temperatura corporal, la SpO₂, la respiración y las
-              condiciones ambientales. Tripulación e Historial muestran su fecha, unidad y origen.
+              {t(
+                'El escenario genera el pulso, la temperatura corporal, la SpO₂, la respiración y las condiciones ambientales. Tripulación e Historial muestran su fecha, unidad y origen.',
+              )}
             </p>
           </article>
           <article>
-            <span className="badge">Entrada manual</span>
-            <h3>Monitoreo diario y autorregistros</h3>
+            <span className="badge">{t('Entrada manual')}</span>
+            <h3>{t('Monitoreo diario y autorregistros')}</h3>
             <p>
-              El usuario introduce observaciones y datos de demostración, como horas de sueño,
-              fatiga o duración del ejercicio. Se guardan en este navegador.
+              {t(
+                'El usuario introduce observaciones y datos de demostración, como horas de sueño, fatiga o duración del ejercicio. Se guardan en este navegador.',
+              )}
             </p>
           </article>
         </div>
       </Panel>
 
-      <Panel label="Investigación de referencia">
+      <Panel label={t('Investigación de referencia')}>
         <div className="panel-heading">
-          <h2>Investigación de referencia</h2>
+          <h2>{t('Investigación de referencia')}</h2>
           <a href="https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/?tab=resources">
-            Recursos del reto Space Apps
+            {t('Recursos del reto Space Apps')}
           </a>
         </div>
         <ul className="source-list" role="list">
@@ -112,27 +118,29 @@ export function SourcesView({ nasaHistoryHref }: { nasaHistoryHref: string }) {
               <article>
                 <h3>
                   <a href={url}>
-                    {title} <Icon name="arrow" size={14} />
+                    {t(title)} <Icon name="arrow" size={14} />
                   </a>
                 </h3>
-                <p>{description}</p>
+                <p>{t(description)}</p>
               </article>
             </li>
           ))}
         </ul>
       </Panel>
 
-      <Panel label="Alcance del prototipo">
-        <h2>Alcance del prototipo</h2>
+      <Panel label={t('Alcance del prototipo')}>
+        <h2>{t('Alcance del prototipo')}</h2>
         <p>
-          Tumi explica los datos de demostración con contenido del proyecto. La conexión a sensores
-          e IA y la validación de criterios clínicos quedan pendientes. El diario se conserva
-          localmente y la aplicación requiere conexión para una primera visita.
+          {t(
+            'Nami explica los datos de demostración con contenido del proyecto. La conexión a sensores e IA y la validación de criterios clínicos quedan pendientes. El diario se conserva localmente y la aplicación requiere conexión para una primera visita.',
+          )}
         </p>
         <p>
-          Modelo “Astronaut” de Poly by Google, con licencia CC BY 2.0.{' '}
+          {t('Modelo “Astronaut” de Poly by Google, con licencia CC BY 2.0.')}
+          {t(' ')}
           <a href="https://github.com/google/model-viewer/blob/v3.5.0/packages/shared-assets/models/Astronaut.glb">
-            Consultar el modelo original <Icon name="arrow" size={14} />
+            {t('Consultar el modelo original')}
+            <Icon name="arrow" size={14} />
           </a>
         </p>
       </Panel>

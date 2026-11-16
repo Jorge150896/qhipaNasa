@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useEffect, useId, useLayoutEffect, useRef } from 'react';
 import { Icon } from '@/ui/Icon';
 import { TrendChart } from '../../../shared/mission/TrendChart';
@@ -36,6 +37,7 @@ export function CrewHologram({
   onSelectTimelineSample(at: string): void;
   onOpenTimeline(): void;
 }) {
+  const t = useTranslation();
   const card = useRef<HTMLElement>(null);
   const reveal = useRef<HTMLDivElement>(null);
   const trendId = useId();
@@ -64,11 +66,11 @@ export function CrewHologram({
           <span className="crew-hologram-icon">
             <Icon name={data.icon} size={20} />
           </span>
-          <h3 id="crew-hologram-title">{data.title}</h3>
+          <h3 id="crew-hologram-title">{t(data.title)}</h3>
           <button
             className="crew-hologram-close"
             type="button"
-            aria-label="Cerrar ficha corporal"
+            aria-label={t('Cerrar ficha corporal')}
             onClick={onClose}
           >
             <Icon name="close" size={19} />
@@ -80,48 +82,51 @@ export function CrewHologram({
             <>
               <div className="crew-hologram-reading">
                 {reading.status ? (
-                  <strong className="crew-reading-status">{reading.status}</strong>
+                  <strong className="crew-reading-status">{t(reading.status)}</strong>
                 ) : (
                   <>
-                    <strong>{reading.value}</strong>
-                    <span> {reading.unit}</span>
+                    <strong>{t(reading.value)}</strong>
+                    <span> {t(reading.unit)}</span>
                   </>
                 )}
               </div>
               <p className="crew-hologram-detail">
-                {reading.timestamp
-                  ? `${reading.status ? 'Última lectura disponible' : 'Última lectura'} · ${reading.timestamp}`
-                  : 'Sin lecturas previas'}
-                {' · Datos simulados'}
+                {t(
+                  reading.timestamp
+                    ? `${reading.status ? 'Última lectura disponible' : 'Última lectura'} · ${reading.timestamp}`
+                    : 'Sin lecturas previas',
+                )}
+                {t(' · Datos simulados')}
               </p>
               <p>
-                <strong>Actividad de la misión</strong> · {data.activity} · {data.context}
+                <strong>{t('Actividad de la misión')}</strong> · {t(data.activity)} ·{' '}
+                {t(data.context)}
               </p>
             </>
           )}
           {data.signalAction && (
             <p className="crew-hologram-signal">
               <Icon name="alert" size={15} />
-              {data.signalAction}
+              {t(data.signalAction)}
             </p>
           )}
 
           {recordPreview && (
             <div className="crew-hologram-record">
               <p className="crew-hologram-detail">
-                {data.recordKind === 'vision' ? 'Última observación visual' : 'Última sesión'}
+                {t(data.recordKind === 'vision' ? 'Última observación visual' : 'Última sesión')}
               </p>
               {entry ? (
                 <>
                   <strong>
-                    {entry.activity ? `${entry.activity} · ${entry.duration}` : entry.state}
+                    {t(entry.activity ? `${entry.activity} · ${entry.duration}` : entry.state)}
                   </strong>
-                  <p className="crew-hologram-detail">{entry.date}</p>
-                  {entry.visionActivity && <p>{entry.visionActivity}</p>}
+                  <p className="crew-hologram-detail">{t(entry.date)}</p>
+                  {entry.visionActivity && <p>{t(entry.visionActivity)}</p>}
                   {entry.note && <p className="crew-record-note">{entry.note}</p>}
                 </>
               ) : (
-                <strong>{recordPreview.message}</strong>
+                <strong>{t(recordPreview.message)}</strong>
               )}
             </div>
           )}
@@ -138,7 +143,7 @@ export function CrewHologram({
                 onClick={onToggleTrend}
               >
                 <Icon name="chart" size={15} />
-                {trendOpen ? 'Ocultar tendencia' : 'Ver tendencia'}
+                {t(trendOpen ? 'Ocultar tendencia' : 'Ver tendencia')}
               </button>
               <div id={trendId}>
                 {trendOpen && (
@@ -150,7 +155,7 @@ export function CrewHologram({
                       onSelectSample={onSelectTimelineSample}
                     />
                     <button type="button" className="text-button" onClick={onOpenTimeline}>
-                      Ver contexto en la línea de tiempo
+                      {t('Ver contexto en la línea de tiempo')}
                     </button>
                   </>
                 )}
@@ -159,25 +164,25 @@ export function CrewHologram({
           ) : (
             <button className="button primary" type="button" onClick={onOpenEntry}>
               <Icon name="clipboard" size={15} />
-              {data.entryAction}
+              {t(data.entryAction)}
             </button>
           )}
 
           {reading && (
             <button className="text-button" type="button" onClick={onOpenModule}>
               <Icon name="rocket" size={15} />
-              Ver módulo de la tripulación
+              {t('Ver módulo de la tripulación')}
             </button>
           )}
           {onAskTumi && (
             <button className="text-button" type="button" onClick={onAskTumi}>
-              Preguntar a Tumi por esta lectura
+              {t('Preguntar a Nami por esta lectura')}
             </button>
           )}
           {trend && (
             <button className="text-button" type="button" onClick={onOpenEntry}>
               <Icon name="clipboard" size={15} />
-              {data.entryAction}
+              {t(data.entryAction)}
             </button>
           )}
           <CrewHologramDetails

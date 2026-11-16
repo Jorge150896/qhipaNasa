@@ -1,4 +1,5 @@
 'use client';
+import { LocalizedText, useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState, useTransition } from 'react';
@@ -17,18 +18,23 @@ import '../launch-sites/launch-sites.css';
 const LaunchSitesScreen = dynamic(
   () => import('../launch-sites/LaunchSitesScreen').then((module) => module.LaunchSitesScreen),
   {
-    loading: () => <p role="status">Preparando sitios de lanzamiento…</p>,
+    loading: () => (
+      <p role="status">
+        <LocalizedText>Preparando sitios de lanzamiento…</LocalizedText>
+      </p>
+    ),
   },
 );
 const SpaceMapScene = dynamic(() => import('./components/SpaceMapScene'), {
   ssr: false,
   loading: () => (
     <div className="fleet-scene fleet-loading" role="status">
-      Preparando mapa espacial…
+      <LocalizedText>Preparando mapa espacial…</LocalizedText>
     </div>
   ),
 });
 export function SpaceExplorerScreen() {
+  const t = useTranslation();
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
   const panel =
@@ -102,14 +108,14 @@ export function SpaceExplorerScreen() {
           />
         ) : model.loading || navigationPending ? (
           <TumiLoader
-            title="Conectando la tripulación con su mundo…"
-            description="Cargando escenarios sintéticos y registros locales."
+            title={t('Conectando la tripulación con su mundo…')}
+            description={t('Cargando escenarios sintéticos y registros locales.')}
           />
         ) : model.error || !model.data || !model.selected ? (
           <div className="loading-state" role="alert">
-            <h1>No pudimos cargar el mapa</h1>
+            <h1>{t('No pudimos cargar el mapa')}</h1>
             <button className="button primary" onClick={model.refresh}>
-              Reintentar
+              {t('Reintentar')}
             </button>
           </div>
         ) : (

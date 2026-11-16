@@ -14,7 +14,7 @@ paths:
     servers: [{ url: 'http://127.0.0.1:8080' }]
     post:
       operationId: askTumi
-      summary: Generar una respuesta de texto para el chat flotante de Tumi
+      summary: Generar una respuesta de texto para el chat flotante de Nami
       description: >-
         Disponible en desarrollo local o desde el origen HTTPS autorizado del sitio público.
         Envía el mensaje y el contexto acotado de la vista a OpenAI desde el servidor.
@@ -34,6 +34,7 @@ paths:
                   properties:
                     view: { type: string, minLength: 1, maxLength: 100 }
                     details: { type: string, maxLength: 6000 }
+                    language: { type: string, enum: [en, es], default: es }
       responses:
         '200':
           description: Respuesta del modelo
@@ -48,7 +49,7 @@ paths:
         '400': { description: Mensaje inválido }
         '403': { description: Solicitud fuera de la interfaz local o desde un origen no permitido }
         '429': { description: Se alcanzó el límite diario de consultas de la demo pública }
-        '503': { description: Tumi no está configurado o el proveedor no pudo responder }
+        '503': { description: Nami no está configurado o el proveedor no pudo responder }
   /api/v1/radiation/instruments:
     servers: [{ url: 'http://localhost:8080' }]
     get:

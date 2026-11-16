@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { publicAsset } from '@/presentation/shared/publicAsset';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF, useTexture } from '@react-three/drei';
@@ -84,7 +85,8 @@ export function AvatarPreview({
   selection: AvatarSelection;
   parts: (AvatarPart | undefined)[];
 }) {
-  const fallback = <p className="avatar-preview-message">Vista 3D no disponible.</p>;
+  const t = useTranslation();
+  const fallback = <p className="avatar-preview-message">{t('Vista 3D no disponible.')}</p>;
   return (
     <PreviewBoundary fallback={fallback}>
       <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0.1, 4.2], fov: 36 }} fallback={fallback}>

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import type { MetricData, SensorKey } from '../../features/mission/types';
 import { Icon, type IconName } from '@/ui/Icon';
 const icons: Record<SensorKey, IconName> = {
@@ -19,11 +20,12 @@ export function MetricCards({
   onSelect(id: SensorKey): void;
   disclosureId?: string;
 }) {
+  const t = useTranslation();
   return (
     <div
       className={labelsOnly ? 'crew-metric-picker' : 'metric-grid'}
       role={labelsOnly ? 'group' : undefined}
-      aria-label={labelsOnly ? 'Lecturas de la instantánea' : undefined}
+      aria-label={t(labelsOnly ? 'Lecturas de la instantánea' : undefined)}
     >
       {metrics.map((metric) => (
         <button
@@ -37,17 +39,17 @@ export function MetricCards({
         >
           <span className="metric-label">
             <Icon name={icons[metric.id]} />
-            {metric.shortLabel}
+            {t(metric.shortLabel)}
           </span>
           {!labelsOnly && (
             <>
               <span className="metric-number">
-                {metric.value}
-                <small>{metric.unit}</small>
+                {t(metric.value)}
+                <small>{t(metric.unit)}</small>
               </span>
               <span className="metric-quality">
                 <span className="status-dot" />
-                {metric.quality}
+                {t(metric.quality)}
               </span>
             </>
           )}

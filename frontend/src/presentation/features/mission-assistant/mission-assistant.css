@@ -5,7 +5,6 @@
   bottom: max(16px, env(safe-area-inset-bottom));
 }
 
-.assistant-launcher,
 .assistant-guide-marker button {
   display: flex;
   align-items: center;
@@ -18,51 +17,6 @@
   color: var(--text);
   font-weight: 700;
   box-shadow: var(--panel-shadow);
-}
-
-.assistant-robot {
-  position: relative;
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  width: 39px;
-  height: 33px;
-  border: 2px solid #ffd297;
-  border-radius: 50% 50% 35% 35% / 40% 40% 48% 48%;
-  background: linear-gradient(155deg, #fff1be, #e67e35 65%, #b54b27);
-  box-shadow: 0 0 0 3px #ff975c22;
-}
-
-.assistant-gpt-portrait {
-  display: inline-grid;
-  place-items: center;
-  flex: 0 0 auto;
-  width: 44px;
-}
-
-.assistant-gpt-portrait svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.assistant-robot-face {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  justify-content: center;
-  width: 27px;
-  height: 16px;
-  border: 1px solid #8c62b7;
-  border-radius: 8px;
-  background: #251833;
-}
-
-.assistant-robot-face i {
-  width: 4px;
-  height: 6px;
-  border-radius: 3px;
-  background: #dbbaff;
 }
 
 .assistant-chat {
@@ -100,7 +54,7 @@
 .assistant-header small,
 .assistant-voice-status {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .assistant-icon-button {
@@ -158,7 +112,7 @@
   padding: 4px 8px;
   background: var(--surface-raised);
   color: inherit;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .assistant-form {
@@ -180,7 +134,7 @@
 .assistant-form .button {
   min-height: 42px;
   padding-inline: 7px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .assistant-voice-status {
@@ -363,13 +317,6 @@
   color: var(--muted);
 }
 
-@media (max-width: 760px) {
-  .assistant-launcher-host .assistant-launcher {
-    min-height: 44px;
-    padding: 4px 9px 4px 5px;
-  }
-}
-
 .assistant-welcome-art {
   display: none;
 }
@@ -407,18 +354,10 @@
   background: radial-gradient(ellipse, #8e3bd863, transparent 68%);
 }
 
-:root[data-appearance='dark'] .assistant-welcome-art .tumi-head {
+:root[data-appearance='dark'] .assistant-welcome-art .tumi-portrait {
   width: 100%;
   height: 100%;
   filter: drop-shadow(0 6px 12px #7524bb8c);
-}
-
-:root[data-appearance='dark'] .assistant-welcome-art .tumi-mouth-calm {
-  display: none;
-}
-
-:root[data-appearance='dark'] .assistant-welcome-art .tumi-mouth-smile {
-  opacity: 1;
 }
 
 :root[data-appearance='dark'] .assistant-welcome .assistant-bubble {

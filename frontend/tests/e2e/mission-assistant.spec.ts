@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { openTumiChat } from './tumi-chat-helpers';
 
-test('Tumi presenta a Elena en lenguaje cotidiano y ofrece mirar cómo le ha ido', async ({
+test('Nami presenta a Elena en lenguaje cotidiano y ofrece mirar cómo le ha ido', async ({
   page,
 }) => {
   await page.goto('/mission/journal');
   await openTumiChat(page);
-  const chat = page.getByRole('region', { name: 'Tumi', exact: true });
+  const chat = page.getByRole('region', { name: 'Nami', exact: true });
   const answer = chat.getByRole('log').locator('[data-role="assistant"]').last();
 
   await chat.getByRole('textbox').fill('Háblame de Elena.');
@@ -27,13 +27,13 @@ test('Tumi presenta a Elena en lenguaje cotidiano y ofrece mirar cómo le ha ido
   await expect(answer).toContainText('mirar su chequeo');
 });
 
-test('Tumi explica la lectura seleccionada y conserva el chat entre secciones', async ({
+test('Nami explica la lectura seleccionada y conserva el chat entre secciones', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 900 });
   await page.goto('/mission/crew');
   await openTumiChat(page);
-  const chat = page.getByRole('region', { name: 'Tumi' });
+  const chat = page.getByRole('region', { name: 'Nami' });
   const log = chat.getByRole('log');
   await chat.getByRole('button', { name: '¿Qué significa mi SpO₂?' }).click();
   await expect(log).toContainText('Saturación periférica');
@@ -44,8 +44,8 @@ test('Tumi explica la lectura seleccionada y conserva el chat entre secciones', 
     'data-assistant-highlight',
     'true',
   );
-  await expect(page.getByRole('button', { name: 'Volver al chat de Tumi' })).toBeFocused();
-  await page.getByRole('button', { name: 'Volver al chat de Tumi' }).click();
+  await expect(page.getByRole('button', { name: 'Volver al chat de Nami' })).toBeFocused();
+  await page.getByRole('button', { name: 'Volver al chat de Nami' }).click();
   await expect(log).toContainText('98 %');
   await chat.getByRole('button', { name: '¿Dónde hago mi chequeo?' }).click();
   await chat.getByRole('button', { name: 'Señalar en el panel' }).last().click();
@@ -58,7 +58,7 @@ test('Tumi explica la lectura seleccionada y conserva el chat entre secciones', 
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
-test('Tumi permite revisar la transcripción local antes de enviarla', async ({ page }) => {
+test('Nami permite revisar la transcripción local antes de enviarla', async ({ page }) => {
   await page.addInitScript(() => {
     Object.defineProperty(window, 'SpeechRecognition', {
       configurable: true,
@@ -79,7 +79,7 @@ test('Tumi permite revisar la transcripción local antes de enviarla', async ({ 
   });
   await page.goto('/mission/crew');
   await openTumiChat(page);
-  const chat = page.getByRole('region', { name: 'Tumi' });
+  const chat = page.getByRole('region', { name: 'Nami' });
   await chat.getByRole('button', { name: 'Dictar' }).click();
   await expect(chat.getByRole('textbox')).toHaveValue('¿Qué significa el pulso?');
   await expect(chat.getByRole('log')).not.toContainText('72 lpm');
@@ -92,7 +92,7 @@ test('Tumi permite revisar la transcripción local antes de enviarla', async ({ 
   await expect(followUp).toContainText('A las 14:32 UTC: Hábitat de descanso');
 });
 
-test('Tumi cambia entre autónomo y guía con ayuda por puntero y teclado', async ({ page }) => {
+test('Nami cambia entre autónomo y guía con ayuda por puntero y teclado', async ({ page }) => {
   await page.goto('/mission/crew');
   await openTumiChat(page);
   await expect(page.getByRole('button', { name: 'Autónomo', exact: true })).toHaveAttribute(
@@ -126,7 +126,7 @@ test('Tumi cambia entre autónomo y guía con ayuda por puntero y teclado', asyn
   await expect(temperature).not.toHaveAttribute('data-assistant-coach');
 });
 
-test('en pantalla táctil Tumi explica el primer toque y permite usar el control con el segundo', async ({
+test('en pantalla táctil Nami explica el primer toque y permite usar el control con el segundo', async ({
   browser,
 }) => {
   const page = await browser.newPage({ hasTouch: true, viewport: { width: 390, height: 900 } });
@@ -134,7 +134,7 @@ test('en pantalla táctil Tumi explica el primer toque y permite usar el control
     await page.goto('/mission/crew');
     await openTumiChat(page);
     await page.getByRole('button', { name: 'Guía local' }).click();
-    const floating = page.getByRole('button', { name: 'Abrir asistente Tumi' });
+    const floating = page.getByRole('button', { name: 'Abrir asistente Nami' });
     await expect(floating).toBeVisible();
     const tabBar = page.getByRole('navigation', { name: 'Navegación principal' });
     await expect
@@ -158,14 +158,14 @@ test('en pantalla táctil Tumi explica el primer toque y permite usar el control
   }
 });
 
-test('Tumi abre una lectura desde la guía y explica el cambio con sus horas', async ({ page }) => {
+test('Nami abre una lectura desde la guía y explica el cambio con sus horas', async ({ page }) => {
   await page.goto('/mission/crew');
   await page.getByRole('button', { name: /Mateo Silva/ }).click();
   await openTumiChat(page);
   await page.getByRole('button', { name: 'Guía local' }).click();
   await page.locator('#assistant-target-metric-heartRate').hover();
   await page.getByRole('button', { name: 'Preguntar por este dato' }).click();
-  const chat = page.getByRole('region', { name: 'Tumi' });
+  const chat = page.getByRole('region', { name: 'Nami' });
   const context = chat.locator('.assistant-context');
   await expect(context).toContainText('Mateo Silva');
   await expect(context).toContainText('14:32 UTC');
@@ -179,7 +179,7 @@ test('Tumi abre una lectura desde la guía y explica el cambio con sus horas', a
   await expect(context).toHaveCount(0);
 });
 
-test('Tumi abre la tarjeta en modo táctil y respeta una lectura ausente', async ({ browser }) => {
+test('Nami abre la tarjeta en modo táctil y respeta una lectura ausente', async ({ browser }) => {
   const page = await browser.newPage({ hasTouch: true, viewport: { width: 390, height: 900 } });
   try {
     await page.goto('/missions/selene/crew');
@@ -187,7 +187,7 @@ test('Tumi abre la tarjeta en modo táctil y respeta una lectura ausente', async
     await page.getByRole('button', { name: 'Guía local' }).click();
     await page.locator('#assistant-target-metric-oxygen').tap();
     await page.getByRole('button', { name: 'Preguntar por este dato' }).tap();
-    const chat = page.getByRole('region', { name: 'Tumi' });
+    const chat = page.getByRole('region', { name: 'Nami' });
     await chat.getByRole('button', { name: '¿Qué cambió?' }).tap();
     const log = chat.getByRole('log');
     await expect(log).toContainText('Sin lectura vigente');
@@ -198,31 +198,31 @@ test('Tumi abre la tarjeta en modo táctil y respeta una lectura ausente', async
   }
 });
 
-test('la ficha de respiración abre Tumi con su lectura y no hay botón duplicado en la cabecera', async ({
+test('la ficha de respiración abre Nami con su lectura y no hay botón duplicado en la cabecera', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/mission/crew');
   await expect(
-    page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Tumi' }),
+    page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Nami' }),
   ).toHaveCount(0);
   await page
     .getByRole('group', { name: 'Lecturas de la instantánea' })
     .getByRole('button', { name: 'Respiración', exact: true })
     .click();
   const reading = page.getByRole('complementary', { name: 'Frecuencia respiratoria' });
-  await reading.getByRole('button', { name: 'Preguntar a Tumi por esta lectura' }).click();
-  const chat = page.getByRole('region', { name: 'Tumi' });
+  await reading.getByRole('button', { name: 'Preguntar a Nami por esta lectura' }).click();
+  const chat = page.getByRole('region', { name: 'Nami' });
   await expect(chat.getByLabel('Dato en conversación')).toContainText('Frecuencia respiratoria');
   await expect(chat.getByLabel('Dato en conversación')).toContainText('Elena Torres');
   await expect(chat.getByLabel('Dato en conversación')).toContainText('14:32 UTC');
   await chat.getByRole('button', { name: 'Ocultar chat' }).click();
   await expect(
-    page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true }),
+    page.getByRole('button', { name: 'Abrir asistente Nami', exact: true }),
   ).toBeVisible();
 });
 
-test('Tumi explica la muestra y el par elegidos sin inventar ubicación', async ({ page }) => {
+test('Nami explica la muestra y el par elegidos sin inventar ubicación', async ({ page }) => {
   await page.goto('/mission/crew');
   await page
     .getByRole('navigation', { name: 'Secciones de Tripulación' })
@@ -232,8 +232,8 @@ test('Tumi explica la muestra y el par elegidos sin inventar ubicación', async 
   await telemetry.getByRole('button', { name: 'Respiración', exact: true }).click();
   await telemetry.getByRole('button', { name: '14:20 UTC: 15 rpm', exact: true }).click();
   const timeline = page.getByRole('region', { name: 'Línea de tiempo', exact: true });
-  await timeline.getByRole('button', { name: 'Preguntar a Tumi por esta muestra' }).click();
-  const chat = page.getByRole('region', { name: 'Tumi' });
+  await timeline.getByRole('button', { name: 'Preguntar a Nami por esta muestra' }).click();
+  const chat = page.getByRole('region', { name: 'Nami' });
   const log = chat.getByRole('log');
   await expect(chat.getByLabel('Dato en conversación')).toContainText('14:20 UTC');
   await chat.getByRole('button', { name: '¿Qué significa este dato?' }).click();
@@ -251,7 +251,7 @@ test('Tumi explica la muestra y el par elegidos sin inventar ubicación', async 
   await timeline
     .getByRole('combobox', { name: 'Segunda muestra' })
     .selectOption('2026-11-08T14:32:00Z');
-  await timeline.getByRole('button', { name: 'Preguntar a Tumi por la comparación' }).click();
+  await timeline.getByRole('button', { name: 'Preguntar a Nami por la comparación' }).click();
   await chat.getByRole('textbox').fill('¿Qué cambió y dónde estaba?');
   await chat.getByRole('button', { name: 'Enviar' }).click();
   const answer = log.locator('[data-role="assistant"]').last();
@@ -262,13 +262,13 @@ test('Tumi explica la muestra y el par elegidos sin inventar ubicación', async 
   await expect(answer).toContainText('A las 14:32 UTC: Hábitat de descanso');
 });
 
-test('Tumi vincula la lectura con su entorno y explica dónde guardar un autorregistro', async ({
+test('Nami vincula la lectura con su entorno y explica dónde guardar un autorregistro', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/mission/crew');
   await openTumiChat(page);
-  const chat = page.getByRole('region', { name: 'Tumi' });
+  const chat = page.getByRole('region', { name: 'Nami' });
   const answer = chat.getByRole('log').locator('[data-role="assistant"]').last();
   const relationship = chat.getByRole('button', {
     name: '¿Cómo se relaciona la lectura con el entorno?',

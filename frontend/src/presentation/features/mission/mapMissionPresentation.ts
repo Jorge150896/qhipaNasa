@@ -1,21 +1,25 @@
+import type { AppLanguage } from '@/domain/assistant/AppLanguage';
 import { createDailyCheckAttachment } from '@/domain/mission/dailyCheckAttachment';
 import type { HabitatId } from '@/domain/explorer/models';
 import { mapMeasurementTrace } from './mapMeasurementTrace';
 import type { CrewJournal, MissionSnapshot, Reading } from '@/domain/mission/models';
 import { metricLabels } from './constants';
 import type { MetricData, MissionData, SensorKey } from './types';
-const number = (value: number) =>
-  new Intl.NumberFormat('es-PE', { maximumFractionDigits: 1 }).format(value);
+const formatNumber = (locale: string) =>
+  new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format;
 const time = (iso: string) =>
   new Intl.DateTimeFormat('es-PE', {
     hour: '2-digit',
     minute: '2-digit',
-    hour12: false,
+    hourCycle: 'h23',
     timeZone: 'UTC',
   }).format(new Date(iso));
-const date = (iso: string) =>
-  new Intl.DateTimeFormat('es-PE', { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(iso));
-function mapMetric(reading: Reading, person: { id: string; name: string }): MetricData {
+function mapMetric(
+  reading: Reading,
+  person: { id: string; name: string },
+  language: AppLanguage,
+): MetricData {
+  const number = formatNumber(language === 'en' ? 'en-US' : 'es-PE');
   const last = reading.samples.at(-1);
   const valid = reading.samples.filter(
     (sample): sample is { at: string; value: number } => sample.value !== null,
@@ -69,7 +73,9 @@ function mapMetric(reading: Reading, person: { id: string; name: string }): Metr
       numericValue: sample.value,
       value: sample.value === null ? 'Sin muestra' : `${number(sample.value)} ${reading.unit}`,
       missing: sample.value === null,
-      trace: sample.measurement ? mapMeasurementTrace(sample.measurement, person) : undefined,
+      trace: sample.measurement
+        ? mapMeasurementTrace(sample.measurement, person, language)
+        : undefined,
     })),
     chart: {
       paths,
@@ -97,7 +103,12 @@ export function mapMissionPresentation(
   zoneId: string,
   today: string,
   habitatId: HabitatId = 'odyssey',
+  language: AppLanguage = 'es',
 ): MissionData {
+  const locale = language === 'en' ? 'en-US' : 'es-PE';
+  const number = formatNumber(locale);
+  const formatDate = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' });
+  const date = (iso: string) => formatDate.format(new Date(iso));
   const crew = snapshot.crew.map((person) => ({
     id: person.id,
     name: person.name,
@@ -107,7 +118,7 @@ export function mapMissionPresentation(
     zoneId: person.zoneId,
     location: snapshot.zones.find((zone) => zone.id === person.zoneId)?.name ?? 'Sin ubicación',
     sleep: `${number(person.sleepHours)} h`,
-    metrics: person.readings.map((reading) => mapMetric(reading, person)),
+    metrics: person.readings.map((reading) => mapMetric(reading, person, language)),
   }));
   const selected = crew.find((person) => person.id === crewId) ?? crew[0];
   const metric = selected.metrics.find((item) => item.id === metricId) ?? selected.metrics[0];
@@ -151,7 +162,7 @@ export function mapMissionPresentation(
     exerciseDone: item.exerciseDone,
     healthReport: item.healthReport,
   }));
-  const todayCheck = journal.checks.find(
+  const todayCheck = journal.checks.some(
     (item) => item.crewId === selected.id && item.recordedAt.slice(0, 10) === today,
   );
   return {
@@ -169,21 +180,8 @@ export function mapMissionPresentation(
     observations,
     pendingCount: String(observations.filter((item) => !item.reviewed).length),
     checks,
-    todayCheck: Boolean(todayCheck),
+    todayCheck,
     checkAttachment: createDailyCheckAttachment(snapshot, selected.id, habitatId),
-    dailyCheckDraft: todayCheck
-      ? {
-          sleep: String(todayCheck.sleepHours),
-          fatigue: todayCheck.fatigue === undefined ? '' : String(todayCheck.fatigue),
-          mood: todayCheck.mood,
-          note: todayCheck.note,
-          context: todayCheck.context,
-          discomfortRegion: todayCheck.discomfortRegion,
-          exerciseDone: todayCheck.exerciseDone,
-          healthReport: todayCheck.healthReport,
-          attachment: todayCheck.attachment,
-        }
-      : undefined,
     analysis: {
       summary:
         snapshot.scenario === 'sleep-change'

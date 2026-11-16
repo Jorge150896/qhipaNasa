@@ -17,6 +17,7 @@ export function CursorAssistantScreen({
   onChangeMode,
   suspended = false,
   getContext,
+  changeLanguageFromQuestion,
   viewIntroduction,
   viewPath,
   getLocalReply,
@@ -27,6 +28,7 @@ export function CursorAssistantScreen({
   onChangeMode(following: boolean): void;
   suspended?: boolean;
   getContext(): TumiScreenContext;
+  changeLanguageFromQuestion(question: string): string | undefined;
   viewIntroduction?: string;
   viewPath: string;
   getLocalReply?(question: string): string | undefined;
@@ -39,6 +41,7 @@ export function CursorAssistantScreen({
     getContext,
     getLocalReply,
     tumiUsesOpenAi ? localTumiConversation : undefined,
+    changeLanguageFromQuestion,
   );
   useTumiMotion(model.actor, {
     stopped: model.data.paused || suspended || following,

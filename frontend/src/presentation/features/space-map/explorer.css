@@ -53,11 +53,11 @@
   font-weight: 500;
 }
 .fleet-stats div span {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
 }
 .fleet-stats > p {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1px;
   margin: 0 0 0 auto;
   line-height: 2;
@@ -92,7 +92,7 @@
   margin: 0;
 }
 .fleet-map-heading .mono {
-  font-size: 9px;
+  font-size: 12px;
   color: var(--muted);
   letter-spacing: 1px;
 }
@@ -124,7 +124,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   background: var(--field);
   border: 1px solid var(--line);
@@ -152,14 +152,14 @@
 }
 .fleet-map-label > span {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
 }
 .fleet-map-label small {
   display: flex;
   gap: 20px;
   justify-content: space-between;
   color: var(--accent);
-  font-size: 9px;
+  font-size: 12px;
   margin-top: 4px;
 }
 .fleet-map-label small span {
@@ -171,7 +171,7 @@
   gap: 15px;
   justify-content: space-between;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   border-top: 1px solid var(--line);
 }
 .fleet-map-caption > span:first-child {
@@ -199,7 +199,7 @@
   background: var(--field);
   padding: 12px 9px;
   border-radius: 7px;
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
   text-align: left;
 }
@@ -210,7 +210,7 @@
 }
 .fleet-destinations button small {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   color: var(--muted);
   margin-top: 5px;
 }
@@ -245,7 +245,7 @@
   border-radius: var(--radius);
 }
 .fleet-detail > .eyebrow {
-  font-size: 9px;
+  font-size: 12px;
   margin: 0 0 24px;
 }
 .fleet-detail-title {
@@ -255,7 +255,7 @@
   gap: 10px;
 }
 .fleet-category {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--accent);
 }
 .fleet-detail-title h2 {
@@ -268,7 +268,7 @@
   color: var(--accent);
 }
 .fleet-subtitle {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
   margin: 8px 0 22px;
 }
@@ -288,7 +288,7 @@
   font-weight: 500;
 }
 .fleet-habitat-name > span {
-  font-size: 9px;
+  font-size: 12px;
   padding: 5px 7px;
   background: var(--field);
   border-radius: 4px;
@@ -296,7 +296,7 @@
   white-space: nowrap;
 }
 .fleet-habitat > p {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.65;
   color: var(--muted);
 }
@@ -317,7 +317,7 @@
 }
 .fleet-status-grid span {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   color: var(--muted);
   line-height: 1.5;
   margin-top: 5px;
@@ -327,11 +327,11 @@
   align-items: center;
   gap: 7px;
   color: var(--amber);
-  font-size: 10px;
+  font-size: 12px;
 }
 .fleet-habitat h4 {
   font-weight: 500;
-  font-size: 11px;
+  font-size: 12px;
   margin: 24px 0 8px;
 }
 .fleet-roster {
@@ -350,23 +350,23 @@
   width: 32px;
   height: 32px;
   flex-shrink: 0;
-  font-size: 10px;
+  font-size: 12px;
 }
 .fleet-roster strong {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
 }
 .fleet-roster div > span {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   color: var(--muted);
   margin-top: 4px;
 }
 .fleet-roster small {
   display: block;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
   margin-top: 3px;
 }
 .fleet-check {
@@ -378,13 +378,13 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 12px;
 }
 .fleet-timestamp {
   display: flex;
   gap: 5px;
   align-items: center;
-  font-size: 9px !important;
+  font-size: 12px !important;
   margin: 12px 0 0;
 }
 .fleet-warning {
@@ -463,19 +463,19 @@
     font-size: 24px;
   }
   .fleet-stats div span {
-    font-size: 10px;
+    font-size: 12px;
   }
   .fleet-stats > p {
-    font-size: 9px;
+    font-size: 12px;
   }
   .fleet-map-heading {
     padding: 16px 12px;
   }
   .fleet-map-heading .mono {
-    font-size: 7px;
+    font-size: 12px;
   }
   .fleet-map-heading .eyebrow {
-    font-size: 8px;
+    font-size: 12px;
   }
   .fleet-scene {
     height: 350px;
@@ -493,14 +493,14 @@
     padding: 5px 6px;
   }
   .fleet-map-label > span {
-    font-size: 9px;
+    font-size: 12px;
   }
   .fleet-map-label small {
-    font-size: 8px;
+    font-size: 12px;
     gap: 8px;
   }
   .fleet-reset {
-    font-size: 8px;
+    font-size: 12px;
     top: 0;
   }
 }
@@ -516,11 +516,11 @@
   border-radius: 6px;
   background: var(--surface-raised);
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
 }
 .fleet-transit-controls .fleet-reset {
   position: static;
-  font-size: 9px;
+  font-size: 12px;
 }
 .fleet-transit-controls button:disabled {
   cursor: default;
@@ -530,11 +530,11 @@
   .fleet-transit-controls {
     right: 12px;
     justify-content: space-between;
-    font-size: 8px;
+    font-size: 12px;
     gap: 5px;
   }
   .fleet-transit-controls .fleet-reset {
-    font-size: 8px;
+    font-size: 12px;
     padding: 6px;
   }
 }
@@ -568,7 +568,7 @@
   background: var(--surface-raised);
   border-radius: 5px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
   padding: 7px 9px;
   cursor: pointer;
 }
@@ -579,7 +579,7 @@
 }
 .fleet-reference-legend > span {
   display: block;
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 0.7px;
   color: var(--muted);
   margin-bottom: 9px;
@@ -594,7 +594,7 @@
   align-items: center;
   gap: 6px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
 }
 .fleet-reference-legend i {
   display: block;
@@ -608,7 +608,7 @@
     left: 10px;
     max-width: 150px;
     padding: 6px;
-    font-size: 7px;
+    font-size: 12px;
   }
   .fleet-reference-legend {
     padding: 12px;
@@ -629,12 +629,12 @@
   border-radius: 6px;
 }
 .fleet-view-mode strong {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--accent);
 }
 .fleet-view-mode span {
-  font-size: 8px;
+  font-size: 12px;
   color: var(--accent);
 }
 .fleet-zoom-toolbar {
@@ -656,7 +656,7 @@
   border: 1px solid var(--line);
   border-radius: 5px;
   color: var(--accent);
-  font-size: 10px;
+  font-size: 12px;
   padding: 7px 9px;
   cursor: pointer;
 }
@@ -673,13 +673,13 @@
   grid-column: 1 / -1;
   margin: 0;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.5;
 }
 .fleet-solar-label {
   display: block;
   color: #ffe4a0;
-  font-size: 10px;
+  font-size: 12px;
   background: #211b12bb;
   border: 1px solid #82653866;
   border-radius: 5px;
@@ -690,7 +690,7 @@
   display: block;
   color: #beb6c8;
   text-align: center;
-  font-size: 9px;
+  font-size: 12px;
   white-space: nowrap;
   padding: 3px 5px;
   background: #271735bc;
@@ -699,14 +699,14 @@
 .fleet-planet-reference-label small {
   display: block;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 12px;
   padding-top: 3px;
 }
 .fleet-focus-label {
   border: 1px solid #db8757;
   background: #38214ce8;
   color: #f3d7c6;
-  font-size: 9px;
+  font-size: 12px;
   border-radius: 5px;
   padding: 5px 8px;
   white-space: nowrap;
@@ -743,10 +743,10 @@
     padding: 6px;
   }
   .fleet-view-mode strong {
-    font-size: 8px;
+    font-size: 12px;
   }
   .fleet-view-mode span {
-    font-size: 7px;
+    font-size: 12px;
   }
 }
 .fleet-solar-label::before {
@@ -771,7 +771,7 @@
 .fleet-detail-presets > span {
   margin-right: auto;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 .fleet-detail-presets button {
   border: 1px solid var(--line);
@@ -780,7 +780,7 @@
   background: var(--surface-raised);
   color: var(--text);
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
 }
 .fleet-detail-presets button[aria-pressed='true'] {
   background: var(--selection-soft);
@@ -805,7 +805,7 @@
 }
 .fleet-expand-map {
   flex-shrink: 0;
-  font-size: 11px;
+  font-size: 12px;
   min-height: 44px;
 }
 .fleet-destination-hint {
@@ -859,7 +859,7 @@
 .fleet-zoom-toolbar button,
 .fleet-reset {
   min-height: 44px;
-  font-size: 11px;
+  font-size: 12px;
 }
 .fleet-detail-presets button,
 .fleet-zoom-toolbar button {
@@ -873,7 +873,7 @@
 .fleet-map-caption {
   background: var(--field);
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.6;
 }
 .fleet-map button:focus-visible,
@@ -925,7 +925,7 @@
     margin: 0;
     padding: 8px 12px 0;
     color: var(--muted);
-    font-size: 11px;
+    font-size: 12px;
     background: var(--field);
   }
   .fleet-destinations {

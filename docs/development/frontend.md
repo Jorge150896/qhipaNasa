@@ -1,14 +1,14 @@
 # Desarrollo del frontend
 
-Monitoreo diario reúne las respuestas, las lecturas corporales y las condiciones del hábitat en un solo formulario. Los chequeos guardados y [las sesiones anteriores](monitoring.md) se despliegan en Tripulación → Historial → Actividad guardada. El chat se abre desde el Tumi flotante.
+Monitoreo diario reúne las respuestas, las lecturas corporales y las condiciones del hábitat en un solo formulario. Los chequeos guardados y [las sesiones anteriores](monitoring.md) se despliegan en Tripulación → Historial → Actividad guardada. El chat se abre desde el Nami flotante.
 
-En el chequeo guiado, Tumi reacciona a la respuesta al presentar la siguiente pregunta. Tras guardar, muestra un resumen que se puede volver a escuchar.
+En el chequeo guiado, Nami reacciona a la respuesta al presentar la siguiente pregunta. Al elegir «Hacerlo con Nami», el dictado local espera a que Nami termine de leer cada pregunta y abre el micrófono. La persona puede elegir español o inglés y pausar la escucha. Si el navegador necesita preparar un paquete, el flujo permite reintentar el micrófono al terminar. Una onda y la transcripción provisional muestran cuándo el micrófono captura audio y qué está oyendo Nami. «Terminar de hablar» cierra la captura y permite procesar el audio recibido. Una opción o cantidad reconocida con claridad se aplica y avanza a la siguiente pregunta. El registro completo mantiene su revisión antes de guardarse. Si el navegador devuelve solo una transcripción provisional, queda disponible para corregirla. Si no entrega texto, la persona puede escribir la respuesta o usar el dictado de su teclado. Tras guardar, Nami muestra un resumen que se puede volver a escuchar.
 
 En Tripulación → Ahora, el visor corporal ajusta el encuadre al tamaño disponible. Los cuatro indicadores aparecen a la izquierda y la ficha seleccionada a la derecha en escritorio. En pantallas estrechas, los indicadores y la ficha aparecen debajo del visor. La primera lectura se abre al entrar y los botones permiten cambiar de lectura. El visor permite girar el astronauta y la rueda desplaza la página.
 
-## Acompañante animado Tumi
+## Acompañante animado Nami
 
-[La guía de Tumi](tumi-ia.md) describe el acompañante flotante, sus expresiones y sus respuestas locales. `MissionAssistantScreen` monta una instancia en portada, explorador y misión. Al abrir el chat contextual, se suspende el acompañante. Ambos paneles comparten la apariencia de la app.
+[La guía de Nami](tumi-ia.md) describe el acompañante flotante, sus expresiones y sus respuestas locales. `MissionAssistantScreen` monta una instancia en el explorador y la misión. Al abrir el chat contextual, se suspende el acompañante. Ambos paneles comparten la apariencia de la app.
 
 ## Decisiones implementadas
 
@@ -39,7 +39,7 @@ La carga sigue `LoadMission -> MissionRepository -> SimulatedMissionRepository`.
 - Provider de misión: propietario de snapshot, escenario, persona, zona, indicador, diario y mensajes. Se monta una vez por flujo; salir de `/mission` lo desmonta.
 - Hook: ejecuta casos de uso, cancela/descarta cargas obsoletas al cambiar escenario o desmontar y muestra errores de lectura/escritura.
 - Screen: navegación y modo puramente visual (astronauta/nave). Tripulación alterna entre Astronauta y Nave, Base o Estación. Los accesos a un módulo abren este mismo visor.
-- Formulario: campos locales por persona. Cambiar de persona descarta un borrador sin guardar. Guardar actualiza un registro por persona/día UTC.
+- Formulario: cada entrada a Monitoreo diario empieza con campos vacíos. Cambiar de persona descarta un borrador sin guardar. Guardar actualiza un registro por persona/día UTC.
 - Diario: clave `astra.demo.journal.v1`, esquema versionado validado con Zod. Se conservan hasta 300 chequeos y 500 revisiones. Writer: adapter local; reader: casos de uso de diario; reset: ninguno automático. Un error o formato incompatible se informa, sin sobrescribirlo.
 - Recarga/URL directa: escenario y selecciones vuelven a sus defaults; chequeos y revisiones se recuperan del navegador. La fecha de mediciones permanece en el escenario; no se disfraza como tiempo real.
 
@@ -122,7 +122,7 @@ No se modifican rutas, contratos, registros, asignaciones de tripulación ni el 
 
 ### Salud por sistemas
 
-Tripulación ya no ofrece la pestaña ni monta el panel «Salud por sistemas». Se mantienen Ahora, Historial y Personalización, los puntos 3D y las lecturas HTML. Se retiraron los tres accesos corporales inferiores, la leyenda del visor y el pie de página solo en Tripulación. Los autorregistros se consultan en Historial y se añaden desde Monitoreo diario. `CrewHealthScreen` conserva la carga de registros para las fichas y la línea de tiempo, sin renderizar `CrewHealthView`. Las entradas antiguas de salud abren Ahora y `#crew-health-history` abre Historial; no se altera storage.
+Tripulación ya no ofrece la pestaña ni monta el panel «Salud por sistemas». Ahora e Historial se mantienen como accesos de Tripulación, junto con los puntos 3D y las lecturas HTML. Se retiraron los tres accesos corporales inferiores, la leyenda del visor y el pie de página solo en Tripulación. Los autorregistros se consultan en Historial y se añaden desde Monitoreo diario. `CrewHealthScreen` conserva la carga de registros para las fichas y la línea de tiempo, sin renderizar `CrewHealthView`. Las entradas antiguas de salud abren Ahora y `#crew-health-history` abre Historial; no se altera storage.
 
 `CrewHealthScreen` se monta en la sección de Tripulación, con tipos de presentación y dependencias propias. `useCrewHealthViewModel` administra carga, escritura, mensajes y reintento; el mapper filtra por persona/sistema y prepara la lectura conjunta. `CrewScreen` orquesta la selección visual y el desplazamiento desde los puntos 3D. El visor conserva su portal independiente. `MetricData.comparison` añade una comparación descriptiva con la primera muestra de su serie; las muestras ausentes no generan comparación actual.
 
@@ -142,7 +142,7 @@ Cambiar de sección desmonta su estado visual privado: modo de visor, sistema co
 
 ### Portada Qhipa Pacha
 
-La ruta raíz monta `landing/LandingScreen.tsx`, con `useLandingViewModel` y `components/LandingView.tsx`. Ofrece entrada al dashboard, mapa y tripulación. Las animaciones de marca, Tumi, estrellas, planeta cercano y reflejo del CTA viven en CSS aislado; el hook administra pausa y disponibilidad de movimiento según sistema/visibilidad. No hay nuevos adapters ni acceso a datos. El parallax de puntero se limita a ratón y se desactiva en pausa/movimiento reducido. Recursos, procedencia y detalles en el README de `landing/`.
+La ruta raíz monta `landing/LandingScreen.tsx`, con `useLandingViewModel` y `components/LandingView.tsx`. Ofrece entrada al dashboard, mapa y tripulación. Las animaciones de marca, Nami, estrellas, planeta cercano y reflejo del CTA viven en CSS aislado; el hook administra pausa y disponibilidad de movimiento según sistema/visibilidad. No hay nuevos adapters ni acceso a datos. El parallax de puntero se limita a ratón y se desactiva en pausa/movimiento reducido. Recursos, procedencia y detalles en el README de `landing/`.
 
 ### Tema del dashboard
 
@@ -152,7 +152,7 @@ La paleta de Qhipa Pacha y sus roles están en [visual-theme.md](visual-theme.md
 
 `presentation/shared/scene/SpaceBackdrop.tsx` representa el mismo cielo local de estrellas y nebulosas en el mapa general, astronauta, nave, estación y base. La textura se genera de forma determinista, sigue la posición de la cámara y se libera al desmontar. El mapa utiliza radio 12000 y el visor de misión radio 100 para respetar sus planos de recorte; las proporciones angulares del fondo se conservan. La esfera decorativa no participa en raycasting ni tapa modelos mediante escritura de profundidad. No cambia el portal HTML independiente, los controles ni los fallbacks.
 
-### Carga animada del Tumi
+### Carga animada del Nami
 
 `presentation/shared/loading/TumiLoader` representa carga de misión y mapa dentro del contenido; su variante fullscreen se reserva para iniciar misión desde la portada y la vista de revisión. `TumiLoadingAnimation` reproduce el MP4 local enviado por el usuario con sus giros originales (4,15 s), en bucle silencioso e inline. Pausa con el control de revisión o al ocultar la pestaña; movimiento reducido muestra su fotograma estático. El archivo original se conserva, pero Canvas elimina el fondo en cada fotograma y suaviza el contorno sin halos blancos. La misma máscara se aplica al poster. `TumiHead` permanece disponible para sus otros consumidores. `/loading-preview` permite revisar el bucle sin depender de una carga real.
 
@@ -161,7 +161,7 @@ La introducción mínima de tres segundos pertenece ahora al ViewModel de portad
 
 ### Monitoreo diario por actividad
 
-El chequeo ofrece «Llenar a mano» y «Hacerlo con Tumi». La guía muestra una pregunta a la vez y puede leerla con la voz del navegador. Las respuestas, mediciones opcionales y notas se comparten entre ambos modos durante la sesión. El flujo entra a la misma confirmación y guardado del chequeo manual. El resumen de Tumi aparece cuando termina el guardado.
+El chequeo ofrece «Llenar a mano» y «Hacerlo con Nami». La guía muestra una pregunta a la vez y puede leerla con la voz del navegador. Las respuestas, mediciones opcionales y notas se comparten entre ambos modos durante la sesión. El flujo entra a la misma confirmación y guardado del chequeo manual. El resumen de Nami aparece cuando termina el guardado.
 
 `DailyCheckScreen` conecta el estado local de los cuatro pasos con la acción de guardado de `useMission`. El caso de uso `RecordDailyCheck` valida los datos generales y los campos permitidos por actividad. El diario mantiene su clave y versión con `context` y `discomfortRegion` opcionales. Los campos vacíos se omiten y los ceros ingresados se conservan. Al recargar, el chequeo del día UTC se puede editar con sus valores guardados. La consola muestra la instantánea sintética del escenario, separada de las respuestas ingresadas.
 
@@ -175,7 +175,7 @@ El mapa permite inspeccionar Tierra, Luna, Marte y nave con controles HTML. El e
 
 ### Visor corporal y personalización
 
-Tripulación usa el astronauta con traje en el visor corporal de Ahora. La pestaña Personalización muestra el editor abierto con accesorios, herramientas, colores y fondo. Las lecturas HTML siguen disponibles si falla el modelo o WebGL. El portal de etiquetas permanece separado del Canvas.
+Tripulación usa el astronauta con traje en el visor corporal de Ahora. El enlace directo `#crew-avatar` abre el editor con accesorios, herramientas, colores y fondo. Las lecturas HTML siguen disponibles si falla el modelo o WebGL. El portal de etiquetas permanece separado del Canvas.
 
 Los modelos holográficos y sus licencias se conservan en `public/models/`. La atribución está en `public/models/ATTRIBUTION.md`.
 
@@ -188,5 +188,5 @@ Historial añade «Ver origen» por muestra, conservando la distribución y el t
 El backend Java ya ofrece catálogo y series de NASA RadLab. La web todavía no los consume; crear una feature/adapter ambiental separado del consumidor de signos vitales. Ejemplos, CORS, errores, zonas horarias y límites en [radlab-backend.md](radlab-backend.md). El contrato comparte `docs/contracts/openapi.yaml` y no requiere cambiar paleta o modelos.
 
 ### Limpieza visual de cabeceras
-Se retiran la hora/escenario y actividad/ubicación de la cabecera de Tripulación, la insignia «Archivo histórico» de Centros en Tierra y su pie de página. Las lecturas conservan su procedencia y fecha en las fichas e Historial. Tumi no tiene un botón independiente en la barra ni en la cabecera. El chat sigue accesible desde el personaje flotante y las fichas.
+Se retiran la hora/escenario y actividad/ubicación de la cabecera de Tripulación, la insignia «Archivo histórico» de Centros en Tierra y su pie de página. Las lecturas conservan su procedencia y fecha en las fichas e Historial. Nami no tiene un botón independiente en la barra ni en la cabecera. El chat sigue accesible desde el personaje flotante y las fichas.
 

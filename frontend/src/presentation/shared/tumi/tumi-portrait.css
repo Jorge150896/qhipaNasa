@@ -1,0 +1,261 @@
+.tumi-portrait {
+  --tumi-gesture-duration: 3.6s;
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: #9bf7ff;
+}
+
+.tumi-portrait[data-tumi-emotion='error'] {
+  color: #ff979e;
+}
+
+.tumi-portrait [class^='tumi-portrait-'] {
+  transform-origin: 160px 194px;
+}
+
+.tumi-portrait-blink,
+.tumi-portrait-laugh,
+.tumi-portrait-delight,
+.tumi-portrait-sparkles,
+.tumi-portrait-underside {
+  opacity: 0;
+}
+
+.tumi-portrait[data-tumi-motion='subtle'] .tumi-portrait-idle[data-blinks='true'] {
+  animation: tumi-portrait-open-eyes 6.8s linear infinite;
+}
+
+.tumi-portrait[data-tumi-motion='subtle']
+  .tumi-portrait-idle[data-blinks='true']
+  + .tumi-portrait-blink {
+  animation: tumi-portrait-close-eyes 6.8s linear infinite;
+}
+
+.tumi-portrait[data-tumi-motion='subtle'] :is(.tumi-portrait-expression, .tumi-portrait-badge) {
+  animation: tumi-portrait-face-in 180ms ease-out both;
+}
+
+.tumi-portrait[data-tumi-motion='celebrate'] .tumi-portrait-body {
+  animation: tumi-portrait-hover var(--tumi-gesture-duration) ease-in-out infinite;
+}
+
+.tumi-portrait[data-tumi-motion='celebrate'] .tumi-portrait-helmet {
+  animation: tumi-portrait-lift var(--tumi-gesture-duration) ease-in-out infinite;
+}
+
+.tumi-portrait[data-tumi-motion='celebrate'] .tumi-portrait-idle {
+  animation: tumi-portrait-smile var(--tumi-gesture-duration) linear infinite;
+}
+
+.tumi-portrait[data-tumi-motion='celebrate'] .tumi-portrait-laugh {
+  animation: tumi-portrait-laugh var(--tumi-gesture-duration) linear infinite;
+}
+
+.tumi-portrait[data-tumi-motion='celebrate'] .tumi-portrait-delight {
+  animation: tumi-portrait-delight var(--tumi-gesture-duration) linear infinite;
+}
+
+.tumi-portrait[data-tumi-motion='celebrate'] .tumi-portrait-blink {
+  animation: tumi-portrait-celebrate-blink var(--tumi-gesture-duration) linear infinite;
+}
+
+.tumi-portrait[data-tumi-motion='celebrate'] .tumi-portrait-underside {
+  animation: tumi-portrait-underside var(--tumi-gesture-duration) ease-in-out infinite;
+}
+
+.tumi-portrait[data-tumi-motion='celebrate'] .tumi-portrait-sparkles {
+  animation: tumi-portrait-sparkle var(--tumi-gesture-duration) ease-in-out infinite;
+}
+
+.tumi-portrait[data-tumi-paused='true'] * {
+  animation-play-state: paused !important;
+}
+
+@keyframes tumi-portrait-hover {
+  0%,
+  17%,
+  82%,
+  100% {
+    transform: translateY(0);
+  }
+  34% {
+    transform: translateY(-8px) rotate(-1deg);
+  }
+  52% {
+    transform: translateY(-12px);
+  }
+  66% {
+    transform: translateY(-5px) rotate(0.6deg);
+  }
+}
+
+.tumi-portrait[data-tumi-motion='celebrate'] .tumi-portrait-face {
+  animation: tumi-portrait-settle var(--tumi-gesture-duration) ease-in-out infinite;
+}
+
+@keyframes tumi-portrait-settle {
+  0%,
+  27%,
+  76%,
+  100% {
+    transform: translateY(0);
+  }
+  48%,
+  54% {
+    transform: translateY(7px);
+  }
+  64% {
+    transform: translateY(4px);
+  }
+}
+
+@keyframes tumi-portrait-lift {
+  0%,
+  27%,
+  76%,
+  100% {
+    transform: translateY(0);
+  }
+  48%,
+  54% {
+    transform: translateY(-50px) rotate(-1.15deg);
+  }
+  64% {
+    transform: translateY(-31px) rotate(0.45deg);
+  }
+}
+
+@keyframes tumi-portrait-smile {
+  0%,
+  18%,
+  80%,
+  88%,
+  96%,
+  100% {
+    opacity: 1;
+  }
+  25%,
+  73%,
+  91%,
+  93% {
+    opacity: 0;
+  }
+}
+
+@keyframes tumi-portrait-laugh {
+  0%,
+  18%,
+  43%,
+  55%,
+  80%,
+  100% {
+    opacity: 0;
+  }
+  25%,
+  38%,
+  61%,
+  73% {
+    opacity: 1;
+  }
+}
+
+@keyframes tumi-portrait-delight {
+  0%,
+  38%,
+  61%,
+  100% {
+    opacity: 0;
+  }
+  43%,
+  55% {
+    opacity: 1;
+  }
+}
+
+@keyframes tumi-portrait-celebrate-blink {
+  0%,
+  88%,
+  96%,
+  100% {
+    opacity: 0;
+  }
+  91%,
+  93% {
+    opacity: 1;
+  }
+}
+
+@keyframes tumi-portrait-underside {
+  0%,
+  30%,
+  72%,
+  100% {
+    opacity: 0;
+  }
+  43%,
+  60% {
+    opacity: 1;
+  }
+}
+
+@keyframes tumi-portrait-sparkle {
+  0%,
+  42%,
+  71%,
+  100% {
+    opacity: 0;
+  }
+  53%,
+  58% {
+    opacity: 0.88;
+  }
+}
+
+@keyframes tumi-portrait-open-eyes {
+  0%,
+  51%,
+  55%,
+  100% {
+    opacity: 1;
+  }
+  52.5%,
+  53.5% {
+    opacity: 0;
+  }
+}
+
+@keyframes tumi-portrait-close-eyes {
+  0%,
+  51%,
+  55%,
+  100% {
+    opacity: 0;
+  }
+  52.5%,
+  53.5% {
+    opacity: 1;
+  }
+}
+
+@keyframes tumi-portrait-face-in {
+  from {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tumi-portrait * {
+    animation: none !important;
+  }
+}
+
+.tumi-avatar {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 44px;
+  aspect-ratio: 278 / 251;
+}

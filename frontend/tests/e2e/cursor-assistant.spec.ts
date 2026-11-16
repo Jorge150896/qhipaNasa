@@ -3,25 +3,25 @@ import { expect, test } from '@playwright/test';
 test('el lápiz del globo abre el campo y permite preguntar de nuevo en móvil', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.clock.install();
-  await page.goto('/');
-  await expect(page.getByRole('button', { name: 'Abrir asistente Tumi' })).toBeVisible();
+  await page.goto('/explore');
+  await expect(page.getByRole('button', { name: 'Abrir asistente Nami' })).toBeVisible();
   const bubble = page.locator('.cursor-assistant-bubble');
   await expect(bubble).toHaveCount(0);
-  await page.clock.fastForward(12_000);
+  await page.clock.runFor(800);
   await expect(bubble).toBeInViewport();
-  await bubble.getByRole('button', { name: 'Escribir a Tumi' }).click();
-  const panel = page.getByRole('region', { name: 'Asistente Tumi', exact: true });
-  const field = panel.getByRole('textbox', { name: 'Mensaje para Tumi' });
+  await bubble.getByRole('button', { name: 'Escribir a Nami' }).click();
+  const panel = page.getByRole('region', { name: 'Asistente Nami', exact: true });
+  const field = panel.getByRole('textbox', { name: 'Mensaje para Nami' });
   const log = panel.getByRole('log');
   await expect(field).toBeFocused();
   await expect(panel).toBeInViewport();
   await expect(bubble).toHaveCount(0);
   await expect(panel).toHaveAttribute('data-side', 'left');
-  await expect(log).toContainText('¡Hola! Soy Tumi.');
+  await expect(log).toContainText('¡Hola! Soy Nami.');
   await expect(log.locator('.tumi-chat-word').first()).toHaveCSS('animation-name', 'tumi-word-in');
   await expect(log.locator('.tumi-chat-word').last()).toHaveCSS('opacity', '1');
 
-  await field.fill('Hola Tumi, ¿dónde está el mapa?');
+  await field.fill('Hola Nami, ¿dónde está el mapa?');
   await panel.getByRole('button', { name: 'Enviar', exact: true }).click();
   await expect(field).toHaveValue('');
   await expect(log).toContainText('¡Un momentito, estoy pensando! ✨');
@@ -37,12 +37,12 @@ test('el lápiz del globo abre el campo y permite preguntar de nuevo en móvil',
   await expect(field).toBeVisible();
 });
 
-test('Tumi reacciona al tono escrito sin mantener una emoción de mensajes anteriores', async ({
+test('Nami reacciona al tono escrito sin mantener una emoción de mensajes anteriores', async ({
   page,
-}) => {
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true }).click();
-  const panel = page.getByRole('region', { name: 'Asistente Tumi', exact: true });
+}, testInfo) => {
+  await page.goto('/explore');
+  await page.getByRole('button', { name: 'Abrir asistente Nami', exact: true }).click();
+  const panel = page.getByRole('region', { name: 'Asistente Nami', exact: true });
   const actor = page.locator('.cursor-assistant');
   for (const [text, emotion, reply] of [
     ['Hoy me siento muy triste, ¿puedes ayudarme? 😢', 'sad', 'Gracias por confiarme'],
@@ -51,49 +51,54 @@ test('Tumi reacciona al tono escrito sin mantener una emoción de mensajes anter
     ['Estoy enojado y tengo mucha rabia', 'angry', 'algo te ha molestado'],
     ['Ya no estoy triste. ¿Dónde está el mapa?', 'neutral', 'Abre Mapa espacial'],
   ]) {
-    await panel.getByRole('textbox', { name: 'Mensaje para Tumi' }).fill(text);
+    await panel.getByRole('textbox', { name: 'Mensaje para Nami' }).fill(text);
     await panel.getByRole('button', { name: 'Enviar', exact: true }).click();
     await expect(panel.getByRole('log')).toContainText(reply);
     await expect(actor).toHaveAttribute('data-emotion', emotion);
-    if (emotion === 'sad') await page.screenshot({ path: '../docs/qa/tumi-emotion-sad.png' });
-    if (emotion === 'angry') await page.screenshot({ path: '../docs/qa/tumi-emotion-angry.png' });
+    await expect(actor.locator('.tumi-portrait')).toHaveAttribute('data-tumi-emotion', emotion);
+    if (emotion === 'sad')
+      await page.screenshot({ path: testInfo.outputPath('tumi-emotion-sad.png') });
+    if (emotion === 'angry')
+      await page.screenshot({ path: testInfo.outputPath('tumi-emotion-angry.png') });
   }
 });
 
-test('Tumi tecnológico conversa, oculta y conserva acceso al chat de misión', async ({ page }) => {
+test('Nami tecnológico conversa, oculta y conserva acceso al chat de misión', async ({
+  page,
+}, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/mission/sources');
   const actor = page.locator('.cursor-assistant');
   await expect(actor).toBeVisible();
   await expect(actor.locator('svg')).toHaveAttribute('aria-label', /tecnológica/);
-  await page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true }).click();
-  const panel = page.getByRole('region', { name: 'Asistente Tumi', exact: true });
+  await page.getByRole('button', { name: 'Abrir asistente Nami', exact: true }).click();
+  const panel = page.getByRole('region', { name: 'Asistente Nami', exact: true });
   await panel.locator('summary').click();
   await expect(panel.getByText(/Sin IA conectada/)).toBeVisible();
   await panel
-    .getByRole('textbox', { name: 'Mensaje para Tumi' })
+    .getByRole('textbox', { name: 'Mensaje para Nami' })
     .fill('¿Dónde están los despegues de la Tierra?');
   await panel.getByRole('button', { name: 'Enviar', exact: true }).click();
   await expect(actor).toHaveAttribute('data-state', 'waiting');
   await expect(panel.getByRole('log')).toContainText('Centros en Tierra');
   await expect(actor).toHaveAttribute('data-state', 'conversing');
-  await page.screenshot({ path: '../docs/qa/tumi-ia-desktop.png' });
+  await page.screenshot({ path: testInfo.outputPath('tumi-ia-desktop.png') });
   await expect(
     panel.getByRole('button', { name: /Pausar movimiento|Reanudar movimiento/ }),
   ).toHaveCount(0);
   await expect(actor).toHaveAttribute('data-paused', 'true');
   await panel.getByRole('button', { name: 'Cerrar conversación', exact: true }).click();
   await expect(actor).toHaveAttribute('data-paused', 'false');
-  await page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true }).click();
+  await page.getByRole('button', { name: 'Abrir asistente Nami', exact: true }).click();
   await panel.locator('summary').click();
-  await panel.getByRole('button', { name: 'Ocultar Tumi' }).click();
+  await panel.getByRole('button', { name: 'Ocultar Nami' }).click();
   await expect(actor).toHaveCount(0);
-  await page.getByRole('button', { name: 'Mostrar Tumi' }).click();
-  await page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true }).click();
+  await page.getByRole('button', { name: 'Mostrar Nami' }).click();
+  await page.getByRole('button', { name: 'Abrir asistente Nami', exact: true }).click();
   await panel.locator('summary').click();
   await panel.getByRole('button', { name: 'Abrir chat contextual', exact: true }).click();
-  await expect(page.getByRole('textbox', { name: 'Pregunta para Tumi' })).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Pregunta para Nami' })).toBeVisible();
   await expect(actor).toHaveCount(0);
   await page.getByRole('button', { name: 'Ocultar chat' }).click();
   await expect(actor).toHaveCount(1);
@@ -102,36 +107,36 @@ test('Tumi tecnológico conversa, oculta y conserva acceso al chat de misión', 
   expect(errors).toEqual([]);
 });
 
-test('portada permite movimiento autónomo moderado y arrastre con permanencia temporal', async ({
+test('la misión permite movimiento autónomo moderado y arrastre con permanencia temporal', async ({
   page,
 }) => {
   await page.addInitScript(() => {
     Math.random = () => 0.75;
   });
   await page.clock.install();
-  await page.goto('/');
+  await page.goto('/mission/sources');
   const actor = page.locator('.cursor-assistant');
   await expect(actor).toBeVisible();
   const before = (await actor.boundingBox())!;
   await page.clock.runFor(14500);
   const after = (await actor.boundingBox())!;
   expect(Math.hypot(after.x - before.x, after.y - before.y)).toBeGreaterThan(20);
-  await page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true }).click();
+  await page.getByRole('button', { name: 'Abrir asistente Nami', exact: true }).click();
   const frozen = await actor.evaluate((element) => (element as HTMLElement).style.transform);
-  await page.clock.runFor(25000);
+  await page.clock.fastForward(25000);
   expect(await actor.evaluate((element) => (element as HTMLElement).style.transform)).toBe(frozen);
   await page.getByRole('button', { name: 'Cerrar conversación', exact: true }).click();
   await page.mouse.move(after.x + 36, after.y + 30);
   await page.mouse.down();
   await page.mouse.move(after.x + 36, after.y - 70, { steps: 8 });
   await page.mouse.up();
-  await expect(page.getByRole('region', { name: 'Asistente Tumi', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('region', { name: 'Asistente Nami', exact: true })).toHaveCount(0);
   const placed = await actor.evaluate((element) => (element as HTMLElement).style.transform);
-  await page.clock.runFor(20000);
+  await page.clock.fastForward(20000);
   expect(await actor.evaluate((element) => (element as HTMLElement).style.transform)).toBe(placed);
 
-  await page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true }).click();
-  const panel = page.getByRole('region', { name: 'Asistente Tumi', exact: true });
+  await page.getByRole('button', { name: 'Abrir asistente Nami', exact: true }).click();
+  const panel = page.getByRole('region', { name: 'Asistente Nami', exact: true });
   await panel.locator('summary').click();
   await panel.getByRole('button', { name: 'Guía local', exact: true }).click();
   await expect(actor).toHaveCount(0);
@@ -141,9 +146,12 @@ test('portada permite movimiento autónomo moderado y arrastre con permanencia t
   await expect(follower).toHaveAttribute('style', /translate3d\(196px, 156px, 0(?:px)?\)/);
   await page.mouse.move(330, 210);
   await expect(follower).toHaveAttribute('style', /translate3d\(346px, 226px, 0(?:px)?\)/);
-  await page.getByRole('button', { name: 'Iniciar mi misión' }).hover();
+  await page
+    .getByRole('navigation', { name: 'Navegación principal' })
+    .getByRole('button', { name: 'Mapa espacial', exact: true })
+    .hover();
   await expect(page.locator('.assistant-coach-tip')).toContainText(
-    'Abre el panel de la tripulación',
+    'Elige un lugar que te dé curiosidad',
   );
   await page.getByRole('button', { name: 'Salir de guía' }).click();
   await expect(follower).toHaveCount(0);
@@ -152,13 +160,13 @@ test('portada permite movimiento autónomo moderado y arrastre con permanencia t
 
 test.describe('interacción táctil', () => {
   test.use({ hasTouch: true, isMobile: true });
-  test('Tumi queda arriba del tab bar al desplazarse y al cambiar el ancho', async ({ page }) => {
+  test('Nami queda arriba del tab bar al desplazarse y al cambiar el ancho', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/mission/journal');
 
     const dock = page.getByRole('navigation', { name: 'Navegación principal' });
-    const tumi = page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true });
+    const tumi = page.getByRole('button', { name: 'Abrir asistente Nami', exact: true });
     await expect(tumi).toBeVisible();
 
     async function expectPosition(width: number) {
@@ -183,24 +191,26 @@ test.describe('interacción táctil', () => {
 
     await tumi.tap();
     await expect(
-      page.getByRole('region', { name: 'Asistente Tumi', exact: true }),
+      page.getByRole('region', { name: 'Asistente Nami', exact: true }),
     ).toBeInViewport();
   });
 
-  test('móvil táctil y movimiento reducido conservan chat, controles y ancho', async ({ page }) => {
+  test('móvil táctil y movimiento reducido conservan chat, controles y ancho', async ({
+    page,
+  }, testInfo) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/');
+    await page.goto('/explore');
     const actor = page.locator('.cursor-assistant');
     await expect(actor).toHaveCSS('width', '64px');
-    await page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true }).tap();
-    const panel = page.getByRole('region', { name: 'Asistente Tumi', exact: true });
+    await page.getByRole('button', { name: 'Abrir asistente Nami', exact: true }).tap();
+    const panel = page.getByRole('region', { name: 'Asistente Nami', exact: true });
     await panel
-      .getByRole('textbox', { name: 'Mensaje para Tumi' })
+      .getByRole('textbox', { name: 'Mensaje para Nami' })
       .fill('una pregunta abierta sobre cualquier tema');
     await panel.getByRole('button', { name: 'Enviar', exact: true }).click();
     await expect(panel.getByRole('log')).toContainText('¿Me la cuentas de otra forma');
-    await page.screenshot({ path: '../docs/qa/tumi-ia-mobile.png' });
+    await page.screenshot({ path: testInfo.outputPath('tumi-ia-mobile.png') });
     await expect(panel).toBeInViewport();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
@@ -210,7 +220,7 @@ test.describe('interacción táctil', () => {
   });
 });
 
-test('Tumi comparte la elección de Texto o Audio entre sus chats', async ({ page }) => {
+test('Nami comparte la elección de Texto o Audio entre sus chats', async ({ page }) => {
   await page.addInitScript(() => {
     Object.defineProperty(window, 'speechSynthesis', {
       value: {
@@ -231,8 +241,8 @@ test('Tumi comparte la elección de Texto o Audio entre sus chats', async ({ pag
     });
   });
   await page.goto('/mission/crew');
-  await page.getByRole('button', { name: 'Abrir asistente Tumi' }).click();
-  const floating = page.getByRole('region', { name: 'Asistente Tumi' });
+  await page.getByRole('button', { name: 'Abrir asistente Nami' }).click();
+  const floating = page.getByRole('region', { name: 'Asistente Nami' });
   const root = page.locator('html');
   await floating.locator('summary').click();
   await expect(root).toHaveCSS('color-scheme', 'dark');
@@ -260,7 +270,7 @@ test('Tumi comparte la elección de Texto o Audio entre sus chats', async ({ pag
   await floating.getByRole('button', { name: 'Audio', exact: true }).click();
 
   await floating.getByRole('button', { name: 'Abrir chat contextual' }).click();
-  const contextual = page.getByRole('region', { name: 'Tumi', exact: true });
+  const contextual = page.getByRole('region', { name: 'Nami', exact: true });
   await expect(root).not.toHaveAttribute('data-spoken-reply', /.+/);
   await expect(contextual.getByRole('button', { name: 'Audio', exact: true })).toHaveAttribute(
     'aria-pressed',
@@ -277,7 +287,7 @@ test('Tumi comparte la elección de Texto o Audio entre sus chats', async ({ pag
   await expect(root).not.toHaveAttribute('data-spoken-reply', /.+/);
 });
 
-test('Tumi presenta la vista al navegar y al cambiar de pestaña', async ({ page }) => {
+test('Nami presenta la vista al navegar y al cambiar de pestaña', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/mission/crew');
   const intro = page.locator('.cursor-assistant-bubble[data-introduction]');
@@ -293,8 +303,8 @@ test('Tumi presenta la vista al navegar y al cambiar de pestaña', async ({ page
   const navigation = page.getByRole('navigation', { name: 'Navegación principal' });
   await navigation.getByRole('button', { name: 'Monitoreo diario', exact: true }).click();
   await expect(intro).toContainText('registrar tu ánimo');
-  await intro.getByRole('button', { name: 'Escribir a Tumi' }).click();
-  await expect(page.getByRole('textbox', { name: 'Mensaje para Tumi' })).toBeFocused();
+  await intro.getByRole('button', { name: 'Escribir a Nami' }).click();
+  await expect(page.getByRole('textbox', { name: 'Mensaje para Nami' })).toBeFocused();
   await page.keyboard.press('Escape');
 
   await navigation.getByRole('button', { name: 'Mapa espacial', exact: true }).click();

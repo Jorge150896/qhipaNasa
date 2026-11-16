@@ -1,4 +1,5 @@
 'use client';
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { StationModel } from '@/presentation/shared/scene/StationModel';
 import {
   Component,
@@ -83,11 +84,12 @@ function TransitObject({
   );
 }
 function MapFallback() {
+  const t = useTranslation();
   return (
     <div className="fleet-loading" role="status">
       <Icon name="orbit" size={36} />
-      <p>El mapa 3D no está disponible.</p>
-      <p>Selecciona un destino en los botones inferiores para explorar su tripulación.</p>
+      <p>{t('El mapa 3D no está disponible.')}</p>
+      <p>{t('Selecciona un destino en los botones inferiores para explorar su tripulación.')}</p>
     </div>
   );
 }
@@ -119,6 +121,7 @@ function MapObjects({
   onSelect(id: DestinationKey): void;
   portal: RefObject<HTMLElement>;
 }) {
+  const t = useTranslation();
   return (
     <>
       {(['moon', 'station'] as const).map((id) => (
@@ -193,9 +196,9 @@ function MapObjects({
               <button
                 className={`fleet-focus-label fleet-focus-${destination.id}`}
                 onClick={() => onSelect(destination.id)}
-                aria-label={`Enfocar ${destination.name}`}
+                aria-label={t(`Enfocar ${destination.name}`)}
               >
-                <span /> {destination.name}
+                <span /> {t(destination.name)}
               </button>
             </Html>
           )}
@@ -225,23 +228,25 @@ function MapObjects({
                 <div className="fleet-map-callout">
                   {destination.id === 'earth' && (
                     <button className="fleet-earth-overview" onClick={onOpenEarthCenters}>
-                      Ver centros en Tierra ↗
+                      {t('Ver centros en Tierra ↗')}
                     </button>
                   )}
                   <button
                     className="fleet-map-label"
-                    aria-label={`Explorar ${destination.name} en el mapa 3D`}
+                    aria-label={t(`Explorar ${destination.name} en el mapa 3D`)}
                     aria-pressed={selected === destination.id}
                     onClick={() => onSelect(destination.id)}
                   >
-                    <span>{destination.name}</span>
+                    <span>{t(destination.name)}</span>
                     <small>
-                      {destination.crewCount} tripulantes <span>↗</span>
+                      {t(destination.crewCount)}
+                      {t(' tripulantes ')}
+                      <span>↗</span>
                     </small>
                   </button>
                   <button
                     className="fleet-callout-close"
-                    aria-label={`Cerrar tarjeta de ${destination.name}`}
+                    aria-label={t(`Cerrar tarjeta de ${destination.name}`)}
                     onClick={(event) => {
                       event.stopPropagation();
                       onDismissCard();
@@ -266,6 +271,7 @@ export default function SpaceMapScene(props: {
   onOpenEarthCenters(): void;
   onSelect(id: DestinationKey): void;
 }) {
+  const t = useTranslation();
   const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [paused, setPaused] = useState(Boolean(props.initialFocus));
@@ -304,8 +310,8 @@ export default function SpaceMapScene(props: {
   const motionPaused = paused || reducedMotion;
   return (
     <>
-      <div className="fleet-detail-presets" role="group" aria-label="Vistas de detalle 3D">
-        <span>Explorar de cerca</span>
+      <div className="fleet-detail-presets" role="group" aria-label={t('Vistas de detalle 3D')}>
+        <span>{t('Explorar de cerca')}</span>
         {(
           [
             { id: 'earth', label: 'Tierra' },
@@ -319,13 +325,13 @@ export default function SpaceMapScene(props: {
             key={item.id}
             aria-pressed={inspection === item.id}
             onClick={() => inspect(item.id)}
-            aria-label={`Ver ${item.label} de cerca`}
+            aria-label={t(`Ver ${item.label} de cerca`)}
           >
-            {item.label}
+            {t(item.label)}
           </button>
         ))}
       </div>
-      <div className="fleet-scene" aria-label="Mapa espacial 3D interactivo">
+      <div className="fleet-scene" aria-label={t('Mapa espacial 3D interactivo')}>
         <div className="starfield" aria-hidden="true" />
         <div className="scene-overlay" ref={setOverlay} />
         <MapBoundary key={attempt}>
@@ -362,30 +368,38 @@ export default function SpaceMapScene(props: {
         </MapBoundary>
         <div className="fleet-view-mode" role="status">
           <strong>
-            {inspection
-              ? `Detalle · ${props.destinations.find((destination) => destination.id === inspection)?.name}`
-              : view.level === 'mission'
-                ? 'Vista de misión'
-                : view.level === 'inner'
-                  ? 'Contexto solar'
-                  : 'Sistema solar'}
+            {t(
+              inspection
+                ? `Detalle · ${props.destinations.find((destination) => destination.id === inspection)?.name}`
+                : view.level === 'mission'
+                  ? 'Vista de misión'
+                  : view.level === 'inner'
+                    ? 'Contexto solar'
+                    : 'Sistema solar',
+            )}
           </strong>
           <span>
-            {inspection ? 'Inspección pausada · arrastra para rotar' : 'Seguimiento Tierra ↔ Marte'}
+            {t(
+              inspection
+                ? 'Inspección pausada · arrastra para rotar'
+                : 'Seguimiento Tierra ↔ Marte',
+            )}
           </span>
         </div>
         <div className="fleet-transit-controls">
-          <span>Movimientos acelerados · órbitas y tamaños ilustrativos</span>
+          <span>{t('Movimientos acelerados · órbitas y tamaños ilustrativos')}</span>
           <button
             className="fleet-reset"
             disabled={reducedMotion}
             onClick={() => setPaused((value) => !value)}
           >
-            {reducedMotion
-              ? 'Movimiento reducido activo'
-              : paused
-                ? 'Reanudar simulación'
-                : 'Pausar simulación'}
+            {t(
+              reducedMotion
+                ? 'Movimiento reducido activo'
+                : paused
+                  ? 'Reanudar simulación'
+                  : 'Pausar simulación',
+            )}
           </button>
         </div>
         <button
@@ -396,50 +410,59 @@ export default function SpaceMapScene(props: {
           }}
         >
           <Icon name="refresh" size={13} />
-          Restablecer vista
+          {t('Restablecer vista')}
         </button>
       </div>
-      <div className="fleet-zoom-toolbar" aria-label="Escala de exploración">
+      <div className="fleet-zoom-toolbar" aria-label={t('Escala de exploración')}>
         <div>
           <button onClick={() => inspect(props.selected)}>
-            Acercar a{' '}
-            {props.destinations.find((destination) => destination.id === props.selected)?.name}
+            {t('Acercar a')}
+            {t(' ')}
+            {t(props.destinations.find((destination) => destination.id === props.selected)?.name)}
           </button>
-          <button onClick={() => navigateZoom('system')}>Ver sistema solar</button>
-          <button onClick={() => navigateZoom('mission')}>Volver a la misión</button>
-          {props.visibleCard && <button onClick={props.onDismissCard}>Cerrar tarjeta</button>}
+          <button onClick={() => navigateZoom('system')}>{t('Ver sistema solar')}</button>
+          <button onClick={() => navigateZoom('mission')}>{t('Volver a la misión')}</button>
+          {props.visibleCard && (
+            <button onClick={props.onDismissCard}>{t('Cerrar tarjeta')}</button>
+          )}
         </div>
         <label>
-          <button aria-label="Acercar mapa" onClick={() => navigateZoom('in')}>
+          <button aria-label={t('Acercar mapa')} onClick={() => navigateZoom('in')}>
             +
           </button>
-          <span className="sr-only">Nivel de zoom</span>
+          <span className="sr-only">{t('Nivel de zoom')}</span>
           <input
-            aria-label="Nivel de zoom"
+            aria-label={t('Nivel de zoom')}
             type="range"
             min="0"
             max="100"
             value={view.zoom}
             onChange={(event) => navigateZoom('slider', Number(event.target.value))}
           />
-          <button aria-label="Alejar mapa" onClick={() => navigateZoom('out')}>
+          <button aria-label={t('Alejar mapa')} onClick={() => navigateZoom('out')}>
             −
           </button>
         </label>
         <p>
-          {view.level === 'mission'
-            ? 'Detalle local ampliado · rueda o pellizco para alejar'
-            : 'Distancias orbitales proporcionales en UA · cuerpos ampliados · fases y tiempos simulados'}
+          {t(
+            view.level === 'mission'
+              ? 'Detalle local ampliado · rueda o pellizco para alejar'
+              : 'Distancias orbitales proporcionales en UA · cuerpos ampliados · fases y tiempos simulados',
+          )}
         </p>
       </div>
       {view.level !== 'mission' && (
-        <div className="fleet-reference-legend" aria-label="Planetas de referencia">
-          <span>ÓRBITAS CON CENTRO EN EL SOL · 1 UA = DISTANCIA MEDIA TIERRA–SOL</span>
+        <div className="fleet-reference-legend" aria-label={t('Planetas de referencia')}>
+          <span>{t('ÓRBITAS CON CENTRO EN EL SOL · 1 UA = DISTANCIA MEDIA TIERRA–SOL')}</span>
           <div>
             {referencePlanets.map((planet) => (
               <span key={planet.id}>
                 <i style={{ background: planet.color }} />
-                {planet.name} <small>{solarOrbits[planet.id].radiusAU} UA</small>
+                {t(planet.name)}{' '}
+                <small>
+                  {t(solarOrbits[planet.id].radiusAU)}
+                  {t(' UA')}
+                </small>
               </span>
             ))}
           </div>

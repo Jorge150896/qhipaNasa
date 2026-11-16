@@ -1,9 +1,0 @@
-# Tumi: recorte transparente
-
-Fuente: `tumi-cursor-reference.jpeg`, imagen aportada por el usuario; se conserva como referencia. Derivado: `tumi-cursor-clean.png`, creado con la herramienta integrada `image_gen` para retirar fondo, cursor dibujado y matte blanco, sin añadir sombra o contorno. No se asigna una licencia nueva a la imagen del usuario.
-
-PNG RGBA 1412 × 1114, con fondo alfa cero. El SVG lo presenta en el mismo sistema de coordenadas que la referencia y conserva el tamaño visual solicitado de 75 px. El derivado de edición no se declara una copia de píxeles idénticos del original. Revisar visualmente antes de reutilizar a otra escala.
-
-## Prompt utilizado
-
-Edit the supplied image into a production transparent sprite. STRICT PRESERVATION: same exact Tumi mascot, same cheerful closed curved eyes, same open mouth, same gold and turquoise colors, same texture details, same asymmetric perspective, same proportions and existing dark brown linework. Do not redraw, redesign, restyle, add features or change expression. Remove ONLY white background, black mouse cursor arrow at upper left, and white-matte fringe. Isolate ONLY mascot. Real clean alpha channel; no white/gray halo, no colored edge spill, no drop shadow, no glow, no added outline or sticker border. Preserve the character's original dark brown outline because that is part of the artwork. CRITICAL CANVAS REGISTRATION: keep original 1156 x 912 canvas geometry and exact original placement and scale: character occupies approximately x=297..901, y=217..641. Do not crop, center, enlarge or rotate. All removed background and mouse cursor pixels must be fully transparent. Antialiased edge pixels must contain original foreground colors, not white-matted RGB. Output one transparent PNG suitable for compositing directly onto dark UI.

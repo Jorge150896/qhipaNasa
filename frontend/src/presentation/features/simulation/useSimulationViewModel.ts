@@ -1,3 +1,4 @@
+import { useAppLanguage } from '@/presentation/shared/language/AppLanguageProvider';
 import { useState } from 'react';
 import type { MonthlyWellbeing } from '@/domain/mission/monthlyWellbeing';
 import {
@@ -6,11 +7,6 @@ import {
   type HabitResult,
 } from '@/domain/mission/wellbeingRoute';
 
-const date = new Intl.DateTimeFormat('es-PE', {
-  day: 'numeric',
-  month: 'short',
-  timeZone: 'UTC',
-});
 const mood = { good: 'Bien', neutral: 'Regular', low: 'Bajo' } as const;
 
 const habitFields = [
@@ -34,6 +30,9 @@ const habitValues = ['supportive', 'usual', 'reduced'] as const;
 type Habit = (typeof habitFields)[number]['id'];
 
 export function useSimulationViewModel(report?: MonthlyWellbeing) {
+  const { language } = useAppLanguage();
+  const locale = language === 'en' ? 'en-US' : 'es-PE';
+  const date = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' });
   const [dayIndex, setDayIndex] = useState(() => (report?.days.length ?? 1) - 1);
   const [habits, setHabits] = useState<Partial<Record<Habit, HabitResult>>>({});
   const position = report && getWellbeingRoute(report.days, dayIndex);
@@ -77,7 +76,7 @@ export function useSimulationViewModel(report?: MonthlyWellbeing) {
       mood: mood[position.day.checkIn.mood],
       exercise: position.day.checkIn.exerciseDonePreviousDay ? 'Sí' : 'No',
       isolation: position.day.checkIn.proposedAnswers.perceivedIsolation,
-      sleep: `${position.day.checkIn.sleepHours.toLocaleString('es-PE')} h`,
+      sleep: `${position.day.checkIn.sleepHours.toLocaleString(locale)} h`,
       fatigue: `${position.day.checkIn.fatigue}/5`,
       reason: position.requestedSupport
         ? `Pidió apoyo en la ventana de ${position.count} días.`

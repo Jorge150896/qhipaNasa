@@ -1,4 +1,8 @@
 'use client';
+import { requestedAppLanguage } from '@/domain/assistant/AppLanguage';
+import { answerAssistantIdentity } from '@/domain/assistant/assistantIdentity';
+import { isSpanishAssistantText } from '@/domain/assistant/isSpanishAssistantText';
+import { useAppLanguage, useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useCallback, useEffect, useEffectEvent, useReducer, useRef, useState } from 'react';
 import {
   TumiDailyLimitError,
@@ -14,9 +18,9 @@ import type { TumiReplyAudio } from '@/presentation/shared/tumi/useTumiReplyAudi
 import type { TumiEmotion } from './types';
 
 const greetings = [
-  '¡Hola! Soy Tumi. ¿En qué te ayudo?',
+  '¡Hola! Soy Nami. ¿En qué te ayudo?',
   '¿En qué puedo ayudarte?',
-  '¡Hola! Soy Tumi, tu asistente virtual. ¿Qué te gustaría saber?',
+  '¡Hola! Soy Nami, tu asistente virtual. ¿Qué te gustaría saber?',
 ];
 const followUps = [
   '¿Te ayudo con alguna otra cosita?',
@@ -31,7 +35,10 @@ export function useCursorAssistantViewModel(
   getContext?: () => TumiScreenContext,
   getLocalReply?: (question: string) => string | undefined,
   fallback?: TumiConversation,
+  changeLanguageFromQuestion?: (question: string) => string | undefined,
 ) {
+  const t = useTranslation();
+  const { language } = useAppLanguage();
   const actor = useRef<HTMLDivElement>(null);
   const [state, dispatch] = useReducer(transitionTumi, 'resting');
   const [emotion, setEmotion] = useState<TumiEmotion>('neutral');
@@ -47,6 +54,7 @@ export function useCursorAssistantViewModel(
   const sequence = useRef(0);
   const reaction = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const opening = useRef(0);
+  useEffect(() => () => request.current?.abort(), [language]);
   useEffect(() => {
     if (open || hidden || paused || speaking || suspended) return;
     if (typeof window.matchMedia !== 'function') return;
@@ -123,7 +131,7 @@ export function useCursorAssistantViewModel(
       state,
       emotion,
       draft,
-      messages,
+      messages: messages.filter((entry) => !entry.language || entry.language === language),
       busy,
       error,
     },
@@ -131,6 +139,23 @@ export function useCursorAssistantViewModel(
     send: async () => {
       const text = draft.trim();
       if (!text || text.length > 600 || request.current) return;
+      const confirmation = changeLanguageFromQuestion?.(text);
+      if (confirmation) {
+        setDraft('');
+        setError('');
+        react('happy');
+        const id = ++sequence.current;
+        const replyId = ++sequence.current;
+        const nextLanguage = requestedAppLanguage(text) ?? language;
+        setMessages((previous) =>
+          [
+            ...previous,
+            { id, role: 'user', text, language: nextLanguage } as const,
+            { id: replyId, role: 'assistant', text: confirmation, language: nextLanguage } as const,
+          ].slice(-40),
+        );
+        return;
+      }
       const controller = new AbortController();
       const textEmotion = detectTextEmotion(text);
       request.current = controller;
@@ -140,11 +165,13 @@ export function useCursorAssistantViewModel(
       dispatch('WAIT');
       setEmotion('thinking');
       setMessages((previous) =>
-        [...previous, { id: ++sequence.current, role: 'user' as const, text }].slice(-40),
+        [...previous, { id: ++sequence.current, role: 'user' as const, text, language }].slice(-40),
       );
       try {
         const signal = controller.signal;
         const answer = await (async () => {
+          const identity = answerAssistantIdentity(text, language);
+          if (identity) return { text: identity, reaction: 'happy' as const };
           const mood = getDirectWellbeingMood(text);
           if (mood) {
             return {
@@ -152,28 +179,37 @@ export function useCursorAssistantViewModel(
               reaction: mood === 'good' ? ('happy' as const) : ('understanding' as const),
             };
           }
-          if (!fallback) {
-            const localReply = getLocalReply?.(text);
-            if (localReply) return { text: localReply };
+          const context = getContext?.();
+          const localReply = getLocalReply?.(text);
+          if (localReply && (!fallback || context?.view === 'Simulación · Ruta emocional')) {
+            return { text: localReply };
           }
           try {
-            return await conversation.reply(text, signal, getContext?.());
+            return await conversation.reply(text, signal, context);
           } catch (error) {
             if (!fallback || signal.aborted || error instanceof TumiDailyLimitError) throw error;
-            const localReply = getLocalReply?.(text);
-            return localReply ? { text: localReply } : fallback.reply(text, signal);
+            return localReply ? { text: localReply } : fallback.reply(text, signal, context);
           }
         })();
         if (controller.signal.aborted) return;
-        const reply = answer.text.trim();
+        const translated = t(answer.text.trim());
+        const reply =
+          language === 'en' && isSpanishAssistantText(translated)
+            ? 'I can help with the crew, the space map or your daily check-in. Which part would you like to explore?'
+            : translated;
         const textWithFollowUp =
           !reply || /\?[\s✨♡:3]*$|si (?:quieres|te apetece), (?:cuéntame|podemos)/iu.test(reply)
             ? reply
-            : `${reply} ${followUps[Math.floor(sequence.current / 2) % followUps.length]}`;
+            : `${reply} ${t(followUps[Math.floor(sequence.current / 2) % followUps.length])}`;
         setMessages((previous) =>
           [
             ...previous,
-            { id: ++sequence.current, role: 'assistant' as const, text: textWithFollowUp },
+            {
+              id: ++sequence.current,
+              role: 'assistant' as const,
+              text: textWithFollowUp,
+              language,
+            },
           ].slice(-40),
         );
         audio?.readReply(textWithFollowUp, { transcript: true });

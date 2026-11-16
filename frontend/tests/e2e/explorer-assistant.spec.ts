@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { openTumiChat } from './tumi-chat-helpers';
 
-test('Tumi está disponible desde misión y conserva el chat entre pestañas del mapa', async ({
+test('Nami está disponible desde misión y conserva el chat entre pestañas del mapa', async ({
   page,
 }) => {
   await page.goto('/mission/crew');
@@ -10,16 +10,16 @@ test('Tumi está disponible desde misión y conserva el chat entre pestañas del
   await expect(page).toHaveURL(/\/explore/);
 
   await expect(
-    page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Tumi' }),
+    page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Nami' }),
   ).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Abrir chat de Tumi' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Abrir chat de Nami' })).toHaveCount(0);
   await openTumiChat(page);
-  const chat = page.getByRole('region', { name: 'Tumi' });
+  const chat = page.getByRole('region', { name: 'Nami' });
   await chat.getByRole('button', { name: '¿Cómo uso el mapa espacial?' }).click();
   await expect(chat.getByRole('log')).toContainText('selecciona un destino');
   await chat.getByRole('button', { name: 'Ocultar chat' }).click();
   await expect(
-    page.getByRole('button', { name: 'Abrir asistente Tumi', exact: true }),
+    page.getByRole('button', { name: 'Abrir asistente Nami', exact: true }),
   ).toBeFocused();
 
   await page.getByRole('tab', { name: 'Mapa de Marte' }).click();
@@ -34,7 +34,7 @@ test('Tumi está disponible desde misión y conserva el chat entre pestañas del
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload();
   await expect(
-    page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Tumi' }),
+    page.getByRole('banner').getByRole('button', { name: 'Abrir chat de Nami' }),
   ).toHaveCount(0);
   await openTumiChat(page);
   await expect(chat).toBeVisible();

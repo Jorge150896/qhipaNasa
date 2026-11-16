@@ -1,11 +1,5 @@
+import type { AppLanguage } from '@/domain/assistant/AppLanguage';
 import type { HealthMeasurement } from '@/domain/measurements/HealthMeasurement';
-const dateTime = new Intl.DateTimeFormat('es-PE', {
-  dateStyle: 'medium',
-  timeStyle: 'medium',
-  timeZone: 'UTC',
-  hour12: false,
-});
-const timestamp = (at: string) => `${dateTime.format(new Date(at))} UTC`;
 const sources = {
   synthetic: 'Sintético',
   device: 'Equipo de medición',
@@ -22,7 +16,15 @@ const methods = {
 export function mapMeasurementTrace(
   measurement: HealthMeasurement,
   person: { id: string; name: string },
+  language: AppLanguage = 'es',
 ) {
+  const dateTime = new Intl.DateTimeFormat(language === 'en' ? 'en-US' : 'es-PE', {
+    dateStyle: 'medium',
+    timeStyle: 'medium',
+    timeZone: 'UTC',
+    hourCycle: 'h23',
+  });
+  const timestamp = (at: string) => `${dateTime.format(new Date(at))} UTC`;
   return {
     source: sources[measurement.source.kind],
     quality: {

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import type { MetricData, SensorKey } from '../../features/mission/types';
 
 export function SensorTabs({
@@ -9,8 +10,9 @@ export function SensorTabs({
   selectedId?: SensorKey;
   onSelect(id: SensorKey): void;
 }) {
+  const t = useTranslation();
   return (
-    <div className="sensor-tabs" role="group" aria-label="Indicadores de telemetría">
+    <div className="sensor-tabs" role="group" aria-label={t('Indicadores de telemetría')}>
       {metrics.map((metric) => (
         <button
           type="button"
@@ -18,7 +20,7 @@ export function SensorTabs({
           aria-pressed={metric.id === selectedId}
           onClick={() => onSelect(metric.id)}
         >
-          {metric.shortLabel}
+          {t(metric.shortLabel)}
         </button>
       ))}
     </div>

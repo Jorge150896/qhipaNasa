@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { removeLoadingBackdrop } from '../src/presentation/shared/loading/removeLoadingBackdrop';
 
-describe('local Tumi video matte', () => {
+describe('local Nami video matte', () => {
   it('removes the connected pale background while retaining enclosed white highlights and gold', () => {
     const size = 7;
     const pixels = new Uint8ClampedArray(size * size * 4);

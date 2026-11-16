@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import type { MissionData } from '../../mission/types';
 import type { DailyCheckGuideViewModel, DailyCheckViewModel } from '../types';
 import { Panel } from '@/ui/Panel';
@@ -17,6 +18,7 @@ export function DailyCheckView({
   model: DailyCheckViewModel;
   guide: DailyCheckGuideViewModel;
 }) {
+  const t = useTranslation();
   const readings = model.step < 2 && guide.mode === 'manual' ? model.attachment : undefined;
   return (
     <div className="journal-layout daily-check-layout" data-readings={Boolean(readings)}>
@@ -37,9 +39,9 @@ export function DailyCheckView({
         <Panel className="daily-readings">
           <div className="panel-heading">
             <Icon name="heart" />
-            <h3>Lecturas del cuerpo y del entorno</h3>
+            <h3>{t('Lecturas del cuerpo y del entorno')}</h3>
           </div>
-          <p className="sub">Estas lecturas se adjuntan al guardar tu registro.</p>
+          <p className="sub">{t('Estas lecturas se adjuntan al guardar tu registro.')}</p>
           <CheckAttachments data={readings} />
         </Panel>
       )}

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { Html } from '@react-three/drei';
 import type { RefObject } from 'react';
 import { Icon } from '@/ui/Icon';
@@ -26,6 +27,7 @@ export function HabitatZoneMarker({
   modules?: HabitatModuleMarkers;
   showCode?: boolean;
 }) {
+  const t = useTranslation();
   const selected = selectedZone === id;
   const occupied = modules?.occupiedId === id;
   const zone = modules?.zones.find((zone) => zone.id === id);
@@ -40,7 +42,7 @@ export function HabitatZoneMarker({
       <button
         type="button"
         className={`scene-hotspot${modules ? ' crew-module-marker' : ''}${showCode ? ' shuttle-marker' : ''}`}
-        aria-label={zone ? `Explorar ${zone.name}` : `Seleccionar zona ${code}`}
+        aria-label={t(zone ? `Explorar ${zone.name}` : `Seleccionar zona ${code}`)}
         aria-pressed={selected}
         aria-describedby={occupied ? 'crew-location-legend' : undefined}
         data-occupied={occupied || undefined}
@@ -56,8 +58,8 @@ export function HabitatZoneMarker({
             <Icon name="check" size={12} />
           </span>
         )}
-        {showCode && <span className="shuttle-marker-code">{code}</span>}
-        {zone ? <span className="crew-marker-name">{zone.shortName}</span> : code}
+        {showCode && <span className="shuttle-marker-code">{t(code)}</span>}
+        {zone ? <span className="crew-marker-name">{t(zone.shortName)}</span> : code}
       </button>
     </Html>
   );

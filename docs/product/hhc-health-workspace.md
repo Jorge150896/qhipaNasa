@@ -50,4 +50,4 @@ La app empaqueta únicamente medianas por fase. El panel permite cambiar entre g
 
 **Fuentes y alcance** identifica el estudio de Inspiration4 como datos históricos reales, las lecturas de la misión como datos simulados y Chequeo diario y Autoevaluación como entradas manuales de este navegador. Los enlaces de investigación de NASA y la Agencia Espacial Canadiense aportan contexto científico. El artículo sobre CANS describe el instrumento y la demo carece de dosimetría.
 
-En **Tripulación**, abre la ficha de Respiración y usa **Ver módulo de la tripulación** para consultar la ubicación y las condiciones simuladas. Vuelve a **Astronauta** para retomar la ficha y elige **Preguntar a Tumi por esta lectura** o **Registrar cómo me siento**. El autorregistro se conserva como observación manual.
+En **Tripulación**, abre la ficha de Respiración y usa **Ver módulo de la tripulación** para consultar la ubicación y las condiciones simuladas. Vuelve a **Astronauta** para retomar la ficha y elige **Preguntar a Nami por esta lectura** o **Registrar cómo me siento**. El autorregistro se conserva como observación manual.

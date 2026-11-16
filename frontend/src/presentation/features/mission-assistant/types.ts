@@ -1,3 +1,4 @@
+import type { AppLanguage } from '@/domain/assistant/AppLanguage';
 import type { MetricData, ScenarioKey, ZoneData } from '../mission/types';
 
 export interface AssistantReply {
@@ -9,6 +10,7 @@ export interface AssistantReply {
 export interface AssistantMessage {
   id: number;
   role: 'user' | 'assistant';
+  language?: AppLanguage;
   reply: AssistantReply;
 }
 

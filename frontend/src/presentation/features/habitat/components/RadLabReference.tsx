@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useId, useState } from 'react';
 import { useTumiViewContext } from '../../mission-assistant/useTumiViewContext';
 import series from './radlab-dostel1.json';
@@ -22,6 +23,7 @@ const path = readings
   .join(' ');
 
 export function RadLabReference() {
+  const t = useTranslation();
   const id = useId();
   const [open, setOpen] = useState(false);
   useTumiViewContext(
@@ -36,38 +38,45 @@ export function RadLabReference() {
       className="panel radlab-reference"
       onToggle={(event) => setOpen(event.currentTarget.open)}
     >
-      <summary>Radiación histórica en la ISS · NASA RadLab</summary>
-      <p>DosTel1 · Módulo Columbus · 1 de marzo de 2022 · 00:00 a 01:00 UTC</p>
+      <summary>{t('Radiación histórica en la ISS · NASA RadLab')}</summary>
+      <p>{t('DosTel1 · Módulo Columbus · 1 de marzo de 2022 · 00:00 a 01:00 UTC')}</p>
       <p className="sub">
-        {series.count} registros archivados · Tasa de dosis absorbida en µGy/h · UTC asumido para la
-        serie original
+        {series.count}
+        {t(
+          ' registros archivados · Tasa de dosis absorbida en µGy/h · UTC asumido para la serie original',
+        )}
       </p>
       <svg viewBox="0 0 640 150" role="img" aria-labelledby={id}>
-        <title id={id}>Tendencia de radiación ambiental histórica en Columbus</title>
+        <title id={id}>{t('Tendencia de radiación ambiental histórica en Columbus')}</title>
         <path d="M15 15 V125 H625" fill="none" stroke="currentColor" opacity="0.3" />
         <path d={path} fill="none" stroke="currentColor" strokeWidth="2" />
       </svg>
       <p className="sub">
-        Rango de las lecturas disponibles · {number.format(min)} a {number.format(max)} µGy/h
+        {t('Rango de las lecturas disponibles ·')}
+        {t(number.format(min))} a {t(number.format(max))} µGy/h
       </p>
       <details>
-        <summary>Consultar lecturas</summary>
+        <summary>{t('Consultar lecturas')}</summary>
         <div className="table-scroll">
           <table>
             <thead>
               <tr>
-                <th>Hora (UTC)</th>
-                <th>Tasa (µGy/h)</th>
+                <th>{t('Hora (UTC)')}</th>
+                <th>{t('Tasa (µGy/h)')}</th>
               </tr>
             </thead>
             <tbody>
               {readings.map(({ at, value }) => (
                 <tr key={at}>
-                  <td>{at.slice(11, 19)}</td>
+                  <td>{t(at.slice(11, 19))}</td>
                   <td>
-                    {value === null
-                      ? 'Sin lectura'
-                      : new Intl.NumberFormat('es-PE', { maximumFractionDigits: 3 }).format(value)}
+                    {t(
+                      value === null
+                        ? 'Sin lectura'
+                        : new Intl.NumberFormat('es-PE', { maximumFractionDigits: 3 }).format(
+                            value,
+                          ),
+                    )}
                   </td>
                 </tr>
               ))}
@@ -76,7 +85,7 @@ export function RadLabReference() {
         </div>
       </details>
       <a href={series.source.requestUrl} target="_blank" rel="noreferrer">
-        Consultar la serie original en NASA RadLab
+        {t('Consultar la serie original en NASA RadLab')}
       </a>
     </details>
   );

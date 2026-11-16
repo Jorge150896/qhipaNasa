@@ -33,15 +33,15 @@ Para generar esa misma exportación localmente, ejecuta `GITHUB_PAGES=true npm r
 
 ## Funciona en esta versión
 
-- **Navegación inferior**: Tripulación → Monitoreo diario → Mapa espacial → Simulación, con cuatro accesos directos en escritorio, tablet y móvil. Se retiró el botón Tumi de la cabecera; la mascota conserva el acceso al chat contextual. [Detalles de uso y mantenimiento](docs/development/frontend.md).
+- **Navegación inferior**: Tripulación → Monitoreo diario → Mapa espacial → Simulación, con cuatro accesos directos en escritorio, tablet y móvil. Se retiró el botón Nami de la cabecera; la mascota conserva el acceso al chat contextual. [Detalles de uso y mantenimiento](docs/development/frontend.md).
 
-- **Tumi flotante** acompaña con movimiento autónomo, arrastre, expresiones y respuestas locales a señales del texto. Puedes escuchar su saludo, ocultarlo o abrir el chat contextual. [Guía de Tumi](docs/development/tumi-ia.md).
+- **Nami flotante** acompaña con movimiento autónomo, arrastre, expresiones y respuestas locales a señales del texto. Puedes escuchar su saludo, ocultarla o abrir el chat contextual. [Guía de Nami](docs/development/tumi-ia.md).
 
 - **Centros en Tierra** reúne en un globo los centros de operaciones y apoyo, los sitios de lanzamiento y tres videos históricos. Se abre dentro de Mapa espacial. La ficha muestra la función del lugar, sus fuentes y dónde ocurrió el despegue relacionado. Los enlaces anteriores conservan el sitio seleccionado.
 
 - **Simulación** reúne la Ruta emocional y la prueba de hábitos. La [demostración de pérdida de señal](http://127.0.0.1:3000/mission/simulation#perdida-de-senal) sigue disponible por enlace directo.
 
-- Carga animada con el video local del Tumi dorado y sus giros originales, en bucle silencioso; imagen estática con movimiento reducido. Introducción breve a pantalla completa solo tras «Iniciar mi misión»; dentro de la app, carga limitada al área de información. Vista permanente en `/loading-preview`.
+- Carga animada con el video local de Nami con su casco dorado y sus giros originales, en bucle silencioso; imagen estática con movimiento reducido. Introducción breve a pantalla completa solo tras «Iniciar mi misión»; dentro de la app, carga limitada al área de información. Vista permanente en `/loading-preview`.
 
 - Tripulación conserva visor corporal, fichas contextuales, lecturas e historial de registros. Se retiraron la pestaña y el panel «Salud por sistemas» y los tres accesos inferiores «Ver corazón/visión/ejercicio». Las observaciones nuevas se añaden desde Monitoreo diario con el área correspondiente.
 
@@ -60,7 +60,7 @@ Para generar esa misma exportación localmente, ejecuta `GITHUB_PAGES=true npm r
 - Escenarios de rutina, cambio de sueño y pérdida de señal. Las muestras ausentes no se reemplazan por valores antiguos ni se interpolan.
 - Monitoreo diario de demostración en un solo formulario con sueño, ánimo, fatiga, ejercicio realizado y preguntas de actividad o salud. Adjunta la instantánea sintética del módulo y las lecturas corporales con origen, hora y calidad. Conserva los chequeos anteriores y sus claves.
 - Persistencia local de chequeos y revisiones entre recargas, con validación de esquema y manejo de errores de almacenamiento.
-- Tumi, guía local que explica lecturas y comparaciones simuladas en el contexto de la actividad y el entorno, y señala controles. [Guía de conocimiento](frontend/src/presentation/features/mission-assistant/README.md).
+- Nami, guía local que explica lecturas y comparaciones simuladas en el contexto de la actividad y el entorno, y señala controles. [Guía de conocimiento](frontend/src/presentation/features/mission-assistant/README.md).
 - Barra inferior compartida por Misión y Mapa espacial. En móvil muestra Mapa espacial, Tripulación y Monitoreo diario. El menú «Más» reúne las demás secciones.
 
 No existe un modo offline completo ni sincronización: el almacenamiento local conserva registros, pero una visita nueva necesita cargar la app. No introducir datos de salud reales en esta demo.

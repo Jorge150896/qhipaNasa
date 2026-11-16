@@ -8,7 +8,7 @@ import {
 import { LocalTumiConversation } from '@/data/assistant/LocalTumiConversation';
 import { useCursorAssistantViewModel } from '@/presentation/features/cursor-assistant/useCursorAssistantViewModel';
 
-describe('Tumi autónomo', () => {
+describe('Nami autónomo', () => {
   it('impide moverse mientras conversa, espera o está pausado', () => {
     for (const state of ['conversing', 'waiting', 'paused'] as const)
       expect(transitionTumi(state, 'MOVE')).toBe(state);

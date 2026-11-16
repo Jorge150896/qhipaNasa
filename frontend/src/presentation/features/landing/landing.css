@@ -127,7 +127,7 @@
 .qhipa-wordmark small {
   display: block;
   margin-top: 5px;
-  font-size: 7px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 2.5px;
   color: var(--brand-wordmark-muted);
@@ -171,7 +171,7 @@
   align-items: center;
   gap: 10px;
   color: var(--purple-ink);
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 2px;
   line-height: 1.6;
   margin: 0 0 26px;
@@ -247,24 +247,6 @@
 .qhipa-cta:active {
   transform: translateY(0) scale(0.98);
 }
-.qhipa-mission-note {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 44px;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.9;
-}
-.qhipa-mission-note strong {
-  font-weight: 400;
-  color: var(--muted);
-}
-.qhipa-note-line {
-  width: 26px;
-  height: 1px;
-  background: #fb5607;
-}
 .qhipa-flight {
   position: relative;
   display: grid;
@@ -315,24 +297,6 @@
   filter: drop-shadow(0 2px 4px #45195b66) drop-shadow(0 10px 21px #ab6af14d);
   animation: qhipa-tumi-float 5.8s ease-in-out infinite;
 }
-.qhipa-tumi-frames {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  isolation: isolate;
-}
-.qhipa-tumi-image {
-  position: absolute;
-  inset: 0 auto auto 0;
-  display: block;
-  width: 400%;
-  max-width: none;
-  height: auto;
-  mix-blend-mode: plus-lighter;
-}
-.qhipa-tumi-transition {
-  opacity: 0;
-}
 .qhipa-spark {
   position: absolute;
   color: var(--accent);
@@ -356,23 +320,6 @@
   font-size: 18px;
   animation-delay: -3.7s;
 }
-.qhipa-flight-caption {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  position: absolute;
-  bottom: -2%;
-  font-size: 9px;
-  color: var(--muted);
-  letter-spacing: 0.5px;
-}
-.qhipa-flight-caption span {
-  width: 4px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #ffb878;
-}
 .qhipa-footer {
   width: min(1200px, calc(100% - 96px));
   margin: auto auto 0;
@@ -383,7 +330,7 @@
   justify-content: space-between;
   gap: 20px;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 1px;
 }
 .qhipa-footer-divider {
@@ -396,7 +343,7 @@
   align-items: center;
 }
 .qhipa-demo-label {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0;
   color: var(--muted);
 }
@@ -405,7 +352,7 @@
   align-items: center;
   gap: 8px;
   color: var(--muted);
-  font-size: 10px !important;
+  font-size: 12px !important;
   background: transparent;
   border: 1px solid #ceb0e430;
   padding: 9px 11px;
@@ -489,19 +436,23 @@
   .qhipa-description {
     font-size: 14px;
   }
-  .qhipa-flight-caption {
-    bottom: -8%;
-  }
 }
 @media (max-width: 760px) {
   .qhipa-header {
     min-height: 96px;
+    gap: 12px;
+  }
+  .qhipa-brand {
+    min-width: 0;
+  }
+  .qhipa-wordmark {
+    min-width: 0;
   }
   .qhipa-nav {
     gap: 18px;
   }
   .qhipa-nav button {
-    font-size: 11px;
+    font-size: 12px;
   }
   .qhipa-hero {
     grid-template-columns: 1fr;
@@ -515,9 +466,6 @@
   }
   .qhipa-eyebrow,
   .qhipa-cta-row,
-  .qhipa-mission-note {
-    justify-content: center;
-  }
   .qhipa-hero h1 {
     font-size: clamp(45px, 8.5vw, 66px);
   }
@@ -527,18 +475,12 @@
   }
   .qhipa-eyebrow {
     margin-bottom: 20px;
-    font-size: 8px;
+    font-size: 12px;
     letter-spacing: 1.4px;
-  }
-  .qhipa-mission-note {
-    display: none;
   }
   .qhipa-flight {
     width: min(430px, 86%);
     margin: 14px auto 38px;
-  }
-  .qhipa-flight-caption {
-    bottom: -1%;
   }
   .qhipa-near-planet {
     width: 48px;
@@ -569,7 +511,7 @@
     font-size: 15px;
   }
   .qhipa-wordmark small {
-    font-size: 6px;
+    font-size: 12px;
     letter-spacing: 1.2px;
   }
   .qhipa-brand-bounce {
@@ -607,13 +549,6 @@
   .qhipa-landing *::after {
     animation: none !important;
     transition: none !important;
-  }
-  .qhipa-tumi-image {
-    transform: none !important;
-    opacity: 1 !important;
-  }
-  .qhipa-tumi-transition {
-    opacity: 0 !important;
   }
   .qhipa-parallax {
     transform: none !important;

@@ -1,3 +1,5 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
+import { LanguageSelect } from '@/presentation/shared/language/LanguageSelect';
 import { useId, type PointerEvent } from 'react';
 import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
 import { Icon } from '@/ui/Icon';
@@ -15,6 +17,7 @@ export function LandingView({
   onOpenExplorer,
   onOpenCrew,
 }: LandingViewProps) {
+  const t = useTranslation();
   const brandPortraitId = useId();
   function moveAtmosphere(event: PointerEvent<HTMLElement>) {
     if (!motionActive || event.pointerType !== 'mouse') return;
@@ -41,14 +44,14 @@ export function LandingView({
       onPointerLeave={resetAtmosphere}
     >
       <a className="qhipa-skip" href="#qhipa-content">
-        Ir al contenido
+        {t('Ir al contenido')}
       </a>
       <SpaceAtmosphere paused={!motionActive} />
       <header className="qhipa-header">
         <button
           className="qhipa-brand"
           onClick={onReplayLogo}
-          aria-label="Animar logo de Qhipa Pacha"
+          aria-label={t('Animar logo de Qhipa Pacha')}
         >
           <span key={logoRevision} className="qhipa-brand-bounce">
             <span className="qhipa-brand-mark" aria-hidden="true">
@@ -56,64 +59,54 @@ export function LandingView({
             </span>
             <span className="qhipa-wordmark">
               QHIPA <strong>PACHA</strong>
-              <small>BIENESTAR SIN FRONTERAS</small>
+              <small>{t('BIENESTAR SIN FRONTERAS')}</small>
             </span>
           </span>
         </button>
-        <nav className="qhipa-nav" aria-label="Navegación de portada">
-          <button data-assistant-control="crew" onClick={onOpenCrew}>
-            Tu bienestar
+        <nav className="qhipa-nav" aria-label={t('Navegación de portada')}>
+          <button onClick={onOpenCrew}>{t('Tu bienestar')}</button>
+          <button onClick={onOpenExplorer}>
+            {t('El universo')}
+            <Icon name="arrow" size={14} />
           </button>
-          <button data-assistant-control="map" onClick={onOpenExplorer}>
-            El universo <Icon name="arrow" size={14} />
-          </button>
+          <LanguageSelect />
         </nav>
       </header>
       <section className="qhipa-hero" id="qhipa-content" aria-labelledby="qhipa-title">
         <div className="qhipa-hero-copy">
           <p className="qhipa-eyebrow">
-            <span /> CONECTA CONTIGO. EXPLORA MÁS LEJOS.
+            <span />
+            {t(' CONECTA CONTIGO. EXPLORA MÁS LEJOS.')}
           </p>
           <h1 id="qhipa-title">
-            Tu bienestar,
+            {t('Tu bienestar,')}
             <br />
-            en otra <em>órbita.</em>
+            {t('en otra')} <em>{t('órbita.')}</em>
           </h1>
           <p className="qhipa-description">
-            Un universo por descubrir empieza contigo. Explora tu salud, comprende tus señales y
-            acompaña cada paso de tu misión.
+            {t(
+              'Un universo por descubrir empieza contigo. Explora tu salud, comprende tus señales y acompaña cada paso de tu misión.',
+            )}
           </p>
           <div className="qhipa-cta-row">
-            <button
-              className="qhipa-cta"
-              data-assistant-control="start-mission"
-              onClick={onOpenMission}
-            >
-              <span>Iniciar mi misión</span>
+            <button className="qhipa-cta" onClick={onOpenMission}>
+              <span>{t('Iniciar mi misión')}</span>
               <Icon name="arrow" size={21} />
             </button>
-          </div>
-          <div className="qhipa-mission-note">
-            <span className="qhipa-note-line" />
-            <span>
-              Inspirado en la exploración.
-              <br />
-              <strong>Diseñado para las personas.</strong>
-            </span>
           </div>
         </div>
         <TumiFlight motionActive={motionActive} />
       </section>
       <footer className="qhipa-footer">
         <span>
-          QHIPA PACHA <span className="qhipa-footer-divider">/</span> HUMANOS, INCLUSO ENTRE
-          ESTRELLAS.
+          QHIPA PACHA <span className="qhipa-footer-divider">/</span>
+          {t(' HUMANOS, INCLUSO ENTRE ESTRELLAS.')}
         </span>
         <div>
-          <span className="qhipa-demo-label">Demo · datos sintéticos</span>
+          <span className="qhipa-demo-label">{t('Demo · datos sintéticos')}</span>
           <button className="qhipa-motion-toggle" onClick={onToggleMotion} aria-pressed={paused}>
             <Icon name={paused ? 'orbit' : 'sliders'} size={14} />
-            {paused ? 'Reanudar animación' : 'Pausar animación'}
+            {t(paused ? 'Reanudar animación' : 'Pausar animación')}
           </button>
         </div>
       </footer>

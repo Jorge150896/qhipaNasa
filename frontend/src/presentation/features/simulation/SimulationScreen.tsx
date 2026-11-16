@@ -1,4 +1,5 @@
-import { useEffect, useEffectEvent, useMemo } from 'react';
+import { useCallback, useEffect, useEffectEvent, useMemo } from 'react';
+import { useAppLanguage, useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { monthlyWellbeingDependencies } from '@/di/createMonthlyWellbeingDependencies.client';
 import { publicAsset } from '@/presentation/shared/publicAsset';
 import { MissionSceneSlot } from '@/presentation/shared/mission/MissionSceneSlot';
@@ -59,14 +60,54 @@ function SimulationRoutes({
   const model = useSimulationViewModel(report);
   const { position, trial } = model;
 
-  useTumiViewContext('Simulación · Ruta emocional', [
-    `${crew.name}. Ubicación en la instantánea de la misión: ${crew.location}.`,
-    trial
-      ? `Prueba de hábitos ficticia. Ruta de ejemplo: ${wellbeingRouteLabels[trial]}. ${model.habitFields.map(({ label, options, value }) => `${label}: ${options.find((option) => option.value === value)?.text}`).join(' · ')}. Los hábitos de la prueba no son una medición del ánimo.`
-      : position
-        ? `Día ${model.days?.[model.dayIndex]?.number} de la serie simulada. Ruta: ${wellbeingRouteLabels[position.route]}. ${position.reason} Sueño: ${position.sleep}. Fatiga: ${position.fatigue}. La ruta representa el autorreporte de la simulación, no la ubicación física.`
-        : 'No hay serie simulada de bienestar para este tripulante.',
-  ]);
+  const { language } = useAppLanguage();
+  const t = useTranslation();
+  const english = language === 'en';
+  const day = model.days?.[model.dayIndex]?.label;
+  const route = trial ?? position?.route;
+  const routeLabel = route && t(wellbeingRouteLabels[route]);
+  const reason = position && t(position.reason);
+  const hasPosition = Boolean(position);
+  const getVisibleRouteAnswer = useCallback(
+    (question: string) => {
+      const normalized = question
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '');
+      if (
+        !/\b(?:what (?:do you see|am i seeing|(?:does|is) this (?:show|route|screen))|(?:describe|explain) (?:this|the) (?:screen|route|simulation)|que (?:ves|se ve|muestra esta pantalla|significa esta ruta)|(?:describe|explica)(?:me)? (?:esta|la) (?:pantalla|ruta|simulacion))\b/.test(
+          normalized,
+        )
+      )
+        return;
+      if (trial && routeLabel) {
+        return english
+          ? `With the habits you picked, ${crew.name} moves to ${routeLabel}. Try changing one habit and watch the marker move.`
+          : `Con los hábitos que elegiste, ${crew.name} pasa a la ruta ${routeLabel}. Cambia un hábito y mira cómo se mueve el punto.`;
+      }
+      if (hasPosition && routeLabel && day) {
+        return english
+          ? `${t(day)}: ${crew.name} is on the ${routeLabel} route. ${reason} Try another day to see how the route changes.`
+          : `En el ${day.toLowerCase()}, ${crew.name} está en la ruta ${routeLabel}. ${reason} Elige otro día para ver cómo cambia la ruta.`;
+      }
+      return t('No hay serie simulada de bienestar para este tripulante.');
+    },
+    [crew.name, day, english, hasPosition, reason, routeLabel, t, trial],
+  );
+
+  useTumiViewContext(
+    'Simulación · Ruta emocional',
+    [
+      `${crew.name}. Ubicación en la instantánea de la misión: ${crew.location}.`,
+      trial
+        ? `Prueba de hábitos ficticia. Ruta de ejemplo: ${wellbeingRouteLabels[trial]}. ${model.habitFields.map(({ label, options, value }) => `${label}: ${options.find((option) => option.value === value)?.text}`).join(' · ')}. Los hábitos de la prueba no son una medición del ánimo.`
+        : position
+          ? `Día ${model.days?.[model.dayIndex]?.number} de la serie simulada. Ruta: ${wellbeingRouteLabels[position.route]}. ${position.reason} Sueño: ${position.sleep}. Fatiga: ${position.fatigue}. La ruta representa el autorreporte de la simulación, no la ubicación física.`
+          : 'No hay serie simulada de bienestar para este tripulante.',
+    ],
+    0,
+    getVisibleRouteAnswer,
+  );
 
   return (
     <WellbeingRoutesView

@@ -1,8 +1,10 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useId, useState } from 'react';
 import type { HealthSystemContent } from '../types';
 
 /** Conceptual drawings: no measurements, patient-specific anatomy or clinical simulation. */
 function SystemDrawing({ system }: { system: HealthSystemContent['id'] }) {
+  const t = useTranslation();
   switch (system) {
     case 'cardio':
       return (
@@ -20,10 +22,10 @@ function SystemDrawing({ system }: { system: HealthSystemContent['id'] }) {
             d="M50 274 H133 L147 255 L160 292 L178 265 L188 274 H370"
           />
           <text x="210" y="65">
-            CIRCULACIÓN
+            {t('CIRCULACIÓN')}
           </text>
           <text x="210" y="321">
-            Pulso · oxigenación · respiración
+            {t('Pulso · oxigenación · respiración')}
           </text>
         </>
       );
@@ -36,10 +38,10 @@ function SystemDrawing({ system }: { system: HealthSystemContent['id'] }) {
           <path className="health-flow" d="M80 180 H157 M263 180 H339" />
           <path className="health-guide" d="M210 234 V279" />
           <text x="210" y="65">
-            SISTEMA NEUROOCULAR
+            {t('SISTEMA NEUROOCULAR')}
           </text>
           <text x="210" y="312">
-            Observación visual ≠ examen ocular
+            {t('Observación visual ≠ examen ocular')}
           </text>
         </>
       );
@@ -56,10 +58,10 @@ function SystemDrawing({ system }: { system: HealthSystemContent['id'] }) {
           </g>
           <path className="health-flow" d="M294 238 Q344 183 306 127" />
           <text x="210" y="65">
-            MOVIMIENTO Y CARGA
+            {t('MOVIMIENTO Y CARGA')}
           </text>
           <text x="210" y="321">
-            Actividad registrada ≠ fuerza medida
+            {t('Actividad registrada ≠ fuerza medida')}
           </text>
         </>
       );
@@ -76,10 +78,10 @@ function SystemDrawing({ system }: { system: HealthSystemContent['id'] }) {
           <ellipse className="health-guide" cx="210" cy="202" rx="135" ry="39" />
           <path className="health-flow" d="M83 212 Q65 111 152 98 M337 192 Q356 274 279 282" />
           <text x="210" y="49">
-            ORIENTACIÓN Y COORDINACIÓN
+            {t('ORIENTACIÓN Y COORDINACIÓN')}
           </text>
           <text x="210" y="330">
-            Cambios de gravedad · contexto de actividad
+            {t('Cambios de gravedad · contexto de actividad')}
           </text>
         </>
       );
@@ -93,10 +95,10 @@ function SystemDrawing({ system }: { system: HealthSystemContent['id'] }) {
           <path className="health-flow" d="M205 89 V162 Q278 156 246 212 Q212 249 169 226" />
           <circle className="health-particle" cx="205" cy="118" r="7" />
           <text x="210" y="53">
-            REGISTRO ALIMENTARIO
+            {t('REGISTRO ALIMENTARIO')}
           </text>
           <text x="210" y="321">
-            Anotar ingesta · conservar contexto
+            {t('Anotar ingesta · conservar contexto')}
           </text>
         </>
       );
@@ -117,10 +119,10 @@ function SystemDrawing({ system }: { system: HealthSystemContent['id'] }) {
             <circle key={index} className="health-particle" cx={210 + x} cy={160 + y} r="13" />
           ))}
           <text x="210" y="53">
-            RESPUESTA INMUNITARIA
+            {t('RESPUESTA INMUNITARIA')}
           </text>
           <text x="210" y="326">
-            Temperatura ≠ función inmunitaria
+            {t('Temperatura ≠ función inmunitaria')}
           </text>
         </>
       );
@@ -135,10 +137,10 @@ function SystemDrawing({ system }: { system: HealthSystemContent['id'] }) {
           <path className="health-eye" d="M185 112 Q210 97 235 112 V131 Q210 144 185 131Z" />
           <ellipse className="health-flow" cx="210" cy="179" rx="132" ry="112" />
           <text x="210" y="40">
-            PERSONA · TRAJE · ENTORNO
+            {t('PERSONA · TRAJE · ENTORNO')}
           </text>
           <text x="210" y="327">
-            Datos del hábitat ≠ sensores del traje
+            {t('Datos del hábitat ≠ sensores del traje')}
           </text>
         </>
       );
@@ -146,6 +148,7 @@ function SystemDrawing({ system }: { system: HealthSystemContent['id'] }) {
 }
 
 export function HealthSystemIllustration({ system }: { system: HealthSystemContent }) {
+  const t = useTranslation();
   const [step, setStep] = useState(0);
   const [paused, setPaused] = useState(false);
   const captionId = useId();
@@ -157,15 +160,18 @@ export function HealthSystemIllustration({ system }: { system: HealthSystemConte
   return (
     <div className={`health-visual ${paused ? 'is-paused' : ''}`} data-step={step}>
       <div className="health-visual-toolbar">
-        <span>EXPLORADOR VISUAL / {system.shortLabel.toUpperCase()}</span>
+        <span>
+          {t('EXPLORADOR VISUAL / ')}
+          {t(system.shortLabel.toUpperCase())}
+        </span>
         <button className="text-button" aria-pressed={paused} onClick={() => setPaused(!paused)}>
-          {paused ? 'Reanudar ilustración' : 'Pausar ilustración'}
+          {t(paused ? 'Reanudar ilustración' : 'Pausar ilustración')}
         </button>
       </div>
       <svg
         viewBox="0 0 420 355"
         role="img"
-        aria-label={`Esquema conceptual: ${system.label}`}
+        aria-label={t(`Esquema conceptual: ${system.label}`)}
         aria-describedby={captionId}
       >
         <g className="health-visual-grid" fill="none">
@@ -175,7 +181,7 @@ export function HealthSystemIllustration({ system }: { system: HealthSystemConte
         </g>
         <SystemDrawing system={system.id} />
       </svg>
-      <div className="health-visual-steps" role="group" aria-label="Pasos de la explicación">
+      <div className="health-visual-steps" role="group" aria-label={t('Pasos de la explicación')}>
         {steps.map((item, index) => (
           <button
             key={item.title}
@@ -184,16 +190,17 @@ export function HealthSystemIllustration({ system }: { system: HealthSystemConte
             onClick={() => setStep(index)}
           >
             <span>0{index + 1}</span>
-            {item.title}
+            {t(item.title)}
           </button>
         ))}
       </div>
       <p className="health-visual-caption" id={captionId} aria-live="polite">
-        {steps[step].text}
+        {t(steps[step].text)}
       </p>
       <small>
-        Esquema educativo, anatomía simplificada. Movimiento ilustrativo, independiente de los
-        sensores.
+        {t(
+          'Esquema educativo, anatomía simplificada. Movimiento ilustrativo, independiente de los sensores.',
+        )}
       </small>
     </div>
   );

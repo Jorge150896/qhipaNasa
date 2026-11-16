@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { useEffect, useEffectEvent, useId, useRef, useState } from 'react';
 import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
 
@@ -19,6 +20,7 @@ export function AssistantCoachmark({
   onExit(): void;
   onAsk(id: string): void;
 }) {
+  const t = useTranslation();
   const robot = useRef<HTMLDivElement>(null);
   const portraitId = useId();
   const tooltip = useRef<HTMLDivElement>(null);
@@ -165,17 +167,17 @@ export function AssistantCoachmark({
       <div ref={tooltip} className="assistant-coach-tip" role="status" hidden={!activeTip}>
         {activeTip && (
           <>
-            <strong>{activeTip.label}</strong>
-            <p>{activeTip.text}</p>
+            <strong>{t(activeTip.label)}</strong>
+            <p>{t(activeTip.text)}</p>
             {activeTip.canAsk && active && (
               <button type="button" className="text-button" onClick={() => onAsk(active.id)}>
-                Preguntar por este dato
+                {t('Preguntar por este dato')}
               </button>
             )}
             {activeTip.canAsk && !active?.touch && (
-              <small>Teclado: pulsa ? sobre la tarjeta.</small>
+              <small>{t('Teclado: pulsa ? sobre la tarjeta.')}</small>
             )}
-            {active?.touch && <small>Toca de nuevo para usar este control.</small>}
+            {active?.touch && <small>{t('Toca de nuevo para usar este control.')}</small>}
           </>
         )}
       </div>

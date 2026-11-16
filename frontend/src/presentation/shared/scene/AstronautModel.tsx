@@ -1,3 +1,4 @@
+import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { publicAsset } from '@/presentation/shared/publicAsset';
 import { Html, useGLTF } from '@react-three/drei';
 import { useEffect, useMemo, useRef, type RefObject } from 'react';
@@ -42,6 +43,7 @@ export function AstronautModel({
   onSelect?(id: SceneSensor): void;
   portal: RefObject<HTMLElement>;
 }) {
+  const t = useTranslation();
   const gltf = useGLTF(publicAsset('/models/astronaut.glb'));
   const model = useAstronautFinish(gltf.scene);
   const highlight = activeBodyRegion && bodyZones[activeBodyRegion];
@@ -170,15 +172,15 @@ export function AstronautModel({
           >
             <button
               className="scene-hotspot health-body-hotspot"
-              aria-label={
+              aria-label={t(
                 item.id === 'vision'
                   ? 'Explorar visión y sistema neuroocular'
-                  : 'Explorar ejercicio y aparato locomotor'
-              }
+                  : 'Explorar ejercicio y aparato locomotor',
+              )}
               aria-pressed={(activeBodyRegion ?? selectedSystem) === item.id}
               onClick={() => onSelectSystem(item.id)}
             >
-              {item.label}
+              {t(item.label)}
             </button>
           </Html>
         ))}
@@ -197,11 +199,11 @@ export function AstronautModel({
               <button
                 type="button"
                 className="scene-hotspot"
-                aria-label={`Consultar ${item.name}`}
+                aria-label={t(`Consultar ${item.name}`)}
                 aria-pressed={(activeBodyRegion ?? selected) === item.id}
                 onClick={() => onSelect(item.id)}
               >
-                {item.label}
+                {t(item.label)}
               </button>
             </Html>
           ))}

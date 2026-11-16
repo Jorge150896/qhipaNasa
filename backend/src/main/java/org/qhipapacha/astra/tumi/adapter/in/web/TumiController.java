@@ -38,7 +38,7 @@ public class TumiController {
     }
     var context = question.context();
     var reply = ask.execute(question.message(),
-        context == null ? null : new TumiScreenContext(context.view(), context.details()));
+        context == null ? null : new TumiScreenContext(context.view(), context.details(), context.language()));
     return new Reply(reply.text(), reply.reaction());
   }
 
@@ -71,7 +71,7 @@ public class TumiController {
   }
 
   record Question(String message, ScreenContext context) {}
-  record ScreenContext(String view, String details) {}
+  record ScreenContext(String view, String details, String language) {}
   record Reply(String text, String reaction) {}
   record ApiError(String code) {}
 }

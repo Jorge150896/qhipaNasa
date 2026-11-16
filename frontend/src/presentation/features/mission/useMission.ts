@@ -1,3 +1,4 @@
+import { useAppLanguage } from '@/presentation/shared/language/AppLanguageProvider';
 import type { HabitatId } from '@/domain/explorer/models';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { CrewJournal, MissionSnapshot } from '@/domain/mission/models';
@@ -19,6 +20,7 @@ interface Dependencies {
   reviewObservation: ReviewObservation;
 }
 export function useMission(dependencies: Dependencies) {
+  const { language } = useAppLanguage();
   const [snapshot, setSnapshot] = useState<MissionSnapshot | null>(null);
   const [journal, setJournal] = useState<CrewJournal>({ checks: [], reviewedObservationIds: [] });
   const [scenario, setScenario] = useState<ScenarioKey>(
@@ -71,9 +73,10 @@ export function useMission(dependencies: Dependencies) {
             zoneId,
             today,
             dependencies.habitatId,
+            language,
           )
         : null,
-    [snapshot, journal, crewId, metricId, zoneId, today, dependencies.habitatId],
+    [snapshot, journal, crewId, metricId, zoneId, today, dependencies.habitatId, language],
   );
   const actions: MissionActions = {
     selectCrew(id) {

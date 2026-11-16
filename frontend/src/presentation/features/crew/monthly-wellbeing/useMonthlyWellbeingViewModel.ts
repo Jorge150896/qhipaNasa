@@ -1,9 +1,8 @@
 import { useState } from 'react';
+import { useAppLanguage, useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import type { MonthlyWellbeing, WellbeingDay } from '@/domain/mission/monthlyWellbeing';
 import { metricLabels } from '../../mission/constants';
 
-const date = new Intl.DateTimeFormat('es-PE', { day: 'numeric', month: 'short', timeZone: 'UTC' });
-const number = new Intl.NumberFormat('es-PE', { maximumFractionDigits: 2 });
 const moods = { good: 'Bien', neutral: 'Regular', low: 'Bajo' };
 const moodLevels = { good: 3, neutral: 2, low: 1 };
 const events: Record<string, string> = {
@@ -20,14 +19,25 @@ const metricOptions = [
   { id: 'co2', label: 'CO₂ de cabina', unit: 'ppm', max: 1250 },
 ] as const;
 
-const formatDay = (value: string) => date.format(new Date(value));
 const formatAnswer = (value: number | null) => (value === null ? 'Sin responder' : `${value}/4`);
 const yesNo = (value: boolean | null) => (value === null ? 'Sin responder' : value ? 'Sí' : 'No');
 const pulse = (day: WellbeingDay) =>
   day.readings.find(({ id }) => id === 'heartRate')?.value ?? null;
 
-function dayReply(name: string, { dateUtc, day, checkIn, cabin }: WellbeingDay) {
+function dayReply(
+  name: string,
+  { dateUtc, day, checkIn, cabin }: WellbeingDay,
+  formatDay: (value: string) => string,
+  number: Intl.NumberFormat,
+  english: boolean,
+  t: ReturnType<typeof useTranslation>,
+) {
   const answers = checkIn.proposedAnswers;
+  if (english) {
+    const mood = t(moods[checkIn.mood]).toLowerCase();
+    const support = answers.requestSupport ? ' They asked for private support that day.' : '';
+    return `On ${formatDay(dateUtc)}, ${name} reported feeling ${mood} in the simulation, with ${number.format(checkIn.sleepHours)} hours of sleep and fatigue at ${checkIn.fatigue} out of 5.${support} Would you like to compare that with a different day?`;
+  }
   return `En la simulación, ${name} reportó ánimo ${moods[checkIn.mood].toLowerCase()} el ${formatDay(dateUtc)} (día ${day}), con ${number.format(checkIn.sleepHours)} h de sueño y fatiga de ${checkIn.fatigue}/5. Aislamiento: ${formatAnswer(answers.perceivedIsolation)}. Confinamiento: ${formatAnswer(answers.perceivedConfinement)}. ${answers.requestSupport === true ? 'Ese día pidió hablar en privado con el equipo de apoyo. ' : ''}La cabina compartida registró ${number.format(cabin.airTemperatureC)} °C y ${number.format(cabin.co2Ppm)} ppm de CO₂ en la simulación. Estos datos describen el contexto de esa noche.`;
 }
 
@@ -61,11 +71,18 @@ function wellbeingOutlook(report: MonthlyWellbeing, dayNumber: number, personal 
 }
 
 export function useMonthlyWellbeingViewModel(report: MonthlyWellbeing) {
+  const { language } = useAppLanguage();
+  const t = useTranslation();
+  const english = language === 'en';
+  const locale = english ? 'en-US' : 'es-PE';
+  const date = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  const number = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
+  const formatDay = (value: string) => date.format(new Date(value));
   const [dayNumber, setDay] = useState(report.days.length);
   const [metricId, setMetric] = useState<(typeof metricOptions)[number]['id']>('mood');
   const day = report.days[dayNumber - 1];
   const check = day.checkIn;
-  const reply = dayReply(report.crewName, day);
+  const reply = dayReply(report.crewName, day, formatDay, number, english, t);
   const start = report.firstWeek;
   const end = report.lastWeek;
   const selectedMetric = metricOptions.find(({ id }) => id === metricId) ?? metricOptions[0];
@@ -161,7 +178,7 @@ export function useMonthlyWellbeingViewModel(report: MonthlyWellbeing) {
   return {
     reportName: report.crewName,
     trajectory: trajectoryLabels[report.trajectory],
-    period: `${formatDay(report.days[0].dateUtc)} – ${formatDay(report.days.at(-1)!.dateUtc)} de 2026`,
+    period: `${formatDay(report.days[0].dateUtc)} – ${formatDay(report.days.at(-1)!.dateUtc)}${english ? ', ' : ' de '}${report.days.at(-1)!.dateUtc.slice(0, 4)}`,
     dayLabel: `Día ${dayNumber} · ${formatDay(day.dateUtc)}`,
     dayNumber,
     length: report.days.length,
@@ -235,7 +252,7 @@ export function useMonthlyWellbeingViewModel(report: MonthlyWellbeing) {
       if (requestedDay) {
         const selected = report.days[Number(requestedDay[1]) - 1];
         return selected
-          ? dayReply(report.crewName, selected)
+          ? dayReply(report.crewName, selected, formatDay, number, english, t)
           : `La simulación tiene días 1 a ${report.days.length}.`;
       }
       return /\b(mes|30 dias|seguimiento|evolucion|tendencia)\b/.test(normalized)

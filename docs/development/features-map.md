@@ -10,7 +10,7 @@ Todas las carpetas de esta tabla están en `frontend/src/presentation/features/`
 | Tripulación | `crew/` | `CrewScreen` → `CrewView` | `/mission/crew` |
 | Monitoreo diario | `daily-check/` | `DailyCheckScreen` → `DailyCheckView` | `/mission/journal` |
 | Simulación | `simulation/` | `SimulationScreen` → `SimulationView` | `/mission/simulation` |
-| Fuentes y alcance | `sources/` | `SourcesScreen` → `SourcesView` | `/mission/sources`, accesible desde Tumi |
+| Fuentes y alcance | `sources/` | `SourcesScreen` → `SourcesView` | `/mission/sources`, accesible desde Nami |
 
 Otros hábitats conservan `/missions/[habitatId]/[section]` con las mismas secciones. Las rutas anteriores de Entorno e Historial abren la vista correspondiente dentro de Tripulación. `MissionShell` comparte la barra inferior de `MissionNavigationDock` entre misión y explorador. El botón «Más» indica cuando la sección activa está dentro del menú móvil.
 
@@ -29,7 +29,7 @@ Las nuevas funcionalidades autónomas con estado/operaciones usan `NombreScreen.
 ## Recorridos de misión
 
 - Resumen de misión prioriza los pendientes de la persona seleccionada y enlaza a la observación o al registro correspondiente. «Ubicar mi módulo» abre el visor de Tripulación con la zona de la persona seleccionada. El visor mantiene un selector HTML sincronizado con el visor y una ficha de condiciones y ocupación. También incluye una serie archivada de NASA RadLab.
-- Tripulación muestra Ahora, Salud por sistemas, Historial y Personalización como vistas seleccionables. Historial de Tripulación reúne la tendencia, el contexto y origen de cada muestra, la actividad guardada y la referencia de Inspiration4. Las sesiones API conservan su identidad externa. Los registros mantienen sus repositorios y rutas de detalle.
+- Tripulación muestra Ahora e Historial como vistas seleccionables. El enlace directo `#crew-avatar` abre el editor de apariencia. Historial de Tripulación reúne la tendencia, el contexto y origen de cada muestra, la actividad guardada y la referencia de Inspiration4. Las sesiones API conservan su identidad externa. Los registros mantienen sus repositorios y rutas de detalle.
 - Tripulación es la entrada de misión. Las antiguas rutas `overview` y `observations` redirigen a Tripulación del mismo hábitat. Simulación muestra el escenario seleccionado y permite repetir la captura de SpO₂ al activar Pérdida de señal. Tierra se abre desde Mapa espacial.
 
 ## Dónde trabajar
@@ -52,7 +52,7 @@ Los modelos, dominio, adapters, DI y claves de persistencia no se reorganizan po
 
 ## Animación de carga
 
-`loading-preview/` ofrece la vista de revisión `/loading-preview`, con Screen/ViewModel/View y pausa local. El componente reusable del Tumi y el temporizador de introducción viven en `presentation/shared/loading/`; consumidores reales: misión, mapa y fallback de rutas. No se duplican operaciones ni datos del provider.
+`loading-preview/` ofrece la vista de revisión `/loading-preview`, con Screen/ViewModel/View y pausa local. El componente reusable del Nami y el temporizador de introducción viven en `presentation/shared/loading/`; consumidores reales: misión, mapa y fallback de rutas. No se duplican operaciones ni datos del provider.
 
 ## Sitios de lanzamiento
 
