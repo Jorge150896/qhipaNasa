@@ -12,7 +12,7 @@ const hotspots: {
   name: string;
   position: [number, number, number];
 }[] = [
-  { id: 'temperature', label: 'T°', name: 'temperatura corporal', position: [0, 1.72, 0.18] },
+  { id: 'temperature', label: 'T°', name: 'temperatura corporal', position: [0.38, 1.72, 0.18] },
   { id: 'heartRate', label: 'FC', name: 'frecuencia cardíaca', position: [0.18, 1.22, 0.3] },
   {
     id: 'respiration',
