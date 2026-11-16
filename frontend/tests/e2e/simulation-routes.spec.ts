@@ -18,6 +18,7 @@ test('Simulación marca la ruta por tripulante y día y abre tres destinos', asy
   const astronaut = routes.locator('.simulation-routes__astronaut');
   const controls = routes.getByRole('group', { name: 'Simular un cambio de hábitos' });
   const tracks = routes.getByRole('list', { name: 'Rutas emocionales disponibles' });
+  const flightEvidence = routes.getByRole('region', { name: 'Evidencia de vuelos reales' });
   const astronautBox = (await astronaut.boundingBox())!;
   const controlsBox = (await controls.boundingBox())!;
   const tracksBox = (await tracks.boundingBox())!;
@@ -26,6 +27,12 @@ test('Simulación marca la ruta por tripulante y día y abre tres destinos', asy
   expect(recordBox.y + recordBox.height).toBeLessThan(controlsBox.y);
   expect(astronautBox.x).toBeCloseTo(controlsBox.x, 0);
   expect(controlsBox.x + controlsBox.width).toBeLessThan(tracksBox.x);
+  const flightEvidenceBox = (await flightEvidence.boundingBox())!;
+  expect(flightEvidenceBox.y).toBeGreaterThan(tracksBox.y + tracksBox.height);
+  expect(flightEvidenceBox.x).toBeCloseTo(tracksBox.x, 0);
+  await expect(flightEvidence.getByText('545 entradas', { exact: true })).toBeHidden();
+  await flightEvidence.getByText('Ver evidencia de los diarios de la ISS').click();
+  await expect(flightEvidence.getByText('545 entradas', { exact: true })).toBeVisible();
 
   await routes.getByLabel('Día simulado').selectOption('0');
   await expect(active).toContainText('Bienestar');

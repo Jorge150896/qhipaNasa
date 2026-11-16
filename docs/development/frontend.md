@@ -10,6 +10,8 @@ En Tripulación → Ahora, el visor corporal ajusta el encuadre al tamaño dispo
 
 [La guía de Nami](tumi-ia.md) describe el acompañante flotante, sus expresiones y sus respuestas locales. `MissionAssistantScreen` monta una instancia en el explorador y la misión. Al abrir el chat contextual, se suspende el acompañante. Ambos paneles comparten la apariencia de la app.
 
+En Simulación → Ruta emocional, debajo de Atención, la tarjeta de evidencia muestra el hallazgo histórico sobre los astronautas de Mir y permite desplegar el dato de los diarios de la ISS. Cada cifra enlaza a su informe de NASA. La tarjeta es contenido de referencia independiente del cálculo, la reproducción y la narración de la serie simulada.
+
 ## Decisiones implementadas
 
 La barra inferior compartida mantiene el orden Monitoreo diario → Simulación → Tripulación → Mapa espacial en escritorio, tablet y móvil. Los cuatro accesos son directos: no hay menú «Más». El orden de teclado coincide con el visual, se conserva el indicador activo y el margen de seguridad inferior del dispositivo.

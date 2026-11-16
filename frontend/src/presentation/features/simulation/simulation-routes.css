@@ -27,6 +27,89 @@
   color: var(--muted);
 }
 
+.flight-evidence {
+  margin-top: 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: linear-gradient(110deg, #ffa36e12, transparent 70%), var(--field);
+}
+
+.flight-evidence__highlight {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  padding: 0.9rem 1rem;
+}
+
+.flight-evidence__count {
+  padding-inline: 0.5rem;
+  color: var(--accent);
+  font-size: clamp(2rem, 5vw, 3.3rem);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.flight-evidence h3,
+.flight-evidence p {
+  margin: 0;
+}
+
+.flight-evidence__context {
+  display: grid;
+  justify-items: start;
+  gap: 0.35rem;
+}
+
+.flight-evidence small,
+.flight-evidence details p {
+  color: var(--muted);
+}
+
+.flight-evidence a {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--accent);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.flight-evidence a svg {
+  flex-shrink: 0;
+}
+
+.flight-evidence details {
+  padding-inline: 1rem;
+  border-top: 1px solid var(--line-soft);
+}
+
+.flight-evidence summary {
+  min-height: 44px;
+  padding-block: 0.6rem;
+  cursor: pointer;
+}
+
+.flight-evidence details[open] {
+  padding-bottom: 0.4rem;
+}
+
+.flight-evidence details strong {
+  color: var(--text);
+}
+
+@media (max-width: 520px) {
+  .flight-evidence__highlight {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .flight-evidence__count {
+    padding-inline: 0;
+  }
+}
+
 .simulation-routes__day {
   display: grid;
   gap: 0.3rem;

@@ -40,7 +40,9 @@ export function WellbeingTimeline({
       <div className="wellbeing-timeline__header">
         <div>
           <h3 id={titleId}>{t('Línea de tiempo emocional')}</h3>
-          <small>{t(`${days.length} días en ${wellbeingPlaybackSeconds} segundos`)}</small>
+          <small>
+            {t('Simulación')} · {t(`${days.length} días en ${wellbeingPlaybackSeconds} segundos`)}
+          </small>
         </div>
         <div className="wellbeing-timeline__controls">
           <button type="button" className="button primary" onClick={togglePlayback}>

@@ -4,6 +4,7 @@ import { Icon, type IconName } from '@/ui/Icon';
 import { TumiTechPortrait, type TumiEmotion } from '@/presentation/shared/tumi/TumiTechPortrait';
 import { wellbeingRouteLabels, type WellbeingRoute } from '../types';
 import type { useSimulationViewModel } from '../useSimulationViewModel';
+import { FlightEvidence } from './FlightEvidence';
 import { SimulationNarration, type SimulationNarrationProps } from './SimulationNarration';
 import { WellbeingTimeline } from './WellbeingTimeline';
 
@@ -246,6 +247,7 @@ export function WellbeingRoutesView({
               );
             })}
           </ul>
+          <FlightEvidence />
         </div>
       </div>
     </section>
