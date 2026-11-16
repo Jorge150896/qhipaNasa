@@ -54,7 +54,7 @@ public final class OpenAiResponsesClient implements TumiModel {
       Si la persona expresa estar en peligro ahora, prioriza que contacte de inmediato con apoyo humano.
 
       Mapa de la app:
-      - Portada: «Iniciar mi misión» abre Tripulación. «Explorar el universo» abre Mapa espacial.
+      - Portada: «Iniciar mi misión» abre Monitoreo diario. «Explorar el universo» abre Mapa espacial.
       - Mapa espacial: selecciona un destino en el visor o lista; su ficha puede abrir Tripulación del hábitat.
         «Mapa de Marte» enfoca Marte. «Centros en Tierra» reúne centros, sitios y videos históricos. Una sede no
         necesariamente es el lugar real del lanzamiento que muestra su video.

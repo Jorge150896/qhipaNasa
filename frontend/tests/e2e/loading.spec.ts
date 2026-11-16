@@ -91,7 +91,8 @@ test('pantalla completa solo desde Iniciar misión; carga interna conserva menú
   const fullscreen = page.locator('.tumi-loader--fullscreen');
   await expect(fullscreen).toBeVisible();
   await expect(fullscreen.getByRole('heading')).toHaveText('Preparing your mission');
-  await expect(page.getByRole('heading', { name: 'Crew', exact: true })).toBeVisible({
+  await expect(page).toHaveURL(/\/mission\/journal$/);
+  await expect(page.getByRole('heading', { name: 'Daily check-in', exact: true })).toBeVisible({
     timeout: 10_000,
   });
   expect(Date.now() - started).toBeGreaterThanOrEqual(550);
@@ -100,13 +101,13 @@ test('pantalla completa solo desde Iniciar misión; carga interna conserva menú
   const gate = new Promise<void>((resolve) => {
     release = resolve;
   });
-  await page.route(/\/mission\/journal\?/, async (route) => {
+  await page.route(/\/mission\/simulation\?/, async (route) => {
     await gate;
     await route.continue();
   });
   const nav = page.getByRole('navigation', { name: 'Main navigation' });
   try {
-    await nav.getByRole('button', { name: 'Daily check-in', exact: true }).click();
+    await nav.getByRole('button', { name: 'Simulation', exact: true }).click();
     const loader = page.locator('.tumi-loader--content');
     await expect(loader).toBeVisible();
     await expect(nav).toBeVisible();

@@ -1,8 +1,8 @@
 # Portada Qhipa Pacha
 
-Entrada `/` → `LandingScreen` → `useLandingViewModel` → `LandingView`. CTA a `/mission/crew` y navegación secundaria a `/explore`. No modifica providers, escenarios o registros de la aplicación existente.
+Entrada `/` → `LandingScreen` → `useLandingViewModel` → `LandingView`. El botón «Iniciar mi misión» abre Monitoreo diario en `/mission/journal`. El selector de idioma está en la cabecera.
 
-El hook posee pausa manual y repetición del rebote del logo. `useSyncExternalStore` escucha movimiento reducido y visibilidad de pestaña, con limpieza de listeners. La View mantiene únicamente desplazamientos visuales en propiedades CSS según el puntero, sin re-render continuo. En táctil no hay parallax de puntero. Las capas tienen profundidades distintas; el drift, flotación, destellos y reflejo del CTA usan transform/opacity de CSS. La pausa afecta también pseudo-elementos; movimiento reducido detiene animaciones y transiciones.
+El hook gestiona la repetición del rebote del logo y pausa la animación cuando la pestaña está oculta o el sistema solicita movimiento reducido. `useSyncExternalStore` escucha ambas preferencias y limpia sus listeners. La View mantiene únicamente desplazamientos visuales en propiedades CSS según el puntero, sin re-render continuo. En táctil no hay parallax de puntero. Las capas tienen profundidades distintas; el drift, flotación, destellos y reflejo del CTA usan transform/opacity de CSS. La pausa afecta también pseudo-elementos; movimiento reducido detiene animaciones y transiciones.
 
 Paleta: naranja `#FB5607` para el CTA, morado `#8338EC`, carbón `#212529` y claro `#E9ECEF`. La portada usa el fondo espacial común y una capa propia para el planeta y su parallax.
 

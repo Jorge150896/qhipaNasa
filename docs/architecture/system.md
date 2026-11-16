@@ -93,7 +93,7 @@ La feature `crew-health` añade Screen/ViewModel/View propios, casos de uso port
 
 Las secciones del menú tienen features de presentación independientes: `space-map`, `mission-overview`, `crew`, `daily-check`, `observations`, `simulation` y `sources`. `mission` coordina el flujo existente, sin una View monolítica. `crew-health` y el historial, incluida la referencia de Inspiration4, se integran en `crew`. Componentes de misión usados entre features viven en `presentation/shared/mission`; `useMission` conserva su nombre y ownership. Ver `docs/development/features-map.md`.
 
-La portada `/` es la feature `landing`, independiente del flujo de misión. Screen traduce navegación; `useLandingViewModel` posee estado visual de movimiento/pausa/logo; View representa el hero y las capas decorativas. Las rutas de misión y sus providers permanecen intactos. Las ilustraciones se sirven localmente desde `public/backgrounds/` y `public/brand/`.
+La portada `/` es la feature `landing`, independiente del flujo de misión. Screen traduce navegación; `useLandingViewModel` gestiona el estado del logo y la disponibilidad de movimiento según el sistema y la visibilidad de la pestaña. View representa el hero y las capas decorativas. Las ilustraciones se sirven localmente desde `public/backgrounds/` y `public/brand/`.
 
 La carga de Nami es UI compartida en `presentation/shared/loading`, con variantes explícitas `fullscreen` y `content`. La introducción de 3000 ms se inicia únicamente desde el CTA de portada y su ViewModel. El provider de misión conserva la carga real sin retrasos visuales. Los Screens coordinan la navegación con `useTransition` y muestran espera dentro del contenido, preservando el shell. `/loading-preview` es una herramienta de revisión permanente.
 

@@ -85,6 +85,30 @@
   justify-content: space-between;
   gap: 24px;
 }
+.qhipa-header-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+}
+.qhipa-repository {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding-inline: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.qhipa-repository:hover {
+  border-color: var(--qhipa-yellow);
+}
 .qhipa-brand {
   padding: 0;
   border: 0;
@@ -128,25 +152,6 @@
   font-weight: 400;
   letter-spacing: 2.5px;
   color: var(--brand-wordmark-muted);
-}
-.qhipa-nav {
-  display: flex;
-  gap: 34px;
-  align-items: center;
-}
-.qhipa-nav button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0;
-  border: 0;
-  color: var(--muted);
-  background: transparent;
-  font-size: 12px;
-  transition: color 200ms ease;
-}
-.qhipa-nav button:hover {
-  color: var(--qhipa-yellow);
 }
 .qhipa-hero {
   width: min(1200px, calc(100% - 96px));
@@ -334,28 +339,6 @@
   margin: 0 10px;
   color: var(--accent);
 }
-.qhipa-footer > div {
-  display: flex;
-  gap: 24px;
-  align-items: center;
-}
-.qhipa-demo-label {
-  font-size: 12px;
-  letter-spacing: 0;
-  color: var(--muted);
-}
-.qhipa-motion-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 12px !important;
-  background: transparent;
-  border: 1px solid #ceb0e430;
-  padding: 9px 11px;
-  border-radius: 8px;
-  letter-spacing: 0;
-}
 .qhipa-landing[data-motion='paused'] *,
 .qhipa-landing[data-motion='paused'] *::before,
 .qhipa-landing[data-motion='paused'] *::after {
@@ -445,12 +428,6 @@
   .qhipa-wordmark {
     min-width: 0;
   }
-  .qhipa-nav {
-    gap: 18px;
-  }
-  .qhipa-nav button {
-    font-size: 12px;
-  }
   .qhipa-hero {
     grid-template-columns: 1fr;
     gap: 0;
@@ -497,9 +474,6 @@
   .qhipa-footer {
     width: calc(100% - 36px);
   }
-  .qhipa-nav button:first-child {
-    display: none;
-  }
   .qhipa-brand-mark {
     width: 38px;
     height: 38px;
@@ -538,6 +512,15 @@
   }
   .qhipa-footer {
     padding-top: 18px;
+  }
+}
+@media (max-width: 360px) {
+  .qhipa-header {
+    flex-wrap: wrap;
+    padding-block: 12px;
+  }
+  .qhipa-header-actions {
+    margin-inline-start: auto;
   }
 }
 @media (prefers-reduced-motion: reduce) {

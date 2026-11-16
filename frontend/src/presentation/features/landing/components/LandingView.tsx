@@ -1,6 +1,7 @@
 import { useTranslation } from '@/presentation/shared/language/AppLanguageProvider';
 import { LanguageSelect } from '@/presentation/shared/language/LanguageSelect';
 import { useId, type PointerEvent } from 'react';
+import { ExternalLink } from 'lucide-react';
 import { TumiTechPortrait } from '@/presentation/shared/tumi/TumiTechPortrait';
 import { Icon } from '@/ui/Icon';
 import type { LandingViewProps } from '../types';
@@ -9,13 +10,9 @@ import { TumiFlight } from './TumiFlight';
 
 export function LandingView({
   motionActive,
-  paused,
   logoRevision,
-  onToggleMotion,
   onReplayLogo,
   onOpenMission,
-  onOpenExplorer,
-  onOpenCrew,
 }: LandingViewProps) {
   const t = useTranslation();
   const brandPortraitId = useId();
@@ -63,14 +60,12 @@ export function LandingView({
             </span>
           </span>
         </button>
-        <nav className="qhipa-nav" aria-label={t('Navegación de portada')}>
-          <button onClick={onOpenCrew}>{t('Tu bienestar')}</button>
-          <button onClick={onOpenExplorer}>
-            {t('El universo')}
-            <Icon name="arrow" size={14} />
-          </button>
+        <div className="qhipa-header-actions">
+          <a className="qhipa-repository" href="https://github.com/Jorge150896/qhipaNasa">
+            GitHub <ExternalLink size={14} aria-hidden="true" />
+          </a>
           <LanguageSelect />
-        </nav>
+        </div>
       </header>
       <section className="qhipa-hero" id="qhipa-content" aria-labelledby="qhipa-title">
         <div className="qhipa-hero-copy">
@@ -102,13 +97,6 @@ export function LandingView({
           QHIPA PACHA <span className="qhipa-footer-divider">/</span>
           {t(' HUMANOS, INCLUSO ENTRE ESTRELLAS.')}
         </span>
-        <div>
-          <span className="qhipa-demo-label">{t('Demo · datos sintéticos')}</span>
-          <button className="qhipa-motion-toggle" onClick={onToggleMotion} aria-pressed={paused}>
-            <Icon name={paused ? 'orbit' : 'sliders'} size={14} />
-            {t(paused ? 'Reanudar animación' : 'Pausar animación')}
-          </button>
-        </div>
       </footer>
     </main>
   );

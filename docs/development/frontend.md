@@ -144,7 +144,7 @@ Cambiar de sección desmonta su estado visual privado: modo de visor, sistema co
 
 ### Portada Qhipa Pacha
 
-La ruta raíz monta `landing/LandingScreen.tsx`, con `useLandingViewModel` y `components/LandingView.tsx`. Ofrece entrada al dashboard, mapa y tripulación. Las animaciones de marca, Nami, estrellas, planeta cercano y reflejo del CTA viven en CSS aislado; el hook administra pausa y disponibilidad de movimiento según sistema/visibilidad. No hay nuevos adapters ni acceso a datos. El parallax de puntero se limita a ratón y se desactiva en pausa/movimiento reducido. Recursos, procedencia y detalles en el README de `landing/`.
+La ruta raíz monta `landing/LandingScreen.tsx`, con `useLandingViewModel` y `components/LandingView.tsx`. «Iniciar mi misión» abre Monitoreo diario. Las animaciones de marca, Nami, estrellas, planeta cercano y reflejo del CTA viven en CSS aislado. El hook pausa el movimiento según la preferencia del sistema y la visibilidad de la pestaña. El parallax de puntero se limita a ratón y se desactiva cuando el movimiento está pausado. Recursos, procedencia y detalles en el README de `landing/`.
 
 ### Tema del dashboard
 

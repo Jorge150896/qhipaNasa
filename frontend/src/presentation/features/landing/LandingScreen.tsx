@@ -18,18 +18,16 @@ export function LandingScreen() {
   }, [language]);
   const model = useLandingViewModel();
   useEffect(() => {
-    if (model.launchReady) router.push('/mission/crew');
+    if (model.launchReady) router.push('/mission/journal');
   }, [model.launchReady, router]);
   if (model.launching) return <TumiLoader variant="fullscreen" />;
   return (
     <LandingView
       {...model}
       onOpenMission={() => {
-        router.prefetch('/mission/crew');
+        router.prefetch('/mission/journal');
         model.onBeginMission();
       }}
-      onOpenExplorer={() => router.push('/explore')}
-      onOpenCrew={() => router.push('/mission/crew')}
     />
   );
 }

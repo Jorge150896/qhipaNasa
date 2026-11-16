@@ -21,16 +21,13 @@ export function useLandingViewModel() {
   );
   const [launching, setLaunching] = useState(false);
   const launchPending = useLoadingDelayViewModel(launching);
-  const [paused, setPaused] = useState(false);
   const [logoRevision, setLogoRevision] = useState(0);
   return {
     launching,
     launchReady: launching && !launchPending,
     onBeginMission: () => setLaunching(true),
-    motionActive: !unavailable && !paused,
-    paused,
+    motionActive: !unavailable,
     logoRevision,
-    onToggleMotion: () => setPaused((value) => !value),
     onReplayLogo: () => setLogoRevision((value) => value + 1),
   };
 }
